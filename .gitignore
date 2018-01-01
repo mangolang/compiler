@@ -89,4 +89,8 @@ gradle-app.setting
 /gradlew
 /gradlew.bat
 
+/gradle/
+
+/mango-js/build
+/mango-jvm/build
 
