@@ -8,7 +8,17 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+
 apply plugin: 'kotlin-platform-js'
+
+compileKotlin2Js {
+    kotlinOptions {
+        outputFile = 'build/js/mango.js'
+        moduleKind = 'umd'
+        sourceMap = true
+        metaInfo = true
+    }
+}
 
 repositories {
     mavenCentral()
@@ -19,3 +29,5 @@ dependencies {
     expectedBy project(":")
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
+
+

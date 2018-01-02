@@ -10,6 +10,7 @@ buildscript {
     }
 }
 
+apply plugin: 'idea'
 apply plugin: "kotlin-platform-common"
 
 repositories {

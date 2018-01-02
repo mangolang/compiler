@@ -8,11 +8,13 @@
           <option name="additionalArguments" value="-Xmulti-platform" />
         </compilerSettings>
         <compilerArguments>
-          <option name="outputFile" value="$MODULE_DIR$/../../../mango-js/build/classes/kotlin/main/mango-js.js" />
+          <option name="outputFile" value="$MODULE_DIR$/../../../build/js/mango.js" />
           <option name="noStdlib" value="true" />
+          <option name="sourceMap" value="true" />
           <option name="sourceMapEmbedSources" value="inlining" />
           <option name="metaInfo" value="true" />
           <option name="target" value="v5" />
+          <option name="moduleKind" value="umd" />
           <option name="main" value="call" />
           <option name="languageVersion" value="1.2" />
           <option name="apiVersion" value="1.2" />

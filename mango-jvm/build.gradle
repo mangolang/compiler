@@ -14,7 +14,7 @@ apply plugin: 'application'
 
 defaultTasks 'run'
 
-mainClassName = "org.mangolang.MainKt"
+mainClassName = "org.mangolang.dev.MainKt"
 
 repositories {
     mavenCentral()
