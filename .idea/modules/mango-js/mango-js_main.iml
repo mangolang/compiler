@@ -8,7 +8,7 @@
           <option name="additionalArguments" value="-Xmulti-platform" />
         </compilerSettings>
         <compilerArguments>
-          <option name="outputFile" value="$MODULE_DIR$/../../../build/js/mango.js" />
+          <option name="outputFile" value="$MODULE_DIR$/../../../mango-js/build/js/mango.js" />
           <option name="noStdlib" value="true" />
           <option name="sourceMap" value="true" />
           <option name="sourceMapEmbedSources" value="inlining" />

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MGPL</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style>
+        body {
+            color: #454849;
+            background-color: #faac28;
+        }
+        h1, h2, h3, h4, a {
+            color: #229857;
+        }
+        body {
+            min-height: 100%;
+            margin-top: 5%;
+        }
+        #content {
+            min-height: 500px;
+            border-radius: 1em;
+            background-color: white;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0.4em 1em;
+        }
+	    .log-msg {
+		    color: #454849
+	    }
+	    .warn-msg {
+		    color: darkorange;
+	    }
+	    .error-msg {
+		    color: darkred;
+	    }
+    </style>
+    <script>
+        /**
+         * This wraps window.console.* logging commands to also output on screen. Temporary, not very elegant.
+         */
+        var wrapped_console_log = window.console.log;
+        window.console.log = function (msg) {
+            wrapped_console_log(msg);
+            var msgElem = document.createElement('p');
+            msgElem.className = 'log-msg';
+            msgElem.innerHTML += msg;
+            document.getElementById('message-container').appendChild(msgElem);
+        };
+        var wrapped_console_warn = window.console.warn;
+        window.console.warn = function (msg) {
+            wrapped_console_warn(msg);
+            var msgElem = document.createElement('p');
+	        msgElem.className = 'warn-msg';
+            msgElem.innerHTML += msg;
+            document.getElementById('message-container').appendChild(msgElem);
+        };
+        var wrapped_console_error = window.console.error;
+        window.console.error = function (msg) {
+            wrapped_console_error(msg);
+            var msgElem = document.createElement('p');
+	        msgElem.className = 'error-msg';
+            msgElem.innerHTML += msg;
+            document.getElementById('message-container').appendChild(msgElem);
+        };
+    </script>
+</head>
+<body>
+
+<main>
+    <div class="row">
+        <div class="col-sm">
+            <article id="content">
+                <h1>Mango</h1>
+                <section id="message-container">
+                </section>
+            </article>
+        </div>
+    </div>
+</main>
+
+<script type="text/javascript" src="kotlin.js"></script>
+<script type="text/javascript" src="mango.js"></script>
+</body>
+</html>
+

@@ -23,5 +23,8 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
 }
 
+//task run(type: Exec) {
+//    println "Cannot run the main project directly; run either js or jvm versions with `gradle -p mango-js/jvm run`"
+//}
 
 

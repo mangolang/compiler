@@ -1,5 +1,7 @@
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = "1.2.10"
+    ext.web_dir = "${projectDir}/build/web"
+    ext.targetJsFile = "${projectDir}/build/js/mango.js"
 
     repositories {
         mavenCentral()
@@ -9,12 +11,12 @@ buildscript {
     }
 }
 
-apply plugin: 'kotlin-platform-js'
+apply plugin: "kotlin-platform-js"
 
 compileKotlin2Js {
     kotlinOptions {
-        outputFile = 'build/js/mango.js'
-        moduleKind = 'umd'
+        outputFile = targetJsFile
+        moduleKind = "umd"
         sourceMap = true
         metaInfo = true
     }
@@ -30,4 +32,24 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
+def homeFile = "${projectDir}/build/resources/main/org/mangolang/dev/home.html"
+def kotlinJsFile = "../node_modules/kotlin/kotlin.js"
+task web(type: Copy) {
+    dependsOn build
+    from file(targetJsFile)
+    from file(homeFile)
+    from file(kotlinJsFile)
+    into { "${web_dir}" }
+}
+web.doFirst {
+    assert file(targetJsFile).exists()
+    assert file(homeFile).exists()
+    assert file(kotlinJsFile).exists(): "kotlin.js not found at ${kotlinJsFile}; make sure to run `npm install`"
+}
+
+task run(type: Exec) {
+    dependsOn build
+    dependsOn web
+    commandLine "node", targetJsFile
+}
 
