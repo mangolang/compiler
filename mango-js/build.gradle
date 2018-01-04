@@ -1,3 +1,4 @@
+
 buildscript {
     ext.kotlin_version = "1.2.10"
     ext.web_dir = "${projectDir}/build/web"
@@ -43,6 +44,8 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
+defaultTasks 'run'
+
 def homeFile = "${projectDir}/build/resources/main/org/mangolang/dev/home.html"
 def kotlinJsFile = "../node_modules/kotlin/kotlin.js"
 task web(type: Copy) {
@@ -60,14 +63,14 @@ web.doFirst {
     assert file(kotlinJsFile).exists(): "kotlin.js not found at ${kotlinJsFile}; make sure to run `npm install`"
 }
 
-// TODO: I want to call this as 'test'
-// TODO: add a test runner, eventually?
 task testJsNode(type: NodeTask) {
+    description = "Run the Javascript tests using NodeJS"
     dependsOn test
     script = file(testJsPath)
 }
 
 task run(type: NodeTask) {
+    description = "Run the Javascript code using NodeJS (no browser)"
     dependsOn testJsNode
     dependsOn web
     script = file(mainJsPath)

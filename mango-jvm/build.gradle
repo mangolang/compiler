@@ -1,3 +1,4 @@
+
 buildscript {
     ext.kotlin_version = '1.2.10'
 
@@ -15,6 +16,8 @@ apply plugin: 'application'
 defaultTasks 'run'
 
 mainClassName = "org.mangolang.dev.MainKt"
+
+run.dependsOn test
 
 repositories {
     mavenCentral()

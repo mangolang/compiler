@@ -11,16 +11,12 @@ How to use
 
 The project requires Gradle and Kotlin (multi-platform). To compile, test and run on JVM:
 
-    gradle -p mango-jvm test run
+    gradle -p mango-jvm
 
-To run the Javascript version with Node (including tests), first do `npm install`. Then:
+To test and run the Javascript version with Node:
 
-    gradle -p mango-js run
+    gradle -p mango-js
 
-To show it in a web-browser (after tests), run
-
-    gradle -p mango-js web
-
-then open `mango-js/build/web/home.html` in a browser.
+To then show it in a web-browser, visit file `mango-js/build/web/home.html`.
 
 
