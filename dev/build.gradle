@@ -1,0 +1,7 @@
+
+dependencies {
+    compile project(':ast')
+    testCompile project(':ast')
+}
+
+

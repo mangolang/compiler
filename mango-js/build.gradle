@@ -1,6 +1,5 @@
 
 buildscript {
-    ext.kotlin_version = "1.2.10"
     ext.web_dir = "${projectDir}/build/web"
     // TODO: isn't there some better way to get the path to this output file?:
     ext.mainJsPath = "$project.buildDir.path/classes/main/${project.name}.js"

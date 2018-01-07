@@ -10,7 +10,6 @@ buildscript {
     }
 }
 
-apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'application'
 
 defaultTasks 'run'
@@ -25,7 +24,6 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    expectedBy project(":")
     testCompile "junit:junit:4.12"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"

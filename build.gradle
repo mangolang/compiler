@@ -1,7 +1,5 @@
 
 buildscript {
-    ext.kotlin_version = "1.2.10"
-
     repositories {
         mavenCentral()
     }
@@ -10,21 +8,47 @@ buildscript {
     }
 }
 
-apply plugin: 'idea'
-apply plugin: "kotlin-platform-common"
+apply plugin: 'kotlin-platform-common'
 
-repositories {
-    mavenCentral()
+allprojects {
+    version = '0.0.0'
+
+    apply plugin: 'idea'
+
+    repositories {
+        mavenCentral()
+    }
+
+    wrapper.enabled = false
+
+    buildDir = rootProject.file("$shared_build_dir")
+}
+
+project.ext {
+    subparts = subprojects.findAll {
+        it.name != 'mango-jvm' && it.name != 'mango-js'
+    }
+}
+
+configure(subparts) {
+    apply plugin: 'kotlin-platform-common'
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+        testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+        testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+    }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+    compile subparts
+    testCompile subparts
 }
 
-//task run(type: Exec) {
-//    println "Cannot run the main project directly; run either js or jvm versions with `gradle -p mango-js/jvm run`"
-//}
+// Some logging
+configurations.compile.each {
+    println "compile: $it"
+}
+
 
 
