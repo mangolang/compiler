@@ -1,0 +1,5 @@
+rootProject.name = 'lexing'
+
+include 'common', 'reading', 'token'
+
+

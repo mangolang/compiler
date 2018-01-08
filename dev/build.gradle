@@ -1,11 +1,11 @@
 
 dependencies {
-    compile project(':common')
-    testCompile project(':common')
-    compile project(':ast')
-    testCompile project(':ast')
-    compile project(':govern')
-    testCompile project(':govern')
+//    compile project(':common')
+//    testCompile project(':common')
+//    compile project(':ast')
+//    testCompile project(':ast')
+//    compile project(':govern')
+//    testCompile project(':govern')
 }
 
 

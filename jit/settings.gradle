@@ -1,0 +1,5 @@
+rootProject.name = 'jit'
+
+include 'common'
+
+

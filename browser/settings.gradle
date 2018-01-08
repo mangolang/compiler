@@ -1,0 +1,5 @@
+rootProject.name = 'browser'
+
+include 'common', 'ir'
+
+

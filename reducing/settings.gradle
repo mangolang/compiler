@@ -1,0 +1,5 @@
+rootProject.name = 'reducing'
+
+include 'common', 'ast'
+
+

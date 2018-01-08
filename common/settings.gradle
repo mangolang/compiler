@@ -1,5 +1,3 @@
-rootProject.name = 'mango'
-
-include 'mango-jvm', 'mango-js'
+rootProject.name = 'common'
 
 
