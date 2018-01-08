@@ -148,11 +148,9 @@ typings/
 ### CUSTOM CHANGES ###
 
 # I am not of the opinion that gradle is part of the code (maybe controversial)
-/gradlew
-/gradlew.bat
+gradlew
+gradlew.bat
 
-/gradle/
+gradle/
 
-/mango-js/build
-/mango-jvm/build
-
+build/
