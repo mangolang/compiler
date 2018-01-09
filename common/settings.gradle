@@ -1,3 +1,5 @@
 rootProject.name = 'common'
 
+include 'mango-jvm', 'mango-js'
+
 
