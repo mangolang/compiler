@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":ast:test" external.linked.project.path="$MODULE_DIR$/../../../ast" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="mango" external.system.module.type="sourceSet" external.system.module.version="0.0.0" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":optimizing:test" external.linked.project.path="$MODULE_DIR$/../../../optimizing" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="mango" external.system.module.type="sourceSet" external.system.module.version="0.0.0" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="Common (experimental) " useProjectSettings="false">
@@ -18,11 +18,11 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output-test url="file://$MODULE_DIR$/../../../ast/out/test/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../optimizing/out/test/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../../ast/src/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../../ast/src/test/kotlin" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../ast/src/test/resources" type="java-test-resource" />
+    <content url="file://$MODULE_DIR$/../../../optimizing/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../optimizing/src/test/kotlin" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../optimizing/src/test/resources" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -33,5 +33,5 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-common:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.10" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="ast_main" />
+  <component name="TestModuleProperties" production-module="optimizing_main" />
 </module>

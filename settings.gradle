@@ -1,6 +1,8 @@
 rootProject.name = 'mango'
 
 include 'mango-jvm', 'mango-js'
-include 'ast'
+include 'common', 'govern', 'cli', 'jit',
+        'reading', 'lexing', 'ast', 'token', 'ir',
+        'browser', 'binary', 'optimizing', 'reducing'
 
 
