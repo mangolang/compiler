@@ -1,4 +1,4 @@
-rootProject.name = 'optimizing'
+rootProject.name = 'mango'
 
 include 'common', 'ir'
 

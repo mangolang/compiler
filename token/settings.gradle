@@ -1,4 +1,4 @@
-rootProject.name = 'token'
+rootProject.name = 'mango'
 
 include 'common'
 

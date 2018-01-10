@@ -1,4 +1,4 @@
-rootProject.name = 'lexing'
+rootProject.name = 'mango'
 
 include 'common', 'reading', 'token'
 

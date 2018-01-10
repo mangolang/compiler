@@ -1,4 +1,4 @@
-rootProject.name = 'browser'
+rootProject.name = 'mango'
 
 include 'common', 'ir'
 

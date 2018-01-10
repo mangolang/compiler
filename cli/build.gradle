@@ -1,9 +1,7 @@
 
 dependencies {
     compile project(':common')
-    testCompile project(':common')
     compile project(':govern')
-    testCompile project(':govern')
 }
 
 

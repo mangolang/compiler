@@ -1,4 +1,4 @@
-rootProject.name = 'binary'
+rootProject.name = 'mango'
 
 include 'common', 'ir'
 

@@ -1,4 +1,4 @@
-rootProject.name = 'dev'
+rootProject.name = 'mango'
 
 include 'common', 'govern', 'cli', 'jit',
         'reading', 'lexing', 'ast', 'token', 'ir',

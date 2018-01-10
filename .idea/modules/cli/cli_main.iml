@@ -27,8 +27,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mango_main" />
-    <orderEntry type="module" module-name="common_main" />
     <orderEntry type="module" module-name="govern_main" />
+    <orderEntry type="module" module-name="common_main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.10" level="project" />
     <orderEntry type="module" module-name="mango-js_main" />
     <orderEntry type="module" module-name="mango-jvm_main" />

@@ -1,9 +1,7 @@
 
 dependencies {
     compile project(':mango-js')
-    testCompile project(':mango-js')
     compile project(':mango-jvm')
-    testCompile project(':mango-jvm')
 }
 
 
