@@ -28,10 +28,17 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mango_test" />
     <orderEntry type="module" module-name="mango_main" />
-    <orderEntry type="module" module-name="mango-js_main" />
+    <orderEntry type="module" module-name="reading_main" />
+    <orderEntry type="module" module-name="token_main" />
+    <orderEntry type="module" module-name="common_main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-annotations-common:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-common:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.10" level="project" />
+    <orderEntry type="module" module-name="mango-js_main" />
+    <orderEntry type="module" module-name="mango-jvm_main" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.2.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="lexing_main" />
 </module>

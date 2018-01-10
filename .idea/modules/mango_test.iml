@@ -27,19 +27,19 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="mango_main" />
+    <orderEntry type="module" module-name="reducing_main" />
     <orderEntry type="module" module-name="ast_main" />
     <orderEntry type="module" module-name="binary_main" />
     <orderEntry type="module" module-name="browser_main" />
     <orderEntry type="module" module-name="cli_main" />
-    <orderEntry type="module" module-name="reading_main" />
-    <orderEntry type="module" module-name="common_main" />
     <orderEntry type="module" module-name="govern_main" />
+    <orderEntry type="module" module-name="optimizing_main" />
     <orderEntry type="module" module-name="ir_main" />
     <orderEntry type="module" module-name="jit_main" />
     <orderEntry type="module" module-name="lexing_main" />
-    <orderEntry type="module" module-name="optimizing_main" />
-    <orderEntry type="module" module-name="reducing_main" />
+    <orderEntry type="module" module-name="reading_main" />
     <orderEntry type="module" module-name="token_main" />
+    <orderEntry type="module" module-name="common_main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.10" level="project" />
     <orderEntry type="module" module-name="mango-js_main" />
     <orderEntry type="module" module-name="mango-jvm_main" />

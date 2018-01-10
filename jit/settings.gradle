@@ -1,4 +1,4 @@
-rootProject.name = 'jit'
+rootProject.name = 'mango'
 
 include 'common'
 

@@ -1,4 +1,7 @@
 
 dependencies {
+    compile project(':common')
+    compile project(':reading')
+    compile project(':token')
 }
 

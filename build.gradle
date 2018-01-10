@@ -1,5 +1,6 @@
-
 buildscript {
+    ext.kotlin_version = '1.2.10'
+
     repositories {
         mavenCentral()
     }
@@ -42,7 +43,6 @@ configure(subparts) {
 
 dependencies {
     compile subparts
-    testCompile subparts
 }
 
 // Some logging
@@ -50,5 +50,28 @@ configurations.compile.each {
     println "compile: $it"
 }
 
+//apply plugin: 'kotlin-platform-common'
 
+//repositories {
+//    mavenCentral()
+//}
 
+dependencies {
+//    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+//    testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+//    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+//    compile subparts
+//    compile project(':common')
+//    compile project(':govern')
+//    compile project(':cli')
+//    compile project(':jit')
+//    compile project(':reading')
+//    compile project(':lexing')
+//    compile project(':ast')
+//    compile project(':token')
+//    compile project(':ir')
+//    compile project(':browser')
+//    compile project(':binary')
+//    compile project(':optimizing')
+//    compile project(':reducing')
+}

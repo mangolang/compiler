@@ -1,4 +1,4 @@
-rootProject.name = 'cli'
+rootProject.name = 'mango'
 
 include 'common', 'govern'
 
