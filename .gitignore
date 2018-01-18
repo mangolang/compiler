@@ -154,3 +154,8 @@ gradlew.bat
 gradle/
 
 build/
+
+
+
+# TEMPORARILT IGNORING .idea/ UNTIL MODULE STRUCTURE IS STABLE
+.idea/
