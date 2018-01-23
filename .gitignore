@@ -155,7 +155,6 @@ gradle/
 
 build/
 
-
-
-# TEMPORARILT IGNORING .idea/ UNTIL MODULE STRUCTURE IS STABLE
+# Going to remove .idea directory, since it's mostly derived from Gradle anyway, which is more portable
 .idea/
+

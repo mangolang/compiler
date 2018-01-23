@@ -1,0 +1,32 @@
+
+/**
+ * This file defines the dependencies between submodules.
+ *
+ * The reason is that this way, they don't have to be provided again for each platform module.
+ */
+
+ext.MODULE_DEPENDENCIES = [
+    token         : ['util'],
+    ast           : ['util'],
+    sem           : ['util'],
+    ir            : ['util'],
+    jscode        : ['util'],
+
+    lexing        : ['util', 'token'],
+    parsing       : ['util', 'token', 'ast'],
+    reducing      : ['util', 'ast'],
+    semanticating : ['util', 'ast', 'sem'],
+    typing        : ['util', 'sem', 'ir'],
+    optimizing    : ['util', 'ir'],
+    jsgen         : ['util', 'ir', 'jscode'],  /* jsruntime */
+
+    util          : [],
+    reading       : ['util'],
+    dev           : ['util', 'lexing', 'parsing', 'reducing', 'semanticating', 'typing', 'optimizing', 'jsgen'],
+    cli           : ['util', 'govern'],
+    govern        : ['util', 'lexing', 'parsing', 'reducing', 'semanticating', 'typing', 'optimizing', 'jsgen'],
+    jit           : ['util', 'ir'],
+
+    // jsruntime     : [],
+]
+
