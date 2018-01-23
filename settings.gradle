@@ -1,8 +1,66 @@
-rootProject.name = 'mango'
 
-include 'mango-jvm', 'mango-js'
-include 'common', 'govern', 'cli', 'jit',
-        'reading', 'lexing', 'ast', 'token', 'ir',
-        'browser', 'binary', 'optimizing', 'reducing'
-rootProject.name = 'mango'
+/**
+ * Include all of the subprojects, including their platform modules.
+ *
+ * Careful, there is no clear error when one is not found.
+ */
+
+/* Representations. */
+include 'token'
+include 'token-jvm'
+include 'token-js'
+include 'ast'
+include 'ast-jvm'
+include 'ast-js'
+include 'sem'
+include 'sem-jvm'
+include 'sem-js'
+include 'ir'
+include 'ir-jvm'
+include 'ir-js'
+include 'jscode'
+include 'jscode-jvm'
+include 'jscode-js'
+
+/* Transformations. */
+include 'lexing'
+include 'lexing-jvm'
+include 'lexing-js'
+include 'parsing'
+include 'parsing-jvm'
+include 'parsing-js'
+include 'uniquifying'
+include 'uniquifying-jvm'
+include 'uniquifying-js'
+include 'semanticating'
+include 'semanticating-jvm'
+include 'semanticating-js'
+include 'typing'
+include 'typing-jvm'
+include 'typing-js'
+include 'optimizing'
+include 'optimizing-jvm'
+include 'optimizing-js'
+include 'jsgen'
+include 'jsgen-jvm'
+include 'jsgen-js'
+
+/* Usage & coordination. */
+include 'util'
+include 'util-jvm'
+include 'util-js'
+include 'dev'
+include 'dev-jvm'
+include 'dev-js'
+include 'cli'
+include 'cli-jvm'
+include 'cli-js'
+include 'govern'
+include 'govern-jvm'
+include 'govern-js'
+include 'jit'
+include 'jit-jvm'
+include 'jit-js'
+include 'jsruntime'  /* in javascript */
+
 

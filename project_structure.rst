@@ -8,19 +8,20 @@ Compilation broadly proceeds in these steps, with representations in **bold** an
 2. *Lexing*: recognize words from the language
 3. **Tokens**
 4. *Parsing*: connect the tokens
-5. **fAST** (full abstract syntax tree)
+5. **fullAST** (full abstract syntax tree)
 6. *Uniquify*: map multiple statements to the same construct
-7. **rAST** (reduced subset of abstract syntax tree)
+7. **coreAST** (reduced subset of abstract syntax tree)
 8. *Semanticate* (semantic analysis): check types and signatures, connect variables
-9. **IR** intermediary representation
-10. *PI-opt* machine-independent optimizations
-11. **IR** (still)
-12. *Generation*
-13. **target** representation at low or high level, depending on target; also optimized and preliminary mode
-14. *PD-opt* platform-dependent optimizations
-15. **target** (still)
-16. *Writing*
-17. **assembly** or other runnable target
+9. **sem** variables are connected but code not validated
+10. *checking* Do type checking and other static analysis
+11. **IR**
+12. *optimizing* platform-independent optimizations
+13. **IR** (still)
+14. *Generation*
+15. **target** representation at low or high level, depending on target; also optimized and preliminary mode
+16. *PD-optimizing* platform-dependent optimizations
+17. **target** (still)
+18. *Writing*
 
 Each of these has it's own sub-project.
 

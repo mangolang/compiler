@@ -1,18 +1,1 @@
 
-dependencies {
-    compile project(':common')
-    compile project(':govern')
-    compile project(':cli')
-    compile project(':jit')
-    compile project(':reading')
-    compile project(':lexing')
-    compile project(':ast')
-    compile project(':token')
-    compile project(':ir')
-    compile project(':browser')
-    compile project(':binary')
-    compile project(':optimizing')
-    compile project(':reducing')
-}
-
-
