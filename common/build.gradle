@@ -1,7 +1,0 @@
-
-dependencies {
-    compile project(':mango-js')
-    compile project(':mango-jvm')
-}
-
-
