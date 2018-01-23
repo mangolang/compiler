@@ -1,77 +1,76 @@
+import javax.naming.ConfigurationException
+
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.20'
 
     repositories {
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
     }
 }
 
 apply plugin: 'kotlin-platform-common'
 
-allprojects {
-    version = '0.0.0'
+apply from: 'dependencies.gradle'
 
-    apply plugin: 'idea'
+/* Utility function. */
+project.ext.fmtMods = { mods -> mods.collect { it.toString().substring(8) }.join(', ') }
+project.ext.deriveDependencyNames = {
+    /* This function takes a subproject and finds the names of the same-platoform projects
+     * that it depends on, based on MODULE_DEPENDENCIES from `dependencies.gradle`.
+     * The purpose is to not define dependencies in platform modules. */
+    Project subProject ->
+    def tokens = subProject.name.tokenize('-')
+    def parent
+    def platform = tokens.last()
+    if (platform in ['jvm', 'js']) {
+        parent = project(':' + tokens.subList(0, tokens.size() - 1).join('-'))
+    } else {
+        parent = subProject
+        platform = null
+    }
+    if (!MODULE_DEPENDENCIES.containsKey(parent.name)) {
+        throw new ConfigurationException("`MODULE_DEPENDENCIES` in `dependencies.gradle` should " +
+                " have an entry for ${parent.name} that lists which modules it depends on")
+    }
+    def dependsOn = MODULE_DEPENDENCIES[parent.name]
+    if (platform == null) {
+        return [parent, dependsOn.collect { ":${it}" }]
+    } else {
+        return [parent, dependsOn.collect { ":${it}:${it}-${platform}" }]
+    }
+}
+
+/* All the projects (including this top-level one). */
+allprojects {
+    group rootProject.name
+    version '1.0.0'
 
     repositories {
         mavenCentral()
     }
 
-    wrapper.enabled = false
-
-    buildDir = rootProject.file("$shared_build_dir")
+    /* Javascript output directory. Actually only needed for the root project and javascript platform ones. */
+    ext.jsTargetDir = file("${project.buildDir.path}/js")
 }
 
-project.ext {
-    subparts = subprojects.findAll {
-        it.name != 'mango-jvm' && it.name != 'mango-js'
-    }
-}
+/* Platform and common configuration have their own files. */
+apply from: 'platform_common.gradle'
+apply from: 'platform_jvm.gradle'
+apply from: 'platform_js.gradle'
 
-configure(subparts) {
-    apply plugin: 'kotlin-platform-common'
-
-    dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-        testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-        testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
-    }
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
 }
 
 dependencies {
-    compile subparts
+    compile project(":dev")
+    testCompile 'org.hamcrest:hamcrest-core:1.3'
 }
 
-// Some logging
-configurations.compile.each {
-    println "compile: $it"
-}
 
-//apply plugin: 'kotlin-platform-common'
-
-//repositories {
-//    mavenCentral()
-//}
-
-dependencies {
-//    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-//    testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
-//    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
-//    compile subparts
-//    compile project(':common')
-//    compile project(':govern')
-//    compile project(':cli')
-//    compile project(':jit')
-//    compile project(':reading')
-//    compile project(':lexing')
-//    compile project(':ast')
-//    compile project(':token')
-//    compile project(':ir')
-//    compile project(':browser')
-//    compile project(':binary')
-//    compile project(':optimizing')
-//    compile project(':reducing')
-}

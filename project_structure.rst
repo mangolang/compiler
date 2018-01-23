@@ -9,7 +9,7 @@ Compilation broadly proceeds in these steps, with representations in **bold** an
 3. **Tokens**
 4. *Parsing*: connect the tokens
 5. **fullAST** (full abstract syntax tree)
-6. *Uniquify*: map multiple statements to the same construct
+6. *Reducing*: map synonymous expressions to the same construct
 7. **coreAST** (reduced subset of abstract syntax tree)
 8. *Semanticate* (semantic analysis): check types and signatures, connect variables
 9. **sem** variables are connected but code not validated
