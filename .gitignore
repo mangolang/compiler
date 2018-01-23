@@ -154,3 +154,7 @@ gradlew.bat
 gradle/
 
 build/
+
+# Going to remove .idea directory, since it's mostly derived from Gradle anyway, which is more portable
+.idea/
+

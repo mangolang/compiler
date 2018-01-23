@@ -1,8 +1,0 @@
-rootProject.name = 'mango'
-
-include 'common', 'govern', 'cli', 'jit',
-        'reading', 'lexing', 'ast', 'token', 'ir',
-        'browser', 'binary', 'optimizing', 'reducing'
-
-
-
