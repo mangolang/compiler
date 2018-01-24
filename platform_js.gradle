@@ -6,7 +6,6 @@
 project.ext.js_submods = subprojects.findAll {
     it.name.endsWith('-js')
 }
-println("javascript submodules: ${fmtMods(js_submods)}")
 
 /* Collect paths of all javascript platform modules and other js dependencies. */
 def js_dep_paths = js_submods.collect { "${it.jsTargetDir}" } +
