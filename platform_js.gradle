@@ -79,7 +79,7 @@ configure(js_submods) {
         script = file("${rootProject.buildDir.path}/node_modules/qunit/bin/qunit")
         args = ['--seed', '1', testsFileRelPath]
         doFirst {
-            assert testsFile.exists()
+            assert testsFile.exists(): "The test file was not found; perhaps this module does not contain any tests?"
             println("run ${testsFileRelPath} with qunit")
         }
     }

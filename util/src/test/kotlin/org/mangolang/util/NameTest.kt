@@ -1,9 +1,11 @@
 
-import org.mangolang.common.Name
-import org.mangolang.common.InvalidNameException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import org.mangolang.util.Name
+import org.mangolang.util.InvalidNameException
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class NameTest {
     @Test
@@ -22,7 +24,7 @@ class NameTest {
         )
         for (inp in valid) {
             /* Mostly this checks that there is no exception when creating Name. */
-            assertEquals(inp, Name(inp).value)
+            assertEquals(inp, Name.new(inp).name)
         }
     }
 
@@ -77,9 +79,16 @@ class NameTest {
         for (inp in invalid) {
             /* Mostly this checks that there is no exception when creating Name. */
             assertFailsWith(InvalidNameException::class, "'${inp}' should be invalid") {
-                Name(inp)
+                Name.new(inp)
             }
         }
+    }
+
+    @Test
+    fun testNameFlyweight() {
+        /* Use triple-equals to check identity. */
+        assertTrue(Name.new("Hello") === Name.new("Hello"))
+        assertFalse(Name.new("Hello") === Name.new("Goodbye"))
     }
 }
 
