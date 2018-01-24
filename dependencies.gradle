@@ -7,15 +7,16 @@
 
 ext.MODULE_DEPENDENCIES = [
     token         : ['util'],
-    ast           : ['util'],
+    fullast       : ['util', 'coreast'],
+    coreast       : ['util'],
     sem           : ['util'],
     ir            : ['util'],
     jscode        : ['util'],
 
     lexing        : ['util', 'token'],
-    parsing       : ['util', 'token', 'ast'],
-    reducing      : ['util', 'ast'],
-    semanticating : ['util', 'ast', 'sem'],
+    parsing       : ['util', 'token', 'fullast'],
+    reducing      : ['util', 'fullast', 'coreast'],
+    semanticating : ['util', 'coreast', 'sem'],
     typing        : ['util', 'sem', 'ir'],
     optimizing    : ['util', 'ir'],
     jsgen         : ['util', 'ir', 'jscode'],  /* jsruntime */
