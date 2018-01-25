@@ -7,7 +7,7 @@ import org.mangolang.token.TokenStream
 
 fun parseGroup(tokens: TokenStream): ExpressionAST {
     val token = tokens.peek()
-    if (token is ParenthesisOpenToken) {
+     if (token is ParenthesisOpenToken) {
         tokens.take()
         val expr = parseGroup(tokens)
         val end = tokens.take()

@@ -1,7 +1,6 @@
 package org.mangolang.parsing
 
 import org.mangolang.fullast.ExpressionAST
-import org.mangolang.fullast.FullAST
 import org.mangolang.token.TokenStream
 
 /**

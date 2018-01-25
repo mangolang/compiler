@@ -9,11 +9,9 @@ import org.mangolang.token.OperatorToken
 import org.mangolang.token.TokenStream
 
 fun parseBinaryOperation(tokens: TokenStream): ExpressionAST {
-    val first = tokens.take()
-    if (first == null) {
-        TODO("Expected an expression, but the stream ended")
-    }
+    val first = tokens.peek()
     if (first is IntegerToken) {  // TODO this should probably try to parse an integer or value or something, instead of checking inline
+        tokens.take()
         val next = tokens.peek()
         if (next is OperatorToken && next.symbol in setOf("+", "-", "*", "/", "%")) {  // TODO this should probably try to parse a binary operator
             tokens.take()
@@ -28,4 +26,6 @@ fun parseBinaryOperation(tokens: TokenStream): ExpressionAST {
     }
     TODO("Expected an expression, but found ${first}, ${tokens.peek()}")
 }
+
+
 
