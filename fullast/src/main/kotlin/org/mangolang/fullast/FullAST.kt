@@ -6,5 +6,6 @@ package org.mangolang.fullast
  * In case the [CoreAST] and [FullAST] elements are the same, place it in [core].
  */
 interface FullAST {
+    fun asText(): CharSequence
 }
 

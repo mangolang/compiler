@@ -82,7 +82,7 @@ configure(js_submods) {
             println("run ${testsFileRelPath} with qunit")
         }
     }
-    test.dependsOn runQunit
+    check.dependsOn runQunit
 
     /* Add Kotlin and dependencies to the node path. */
     tasks.withType(NodeTask) {

@@ -9,13 +9,9 @@ https://mangolang.org/
 How to use
 -------------------------------
 
-The project requires Gradle and Kotlin (multi-platform). To compile, test and run on JVM:
+The project requires Gradle and Kotlin (multi-platform). To compile, test and run on JVM and JS:
 
-    gradle -p mango-jvm
-
-To test and run the Javascript version with Node:
-
-    gradle -p mango-js
+    gradle run
 
 To then show it in a web-browser, visit file `mango-js/build/web/home.html`.
 
