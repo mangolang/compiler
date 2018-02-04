@@ -2,7 +2,7 @@
 Mango
 ===============================
 
-Mango is a programming language that is still in currently development.
+Mango is a programming language that is currently in development.
 
 https://mangolang.org/
 

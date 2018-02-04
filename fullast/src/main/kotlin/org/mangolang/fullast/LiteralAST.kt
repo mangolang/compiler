@@ -1,5 +1,14 @@
 package org.mangolang.fullast
 
-interface LiteralAST: ExpressionAST {
+import org.mangolang.token.IntegerToken
+
+interface LiteralAST: UnaryOperationAST
+
+class IntegerAST(public val token: IntegerToken): LiteralAST {
+    public val value = token.value
+
+    override fun asText(): CharSequence {
+        return token.asText()
+    }
 }
 

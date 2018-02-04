@@ -9,7 +9,7 @@ import org.mangolang.token.TokenStream
  * abstract syntax tree nodes.
  */
 public fun parse(tokens: TokenStream): ExpressionAST {
-    return parseGroup(tokens)
+    return parseExpression(tokens)
 }
 
 

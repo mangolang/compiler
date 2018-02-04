@@ -12,17 +12,17 @@ fun main(arg: Array<String>) {
     // For development testing, bypass the command line interface and tell the conductor to do things.
     println("Hello, world!")
     val tokens: TokenStream = FixedTokenStream(listOf(
-            ParenthesisOpenToken(),
+            ParenthesisOpenToken,
             IntegerToken(5),
             OperatorToken("+"),
-            ParenthesisOpenToken(),
+            ParenthesisOpenToken,
             IntegerToken(3),
             OperatorToken("+"),
             IntegerToken(2),
-            ParenthesisCloseToken(),
-            OperatorToken("+"),
+            ParenthesisCloseToken,
+            OperatorToken("-"),
             IntegerToken(6),
-            ParenthesisCloseToken()
+            ParenthesisCloseToken
     ))
     println(tokens)
     println(parse(tokens).asText())
