@@ -1,6 +1,6 @@
 package org.mangolang.util
 
-import org.mangolang.concurrent.concurrentMapOf
+import org.mangolang.util.concurrent.concurrentMapOf
 
 /**
  * This class represents the name of an identifier (variable, function, struct...).

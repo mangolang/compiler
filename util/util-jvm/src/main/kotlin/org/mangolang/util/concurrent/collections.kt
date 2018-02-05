@@ -1,4 +1,4 @@
-package org.mangolang.concurrent
+package org.mangolang.util.concurrent
 
 import java.util.concurrent.ConcurrentHashMap
 

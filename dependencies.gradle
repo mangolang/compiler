@@ -7,11 +7,11 @@
 
 ext.MODULE_DEPENDENCIES = [
     token         : ['util'],
-    fullast       : ['util', 'coreast'],
-    coreast       : ['util'],
-    sem           : ['util'],
-    ir            : ['util'],
-    jscode        : ['util'],
+    fullast       : ['util', 'token'],
+    coreast       : ['util', 'fullast'],
+    sem           : ['util', 'coreast'],
+    ir            : ['util', 'sem'],
+    jscode        : ['util', 'ir'],
 
     lexing        : ['util', 'token'],
     parsing       : ['util', 'token', 'fullast'],
