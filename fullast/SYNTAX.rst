@@ -8,10 +8,10 @@ But for reference, this is the grammar::
 
     Expression -> Addition
 
-    Addition -> Multiplication ("+" | "-") Multiplication
+    Addition -> Multiplication ("+" | "-") Addition
         | Multiplication
 
-    Multiplication -> UnaryOperation ("*" | "/") UnaryOperation
+    Multiplication -> UnaryOperation ("*" | "/") Multiplication
         | UnaryOperation
 
     UnaryOperation -> NegateOperation

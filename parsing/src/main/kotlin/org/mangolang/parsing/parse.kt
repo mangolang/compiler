@@ -2,6 +2,7 @@ package org.mangolang.parsing
 
 import org.mangolang.fullast.ExpressionAST
 import org.mangolang.token.TokenStream
+import org.mangolang.util.checks.require
 
 /**
  * This is the entry point for the recursive descent parser. It will
@@ -9,7 +10,8 @@ import org.mangolang.token.TokenStream
  * abstract syntax tree nodes.
  */
 public fun parse(tokens: TokenStream): ExpressionAST {
-    return parseExpression(tokens)
+    val expression = parseExpression(tokens)
+    require(tokens.peek() == null, lazy { "Stopped before end of input" })
+    return expression
 }
-
 

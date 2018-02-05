@@ -1,6 +1,7 @@
 package org.mangolang.token
 
-object ParenthesisCloseToken: Token {
+// TODO: add `data`?
+class ParenthesisCloseToken: Token {
     override fun asText(): CharSequence {
         return ")"
     }

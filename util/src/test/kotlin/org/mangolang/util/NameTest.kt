@@ -1,9 +1,9 @@
 
+import org.mangolang.util.InvalidNameException
+import org.mangolang.util.Name
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import org.mangolang.util.Name
-import org.mangolang.util.InvalidNameException
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 

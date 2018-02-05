@@ -4,9 +4,8 @@ import org.mangolang.token.OperatorToken
 
 interface BinaryOperatorAST: ExpressionAST
 
-class ConcreteBinaryOperator(public val token: OperatorToken): BinaryOperatorAST {
+data class ConcreteBinaryOperator(public val token: OperatorToken): BinaryOperatorAST {
     public val symbol = token.symbol
-    // TODO: perhaps convert the symbol to a type (but maybe needs to be extensible in the future)
 
     override fun asText(): CharSequence {
         return token.asText()

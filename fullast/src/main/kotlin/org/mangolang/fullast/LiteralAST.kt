@@ -4,7 +4,7 @@ import org.mangolang.token.IntegerToken
 
 interface LiteralAST: UnaryOperationAST
 
-class IntegerAST(public val token: IntegerToken): LiteralAST {
+data class IntegerAST(public val token: IntegerToken): LiteralAST {
     public val value = token.value
 
     override fun asText(): CharSequence {

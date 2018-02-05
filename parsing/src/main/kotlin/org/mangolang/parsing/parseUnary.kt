@@ -1,11 +1,11 @@
 package org.mangolang.parsing
 
+import org.mangolang.fullast.ExpressionAST
 import org.mangolang.fullast.NegateOperationAST
-import org.mangolang.fullast.UnaryOperationAST
 import org.mangolang.token.OperatorToken
 import org.mangolang.token.TokenStream
 
-fun parseUnary(tokens: TokenStream): UnaryOperationAST {
+fun parseUnary(tokens: TokenStream): ExpressionAST {
     val maybeOperator = tokens.peek()
     if (maybeOperator is OperatorToken) {
         /* Attempt to parse `("+" | "-") UnaryOperation`. */
