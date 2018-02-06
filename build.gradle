@@ -56,7 +56,8 @@ allprojects {
     }
 
     /* Javascript output directory. Actually only needed for the root project and javascript platform ones. */
-    ext.jsTargetDir = file("${project.buildDir.path}/js")
+    buildDir = file("${rootProject.buildDir.path}/$name")
+    ext.jsTargetDir = file("${buildDir}/js")
 }
 
 /* Platform and common configuration have their own files. */
