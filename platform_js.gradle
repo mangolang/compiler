@@ -82,7 +82,7 @@ configure(js_submods) {
             assert testsFile.exists(): "The test file was not found; perhaps this module does not contain any tests?"
         }
     }
-    test.dependsOn runQunit
+    check.dependsOn runQunit
 
     /* Add Kotlin and dependencies to the node path. */
     tasks.withType(NodeTask) {

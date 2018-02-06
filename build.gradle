@@ -71,7 +71,6 @@ task wrapper(type: Wrapper) {
 
 dependencies {
     compile project(":dev")
-    testCompile 'org.hamcrest:hamcrest-core:1.3'
 }
 
 
