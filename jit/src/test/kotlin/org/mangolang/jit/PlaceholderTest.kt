@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 class PlaceholderTest {
     @Test
     fun testSanityCheck() {
-        assertTrue(1 == 1)
+        assertTrue(1 == 2)
     }
 }
 
