@@ -22,15 +22,6 @@ configure(common_submods) {
     dependencies {
         compile depNames.collect { project(it) }
     }
-
-    detekt {
-//        version = "$detekt_version"
-        profile(name) {
-            input = "$projectDir/src/main/kotlin"
-            config = "$rootProject.projectDir/detekt.yml"
-            filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
-        }
-    }
 }
 
 

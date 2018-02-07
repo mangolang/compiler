@@ -14,6 +14,7 @@ buildscript {
     }
 }
 
+/* Install the Detekt plugin for all projects. */
 plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
 }
@@ -68,6 +69,23 @@ allprojects {
 apply from: 'platform_common.gradle'
 apply from: 'platform_jvm.gradle'
 apply from: 'platform_js.gradle'
+
+/* Set up Detekt code quality inspections for all projects. */
+subprojects {
+    detekt {
+        profile("main") {
+            input = file("${projectDir}/src/main/kotlin")
+            config = file("${rootProject.projectDir}/detekt.yml")
+            output = file("${rootProject.buildDir}/detekt")
+            filters = ".*/resources/.*"
+            parallel = true
+        }
+    }
+    detektCheck.doFirst {
+        assert file("$rootProject.projectDir/detekt.yml").exists()
+    }
+    tasks.check.dependsOn detektCheck
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
