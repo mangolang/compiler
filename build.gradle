@@ -5,18 +5,15 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0.RC6-3"
     }
-}
-
-/* Install the Detekt plugin for all projects. */
-plugins {
-    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
 }
 
 apply plugin: 'kotlin-platform-common'
@@ -69,23 +66,6 @@ allprojects {
 apply from: 'platform_common.gradle'
 apply from: 'platform_jvm.gradle'
 apply from: 'platform_js.gradle'
-
-/* Set up Detekt code quality inspections for all projects. */
-subprojects {
-    detekt {
-        profile("main") {
-            input = file("${projectDir}/src/main/kotlin")
-            config = file("${rootProject.projectDir}/detekt.yml")
-            output = file("${rootProject.buildDir}/detekt")
-            filters = ".*/resources/.*"
-            parallel = true
-        }
-    }
-    detektCheck.doFirst {
-        assert file("$rootProject.projectDir/detekt.yml").exists()
-    }
-    tasks.check.dependsOn detektCheck
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
