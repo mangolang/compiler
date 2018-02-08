@@ -86,12 +86,11 @@ subprojects {
     detekt {
         version = '1.0.0.RC6-3'
         profile('main') {
-            input = "$projectDir/src/main/kotlin"
+            input = file("$projectDir/src/main/kotlin").exists() ? "$projectDir/src/main/kotlin" : null
             config = "${rootProject.projectDir}/detekt.yml"
-            filters = ".*/resources/.*"
+//                filters = ".*/resources/.*"
         }
     }
-
     check.dependsOn detektCheck
 }
 
