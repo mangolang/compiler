@@ -1,5 +1,15 @@
 import javax.naming.ConfigurationException
 
+subprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
+            jcenter()
+            maven { url "https://plugins.gradle.org/m2/" }
+        }
+    }
+}
+
 buildscript {
     ext.kotlin_version = '1.2.21'
 
@@ -12,7 +22,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
-        classpath "gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0.RC6-3"
+        classpath 'gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0.RC6-3'
     }
 }
 
@@ -55,6 +65,8 @@ allprojects {
 
     repositories {
         mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     /* Javascript output directory. Actually only needed for the root project and javascript platform ones. */
@@ -66,6 +78,22 @@ allprojects {
 apply from: 'platform_common.gradle'
 apply from: 'platform_jvm.gradle'
 apply from: 'platform_js.gradle'
+
+/* Set up code quality inspection for all subprojects. */
+subprojects {
+    apply plugin: 'io.gitlab.arturbosch.detekt'
+
+    detekt {
+        version = '1.0.0.RC6-3'
+        profile('main') {
+            input = "$projectDir/src/main/kotlin"
+            config = "${rootProject.projectDir}/detekt.yml"
+            filters = ".*/resources/.*"
+        }
+    }
+
+    check.dependsOn detektCheck
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
