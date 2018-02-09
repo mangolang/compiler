@@ -8,7 +8,8 @@ import org.mangolang.util.concurrent.concurrentMapOf
  * - Create instances using `new` instead of through the constructor, to use flyweight pattern.
  * - It's up to the parser to disallow keywords as names.
  */
-public final class Name private constructor(val name: String) {
+@Suppress("UseDataClass")
+class Name private constructor(val name: String) {
     companion object {
         private val interned: MutableMap<String, Name> = concurrentMapOf()
 
@@ -19,7 +20,7 @@ public final class Name private constructor(val name: String) {
          *
          * If an object already exists for the name, the existing object is returned.
          */
-        public fun new(text: String): Name {
+        fun new(text: String): Name {
             if (text !in interned) {
                 val res = validate(text)
                 if (res is Failure<Unit, String>) {
@@ -27,6 +28,7 @@ public final class Name private constructor(val name: String) {
                 }
                 interned[text] = Name(text)
             }
+            @Suppress("UnsafeCallOnNullableType")
             return interned[text]!!
         }
 
@@ -36,7 +38,7 @@ public final class Name private constructor(val name: String) {
         /**
          * Check whether the input value is a valid identifier. Returns an explanation if not.
          */
-        public fun validate(value: String): Result<Unit, String> {
+        fun validate(value: String): Result<Unit, String> {
             if (validIdentifier.containsMatchIn(value)) {
                 return Success<Unit, String>(Unit)
             }
@@ -50,20 +52,16 @@ public final class Name private constructor(val name: String) {
         }
     }
 
-    override fun toString(): String {
-        return name
-    }
+    override fun toString(): String = name
 
-    final override fun hashCode(): Int {
-        return name.hashCode() * 3
-    }
+    override fun hashCode(): Int = name.hashCode() * HASH_CODE_MULT
 
-    final override fun equals(other: Any?): Boolean {
-        /* Due to flyweight pattern, this is just an identity comparison. */
-        return this === other
-    }
+    /* Due to flyweight pattern, this is just an identity comparison. */
+    override fun equals(other: Any?): Boolean = this === other
 }
 
-class InvalidNameException(txt: String): Exception(txt) {}
-
+/**
+ * This exception indicates that the text [Name] is not valid.
+ */
+class InvalidNameException(txt: String): Exception(txt)
 
