@@ -27,6 +27,7 @@ buildscript {
 }
 
 apply plugin: 'kotlin-platform-common'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 apply from: 'dependencies.gradle'
 
@@ -80,19 +81,21 @@ apply from: 'platform_jvm.gradle'
 apply from: 'platform_js.gradle'
 
 /* Set up code quality inspection for all subprojects. */
-subprojects {
-    apply plugin: 'io.gitlab.arturbosch.detekt'
+def kotlinSourceDirs = subprojects.collect { file("${it.projectDir}/src/main/kotlin") }
+        .findAll { it.exists() }.collect { it.path }.join(",")
 
-    detekt {
-        version = '1.0.0.RC6-3'
-        profile('main') {
-            input = file("$projectDir/src/main/kotlin").exists() ? "$projectDir/src/main/kotlin" : null
-            config = "${rootProject.projectDir}/detekt.yml"
-//                filters = ".*/resources/.*"
-        }
+/* This used to be for all subprojects so they can be tested individually, but it was too verbose and slow. */
+detekt {
+    version = '1.0.0.RC6-3'
+    profile('main') {
+        input = kotlinSourceDirs
+        config = "${rootProject.projectDir}/detekt.yml"
     }
-    check.dependsOn detektCheck
 }
+
+task run()
+run.dependsOn test
+test.dependsOn detektCheck
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
