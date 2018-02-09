@@ -1,0 +1,26 @@
+
+failFast: true
+autoCorrect: true
+
+naming:
+  # For small functions or data classes, the Mango convention is to allow to treat the file as a module.
+  # Multiple declarations are allowed inside, and if there is only one so far, it can still use a module-like filename.
+  MatchingDeclarationName:
+    active: false
+
+performance:
+  # Use the operator for it's intended purpose, unless there is a proven performance problem.
+  SpreadOperator:
+    active: false
+
+style:
+  # With apologies to anyone programming on a mobile phone, it's 2018, limiting line length of 80 is just not necessary anymore.
+  MaxLineLength:
+    active: true
+    maxLineLength: 132
+  # The Mango convention does not consider multiple return values to be problematic.
+  # Long or deeply nested function bodies are a problem though, with or without returns.
+  # Returning early is an accepted and encouraged way to stop early and prevent nesting.
+  ReturnCount:
+    active: false
+

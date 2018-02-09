@@ -5,14 +5,18 @@ import org.mangolang.fullast.ConcreteBinaryOperator
 import org.mangolang.fullast.ExpressionAST
 import org.mangolang.token.OperatorToken
 import org.mangolang.token.TokenStream
+import org.mangolang.util.errors.ProblemListener
 
-fun parseMultiplication(tokens: TokenStream): ExpressionAST {
-    val lhsUnary = parseUnary(tokens)
+/**
+ * Parse a multiplication or division expression (left * right or left / right).
+ */
+fun parseMultiplication(listener: ProblemListener, tokens: TokenStream): ExpressionAST {
+    val lhsUnary = parseUnary(listener, tokens)
     val maybeOperator = tokens.peek()
     if (maybeOperator is OperatorToken && maybeOperator.isMultDiv) {
         /* Attempt to parse `UnaryOperation ("*" | "/") UnaryOperation`. */
         tokens.take()
-        val rhsUnary = parseMultiplication(tokens)
+        val rhsUnary = parseMultiplication(listener, tokens)
         return ConcreteBinaryOperation(
                 lhsUnary,
                 ConcreteBinaryOperator(maybeOperator),

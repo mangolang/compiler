@@ -9,11 +9,11 @@ interface TokenStream {
     /**
      * Peeks at an item from the stream, returning the item but not advancing the stream.
      */
-    public fun peek(): Token?
+    fun peek(): Token?
 
     /**
      * Takes an item from the stream and returns it.
      */
-    public fun take(): Token?
+    fun take(): Token?
 }
 

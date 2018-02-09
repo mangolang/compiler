@@ -22,8 +22,6 @@ class FixedTokenStream(private val tokens: List<Token>): TokenStream {
         return result
     }
 
-    override fun toString(): String {
-        return tokens.map { it.asText() }.joinToString("")
-    }
+    override fun toString(): String = tokens.map { it.asText() }.joinToString("")
 }
 

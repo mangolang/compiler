@@ -1,24 +1,36 @@
 package org.mangolang.parsing
 
 import org.mangolang.fullast.ExpressionAST
+import org.mangolang.fullast.UnparseableAST
 import org.mangolang.token.ParenthesisCloseToken
 import org.mangolang.token.ParenthesisOpenToken
 import org.mangolang.token.TokenStream
+import org.mangolang.util.errors.ProblemListener
+import org.mangolang.util.text.Message
 
-fun parseExpression(tokens: TokenStream): ExpressionAST {
-    return parseAddition(tokens)
-}
+/**
+ * Parse an expression (by delegating to other parse functions).
+ */
+fun parseExpression(listener: ProblemListener, tokens: TokenStream): ExpressionAST
+        = parseAddition(listener, tokens)
 
-fun parseGroupedExpression(tokens: TokenStream): ExpressionAST {
+/**
+ * Parse a grouped expression (there no special AST element for
+ * grouping so parenthesis information is list at this point).
+ */
+fun parseGroupedExpression(listener: ProblemListener, tokens: TokenStream): ExpressionAST {
     val token = tokens.take()
     if (token !is ParenthesisOpenToken) {
-        // TODO: specific error type
-        throw IllegalArgumentException("Expected a grouped expression, but found ${tokens.peek()}")  // really need to stop here to avoid infinite recursion
+        /* It is really necessary to stop here to avoid infinite recursion. */
+        listener.error(SyntaxError(Message("Expected a grouped expression, but found ${tokens.peek()}."),
+                null))
+        return UnparseableAST(tokens.peek())
     }
-    val expression = parseExpression(tokens)
+    val expression = parseExpression(listener, tokens)
     if (tokens.peek() !is ParenthesisCloseToken) {
-        // TODO: specific error type
-        throw IllegalArgumentException("Did not find a closing parenthesis at end of expression; found ${tokens.peek()}")  // really need to stop here to avoid infinite recursion
+        listener.error(SyntaxError(Message("Did not find a closing parenthesis at end of expression; " +
+                "found ${tokens.peek()}."), null))
+        return UnparseableAST(tokens.peek())
     }
     tokens.take()
     return expression
