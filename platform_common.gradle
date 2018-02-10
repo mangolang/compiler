@@ -22,6 +22,7 @@ configure(common_submods) {
     dependencies {
         compile depNames.collect { project(it) }
     }
-}
 
+    test.dependsOn depNames.collect { "$it:test" }
+}
 

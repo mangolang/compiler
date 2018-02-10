@@ -26,6 +26,6 @@ configure(jvm_submods) {
         compile depNames.collect { project(it) }
     }
 
-    check.dependsOn depNames.collect { "${it}:test" }
+    test.dependsOn depNames.collect { "$it:test" }
 }
 
