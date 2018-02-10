@@ -9,7 +9,6 @@ import org.mangolang.token.OperatorToken
 import org.mangolang.token.ParenthesisCloseToken
 import org.mangolang.token.ParenthesisOpenToken
 import org.mangolang.token.mock.FixedTokenStream
-import org.mangolang.util.errors.mock.MockListener
 import kotlin.test.Test
 
 class ParseNestedMathTest {
@@ -33,7 +32,7 @@ class ParseNestedMathTest {
                                 )
                         )
                 ),
-                parse(MockListener(), FixedTokenStream(listOf(
+                FixedTokenStream(listOf(
                         OperatorToken("-"),
                         ParenthesisOpenToken(),
                         IntegerToken(2),
@@ -47,7 +46,7 @@ class ParseNestedMathTest {
                         OperatorToken("+"),
                         IntegerToken(5),
                         ParenthesisCloseToken()
-                )))
+                ))
         )
     }
 }
