@@ -89,6 +89,8 @@ configure(js_submods) {
         /* Make all node tasks have the correct path to find sources. */
         environment NODE_PATH: js_dep_paths.join(':')
     }
+
+    test.dependsOn depNames.collect { "$it:test" }
 }
 
 /* Make a task that collects all the javascript files */
