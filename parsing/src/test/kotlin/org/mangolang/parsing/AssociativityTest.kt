@@ -8,6 +8,9 @@ import org.mangolang.token.OperatorToken
 import org.mangolang.token.mock.FixedTokenStream
 import kotlin.test.Test
 
+/**
+ * Test that 1 + 2 + 3 is parsed as 1 + (2 + 3).
+ */
 class AssociativityTest {
     @Test
     fun testAssociativity() {
