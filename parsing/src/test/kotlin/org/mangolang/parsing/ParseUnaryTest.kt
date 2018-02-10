@@ -8,7 +8,6 @@ import org.mangolang.token.TokenStream
 import org.mangolang.token.mock.FixedTokenStream
 import org.mangolang.util.errors.mock.MockListener
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ParseUnaryTest {
     @Test
@@ -18,7 +17,7 @@ class ParseUnaryTest {
                 OperatorToken("+"),
                 IntegerToken(7)
         ))
-        assertEquals(
+        assertParse(
                 IntegerAST(IntegerToken(7)),
                 parse(MockListener(), li)
         )
@@ -26,7 +25,7 @@ class ParseUnaryTest {
                 OperatorToken("-"),
                 IntegerToken(7)
         ))
-        assertEquals(
+        assertParse(
                 NegateOperationAST(IntegerAST(IntegerToken(7))),
                 parse(MockListener(), li)
         )

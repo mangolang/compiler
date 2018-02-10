@@ -9,7 +9,6 @@ import org.mangolang.token.TokenStream
 import org.mangolang.token.mock.FixedTokenStream
 import org.mangolang.util.errors.mock.MockListener
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ParseAdditionTest {
     @Test
@@ -20,7 +19,7 @@ class ParseAdditionTest {
                 OperatorToken("+"),
                 IntegerToken(7)
         ))
-        assertEquals(
+        assertParse(
                 ConcreteBinaryOperation(IntegerAST(IntegerToken(7)),
                         ConcreteBinaryOperator(OperatorToken("+")), IntegerAST(IntegerToken(7))),
                 parse(MockListener(), li)
@@ -30,7 +29,7 @@ class ParseAdditionTest {
                 OperatorToken("-"),
                 IntegerToken(7)
         ))
-        assertEquals(
+        assertParse(
                 ConcreteBinaryOperation(IntegerAST(IntegerToken(7)),
                         ConcreteBinaryOperator(OperatorToken("-")), IntegerAST(IntegerToken(7))),
                 parse(MockListener(), li)
