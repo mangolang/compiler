@@ -5,6 +5,7 @@ package org.mangolang.util.text
  */
 data class Message(val value: String) {
     // LATER: add any possible restrictions
+    // LATER: add automated tests
 
     override fun toString(): String = value
 }
