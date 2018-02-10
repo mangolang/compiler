@@ -8,7 +8,7 @@ interface UnaryOperationAST: BinaryAST
 /**
  * Implementation for the negation unary operation (-x).
  */
-class NegateOperationAST(val target: ExpressionAST): UnaryOperationAST {
+data class NegateOperationAST(val target: ExpressionAST): UnaryOperationAST {
 
     /**
      * {@see HasTextRepresentation.asText()}.

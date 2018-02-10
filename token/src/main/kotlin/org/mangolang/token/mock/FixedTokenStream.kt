@@ -28,13 +28,9 @@ class FixedTokenStream(private val tokens: List<Token>): TokenStream {
     /**
      * This checks whether the tokens in the stream are equal. The current reading index is not taken into account.
      */
-    @Suppress("EqualsAlwaysReturnsTrueOrFalse")  // LATER: this suppression should not be necessary...
+    @Suppress("EqualsAlwaysReturnsTrueOrFalse")
     override fun equals(other: Any?): Boolean {
-        // LATER: check the exact class instead of subclass?
-        if (this === other) {
-            return true
-        }
-        if (other !is FixedTokenStream) {
+        if (other !is FixedTokenStream || this::class != other::class) {
             return false
         }
         if (tokens.size != other.tokens.size) {
