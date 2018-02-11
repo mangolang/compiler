@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
-    id 'org.jlleitschuh.gradle.ktlint' version '3.0.0'
+    id 'org.jmailen.kotlinter' version '1.7.0'
 }
 
 apply plugin: 'kotlin-platform-common'
@@ -87,17 +87,10 @@ detekt {
 }
 
 /* KtLint formatting inspections. */
-ktlint {
-    debug = true
-    verbose = false
-    android = false
-    ignoreFailures = false
-}
-
 task run()
 run.dependsOn test
-check.dependsOn ktlintCheck
 check.dependsOn detektCheck
+/* Linting is run from the JVM platform module, which I put in `util-jvm`. */
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
