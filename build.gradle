@@ -1,15 +1,5 @@
 import javax.naming.ConfigurationException
 
-subprojects {
-    buildscript {
-        repositories {
-            mavenCentral()
-            jcenter()
-            maven { url "https://plugins.gradle.org/m2/" }
-        }
-    }
-}
-
 buildscript {
     ext.kotlin_version = '1.2.21'
 
@@ -22,12 +12,15 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
-        classpath 'gradle.plugin.io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0.RC6-3'
     }
 }
 
+plugins {
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
+    id 'org.jlleitschuh.gradle.ktlint' version '3.0.0'
+}
+
 apply plugin: 'kotlin-platform-common'
-apply plugin: 'io.gitlab.arturbosch.detekt'
 
 apply from: 'dependencies.gradle'
 
@@ -38,25 +31,25 @@ project.ext.deriveDependencyNames = {
      * that it depends on, based on MODULE_DEPENDENCIES from `dependencies.gradle`.
      * The purpose is to not define dependencies in platform modules. */
     Project subProject ->
-    def tokens = subProject.name.tokenize('-')
-    def parent
-    def platform = tokens.last()
-    if (platform in ['jvm', 'js']) {
-        parent = project(':' + tokens.subList(0, tokens.size() - 1).join('-'))
-    } else {
-        parent = subProject
-        platform = null
-    }
-    if (!MODULE_DEPENDENCIES.containsKey(parent.name)) {
-        throw new ConfigurationException("`MODULE_DEPENDENCIES` in `dependencies.gradle` should " +
-                " have an entry for ${parent.name} that lists which modules it depends on")
-    }
-    def dependsOn = MODULE_DEPENDENCIES[parent.name]
-    if (platform == null) {
-        return [parent, dependsOn.collect { ":${it}" }]
-    } else {
-        return [parent, dependsOn.collect { ":${it}:${it}-${platform}" }]
-    }
+        def tokens = subProject.name.tokenize('-')
+        def parent
+        def platform = tokens.last()
+        if (platform in ['jvm', 'js']) {
+            parent = project(':' + tokens.subList(0, tokens.size() - 1).join('-'))
+        } else {
+            parent = subProject
+            platform = null
+        }
+        if (!MODULE_DEPENDENCIES.containsKey(parent.name)) {
+            throw new ConfigurationException("`MODULE_DEPENDENCIES` in `dependencies.gradle` should " +
+                    " have an entry for ${parent.name} that lists which modules it depends on")
+        }
+        def dependsOn = MODULE_DEPENDENCIES[parent.name]
+        if (platform == null) {
+            return [parent, dependsOn.collect { ":${it}" }]
+        } else {
+            return [parent, dependsOn.collect { ":${it}:${it}-${platform}" }]
+        }
 }
 
 /* All the projects (including this top-level one). */
@@ -93,9 +86,18 @@ detekt {
     }
 }
 
+/* KtLint formatting inspections. */
+ktlint {
+    debug = true
+    verbose = false
+    android = false
+    ignoreFailures = false
+}
+
 task run()
 run.dependsOn test
-test.dependsOn detektCheck
+check.dependsOn ktlintCheck
+check.dependsOn detektCheck
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
