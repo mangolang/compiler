@@ -17,4 +17,3 @@ fun parse(listener: ProblemListener, tokens: TokenStream): ExpressionAST {
     }
     return expression
 }
-

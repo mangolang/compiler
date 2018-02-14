@@ -6,12 +6,12 @@ import org.mangolang.util.HASH_CODE_MULT
 /**
  * Type for literal values of various types.
  */
-interface LiteralAST: UnaryOperationAST
+interface LiteralAST : UnaryOperationAST
 
 /**
  * Integer literal.
  */
-data class IntegerAST(val token: IntegerToken): LiteralAST {
+data class IntegerAST(val token: IntegerToken) : LiteralAST {
     val value = token.value
 
     override fun asText(): CharSequence = token.asText()
@@ -21,4 +21,3 @@ data class IntegerAST(val token: IntegerToken): LiteralAST {
 
     override fun hashCode(): Int = this::class.hashCode() + HASH_CODE_MULT * value
 }
-

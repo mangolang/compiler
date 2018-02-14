@@ -9,4 +9,3 @@ interface HasTextRepresentation {
      */
     fun asText(): CharSequence
 }
-

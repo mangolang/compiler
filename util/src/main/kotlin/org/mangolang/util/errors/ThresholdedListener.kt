@@ -3,7 +3,7 @@ package org.mangolang.util.errors
 /**
  * This [ProblemListener] throws an [TooManyProblems] error when a certain number of errors or warnings have been registered.
  */
-class ThresholdedListener(val maxErrors: Int? = 1, val maxWarnings: Int? = null): ProblemListener {
+class ThresholdedListener(val maxErrors: Int? = 1, val maxWarnings: Int? = null) : ProblemListener {
 
     private val errors: MutableList<CompileError> = mutableListOf()
     private val warnings: MutableList<CompileWarning> = mutableListOf()
@@ -25,6 +25,5 @@ class ThresholdedListener(val maxErrors: Int? = 1, val maxWarnings: Int? = null)
     /**
      * This exception is thrown to terminate the compilation when there have been too many problems.
      */
-    class TooManyProblems(msg: String): Exception(msg)
+    class TooManyProblems(msg: String) : Exception(msg)
 }
-

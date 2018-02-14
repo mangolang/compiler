@@ -20,7 +20,7 @@ class NameTest {
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "_",
                 "hello_world",
-                "_0"  /* '_0' is a string, '0_' is an int. */
+                "_0" /* '_0' is a string, '0_' is an int. */
         )
         for (inp in valid) {
             /* Mostly this checks that there is no exception when creating Name. */
@@ -34,7 +34,7 @@ class NameTest {
                 "0",
                 "9",
                 "01234567890123456789",
-                "0_",  /* '_0' is a string, '0_' is an int. */
+                "0_", /* '_0' is a string, '0_' is an int. */
                 "0a",
                 "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 "hello world",
@@ -74,11 +74,11 @@ class NameTest {
                 ".",
                 "/",
                 "?",
-                "你好"  /* Might be allowed in the future, but not yet. */
+                "你好" /* Might be allowed in the future, but not yet. */
         )
         for (inp in invalid) {
             /* Mostly this checks that there is no exception when creating Name. */
-            assertFailsWith(InvalidNameException::class, "'${inp}' should be invalid") {
+            assertFailsWith(InvalidNameException::class, "'$inp' should be invalid") {
                 Name.new(inp)
             }
         }
@@ -91,5 +91,3 @@ class NameTest {
         assertFalse(Name.new("Hello") === Name.new("Goodbye"))
     }
 }
-
-

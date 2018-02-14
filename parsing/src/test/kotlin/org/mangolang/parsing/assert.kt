@@ -12,8 +12,7 @@ fun assertParse(expected: FullAST, input: TokenStream) {
     if (actual != expected) {
         throw AssertionError("Parse result did not match expectation!\n\n" +
                 "actual:   ${actual.asText()}\nexpected: ${expected.asText()}\n\n" +
-                "actual:   ${actual}\nexpected: ${expected}"
+                "actual:   ${actual}\nexpected: $expected"
         )
     }
 }
-

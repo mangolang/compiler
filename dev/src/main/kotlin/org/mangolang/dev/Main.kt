@@ -32,5 +32,3 @@ fun main(arg: Array<String>) {
     println(tokens)
     println(parse(listener, tokens).asText())
 }
-
-

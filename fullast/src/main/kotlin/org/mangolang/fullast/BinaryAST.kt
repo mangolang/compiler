@@ -5,7 +5,7 @@ import org.mangolang.util.checks.require
 /**
  * Type for binary operations.
  */
-interface BinaryAST: ExpressionAST
+interface BinaryAST : ExpressionAST
 
 /**
  * Implement a operation on two targets.
@@ -13,7 +13,7 @@ interface BinaryAST: ExpressionAST
 data class ConcreteBinaryOperation(
         val left: ExpressionAST,
         val operator: ConcreteBinaryOperator,
-        val right: ExpressionAST): BinaryAST {
+        val right: ExpressionAST) : BinaryAST {
 
     init {
         require(operator.isAddSub || operator.isMultDiv,
@@ -26,4 +26,3 @@ data class ConcreteBinaryOperation(
     override fun asText(): CharSequence =
             "(${left.asText()}${operator.asText()}${right.asText()})"
 }
-

@@ -10,5 +10,3 @@ class PlaceholderTest {
         assertTrue(1 == 1)
     }
 }
-
-

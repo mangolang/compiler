@@ -21,4 +21,3 @@ class RequireTest {
         require(true, lazy { "test_message" })
     }
 }
-

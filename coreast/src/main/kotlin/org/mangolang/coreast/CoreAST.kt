@@ -5,4 +5,3 @@ package org.mangolang.coreast
  * Produced from [FullAST] by the reducer.
  */
 interface CoreAST
-

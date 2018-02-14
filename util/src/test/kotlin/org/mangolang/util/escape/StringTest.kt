@@ -15,4 +15,3 @@ class StringTest {
         assertEquals("\"\\\\\\n\"", toStringLiteral("\\\n"))
     }
 }
-

@@ -10,10 +10,9 @@ sealed class Result<Value, Error>
 /**
  * This is the Result value for operations that succeeded.
  */
-data class Success<Value, Error>(val value: Value): Result<Value, Error>()
+data class Success<Value, Error>(val value: Value) : Result<Value, Error>()
 
 /**
  * This is the result value for operations that failed.
  */
-data class Failure<Value, Error>(val error: Error): Result<Value, Error>()
-
+data class Failure<Value, Error>(val error: Error) : Result<Value, Error>()

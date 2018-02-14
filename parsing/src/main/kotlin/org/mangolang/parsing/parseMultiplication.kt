@@ -26,4 +26,3 @@ fun parseMultiplication(listener: ProblemListener, tokens: TokenStream): Express
     /* Parsing `UnaryOperation ("*" | "/") UnaryOperation` failed, just use UnaryOperation. */
     return lhsUnary
 }
-

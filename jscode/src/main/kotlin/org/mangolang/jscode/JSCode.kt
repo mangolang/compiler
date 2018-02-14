@@ -6,4 +6,3 @@ package org.mangolang.jscode
  * It is intended as a compile-target, to be rendered to text.
  */
 interface JSCode
-

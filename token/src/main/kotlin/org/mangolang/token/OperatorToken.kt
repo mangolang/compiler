@@ -5,7 +5,7 @@ package org.mangolang.token
 /**
  * A token representing an operator (like ``+``, ``-``, ``*``, ``/`` etc).
  */
-data class OperatorToken(public val symbol: String): Token {
+data class OperatorToken(public val symbol: String) : Token {
 
     val isNegate: Boolean get() = symbol == "-"
 
@@ -17,4 +17,3 @@ data class OperatorToken(public val symbol: String): Token {
 
     override fun asText(): CharSequence = " $symbol "
 }
-

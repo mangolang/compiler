@@ -7,5 +7,4 @@ import org.mangolang.util.HasTextRepresentation
  * Produced by the parser and converted by the reducer to [CoreAST].
  * In case the [CoreAST] and [FullAST] elements are the same, place it in [core].
  */
-interface FullAST: HasTextRepresentation
-
+interface FullAST : HasTextRepresentation

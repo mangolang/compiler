@@ -11,8 +11,8 @@ import org.mangolang.util.text.Message
 /**
  * Parse an expression (by delegating to other parse functions).
  */
-fun parseExpression(listener: ProblemListener, tokens: TokenStream): ExpressionAST
-        = parseAddition(listener, tokens)
+fun parseExpression(listener: ProblemListener, tokens: TokenStream): ExpressionAST =
+        parseAddition(listener, tokens)
 
 /**
  * Parse a grouped expression (there no special AST element for
@@ -35,4 +35,3 @@ fun parseGroupedExpression(listener: ProblemListener, tokens: TokenStream): Expr
     tokens.take()
     return expression
 }
-

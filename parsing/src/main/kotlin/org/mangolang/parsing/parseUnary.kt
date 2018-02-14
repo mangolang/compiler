@@ -30,4 +30,3 @@ fun parseUnary(listener: ProblemListener, tokens: TokenStream): ExpressionAST {
     /* No unary operation, parse literal instead. */
     return parseLiteral(listener, tokens)
 }
-

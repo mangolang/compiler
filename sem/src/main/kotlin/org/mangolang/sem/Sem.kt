@@ -5,4 +5,3 @@ package org.mangolang.sem
  * and references have been connected in their scope.
  */
 interface Sem
-

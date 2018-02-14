@@ -8,4 +8,3 @@ fun require(condition: Boolean, message: Lazy<String> = lazy { "Assert condition
         throw AssertionError(message.value)
     }
 }
-

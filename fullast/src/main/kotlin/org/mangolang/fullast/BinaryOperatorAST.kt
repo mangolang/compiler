@@ -6,12 +6,12 @@ import org.mangolang.util.HASH_CODE_MULT
 /**
  * Type for binary operators (not operations; just the operator itself).
  */
-interface BinaryOperatorAST: ExpressionAST
+interface BinaryOperatorAST : ExpressionAST
 
 /**
  * A binary operator.
  */
-data class ConcreteBinaryOperator(val token: OperatorToken): BinaryOperatorAST {
+data class ConcreteBinaryOperator(val token: OperatorToken) : BinaryOperatorAST {
     val symbol = token.symbol
 
     override fun asText(): CharSequence = token.asText()
@@ -24,4 +24,3 @@ data class ConcreteBinaryOperator(val token: OperatorToken): BinaryOperatorAST {
 
     override fun hashCode(): Int = this::class.hashCode() + HASH_CODE_MULT * token.hashCode()
 }
-

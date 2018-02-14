@@ -51,4 +51,3 @@ class ASTEqualityTest {
         assertNotEquals(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
     }
 }
-

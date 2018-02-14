@@ -10,4 +10,3 @@ fun toStringLiteral(txt: String): String {
             .replace("\"", "\\\"") + '"'
     // return '"' + Regex("(\"|\\n|\\)").replace(txt, "") + '"'
 }
-

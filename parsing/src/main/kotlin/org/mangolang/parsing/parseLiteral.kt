@@ -25,9 +25,8 @@ fun parseLiteral(listener: ProblemListener, tokens: TokenStream): ExpressionAST 
             UnparseableAST()
         }
         else -> {
-            listener.error(SyntaxError(Message("Expected a literal, but found ${token}."), token))
+            listener.error(SyntaxError(Message("Expected a literal, but found $token."), token))
             UnparseableAST(token)
         }
     }
 }
-

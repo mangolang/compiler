@@ -7,8 +7,7 @@ import org.mangolang.util.errors.ProblemListener
 /**
  * Mock version of [ProblemListener] which just discards all errors.
  */
-class MockListener: ProblemListener {
+class MockListener : ProblemListener {
     override fun error(err: CompileError) {}
     override fun warning(warn: CompileWarning) {}
 }
-

@@ -9,4 +9,3 @@ data class Message(val value: String) {
 
     override fun toString(): String = value
 }
-

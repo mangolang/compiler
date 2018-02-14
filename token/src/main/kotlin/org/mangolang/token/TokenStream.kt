@@ -16,4 +16,3 @@ interface TokenStream {
      */
     fun take(): Token?
 }
-

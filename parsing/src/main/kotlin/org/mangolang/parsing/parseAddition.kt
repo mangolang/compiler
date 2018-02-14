@@ -26,4 +26,3 @@ fun parseAddition(listener: ProblemListener, tokens: TokenStream): ExpressionAST
     /* Parsing `Multiplication ("+" | "-") Multiplication` failed, just use Multiplication. */
     return lhsMultiplication
 }
-

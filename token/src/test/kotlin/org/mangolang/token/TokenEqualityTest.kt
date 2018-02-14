@@ -6,7 +6,6 @@ import kotlin.test.assertNotEquals
 
 import org.mangolang.token.mock.FixedTokenStream
 
-
 class TokenEqualityTest {
     @Test
     fun testTokenEquality() {
@@ -42,4 +41,3 @@ class TokenEqualityTest {
         assertNotEquals(OperatorToken("*"), OperatorToken("/"))
     }
 }
-
