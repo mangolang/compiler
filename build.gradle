@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
-    id 'org.jlleitschuh.gradle.ktlint' version '3.0.1'
+    id 'com.diffplug.gradle.spotless' version '3.9.0'
 }
 
 apply plugin: 'kotlin-platform-common'
@@ -86,15 +86,26 @@ detekt {
     }
 }
 
-/* KtLint formatting inspections. */
+spotless {
+    enforceCheck true
+    kotlin {
+        ktlint()
+        target '**/*.kt'
+        licenseHeader '/* Part of Mango (https://mangolang.org) © $YEAR, Apache 2.0 */'
+        paddedCell()
+    }
+    format 'misc', {
+        target '**/*.gradle', '**/*.rst', '**/.gitignore'
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        paddedCell()
+    }
+}
+
 task run()
 run.dependsOn test
 check.dependsOn detektCheck
-afterEvaluate {
-    // Currently necessary: https://github.com/JLLeitschuh/ktlint-gradle/issues/55
-    // LATER: still doesn't work, but running manually works, so try that
-    // test.dependsOn ktlintCheck
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'

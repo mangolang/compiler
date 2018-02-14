@@ -1,6 +1,6 @@
 
-import org.mangolang.util.InvalidNameException
-import org.mangolang.util.Name
+package org.mangolang.util
+
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
