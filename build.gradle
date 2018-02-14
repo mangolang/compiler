@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
     id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
-    id 'org.jmailen.kotlinter' version '1.7.0'
+    id 'org.jlleitschuh.gradle.ktlint' version '3.0.1'
 }
 
 apply plugin: 'kotlin-platform-common'
@@ -90,7 +90,11 @@ detekt {
 task run()
 run.dependsOn test
 check.dependsOn detektCheck
-/* Linting is run from the JVM platform module, which I put in `util-jvm`. */
+afterEvaluate {
+    // Currently necessary: https://github.com/JLLeitschuh/ktlint-gradle/issues/55
+    // LATER: still doesn't work, but running manually works, so try that
+    // test.dependsOn ktlintCheck
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.4.1'
