@@ -1,0 +1,116 @@
+import javax.naming.ConfigurationException
+
+buildscript {
+    ext.kotlin_version = '1.2.21'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+    }
+}
+
+plugins {
+    id 'io.gitlab.arturbosch.detekt' version '1.0.0.RC6-3'
+    id 'com.diffplug.gradle.spotless' version '3.9.0'
+}
+
+apply plugin: 'kotlin-platform-common'
+
+apply from: 'dependencies.gradle'
+
+/* Utility function. */
+project.ext.fmtMods = { mods -> mods.collect { it.toString().substring(8) }.join(', ') }
+project.ext.deriveDependencyNames = {
+    /* This function takes a subproject and finds the names of the same-platoform projects
+     * that it depends on, based on MODULE_DEPENDENCIES from `dependencies.gradle`.
+     * The purpose is to not define dependencies in platform modules. */
+    Project subProject ->
+        def tokens = subProject.name.tokenize('-')
+        def parent
+        def platform = tokens.last()
+        if (platform in ['jvm', 'js']) {
+            parent = project(':' + tokens.subList(0, tokens.size() - 1).join('-'))
+        } else {
+            parent = subProject
+            platform = null
+        }
+        if (!MODULE_DEPENDENCIES.containsKey(parent.name)) {
+            throw new ConfigurationException("`MODULE_DEPENDENCIES` in `dependencies.gradle` should " +
+                    " have an entry for ${parent.name} that lists which modules it depends on")
+        }
+        def dependsOn = MODULE_DEPENDENCIES[parent.name]
+        if (platform == null) {
+            return [parent, dependsOn.collect { ":${it}" }]
+        } else {
+            return [parent, dependsOn.collect { ":${it}:${it}-${platform}" }]
+        }
+}
+
+/* All the projects (including this top-level one). */
+allprojects {
+    group rootProject.name
+    version '1.0.0'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    /* Javascript output directory. Actually only needed for the root project and javascript platform ones. */
+    buildDir = file("${rootProject.buildDir.path}/$name")
+    ext.jsTargetDir = file("${buildDir}/js")
+}
+
+/* Platform and common configuration have their own files. */
+apply from: 'platform_common.gradle'
+apply from: 'platform_jvm.gradle'
+apply from: 'platform_js.gradle'
+
+/* Set up code quality inspection for all subprojects. */
+def kotlinSourceDirs = subprojects.collect { file("${it.projectDir}/src/main/kotlin") }
+        .findAll { it.exists() }.collect { it.path }.join(",")
+
+/* This used to be for all subprojects so they can be tested individually, but it was too verbose and slow. */
+detekt {
+    version = '1.0.0.RC6-3'
+    profile('main') {
+        input = kotlinSourceDirs
+        config = "${rootProject.projectDir}/detekt.yml"
+    }
+}
+
+spotless {
+    enforceCheck true
+    kotlin {
+        ktlint()
+        target '**/*.kt'
+        licenseHeader '\n/* Mango compiler (mangolang.org) | Apache 2.0 license, © $YEAR. */\n\n'
+        paddedCell()
+    }
+    format 'misc', {
+        target '**/*.gradle', '**/*.rst', '**/.gitignore'
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        paddedCell()
+    }
+}
+
+task run()
+run.dependsOn test
+check.dependsOn detektCheck
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4.1'
+}
+
+dependencies {
+    compile project(":dev")
+}
