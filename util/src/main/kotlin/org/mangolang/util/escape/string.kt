@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.util.escape
 
 /**
@@ -10,4 +13,3 @@ fun toStringLiteral(txt: String): String {
             .replace("\"", "\\\"") + '"'
     // return '"' + Regex("(\"|\\n|\\)").replace(txt, "") + '"'
 }
-

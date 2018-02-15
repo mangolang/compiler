@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.util
 
 import org.mangolang.util.concurrent.concurrentMapOf
@@ -43,10 +46,10 @@ class Name private constructor(val name: String) {
                 return Success<Unit, String>(Unit)
             }
             if (startsWithDigit.containsMatchIn(value)) {
-                return Failure<Unit, String>("Name '${value}' is invalid. " +
+                return Failure<Unit, String>("Name '$value' is invalid. " +
                         "Names should not start with a digit.")
             } else {
-                return Failure<Unit, String>("Name '${value}' is invalid. " +
+                return Failure<Unit, String>("Name '$value' is invalid. " +
                         "Names should consist of letters, numbers and underscores.")
             }
         }
@@ -63,5 +66,4 @@ class Name private constructor(val name: String) {
 /**
  * This exception indicates that the text [Name] is not valid.
  */
-class InvalidNameException(txt: String): Exception(txt)
-
+class InvalidNameException(txt: String) : Exception(txt)

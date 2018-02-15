@@ -22,5 +22,3 @@ But for reference, this is the grammar::
 
     Literal -> INTEGER
         | "(" Expression ")"
-
-

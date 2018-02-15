@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.coreast
 
 /**
@@ -5,4 +8,3 @@ package org.mangolang.coreast
  * Produced from [FullAST] by the reducer.
  */
 interface CoreAST
-

@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.parsing
 
 import org.mangolang.fullast.ExpressionAST
@@ -30,4 +33,3 @@ fun parseUnary(listener: ProblemListener, tokens: TokenStream): ExpressionAST {
     /* No unary operation, parse literal instead. */
     return parseLiteral(listener, tokens)
 }
-

@@ -28,4 +28,3 @@ configure(jvm_submods) {
 
     test.dependsOn depNames.collect { "$it:test" }
 }
-

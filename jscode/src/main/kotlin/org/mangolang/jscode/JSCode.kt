@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.jscode
 
 /**
@@ -6,4 +9,3 @@ package org.mangolang.jscode
  * It is intended as a compile-target, to be rendered to text.
  */
 interface JSCode
-

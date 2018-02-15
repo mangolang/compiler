@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.fullast
 
 import org.mangolang.token.IntegerToken
@@ -51,4 +54,3 @@ class ASTEqualityTest {
         assertNotEquals(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
     }
 }
-

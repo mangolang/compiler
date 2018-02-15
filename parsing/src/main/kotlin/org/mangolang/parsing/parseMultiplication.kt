@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.parsing
 
 import org.mangolang.fullast.ConcreteBinaryOperation
@@ -26,4 +29,3 @@ fun parseMultiplication(listener: ProblemListener, tokens: TokenStream): Express
     /* Parsing `UnaryOperation ("*" | "/") UnaryOperation` failed, just use UnaryOperation. */
     return lhsUnary
 }
-

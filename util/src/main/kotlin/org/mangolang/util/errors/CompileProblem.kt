@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.util.errors
 
 /**
@@ -18,11 +21,9 @@ interface CompileProblem {
 /**
  * Represents a serious compilation problem that prevents results from being as requested.
  */
-interface CompileError: CompileProblem
+interface CompileError : CompileProblem
 
 /**
  * Represents a less serious compilation problem that can produce results, but possibly not as intended.
  */
-interface CompileWarning: CompileProblem
-
-
+interface CompileWarning : CompileProblem
