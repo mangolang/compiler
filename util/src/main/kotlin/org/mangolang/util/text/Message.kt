@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.util.text
 
 /**
@@ -9,4 +12,3 @@ data class Message(val value: String) {
 
     override fun toString(): String = value
 }
-

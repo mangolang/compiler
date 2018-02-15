@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.token
 
 import org.mangolang.util.HasTextRepresentation
@@ -5,5 +8,4 @@ import org.mangolang.util.HasTextRepresentation
 /**
  * A token as produced by the lexer. Describes a single element of the syntax.
  */
-interface Token: HasTextRepresentation
-
+interface Token : HasTextRepresentation

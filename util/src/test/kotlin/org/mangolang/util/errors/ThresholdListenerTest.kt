@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.util.errors
 
 import kotlin.test.Test
@@ -6,7 +9,7 @@ import kotlin.test.assertFailsWith
 /**
  * Mock class that implement [CompileError].
  */
-internal class MockCompileError: CompileError {
+internal class MockCompileError : CompileError {
     override fun detailed(): CharSequence = "detailed"
     override fun brief(): CharSequence = "brief"
 }
@@ -14,7 +17,7 @@ internal class MockCompileError: CompileError {
 /**
  * Mock class that implement [CompileWarning].
  */
-internal class MockCompileWarning: CompileWarning {
+internal class MockCompileWarning : CompileWarning {
     override fun detailed(): CharSequence = "detailed"
     override fun brief(): CharSequence = "brief"
 }
@@ -44,4 +47,3 @@ class ThresholdListenerTest {
         }
     }
 }
-

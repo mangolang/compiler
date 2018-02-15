@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.token
 
 import kotlin.test.Test
@@ -5,7 +8,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 import org.mangolang.token.mock.FixedTokenStream
-
 
 class TokenEqualityTest {
     @Test
@@ -42,4 +44,3 @@ class TokenEqualityTest {
         assertNotEquals(OperatorToken("*"), OperatorToken("/"))
     }
 }
-

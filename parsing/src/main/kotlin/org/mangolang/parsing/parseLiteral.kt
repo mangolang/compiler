@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.parsing
 
 import org.mangolang.fullast.ExpressionAST
@@ -25,9 +28,8 @@ fun parseLiteral(listener: ProblemListener, tokens: TokenStream): ExpressionAST 
             UnparseableAST()
         }
         else -> {
-            listener.error(SyntaxError(Message("Expected a literal, but found ${token}."), token))
+            listener.error(SyntaxError(Message("Expected a literal, but found $token."), token))
             UnparseableAST(token)
         }
     }
 }
-

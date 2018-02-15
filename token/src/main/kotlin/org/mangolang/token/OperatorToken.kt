@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.token
 
 // This might be extended to allow adding custom tokens (or another class added)
@@ -5,7 +8,7 @@ package org.mangolang.token
 /**
  * A token representing an operator (like ``+``, ``-``, ``*``, ``/`` etc).
  */
-data class OperatorToken(public val symbol: String): Token {
+data class OperatorToken(public val symbol: String) : Token {
 
     val isNegate: Boolean get() = symbol == "-"
 
@@ -17,4 +20,3 @@ data class OperatorToken(public val symbol: String): Token {
 
     override fun asText(): CharSequence = " $symbol "
 }
-

@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.fullast
 
 import org.mangolang.util.HasTextRepresentation
@@ -7,5 +10,4 @@ import org.mangolang.util.HasTextRepresentation
  * Produced by the parser and converted by the reducer to [CoreAST].
  * In case the [CoreAST] and [FullAST] elements are the same, place it in [core].
  */
-interface FullAST: HasTextRepresentation
-
+interface FullAST : HasTextRepresentation

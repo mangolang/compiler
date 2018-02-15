@@ -1,3 +1,6 @@
+
+/* Mango compiler (mangolang.org) | Apache 2.0 license, © 2018. */
+
 package org.mangolang.token.mock
 
 import org.mangolang.token.Token
@@ -7,7 +10,7 @@ import org.mangolang.util.HASH_CODE_MULT
 /**
  * A stream that just produces the tokens it received as input.
  */
-class FixedTokenStream(private val tokens: List<Token>): TokenStream {
+class FixedTokenStream(private val tokens: List<Token>) : TokenStream {
     private var index = 0
 
     override fun peek(): Token? {
@@ -58,4 +61,3 @@ class FixedTokenStream(private val tokens: List<Token>): TokenStream {
         return hash
     }
 }
-

@@ -3,5 +3,3 @@ dependencies {
     /* Normal kotlin-common has no 'assert', so use the 'assertTrue' from test for now. */
     compile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
 }
-
-

@@ -13,4 +13,3 @@ The project requires Gradle and Kotlin (multi-platform). To compile, test and ru
 
     gradle run
 
-
