@@ -14,5 +14,3 @@ The project requires Gradle and Kotlin (multi-platform). To compile, test and ru
     gradle run
 
 To then show it in a web-browser, visit file `mango-js/build/web/home.html`.
-
-

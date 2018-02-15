@@ -24,5 +24,3 @@ Compilation broadly proceeds in these steps, with representations in **bold** an
 18. *Writing*
 
 Each of these has it's own sub-project.
-
-
