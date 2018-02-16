@@ -12,4 +12,3 @@ How to use
 The project requires Gradle and Kotlin (multi-platform). To compile, test and run on JVM and JS:
 
     gradle run
-

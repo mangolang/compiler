@@ -11,5 +11,3 @@ For more information please visit the `No Code of Conduct`_ homepage.
 
 .. _`No Code of Conduct`: https://github.com/domgetter/NCoC
 .. _`Contact me`: https://markv.nl/about
-
-

@@ -16,5 +16,3 @@ Updating this list is optional; if someone is not on the list, it does not mean 
 
 .. _contribution: https://github.com/mangolang/compiler/blob/master/CONTRIBUTING.rst
 .. _Mark: https://markv.nl/
-
-

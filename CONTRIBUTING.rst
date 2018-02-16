@@ -20,15 +20,23 @@ Licensing
 -------------------------------
 
 * Be aware that you are making your contributions available under `Apache License 2.0`_.
-* Do not include copyright, author or change date in source files.
+* A short copyright notice can be added automatically using ``gradle spotlessApply``.
 
 Code conventions
 -------------------------------
 
 * Try to follow the `Kotlin coding convention`_.
-* Some of these and some other conventions are enforced by Detekt_ and (config_) KtLint_ as part of gradle build.
+* Some of these and some other conventions are enforced by Detekt_ (config_) and KtLint_ as part of gradle build.
 * Try to include tests for any non-trivial code.
-* Assertion-style checks are encouraged, but use ``require``.
+* Assertion-style checks are encouraged, but should use ``require``.
+
+Pull requests
+-------------------------------
+
+* You can apply style fixes with ``gradle spotlessApply`` to save time.
+* Make sure ``gradle test`` completes successfully (this is also done automatically by Travis).
+* Feel free to add yourself so the [contributors.rst](contributors.rst) file.
+* If you want to add new functionality, you may want to discuss in an issue before implementing it.
 
 Git
 -------------------------------
@@ -41,7 +49,13 @@ All changes must be done through pull requests. Automated tests and style checks
 * If the commit message contains body, it should be separated from the title by a newline.
 * Titles should start with a capital, omit the period, and be at most 72 characters (preferably 50).
 
+Security
+-------------------------------
 
+If you feel there is a security issue, please `contact me`_ privately.
+
+
+.. _`contact me`: https://markv.nl/about
 .. _issues: https://github.com/mangolang/compiler/issues
 .. _`pull request`: https://github.com/mangolang/compiler/pulls
 .. _`Apache License 2.0`: https://github.com/mangolang/compiler/blob/master/LICENSE.txt
@@ -50,5 +64,3 @@ All changes must be done through pull requests. Automated tests and style checks
 .. _`Detekt`: https://github.com/arturbosch/detekt
 .. _`KtLint`: https://github.com/shyiko/ktlint
 .. _`config`: https://github.com/mangolang/compiler/blob/master/detekt.yml
-
-
