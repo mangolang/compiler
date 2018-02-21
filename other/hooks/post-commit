@@ -3,11 +3,12 @@
 
 """
 This git hooks makes sure a tag is created each time the version is increased.
-This version only works with version from `setup.py`, but can easily be adapted.
+This version only works with version from `setup.py` and `settings.gradle`, but can be adapted.
 To enable it on git 2.9+, use::
 	chmod u+x dev/hooks/*
 	git config core.hooksPath dev/hooks
 On older versions, copy or symlink the hooks to `.git/hooks`
+https://gist.github.com/mverleg/9988b44d57b63b0eef40dd9ce7b48e45
 """
 
 from re import findall
@@ -33,25 +34,33 @@ def get_existing_versions():
 			git('tag --list --format "%(refname:short)"').splitlines())
 
 
-def get_current_version():
-	"""
-	Get the current version of the project, according to package file.
-	PWD is the root of the git project.
-	"""
+def get_setup_py_version():
 	if exists('setup.py'):
 		with open('setup.py', 'r') as fh:
 			res = findall(r'\n[^#\n]*version\s*=[\'"]([\w.-_]+)[\'"]', fh.read())
 		assert len(res) != 0, 'Did not find version inside setup.py'
 		assert len(res) < 2, 'Found multiple versions inside setup.py'
 		return res[0].strip().lstrip('v')
+	return None
+
+
+def get_settings_gradle_version():
 	if exists('settings.gradle'):
 		with open('settings.gradle', 'r') as fh:
 			""" Only single-quotes supported, because double quotes may contain variables. """
-			res = findall(r'\n\s*version\s*=\'([\w.-_]+)\'', fh.read())
+			res = findall(r'\n\s*version\s*=\s*\'([\w.-_]+)\'', fh.read())
 		assert len(res) != 0, 'Did not find version inside settings.gradle'
 		assert len(res) < 2, 'Found multiple versions inside settings.gradle'
 		return res[0].strip().lstrip('v')
 	return None
+
+
+def get_current_version():
+	"""
+	Get the current version of the project, according to package file.
+	PWD is the root of the git project.
+	"""
+	return get_setup_py_version() or get_settings_gradle_version() or None
 
 
 def version_tag():
