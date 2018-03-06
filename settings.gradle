@@ -1,5 +1,8 @@
 
 rootProject.name = 'mango'
+gradle.rootProject {
+    version = '1.0.1'
+}
 
 /**
  * Include all of the subprojects, including their platform modules.

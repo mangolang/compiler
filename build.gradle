@@ -55,7 +55,7 @@ project.ext.deriveDependencyNames = {
 /* All the projects (including this top-level one). */
 allprojects {
     group rootProject.name
-    version '1.0.0'
+    version rootProject.version
 
     repositories {
         mavenCentral()
