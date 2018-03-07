@@ -15,7 +15,7 @@ import org.mangolang.util.text.Message
  * Parse an expression (by delegating to other parse functions).
  */
 fun parseExpression(listener: ProblemListener, tokens: TokenStream): ExpressionAST =
-        parseAddition(listener, tokens)
+        parseBinding(listener, tokens)
 
 /**
  * Parse a grouped expression (there no special AST element for
