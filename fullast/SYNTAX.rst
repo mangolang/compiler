@@ -6,22 +6,22 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
-	Expression -> Assignment
+    Expression -> Assignment
 
-	Assignment -> Identifier "=" Expression
-		| Addition
+    Assignment -> Identifier "=" Expression
+        | Addition
 
-	Addition -> Multiplication ("+" | "-") Addition
-		| Multiplication
+    Addition -> Multiplication ("+" | "-") Addition
+        | Multiplication
 
-	Multiplication -> UnaryOperation ("*" | "/") Multiplication
-		| UnaryOperation
+    Multiplication -> UnaryOperation ("*" | "/") Multiplication
+        | UnaryOperation
 
-	UnaryOperation -> NegateOperation
-		| "+" UnaryOperation
-		| Literal
+    UnaryOperation -> NegateOperation
+        | "+" UnaryOperation
+        | Literal
 
-	NegateOperation -> "-" UnaryOperation
+    NegateOperation -> "-" UnaryOperation
 
-	Literal -> INTEGER
-		| "(" Expression ")"
+    Literal -> INTEGER
+        | "(" Expression ")"

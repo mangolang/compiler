@@ -73,5 +73,5 @@ include 'jit'
 include 'jit:jit-jvm'
 include 'jit:jit-js'
 
-// TODO: enable non-Kotlin project `jsruntime` later
+// LATER: enable non-Kotlin project `jsruntime`
 //include 'jsruntime'  /* in javascript */

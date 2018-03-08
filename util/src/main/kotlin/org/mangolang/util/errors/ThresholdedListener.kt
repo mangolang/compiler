@@ -13,6 +13,7 @@ class ThresholdedListener(val maxErrors: Int? = 1, val maxWarnings: Int? = null)
 
     override fun error(err: CompileError) {
         errors.add(err)
+        println(err.brief()) // todo tmp
         if (maxErrors != null && errors.size >= maxErrors) {
             throw TooManyProblems("Stopping because the limit of $maxErrors errors was reached (${warnings.size} warnings).")
         }
@@ -20,6 +21,7 @@ class ThresholdedListener(val maxErrors: Int? = 1, val maxWarnings: Int? = null)
 
     override fun warning(warn: CompileWarning) {
         warnings.add(warn)
+        println(warn.brief()) // todo tmp
         if (maxWarnings != null && warnings.size >= maxWarnings) {
             throw TooManyProblems("Stopping because the limit of $maxWarnings warnings was reached (${errors.size} errors).")
         }
