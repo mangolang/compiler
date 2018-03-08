@@ -1,8 +1,11 @@
 language: rust
 rust:
   - beta
+before_script:
+  - rustup component add rustfmt-preview
 sudo: false
 cache: cargo
 script:
+  - cargo fmt --all
   - cargo build --verbose --all
   - cargo test --verbose --all
