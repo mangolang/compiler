@@ -19,7 +19,7 @@ fun parseAddition(listener: ProblemListener, tokens: TokenStream): ExpressionAST
     if (maybeOperator is OperatorToken && maybeOperator.isAddSub) {
         /* Attempt to parse `Multiplication ("+" | "-") Multiplication`. */
         tokens.take()
-        val rhsMultiplication = parseAddition(listener, tokens)
+        val rhsMultiplication = parseExpression(listener, tokens)
         return ConcreteBinaryOperation(
                 lhsMultiplication,
                 ConcreteBinaryOperator(maybeOperator),

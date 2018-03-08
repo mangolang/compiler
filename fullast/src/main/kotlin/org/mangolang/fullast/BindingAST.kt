@@ -19,5 +19,5 @@ data class Assignment(
      * {@see HasTextRepresentation.asText()}.
      */
     override fun asText(): CharSequence =
-            "${assignee.asText()} = ${value.asText()}"
+            "(${assignee.asText()} = (${value.asText()}))"
 }
