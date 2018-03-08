@@ -4,13 +4,16 @@
 package org.mangolang.dev
 
 import org.mangolang.parsing.parse
-import org.mangolang.token.IntegerToken
-import org.mangolang.token.OperatorToken
-import org.mangolang.token.ParenthesisCloseToken
-import org.mangolang.token.ParenthesisOpenToken
-import org.mangolang.token.TokenStream
 import org.mangolang.token.mock.FixedTokenStream
 import org.mangolang.util.errors.ThresholdedListener
+import org.mangolang.util.Name
+import org.mangolang.token.TokenStream
+import org.mangolang.token.IdentifierToken
+import org.mangolang.token.AssociationToken
+import org.mangolang.token.ParenthesisOpenToken
+import org.mangolang.token.ParenthesisCloseToken
+import org.mangolang.token.IntegerToken
+import org.mangolang.token.OperatorToken
 
 /**
  * Run the compiler with some sample data, for during development.
@@ -19,9 +22,13 @@ import org.mangolang.util.errors.ThresholdedListener
 fun main(arg: Array<String>) {
     // For development testing, bypass the command line interface and tell the conductor to do things.
     val tokens: TokenStream = FixedTokenStream(listOf(
+            IdentifierToken(Name.new("x")),
+            AssociationToken("="),
             ParenthesisOpenToken(),
             IntegerToken(5),
             OperatorToken("+"),
+            IdentifierToken(Name.new("y")),
+            AssociationToken("="),
             ParenthesisOpenToken(),
             IntegerToken(3),
             OperatorToken("+"),

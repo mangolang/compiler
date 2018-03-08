@@ -7,8 +7,6 @@ import org.mangolang.token.Token
 import org.mangolang.util.text.Message
 import org.mangolang.util.errors.CompileError
 
-//TODO
-
 /**
  * An error that occurs during parsing.
  */

@@ -6,7 +6,10 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
-    Expression -> Addition
+    Expression -> Assignment
+
+    Assignment -> Identifier "=" Expression
+        | Addition
 
     Addition -> Multiplication ("+" | "-") Addition
         | Multiplication

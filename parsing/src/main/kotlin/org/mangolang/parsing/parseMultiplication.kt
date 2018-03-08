@@ -19,7 +19,7 @@ fun parseMultiplication(listener: ProblemListener, tokens: TokenStream): Express
     if (maybeOperator is OperatorToken && maybeOperator.isMultDiv) {
         /* Attempt to parse `UnaryOperation ("*" | "/") UnaryOperation`. */
         tokens.take()
-        val rhsUnary = parseMultiplication(listener, tokens)
+        val rhsUnary = parseExpression(listener, tokens)
         return ConcreteBinaryOperation(
                 lhsUnary,
                 ConcreteBinaryOperator(maybeOperator),
