@@ -1,6 +1,8 @@
-language: java
+language: rust
+rust:
+  - beta
 sudo: false
-jdk:
-  - oraclejdk8
+cache: cargo
 script:
-  - gradle test
+  - cargo build --verbose --all
+  - cargo test --verbose --all
