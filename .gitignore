@@ -1,3 +1,8 @@
+Cargo.lock
+
+
+### PREVIOUS KOTLIN AND IDEA IGNORES ###
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Kotlin template
 # Compiled class file
@@ -158,3 +163,5 @@ build/
 # Going to remove .idea directory, since it's mostly derived from Gradle anyway, which is more portable
 .idea/
 
+target/
+**/*.rs.bk
