@@ -1,6 +1,11 @@
 [package]
 name = "mango"
+description = "Mango is a programming language focussed on maintainability and bug prevention (UNDER CONSTRUCTION)"
 version = "0.1.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
+homepage = "https://mangolang.org/"
+documentation = "https://mangolang.org/"
+license = "Apache-2.0"
+publish = true
 
 [dependencies]
