@@ -12,14 +12,14 @@ Compilation broadly proceeds in these steps, with representations in **bold** an
 6. *Reducing*: map synonymous expressions to the same construct
 7. **coreAST** (reduced subset of abstract syntax tree)
 8. *Semanticate* (semantic analysis): check types and signatures, connect variables
-9. **sem** variables are connected but code not validated
+9. **mango.sem** variables are connected but code not validated
 10. *checking* Do type checking and other static analysis
 11. **IR**
-12. *optimizing* platform-independent optimizations
+12. *mango.optimizing* platform-independent optimizations
 13. **IR** (still)
 14. *Generation*
 15. **target** representation at low or high level, depending on target; also optimized and preliminary mode
-16. *PD-optimizing* platform-dependent optimizations
+16. *PD-mango.optimizing* platform-dependent optimizations
 17. **target** (still)
 18. *Writing*
 
