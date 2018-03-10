@@ -1,3 +1,7 @@
+extern crate mango;
+
+use mango::playground::dev_try;
+
 fn main() {
-    println!("Hello, world!");
+    dev_try()
 }

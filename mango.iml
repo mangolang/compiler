@@ -7,21 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/benches" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/ast_core/target" />
-      <excludeFolder url="file://$MODULE_DIR$/ast_full/target" />
-      <excludeFolder url="file://$MODULE_DIR$/cli/target" />
-      <excludeFolder url="file://$MODULE_DIR$/ir/target" />
-      <excludeFolder url="file://$MODULE_DIR$/jit/target" />
-      <excludeFolder url="file://$MODULE_DIR$/lexing/target" />
-      <excludeFolder url="file://$MODULE_DIR$/optimizing/target" />
-      <excludeFolder url="file://$MODULE_DIR$/parsing/target" />
-      <excludeFolder url="file://$MODULE_DIR$/reducing/target" />
-      <excludeFolder url="file://$MODULE_DIR$/sem/target" />
-      <excludeFolder url="file://$MODULE_DIR$/semanticating/target" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
-      <excludeFolder url="file://$MODULE_DIR$/token/target" />
-      <excludeFolder url="file://$MODULE_DIR$/typing/target" />
-      <excludeFolder url="file://$MODULE_DIR$/util/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

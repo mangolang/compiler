@@ -1,5 +1,5 @@
 
-mod mango {
+pub mod mango {
     // Utilities
     mod util;
     mod cli;
@@ -22,4 +22,4 @@ mod mango {
 }
 
 // For development
-mod playground;
+pub mod playground;
