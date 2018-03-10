@@ -1,0 +1,6 @@
+
+* Not all packages should be able to use each other
+* (Optionally) not all packages should share dependencies
+* I don't want to manually version and publish ~15 packages
+*
+

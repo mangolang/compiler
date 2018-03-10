@@ -49,6 +49,17 @@ All changes must be done through pull requests. Automated tests and style checks
 * If the commit message contains body, it should be separated from the title by a newline.
 * Titles should start with a capital, omit the period, and be at most 72 characters (preferably 50).
 
+Versioning
+-------------------------------
+
+* Semantic versioning is used:
+
+  - Major version increases for backward-incompatible changes.
+  - Minor version increases for new but (mostly) compatible functionality.
+  - Patch versions increase for bug fixes.
+
+* The compiler version is not the language version.
+
 Security
 -------------------------------
 
