@@ -1,6 +1,6 @@
 [package]
-name = "mango_compiler_ast_core"
-description = "The reduced abstract syntax tree for the Mango programming language (UNDER CONSTRUCTION)"
+name = "mango_compiler_jit"
+description = "The just-in-time compiler for the Mango programming language (PLANNED FOR FUTURE)"
 version = "0.1.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangolang.org/"

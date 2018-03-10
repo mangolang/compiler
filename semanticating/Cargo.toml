@@ -1,6 +1,6 @@
 [package]
-name = "mango"
-description = "Mango is a programming language focussed on maintainability and bug prevention (UNDER CONSTRUCTION)"
+name = "mango_compiler_semanticating"
+description = "The tool for connecting variables in the abstract syntax tree for the Mango programming language (UNDER CONSTRUCTION)"
 version = "0.1.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangolang.org/"

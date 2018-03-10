@@ -1,6 +1,6 @@
 [package]
-name = "mango_compiler_ast_core"
-description = "The reduced abstract syntax tree for the Mango programming language (UNDER CONSTRUCTION)"
+name = "mango_compiler_typing"
+description = "The type checker for the Mango programming language (UNDER CONSTRUCTION)"
 version = "0.1.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangolang.org/"
