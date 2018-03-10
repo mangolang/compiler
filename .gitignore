@@ -165,3 +165,10 @@ build/
 
 target/
 **/*.rs.bk
+
+/target/
+**/*.rs.bk
+Cargo.lock
+
+/target/
+**/*.rs.bk
