@@ -3,5 +3,9 @@ name = "mango_compiler_playground"
 version = "0.1.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 publish = false
+include = [
+    "src/**/*",
+    "Cargo.toml"
+]
 
 [dependencies]

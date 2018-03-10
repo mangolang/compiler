@@ -7,5 +7,9 @@ homepage = "https://mangolang.org/"
 documentation = "https://mangolang.org/"
 license = "Apache-2.0"
 publish = true
+include = [
+    "src/**/*",
+    "Cargo.toml"
+]
 
 [dependencies]
