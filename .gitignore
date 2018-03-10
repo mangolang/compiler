@@ -1,5 +1,6 @@
 Cargo.lock
 target/
+/local/
 
 ### PREVIOUS KOTLIN AND IDEA IGNORES ###
 

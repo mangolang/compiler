@@ -37,16 +37,17 @@ impl fmt::Display for Msg {
 
 impl StrType for Msg {
     fn new<S>(msg: S) -> Result<Msg, Msg> where S: ToString {
-        return match Msg::validate(msg.to_string()) {
-            Ok(txt) => Ok(Msg { msg: txt }),
+        // todo: prevent this to_string stuff
+        return match Msg::validate(&msg.to_string()) {
+            Ok(txt) => Ok(Msg { msg: txt.to_string() }),
             Err(msg) => Err(msg)
         }
     }
 
-    fn validate<S>(msg: S) -> Result<String, Msg> where S: ToString {
+    fn validate(msg: &str) -> Result<&str, Msg> {
         if ! VALID_MESSAGE.is_match(&msg.to_string()) {
             return Err(Msg::from_valid("Messages should consist of printable text.".to_owned()));
         }
-        return Ok(msg.to_string());
+        return Ok(msg);
     }
 }
