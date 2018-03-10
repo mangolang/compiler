@@ -40,23 +40,23 @@ impl PartialEq<Self> for Name {
 }
 
 impl StrType for Name {
-    fn new<S>(name: S) -> Result<Name, Msg> where S: ToString {
+    fn new(name: String) -> Result<Name, Msg> {
         return match Name::validate(&name.to_string()) {
-            Ok(txt) => Ok(Name { name_id: DefaultStringInterner::default().get_or_intern(txt) }),
+            Ok(_) => Ok(Name { name_id: DefaultStringInterner::default().get_or_intern(name) }),
             Err(msg) => Err(msg)
         }
     }
 
-    fn validate(name: &str) -> Result<&str, Msg> {
+    fn validate(name: &str) -> Result<(), Msg> {
         match name.chars().next() {
             Some(chr) => if chr.is_digit(10) {
                 return Err(Msg::from_valid("Identifier names may not start with a digit."))
             },
-            None => return Ok(name)  // empty string
+            None => return Ok(())  // empty string
         }
         if !VALID_IDENTIFIER.is_match(&name.to_string()) {
             return Err(Msg::from_valid("Identifier names should consist of letters, numbers and underscores."))
         }
-        return Ok(name);
+        return Ok(());
     }
 }

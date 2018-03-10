@@ -7,13 +7,18 @@ pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
 
     /// Validate whether this is a valid string for this type. Returns an explanation message if not.
     //todo: public
-    fn validate(value: &str) -> Result<&str, Msg>;
+    fn validate(value: &str) -> Result<(), Msg>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid.
-    fn new<S>(txt: S) -> Result<Self, Msg> where S: ToString;
+    fn new(txt: String) -> Result<Self, Msg>;
+
+    /// Constructor that creates an instance if valid, or a validation message if invalid, by copying a string reference.
+    fn copy_new(txt: &str) -> Result<Self, Msg> {
+        return Self::new(txt.to_string());
+    }
 
     /// Alternative constructor that panics on invalid input.
-    fn from_valid<S>(txt: S) -> Self where S: ToString {
-        return Self::new(txt.to_string()).unwrap();
+    fn from_valid(txt: &str) -> Self {
+        return Self::copy_new(txt).unwrap();
     }
 }
