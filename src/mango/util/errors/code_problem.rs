@@ -15,6 +15,12 @@ pub struct Context {
     code: String, // todo: change this type when there is a specific one
 }
 
+impl Context {
+    pub fn new(code: String) -> Context {
+        return Context { code: code };
+    }
+}
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct CodeProblem {
     severity: Severity,
@@ -119,21 +125,15 @@ mod tests {
     fn test_new_problem() {
         CodeProblem::error(
             Msg::copy_new("test problem").unwrap(),
-            Context {
-                code: "test context".to_string(),
-            },
+            Context::new("test context".to_string())
         );
         CodeProblem::warning(
             Msg::copy_new("test problem").unwrap(),
-            Context {
-                code: "test context".to_string(),
-            },
+            Context::new("test context".to_string())
         );
         CodeProblem::debug(
             Msg::copy_new("test problem").unwrap(),
-            Context {
-                code: "test context".to_string(),
-            },
+            Context::new("test context".to_string())
         );
     }
 }
