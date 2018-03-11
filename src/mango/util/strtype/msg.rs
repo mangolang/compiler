@@ -22,19 +22,6 @@ impl fmt::Display for Msg {
     }
 }
 
-///// Note that using this causes a panic for invalid inputs.
-//impl From<String> for Msg {
-//    fn from(msg: String) -> Msg {
-//        return Msg::new(msg).unwrap();
-//    }
-//}
-//
-//impl From<&'static str> for Msg {
-//    fn from(msg: &str) -> Msg {
-//        return Msg::new(msg.to_owned()).unwrap();
-//    }
-//}
-
 impl StrType for Msg {
     fn new(msg: String) -> Result<Msg, Msg> {
         return match Msg::validate(&msg) {
