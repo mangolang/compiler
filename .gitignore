@@ -1,6 +1,7 @@
 Cargo.lock
 target/
 /local/
+*.iml
 
 ### PREVIOUS KOTLIN AND IDEA IGNORES ###
 
