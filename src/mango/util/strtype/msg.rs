@@ -3,7 +3,7 @@ use super::StrType;
 use std::fmt;
 
 lazy_static! {
-    static ref VALID_MESSAGE: Regex = Regex::new(r"^[\p{L}\d +\-_:/\\']*$").unwrap();
+    static ref VALID_MESSAGE: Regex = Regex::new(r"^[\p{L}\d +\-_:/\\'.,]*$").unwrap();
 }
 
 /// Type for valid identifier names.
@@ -45,6 +45,7 @@ impl StrType for Msg {
 
     fn validate(msg: &str) -> Result<(), Msg> {
         if ! VALID_MESSAGE.is_match(&msg.to_string()) {
+            // Make sure this is a valid string, otherwise it causes an infinite loop making error messages for it!
             return Err(Msg::from_valid("Messages should consist of printable text."));
         }
         return Ok(());
