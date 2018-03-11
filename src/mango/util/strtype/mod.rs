@@ -1,4 +1,3 @@
-
 mod strtype;
 pub use self::strtype::StrType;
 

@@ -4,7 +4,6 @@ use mango::util::strtype::Msg;
 
 /// A trait for types that wrap a string matching a certain structure.
 pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
-
     /// Validate whether this is a valid string for this type. Returns an explanation message if not.
     //todo: public
     fn validate(value: &str) -> Result<(), Msg>;
