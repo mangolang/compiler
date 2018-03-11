@@ -1,12 +1,18 @@
 use regex::Regex;
 use super::StrType;
 use super::Msg;
-use string_interner::DefaultStringInterner;
+use string_interner::StringInterner;
 use std::fmt;
+use std::collections::hash_map::RandomState;
+use std::sync::Mutex;
 
 lazy_static! {
     // TODO: What the f... This isn't remotely the correct regex...
     static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
+}
+
+lazy_static! {
+    static ref INTERNER: Mutex<StringInterner<usize, RandomState>> = Mutex::new(StringInterner::new());
 }
 
 /// Type for valid identifier names.
@@ -22,19 +28,15 @@ pub struct Name {
 impl Name {
     pub fn value(&self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
-        let interner = DefaultStringInterner::default();
-        println!("value {}", interner.len()); // TODO
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        return interner.resolve(self.name_id).unwrap().to_string();
+        return INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string();
     }
 }
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Use interner directly instead of .value(), because that creates a copy
-        let interner = DefaultStringInterner::default();
-        println!("fmt {}", interner.len()); // TODO
-        return write!(f, "{}", interner.resolve(self.name_id).unwrap());
+        return write!(f, "{}", INTERNER.lock().unwrap().resolve(self.name_id).unwrap());
     }
 }
 
@@ -46,10 +48,7 @@ impl PartialEq<Self> for Name {
 
 impl StrType for Name {
     fn new(name: String) -> Result<Name, Msg> {
-        let mut interner = DefaultStringInterner::default();
-        println!("new  I: {}", interner.len()); // TODO
-        let id = interner.get_or_intern(name.to_string());
-        println!("new II: {}", interner.len()); // TODO
+        let id = INTERNER.lock().unwrap().get_or_intern(name.to_string());
         return match Name::validate(&name.to_string()) {
             Ok(_) => Ok(Name { name_id: id }),
             Err(msg) => Err(msg)
