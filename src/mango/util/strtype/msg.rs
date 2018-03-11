@@ -37,7 +37,6 @@ impl fmt::Display for Msg {
 
 impl StrType for Msg {
     fn new(msg: String) -> Result<Msg, Msg> {
-        // todo: prevent this to_string stuff
         return match Msg::validate(&msg) {
             Ok(_) => Ok(Msg { msg: msg }),
             Err(msg) => Err(msg)

@@ -1,6 +1,5 @@
 
 mod strtype;
-// todo: is this needed?
 pub use self::strtype::StrType;
 
 mod msg;

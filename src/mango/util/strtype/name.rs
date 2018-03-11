@@ -19,7 +19,7 @@ pub struct Name {
 }
 
 impl Name {
-    fn value(&self) -> String {
+    pub fn value(&self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         let interner = DefaultStringInterner::default();
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
@@ -29,7 +29,9 @@ impl Name {
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        return write!(f, "{}", self.value());
+        // Use interner directly instead of .value(), because that creates a copy
+        let interner = DefaultStringInterner::default();
+        return write!(f, "{}", interner.resolve(self.name_id).unwrap());
     }
 }
 
