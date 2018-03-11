@@ -7,7 +7,6 @@ use std::collections::hash_map::RandomState;
 use std::sync::Mutex;
 
 lazy_static! {
-    // TODO: What the f... This isn't remotely the correct regex...
     static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
 }
 
@@ -85,8 +84,92 @@ impl StrType for Name {
 
 #[cfg(test)]
 mod tests {
+    use super::Name;
+    use mango::util::strtype::strtype::StrType;
+
     #[test]
-    fn test_names() {
-        assert!(false, "Name tests not translated yet");
+    fn test_valid_names() {
+        let valid = [
+            "a",
+            "z",
+            "A",
+            "Z",
+            "a0",
+            "a1234567890",
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "_",
+            "hello_world",
+            "_0", /* '_0' is a string, '0_' is an int. */
+        ];
+        for inp in valid.iter() {
+            /* Check that all of these names validate. */
+            assert_eq!(inp.to_string(), Name::copy_new(inp).unwrap().value());
+        }
+    }
+
+    #[test]
+    fn test_invalid_names() {
+        let invalid = [
+            "0",
+            "9",
+            "01234567890123456789",
+            "0_", /* '_0' is a string, '0_' is an int. */
+            "0a",
+            "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "hello world",
+            "hello-world",
+            " ",
+            "\t",
+            "\n",
+            "~",
+            "!",
+            "@",
+            "#",
+            "$",
+            "€",
+            "%",
+            "^",
+            "&",
+            "*",
+            "(",
+            ")",
+            "-",
+            "+",
+            "=",
+            "}",
+            "}",
+            "[",
+            "]",
+            ":",
+            ";",
+            "\"",
+            "'",
+            "\\",
+            "|",
+            "/",
+            "<",
+            ">",
+            ",",
+            ".",
+            "/",
+            "?",
+            "你好", /* Might be allowed in the future, but not yet. */
+        ];
+        for inp in invalid.iter() {
+            /* Check that none of these names validate. */
+            assert!(Name::copy_new(inp).is_err());
+        }
+    }
+
+    #[test]
+    fn test_name_interning() {
+        assert_eq!(
+            Name::copy_new("Hello").unwrap(),
+            Name::copy_new("Hello").unwrap()
+        );
+        assert_ne!(
+            Name::copy_new("Hello").unwrap(),
+            Name::copy_new("Goodbye").unwrap()
+        );
     }
 }

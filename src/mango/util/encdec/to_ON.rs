@@ -1,4 +1,3 @@
-
 // todo: implement and move (possibly to another library)
 pub enum ON {
 }

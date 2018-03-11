@@ -4,4 +4,3 @@ pub use self::to_ON::ToObjectNotation;
 
 mod to_text;
 pub use self::to_text::ToText;
-

@@ -1,4 +1,3 @@
-
 /// Types which have a text representation that:
 ///
 /// * Is human readable
