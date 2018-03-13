@@ -5,8 +5,6 @@ use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 use mango::ast_full::AST;
 use mango::util::encdec::ToText;
-use mango::util::encdec::ToObjectNotation;
-use mango::util::encdec::ON;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq)]
@@ -71,12 +69,12 @@ impl ToText for OperatorAST {
     }
 }
 
-impl ToObjectNotation for OperatorAST {
-    #[allow(non_snake_case)]
-    fn to_ON(&self) -> ON {
-        return ON::Null;  // todo
-    }
-}
+//impl ToObjectNotation for OperatorAST {
+//    #[allow(non_snake_case)]
+//    fn to_ON(&self) -> ON {
+//        return ON::Null;  // todo
+//    }
+//}
 
 impl AST for OperatorAST {}
 
