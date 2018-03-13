@@ -1,6 +1,6 @@
 use mango::util::encdec::ToText;
-use mango::util::encdec::ToObjectNotation;
 
 /// Trait to be implemented by everything in the full abstract syntax tree.
-pub trait AST: ToText + ToObjectNotation {
+//pub trait AST: ToText + ToObjectNotation {  // todo: add ON again later
+pub trait AST: ToText {
 }
