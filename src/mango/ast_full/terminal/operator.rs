@@ -22,27 +22,33 @@ impl Symbol {
             "-" => Ok(Symbol::Dash),
             "*" => Ok(Symbol::Asterisk),
             "/" => Ok(Symbol::Slash),
-            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", symbol_txt)))
-        }
+            _ => Err(Msg::from_valid(&format!(
+                "Unknown symbol: '{}'",
+                symbol_txt
+            ))),
+        };
     }
 }
 
 impl Display for Symbol {
     fn fmt(&self, f: &mut Formatter) -> fResult {
-        return write!(f, "{}", match *self {
-            Symbol::Plus => "+",
-            Symbol::Dash => "-",
-            Symbol::Asterisk => "*",
-            Symbol::Slash => "/",
-        });
+        return write!(
+            f,
+            "{}",
+            match *self {
+                Symbol::Plus => "+",
+                Symbol::Dash => "-",
+                Symbol::Asterisk => "*",
+                Symbol::Slash => "/",
+            }
+        );
     }
 }
 
 /// An operator (unary, binary, ...).
 #[derive(Debug, PartialEq, Eq)]
 pub struct OperatorAST {
-    symbol: Symbol
-
+    symbol: Symbol,
 }
 
 impl OperatorAST {
@@ -65,7 +71,7 @@ impl OperatorAST {
 
 impl ToText for OperatorAST {
     fn to_text(&self) -> String {
-        return format!(" {} ", self.symbol)
+        return format!(" {} ", self.symbol);
     }
 }
 
@@ -77,4 +83,3 @@ impl ToText for OperatorAST {
 //}
 
 impl AST for OperatorAST {}
-

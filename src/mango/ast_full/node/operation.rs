@@ -8,7 +8,11 @@ pub struct BinaryOperationAST {
 }
 
 impl BinaryOperationAST {
-    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> BinaryOperationAST{
-        return BinaryOperationAST { left, operator, right };
+    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> BinaryOperationAST {
+        return BinaryOperationAST {
+            left,
+            operator,
+            right,
+        };
     }
 }
