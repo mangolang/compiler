@@ -51,6 +51,8 @@ impl ToText for StringLiteralAST {
     }
 }
 
+impl Eq for FloatLiteralAST {}
+
 impl AST for IntLiteralAST {}
 impl AST for FloatLiteralAST {}
 impl AST for StringLiteralAST {}
