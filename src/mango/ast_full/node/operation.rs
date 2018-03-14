@@ -43,4 +43,3 @@ impl Debug for BinaryOperationAST {
     }
 }
 
-impl AST for BinaryOperationAST {}

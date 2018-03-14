@@ -3,7 +3,6 @@ use mango::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
-use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 
 /// The different operator symbols that are recognized.
@@ -82,4 +81,3 @@ impl ToText for OperatorAST {
 //    }
 //}
 
-impl AST for OperatorAST {}
