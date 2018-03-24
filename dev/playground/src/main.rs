@@ -5,16 +5,31 @@
 use std::any::Any;
 use std::f64::consts::PI;
 
+trait AST {}
+
 trait CompareAST: AST {
     // Should return an &Any so that we can test equality on a casted value.
     fn as_any(&self) -> &Any;
 
     // Do the test.
-    fn equals(&self, &CompareAST) -> bool;
+    fn equals(&self, other: &CompareAST) -> bool;
 }
 
-trait AST {
+// This makes all AST nodes.
+// I *think* that 'static here just refers to the type S (not instances)
+impl<S: 'static + AST + PartialEq> CompareAST for S {
+    fn as_any(&self) -> &Any {
+        return self as &Any
+    }
 
+    fn equals(& self, other: &CompareAST) -> bool {
+        // Do a type-safe casting. If types are differents
+        // return false, else test for equality.
+        return match other.as_any().downcast_ref::<S>() {
+            None => false,
+            Some(a) => self == a,
+        }
+    }
 }
 
 #[derive(PartialEq)]
@@ -50,32 +65,16 @@ impl NotAST {
     }
 }
 
-// This implements A for all static types having an instance of PartialEq.
-// todo: remove 'static
-impl<S: 'static + AST + PartialEq> CompareAST for S {
-    fn as_any(&self) -> &Any {
-        self as &Any
-    }
-
-    fn equals(&self, other: &CompareAST) -> bool {
-        // Do a type-safe casting. If types are differents
-        // return false, else test for equality.
-        match other.as_any().downcast_ref::<S>() {
-            None => false,
-            Some(a) => self == a,
-        }
-    }
-}
-
 fn main() {
     assert!( to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(1, "hi".to_string())));
     assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(2, "bye".to_string())));
     assert!( to_trait_obj_and_compare(&Another::new(PI), &Another::new(PI)));
     assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Another::new(PI)));
-//    assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &NotAST::new(2)));
+    // This does not compile, and it shouldn't, because only AST nodes should be comparable:
+    // assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &NotAST::new(2)));
 }
 
-// todo: cast to AST
+// todo: use AST instead of CompareAST
 fn to_trait_obj_and_compare(an_a: &CompareAST, another_a: &CompareAST) -> bool {
     an_a.equals(another_a)
 }
