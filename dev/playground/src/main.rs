@@ -15,7 +15,7 @@ trait AST: BaseAST {
     fn equals(&self, other: &AST) -> bool;
 }
 
-// This makes all AST nodes.
+// This makes all AST nodes comparable.
 // I *think* that 'static here just refers to the type S (not instances)
 impl<S: 'static + BaseAST + PartialEq> AST for S {
     fn as_any(&self) -> &Any {
@@ -29,6 +29,14 @@ impl<S: 'static + BaseAST + PartialEq> AST for S {
             None => false,
             Some(a) => self == a,
         }
+    }
+}
+
+/// Actually implement PartialEq to delegate to .equals(...).
+// From https://stackoverflow.com/a/49138717/723090
+impl<'a> PartialEq for AST + 'a {
+    fn eq(&self, other: &AST) -> bool {
+        return self.equals(other);
     }
 }
 
@@ -76,5 +84,5 @@ fn main() {
 
 // todo: use AST instead of CompareAST
 fn to_trait_obj_and_compare(an_a: &AST, another_a: &AST) -> bool {
-    an_a.equals(another_a)
+    return an_a == another_a;
 }

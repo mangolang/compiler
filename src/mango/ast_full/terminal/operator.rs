@@ -4,6 +4,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 use mango::util::encdec::ToText;
+use mango::ast_full::BaseAST;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq)]
@@ -74,10 +75,11 @@ impl ToText for OperatorAST {
     }
 }
 
+impl BaseAST for OperatorAST {}
+
 //impl ToObjectNotation for OperatorAST {
 //    #[allow(non_snake_case)]
 //    fn to_ON(&self) -> ON {
 //        return ON::Null;  // todo
 //    }
 //}
-

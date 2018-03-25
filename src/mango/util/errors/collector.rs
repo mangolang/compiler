@@ -1,6 +1,6 @@
-use super::CodeProblem;
-use mango::util::strtype::Msg;
+use mango::util::errors::CodeProblem;
 use mango::util::errors::Context;
+use mango::util::strtype::Msg;
 use std::slice;
 
 #[derive(Debug)]
@@ -44,11 +44,6 @@ impl<'a> IntoIterator for &'a ProblemCollector {
 
 #[cfg(test)]
 mod tests {
-    use super::ProblemCollector;
-    use mango::util::strtype::Msg;
-    use mango::util::errors::Context;
-    use mango::util::strtype::StrType;
-
     #[test]
     fn test_iter_collector() {
         let mut collector = ProblemCollector::new();

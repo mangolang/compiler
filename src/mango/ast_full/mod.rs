@@ -6,4 +6,5 @@ pub use self::terminal::*;
 
 mod collect;
 pub use self::collect::FullAST;
+pub use self::collect::BaseAST;
 pub use self::collect::AST;
