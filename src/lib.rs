@@ -24,6 +24,3 @@ pub mod mango {
     pub mod typing;
     pub mod optimizing;
 }
-
-// For development
-pub mod playground;

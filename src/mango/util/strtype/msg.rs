@@ -1,5 +1,5 @@
+use mango::util::strtype::StrType;
 use regex::Regex;
-use super::StrType;
 use std::fmt;
 
 lazy_static! {

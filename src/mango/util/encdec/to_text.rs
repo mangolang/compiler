@@ -5,5 +5,5 @@
 /// * Is unambiguous
 /// * Does not include metadata
 pub trait ToText {
-    fn to_text(&self) -> &str;
+    fn to_text(&self) -> String;
 }

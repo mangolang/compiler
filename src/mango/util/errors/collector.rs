@@ -1,6 +1,6 @@
-use super::CodeProblem;
-use mango::util::strtype::Msg;
+use mango::util::errors::CodeProblem;
 use mango::util::errors::Context;
+use mango::util::strtype::Msg;
 use std::slice;
 
 #[derive(Debug)]

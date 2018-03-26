@@ -1,5 +1,14 @@
 // todo: implement and move (possibly to another library)
 pub enum ON {
+    Null,
+    True,
+    False,
+    Integer,
+    Double,
+    String,
+    Object,
+    List,
+    // todo: not complete/final
 }
 
 /// Types which have an object notation representation.
