@@ -20,7 +20,7 @@ lazy_static! {
 /// # Implementation
 ///
 /// * Name strings are interned for fast equality checking.
-#[derive(Debug, Hash, Eq)]
+#[derive(Debug, Hash, PartialEq, Eq)]
 pub struct Name {
     name_id: usize,
 }
@@ -46,12 +46,6 @@ impl fmt::Display for Name {
             "{}",
             INTERNER.lock().unwrap().resolve(self.name_id).unwrap()
         );
-    }
-}
-
-impl PartialEq<Self> for Name {
-    fn eq(&self, other: &Name) -> bool {
-        self.name_id == other.name_id
     }
 }
 
@@ -84,6 +78,9 @@ impl StrType for Name {
 
 #[cfg(test)]
 mod tests {
+    use super::Name;
+    use mango::util::strtype::strtype::StrType;
+
     #[test]
     fn test_valid_names() {
         let valid = [
