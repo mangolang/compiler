@@ -1,10 +1,10 @@
 use regex::Regex;
-use super::StrType;
-use super::Msg;
-use string_interner::StringInterner;
-use std::fmt;
 use std::collections::hash_map::RandomState;
+use std::fmt;
 use std::sync::Mutex;
+use string_interner::StringInterner;
+use mango::util::strtype::Msg;
+use mango::util::strtype::StrType;
 
 lazy_static! {
     static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
@@ -84,9 +84,6 @@ impl StrType for Name {
 
 #[cfg(test)]
 mod tests {
-    use super::Name;
-    use mango::util::strtype::strtype::StrType;
-
     #[test]
     fn test_valid_names() {
         let valid = [
