@@ -29,25 +29,25 @@ pub struct StringLiteralAST {
 
 impl IntLiteralAST {
     pub fn new(value: i64) -> IntLiteralAST {
-        return IntLiteralAST { value };
+        IntLiteralAST { value }
     }
 }
 
 impl ToText for IntLiteralAST {
     fn to_text(&self) -> String {
-        return format!(" {:} ", self.value);
+        format!(" {:} ", self.value)
     }
 }
 
 impl ToText for FloatLiteralAST {
     fn to_text(&self) -> String {
-        return format!(" {:.e} ", self.value);
+        format!(" {:.e} ", self.value)
     }
 }
 
 impl ToText for StringLiteralAST {
     fn to_text(&self) -> String {
-        return format!(" {:} ", to_double_quoted_str(&self.value));
+        format!(" {:} ", to_double_quoted_str(&self.value))
     }
 }
 

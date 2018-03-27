@@ -18,16 +18,16 @@ pub struct Msg {
 
 impl fmt::Display for Msg {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        return write!(f, "{}", self.msg);
+        write!(f, "{}", self.msg)
     }
 }
 
 impl StrType for Msg {
     fn new(msg: String) -> Result<Msg, Msg> {
-        return match Msg::validate(&msg) {
+        match Msg::validate(&msg) {
             Ok(_) => Ok(Msg { msg: msg }),
             Err(msg) => Err(msg),
-        };
+        }
     }
 
     fn validate(msg: &str) -> Result<(), Msg> {
@@ -37,6 +37,6 @@ impl StrType for Msg {
                 "Messages should consist of printable text.",
             ));
         }
-        return Ok(());
+        Ok(())
     }
 }

@@ -29,33 +29,33 @@ impl Name {
     pub fn value(&self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        return INTERNER
+        INTERNER
             .lock()
             .unwrap()
             .resolve(self.name_id)
             .unwrap()
-            .to_string();
+            .to_string()
     }
 }
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Use interner directly instead of .value(), because that creates a copy
-        return write!(
+        write!(
             f,
             "{}",
             INTERNER.lock().unwrap().resolve(self.name_id).unwrap()
-        );
+        )
     }
 }
 
 impl StrType for Name {
     fn new(name: String) -> Result<Name, Msg> {
         let id = INTERNER.lock().unwrap().get_or_intern(name.to_string());
-        return match Name::validate(&name.to_string()) {
+        match Name::validate(&name.to_string()) {
             Ok(_) => Ok(Name { name_id: id }),
             Err(msg) => Err(msg),
-        };
+        }
     }
 
     fn validate(name: &str) -> Result<(), Msg> {
@@ -72,7 +72,7 @@ impl StrType for Name {
                 "Identifier names should consist of letters, numbers and underscores.",
             ));
         }
-        return Ok(());
+        Ok(())
     }
 }
 

@@ -17,7 +17,7 @@ pub struct Context {
 
 impl Context {
     pub fn new(code: String) -> Context {
-        return Context { code: code };
+        Context { code: code }
     }
 }
 
@@ -31,24 +31,24 @@ pub struct CodeProblem {
 
 impl CodeProblem {
     pub fn new(severity: Severity, description: Msg, context: Context) -> CodeProblem {
-        return CodeProblem {
+        CodeProblem {
             severity: severity,
             description: description,
             context: context,
             hints: vec![],
-        };
+        }
     }
 
     pub fn error(description: Msg, context: Context) -> CodeProblem {
-        return Self::new(Severity::Error, description, context);
+        Self::new(Severity::Error, description, context)
     }
 
     pub fn warning(description: Msg, context: Context) -> CodeProblem {
-        return Self::new(Severity::Warning, description, context);
+        Self::new(Severity::Warning, description, context)
     }
 
     pub fn debug(description: Msg, context: Context) -> CodeProblem {
-        return Self::new(Severity::Debug, description, context);
+        Self::new(Severity::Debug, description, context)
     }
 
     // later: add hints
@@ -70,7 +70,7 @@ impl Display for Severity {
 
 impl PartialOrd for Severity {
     fn partial_cmp(&self, other: &Severity) -> Option<Ordering> {
-        return match self {
+        match self {
             &Severity::Error => match other {
                 &Severity::Error => Some(Ordering::Equal),
                 &Severity::Warning => Some(Ordering::Greater),
@@ -86,13 +86,13 @@ impl PartialOrd for Severity {
                 &Severity::Warning => Some(Ordering::Less),
                 &Severity::Debug => Some(Ordering::Equal),
             },
-        };
+        }
     }
 }
 
 impl Ord for Severity {
     fn cmp(&self, other: &Severity) -> Ordering {
-        return self.partial_cmp(other).unwrap();
+        self.partial_cmp(other).unwrap()
     }
 }
 

@@ -20,16 +20,16 @@ pub trait AST: BaseAST {
 // I *think* that 'static here refers to the type S (not instances).
 impl<S: 'static + BaseAST + PartialEq> AST for S {
     fn as_any(&self) -> &Any {
-        return self as &Any;
+        self as &Any
     }
 
     fn equals(&self, other: &AST) -> bool {
         // Do a type-safe casting. If types are differents
         // return false, else test for equality.
-        return match other.as_any().downcast_ref::<S>() {
+        match other.as_any().downcast_ref::<S>() {
             None => false,
             Some(a) => self == a,
-        };
+        }
     }
 }
 
@@ -37,6 +37,6 @@ impl<S: 'static + BaseAST + PartialEq> AST for S {
 // From https://stackoverflow.com/a/49138717/723090
 impl<'a> PartialEq for AST + 'a {
     fn eq(&self, other: &AST) -> bool {
-        return self.equals(other);
+        self.equals(other)
     }
 }
