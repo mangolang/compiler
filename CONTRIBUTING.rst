@@ -60,6 +60,14 @@ Versioning
 
 * The compiler version is not the language version.
 
+Support for older versions
+-------------------------------
+
+* Development happens relative to the ``dev`` branch (through pull requests). All features and most bugfixes should be pull requests against the ``dev`` branch.
+* A branch ``vx.y`` is created for each major and minor version for back-porting fixes for a limited time.
+* If a version ``x.y.6`` is released, that means ``x.y.0`` to ``x.y.5`` are deprecated and updating is recommended. Use ``x.y.*`` (or ``x.*``) as requirement.
+* A timeline for how long old major and minor versions are supported will be added later.
+
 Security
 -------------------------------
 
@@ -75,3 +83,4 @@ If you feel there is a security issue, please `contact me`_ privately.
 .. _`Detekt`: https://github.com/arturbosch/detekt
 .. _`KtLint`: https://github.com/shyiko/ktlint
 .. _`config`: https://github.com/mangolang/compiler/blob/master/detekt.yml
+
