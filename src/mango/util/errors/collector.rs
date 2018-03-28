@@ -11,25 +11,25 @@ pub struct ProblemCollector {
 
 impl ProblemCollector {
     pub fn new() -> ProblemCollector {
-        return ProblemCollector { problems: vec![] };
+        ProblemCollector { problems: vec![] }
     }
 
     pub fn error(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::error(description, context);
         self.problems.push(problem);
-        return self.problems.last_mut().unwrap();
+        self.problems.last_mut().unwrap()
     }
 
     pub fn warning(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::warning(description, context);
         self.problems.push(problem);
-        return self.problems.last_mut().unwrap();
+        self.problems.last_mut().unwrap()
     }
 
     pub fn debug(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::debug(description, context);
         self.problems.push(problem);
-        return self.problems.last_mut().unwrap();
+        self.problems.last_mut().unwrap()
     }
 }
 
@@ -38,7 +38,7 @@ impl<'a> IntoIterator for &'a ProblemCollector {
     type IntoIter = slice::Iter<'a, CodeProblem>;
 
     fn into_iter(self) -> Self::IntoIter {
-        return self.problems.iter();
+        self.problems.iter()
     }
 }
 

@@ -11,7 +11,7 @@ pub fn to_double_quoted_str(txt: &str) -> String {
             c => c.to_string(),
         })
         .collect();
-    return "\"".to_string() + &esc + "\"";
+    "\"".to_string() + &esc + "\""
 }
 
 #[cfg(test)]

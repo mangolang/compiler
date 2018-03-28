@@ -19,13 +19,13 @@ trait AST: BaseAST {
 // I *think* that 'static here just refers to the type S (not instances)
 impl<S: 'static + BaseAST + PartialEq> AST for S {
     fn as_any(&self) -> &Any {
-        return self as &Any
+        self as &Any
     }
 
     fn equals(& self, other: &AST) -> bool {
         // Do a type-safe casting. If types are differents
         // return false, else test for equality.
-        return match other.as_any().downcast_ref::<S>() {
+        match other.as_any().downcast_ref::<S>() {
             None => false,
             Some(a) => self == a,
         }
@@ -36,7 +36,7 @@ impl<S: 'static + BaseAST + PartialEq> AST for S {
 // From https://stackoverflow.com/a/49138717/723090
 impl<'a> PartialEq for AST + 'a {
     fn eq(&self, other: &AST) -> bool {
-        return self.equals(other);
+        self.equals(other)
     }
 }
 
@@ -47,7 +47,7 @@ struct Node {
 }
 impl Node {
     fn new(a: i32, b: String) -> Node {
-        return Node { a, b }
+        Node { a, b }
     }
 }
 impl BaseAST for Node {}
@@ -58,7 +58,7 @@ struct Another {
 }
 impl Another {
     fn new(c: f64) -> Another {
-        return Another { c }
+        Another { c }
     }
 }
 impl BaseAST for Another {}
@@ -69,7 +69,7 @@ struct NotAST {
 }
 impl NotAST {
     fn new(d: u8) -> NotAST {
-        return NotAST { d }
+        NotAST { d }
     }
 }
 
@@ -84,5 +84,5 @@ fn main() {
 
 // todo: use AST instead of CompareAST
 fn to_trait_obj_and_compare(an_a: &AST, another_a: &AST) -> bool {
-    return an_a == another_a;
+    an_a == another_a
 }

@@ -7,14 +7,14 @@ use std::any::Any;
 
 trait MyTrait: PartialEq {
     fn as_any(&self) -> &Any {
-        return self as &Any;
+        self as &Any
     }
 
     fn equals(&self, other: &MyTraitComparable) -> bool {
-        return match other.as_any().downcast_ref::<S>() {
+        match other.as_any().downcast_ref::<S>() {
             None => false,
             Some(a) => self == a,
-        };
+        }
     }
 }
 
@@ -23,7 +23,7 @@ struct MyObj {
     a: i32,
 } impl MyObj {
     fn new(a: i32) -> MyObj {
-        return MyObj { a };
+        MyObj { a }
     }
 }
 

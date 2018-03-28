@@ -16,6 +16,7 @@ There are many ways to contribute:
 * Reviewing a `pull request`_
 * Telling a friend :)
 
+
 Licensing
 -------------------------------
 
@@ -25,10 +26,18 @@ Licensing
 Code conventions
 -------------------------------
 
-* Try to follow the `Kotlin coding convention`_.
-* Some of these and some other conventions are enforced by Detekt_ (config_) and KtLint_ as part of gradle build.
-* Try to include tests for any non-trivial code.
-* Assertion-style checks are encouraged, but should use ``require``.
+* Follow the `Rust style guide`_. A quick summary of non-automatic elements:
+
+  - Use ``///``` line comments for documentation, ``//`` for technical notes. Place them on their own line(s) above what they document.
+  - ``snake_case`` for local variables, fields, enum values, arguments/parameters and macros. ``PascalCase`` for traits, structs and enum types.
+  - Do not use return statements in the last expression of a function.
+
+* To apply some of the formatting conventions automatically, use ``cargo fmt``. This is enforced as automated test.
+* Try to include tests for any non-trivial logic.
+* Assertion-style checks are encouraged, with `assert!`_, not `debug_assert!`_.
+* Follow these_ and other practises to avoid bugs.
+* Identifiers can be long if that makes them clearer (they may be aliased locally).
+* Put unit tests in a ``test`` submodule in the same file.
 
 Pull requests
 -------------------------------
@@ -79,8 +88,7 @@ If you feel there is a security issue, please `contact me`_ privately.
 .. _`pull request`: https://github.com/mangolang/compiler/pulls
 .. _`Apache License 2.0`: https://github.com/mangolang/compiler/blob/master/LICENSE.txt
 .. _`Be nice`: https://github.com/mangolang/compiler/blob/master/CODE_OF_CONDUCT.rst
-.. _`Kotlin coding convention`: https://kotlinlang.org/docs/reference/coding-conventions.html
-.. _`Detekt`: https://github.com/arturbosch/detekt
-.. _`KtLint`: https://github.com/shyiko/ktlint
-.. _`config`: https://github.com/mangolang/compiler/blob/master/detekt.yml
-
+.. _`Rust style guide`: https://github.com/rust-lang-nursery/fmt-rfcs/blob/master/guide/guide.md
+.. _`assert!: https://doc.rust-lang.org/1.22.1/std/macro.assert.html
+.. _`debug_assert!: https://doc.rust-lang.org/1.22.1/std/macro.debug_assert.html
+.. _these: http://hshno.de/HJhvEnVDz

@@ -17,7 +17,7 @@ pub enum Symbol {
 
 impl Symbol {
     pub fn new(symbol_txt: &str) -> Result<Symbol, Msg> {
-        return match symbol_txt {
+        match symbol_txt {
             "+" => Ok(Symbol::Plus),
             "-" => Ok(Symbol::Dash),
             "*" => Ok(Symbol::Asterisk),
@@ -26,13 +26,13 @@ impl Symbol {
                 "Unknown symbol: '{}'",
                 symbol_txt
             ))),
-        };
+        }
     }
 }
 
 impl Display for Symbol {
     fn fmt(&self, f: &mut Formatter) -> fResult {
-        return write!(
+        write!(
             f,
             "{}",
             match *self {
@@ -41,7 +41,7 @@ impl Display for Symbol {
                 Symbol::Asterisk => "*",
                 Symbol::Slash => "/",
             }
-        );
+        )
     }
 }
 
@@ -53,25 +53,25 @@ pub struct OperatorAST {
 
 impl OperatorAST {
     pub fn from_str(symbol_txt: &str) -> Result<OperatorAST, Msg> {
-        return Ok(OperatorAST::from_symbol(Symbol::new(symbol_txt)?));
+        Ok(OperatorAST::from_symbol(Symbol::new(symbol_txt)?))
     }
 
     pub fn from_symbol(symbol: Symbol) -> OperatorAST {
-        return OperatorAST { symbol: symbol };
+        OperatorAST { symbol: symbol }
     }
 
     pub fn is_add_sub(&self) -> bool {
-        return self.symbol == Symbol::Plus || self.symbol == Symbol::Dash;
+        self.symbol == Symbol::Plus || self.symbol == Symbol::Dash
     }
 
     pub fn is_mul_div(&self) -> bool {
-        return self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash;
+        self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
     }
 }
 
 impl ToText for OperatorAST {
     fn to_text(&self) -> String {
-        return format!(" {} ", self.symbol);
+        format!(" {} ", self.symbol)
     }
 }
 
