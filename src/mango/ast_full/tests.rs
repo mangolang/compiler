@@ -1,3 +1,5 @@
+use mango::ast_full::special::UnparseableAST;
+
 #[test]
 fn test_ast_equality() {
     //    let twinOne = ConcreteBinaryOperation(
@@ -27,11 +29,11 @@ fn test_ast_inequality() {
 
 #[test]
 fn test_unparseable_equality() {
-    //    let up: UnparseableAST
-    //    up = UnparseableAST(null)
-    //    assert_eq!(up, up)
-    //    up = UnparseableAST(IntegerToken(7))
-    //    assert_eq!(up, up)
-    //    assert_ne!(UnparseableAST(null), UnparseableAST(null))
-    //    assert_ne!(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
+        let unp: UnparseableAST;
+        unp = UnparseableAST::from_tokens(vec![]);
+        assert_eq!(unp, unp);
+//        let unp = UnparseableAST::from_tokens(vec![IntegerToken()]);
+//        assert_eq!(up, up)
+//        assert_ne!(UnparseableAST(null), UnparseableAST(null))
+//        assert_ne!(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
 }

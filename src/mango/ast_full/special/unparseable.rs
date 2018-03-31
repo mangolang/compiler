@@ -9,7 +9,7 @@ pub struct UnparseableAST {
 }
 
 impl UnparseableAST {
-    pub fn from_symbols(tokens: Vec<Box<Token>>) -> UnparseableAST {
+    pub fn from_tokens(tokens: Vec<Box<Token>>) -> UnparseableAST {
         UnparseableAST { tokens: tokens }
     }
 }
