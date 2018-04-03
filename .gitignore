@@ -2,6 +2,8 @@ Cargo.lock
 target/
 /local/
 *.iml
+__pycache__/
+*.pyc
 
 ### PREVIOUS KOTLIN AND IDEA IGNORES ###
 
