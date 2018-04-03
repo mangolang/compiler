@@ -11,10 +11,7 @@ pub struct AssignmentAST {
 
 impl AssignmentAST {
     pub fn new(assignee: Box<AST>, value: Box<AST>) -> AssignmentAST {
-        return AssignmentAST {
-            assignee,
-            value,
-        };
+        return AssignmentAST { assignee, value };
     }
 }
 
@@ -22,9 +19,8 @@ impl ToText for AssignmentAST {
     fn to_text(&self) -> String {
         return format!(
             "{0:} = ({1:})",
-            (*self.assignee).to_text(),
-            (*self.value).to_text()
-            // TODO: try without *
+            self.assignee.to_text(),
+            self.value.to_text() // TODO: try without *
         );
     }
 }
@@ -32,7 +28,7 @@ impl ToText for AssignmentAST {
 // TODO: try without this, and without &*
 impl PartialEq for AssignmentAST {
     fn eq(&self, other: &AssignmentAST) -> bool {
-        return &*self.assignee == &*other.assignee && &*self.value == &*other.value;
+        return &self.assignee == &other.assignee && &self.value == &other.value;
     }
 }
 
