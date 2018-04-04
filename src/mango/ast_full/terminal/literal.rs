@@ -51,10 +51,9 @@ impl ToText for StringLiteralAST {
     }
 }
 
+// TODO: I need to make sure than NaN == NaN to do this legitimately
 impl Eq for FloatLiteralAST {}
 
 impl BaseAST for IntLiteralAST {}
 impl BaseAST for FloatLiteralAST {}
 impl BaseAST for StringLiteralAST {}
-
-// todo: test that printing and reparsing gives the same value?
