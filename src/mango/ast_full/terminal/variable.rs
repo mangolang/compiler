@@ -1,5 +1,4 @@
 use mango::util::encdec::ToText;
-use mango::util::format::to_double_quoted_str;
 use mango::ast_full::BaseAST;
 use mango::util::strtype::Name;
 
