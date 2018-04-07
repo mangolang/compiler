@@ -1,88 +1,63 @@
-
-// https://stackoverflow.com/questions/25339603/how-to-test-for-equality-between-trait-objects
-
-// Any allows us to do dynamic typecasting.
+use std::collections::HashMap;
+use std::hash::Hasher;
+use std::hash::Hash;
+use std::fmt::Debug;
 use std::any::Any;
-use std::f64::consts::PI;
 
-trait BaseAST {}
+#[derive(Hash, Eq, PartialEq, Debug)]
+struct A(i32);
 
-trait AST: BaseAST {
-    // Should return an &Any so that we can test equality on a casted value.
-    fn as_any(&self) -> &Any;
-
-    // Do the test.
-    fn equals(&self, other: &AST) -> bool;
+#[derive(Hash, Eq, PartialEq, Debug)]
+struct B {
+    val: String,
 }
 
-// This makes all AST nodes comparable.
-// I *think* that 'static here just refers to the type S (not instances)
-impl<S: 'static + BaseAST + PartialEq> AST for S {
+trait PreS: Hash + PartialEq + Eq + Debug {}
+
+trait PostS {
+    fn as_any(&self) -> &Any;
+
+    fn _eq(&self, other: &PostS) -> bool;
+
+    fn _hash<H: Hasher>(&self, hasher: H);
+}
+
+impl<T: 'static + PreS> PostS for T {
     fn as_any(&self) -> &Any {
         self as &Any
     }
 
-    fn equals(& self, other: &AST) -> bool {
-        // Do a type-safe casting. If types are differents
-        // return false, else test for equality.
-        match other.as_any().downcast_ref::<S>() {
+    fn _eq(&self, other: &PostS) -> bool {
+        match other.as_any().downcast_ref::<T>() {
             None => false,
-            Some(a) => self == a,
+            Some(it) => self == it,
         }
     }
-}
-
-/// Actually implement PartialEq to delegate to .equals(...).
-// From https://stackoverflow.com/a/49138717/723090
-impl<'a> PartialEq for AST + 'a {
-    fn eq(&self, other: &AST) -> bool {
-        self.equals(other)
+    fn _hash<H: Hasher>(&self, hasher: H) {
+        self.as_any().downcast_ref::<T>().hash(hasher)
     }
 }
 
-#[derive(PartialEq)]
-struct Node {
-    a: i32,
-    b: String,
-}
-impl Node {
-    fn new(a: i32, b: String) -> Node {
-        Node { a, b }
+impl PreS for A {}
+
+impl PreS for B {}
+
+impl PartialEq<PostS> for PostS {
+    fn eq(&self, other: &PostS) -> bool {
+        self._eq(other)
     }
 }
-impl BaseAST for Node {}
 
-#[derive(PartialEq)]
-struct Another {
-    c: f64,
-}
-impl Another {
-    fn new(c: f64) -> Another {
-        Another { c }
-    }
-}
-impl BaseAST for Another {}
+impl Eq for PostS {}
 
-#[derive(PartialEq)]
-struct NotAST {
-    d: u8,
-}
-impl NotAST {
-    fn new(d: u8) -> NotAST {
-        NotAST { d }
+impl Hash for PostS {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        self._hash(hasher)
     }
 }
 
 fn main() {
-    assert!( to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(1, "hi".to_string())));
-    assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(2, "bye".to_string())));
-    assert!( to_trait_obj_and_compare(&Another::new(PI), &Another::new(PI)));
-    assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Another::new(PI)));
-    // This does not compile, and it shouldn't, because only AST nodes should be comparable:
-    // assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &NotAST::new(2)));
-}
-
-// todo: use AST instead of CompareAST
-fn to_trait_obj_and_compare(an_a: &AST, another_a: &AST) -> bool {
-    an_a == another_a
+    let x: &PostS = &A(1);
+    let m = HashMap::new();
+    m.insert(x, 0);
 }
