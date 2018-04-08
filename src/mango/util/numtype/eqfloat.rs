@@ -4,7 +4,7 @@ use std::hash::Hash;
 use std::hash::Hasher;
 
 /// This is a wrapper for f64 that implements Eq and Hash,
-/// by defining that NaN == NaN. It intentionally can't
+/// by defining that NAN == NAN. It intentionally can't
 /// be used for arithmetic, as rounding errors would be bad
 /// for e.g. HashMap keys.
 #[derive(Debug, Clone, Copy)]
@@ -31,8 +31,10 @@ impl fmt::LowerExp for f64eq {
 
 impl PartialEq for f64eq {
     fn eq(&self, other: &f64eq) -> bool {
-        if self.0.is_nan() && other.0.is_nan() {
-            return true;
+        if self.0.is_nan() {
+            return other.0.is_nan();
+        } else if other.0.is_nan() {
+            return false;
         }
         if (self.0 == 0f64 || self.0 == -0f64) || (other.0 == 0f64 || other.0 == -0f64) {
             return true;
@@ -49,6 +51,10 @@ impl Eq for f64eq {}
 impl Hash for f64eq {
     fn hash<H: Hasher>(&self, hasher: &mut H) {
         // Inspired by https://docs.rs/ordered-float/0.5.0/src/ordered_float/lib.rs.html#543
+        if self.0 == -0. {
+            (0f64).to_bits().hash(hasher);
+            return
+        }
         self.0.to_bits().hash(hasher);
     }
 }
@@ -61,8 +67,8 @@ impl From<f64> for f64eq {
 
 // TODO: maybe this was a bad idea, I don't want arithmetic like `powi`
 //impl Float for f64eq {
-//    fn is_nan(self) -> bool {
-//        self.0.is_nan()
+//    fn is_NAN(self) -> bool {
+//        self.0.is_NAN()
 //    }
 //
 //    fn is_infinite(self) -> bool {
@@ -125,3 +131,48 @@ impl From<f64> for f64eq {
 // Ord is not yet implemented because there has not been a need,
 // but if a need arises, it would be in the spirit of this wrapper
 // to implement both PartialOrd and Ord.
+
+#[cfg(test)]
+mod tests {
+    use super::f64eq;
+    use std::f64::consts::PI;
+    use std::f64::{INFINITY, NAN, NEG_INFINITY};
+    use std::hash::{Hash, Hasher, BuildHasher};
+    use std::collections::hash_map::RandomState;
+
+    #[test]
+    fn test_eq() {
+        assert_eq!(f64eq::new(42.), f64eq::new(42.));
+        assert_eq!(f64eq::new(PI), f64eq::new(PI));
+        assert_ne!(f64eq::new(42.), f64eq::new(-42.));
+        assert_eq!(f64eq::new(0.), f64eq::new(-0.));
+        assert_eq!(f64eq::new(INFINITY), f64eq::new(INFINITY));
+        assert_ne!(f64eq::new(INFINITY), f64eq::new(NEG_INFINITY));
+        assert_ne!(f64eq::new(42.), f64eq::new(NAN));
+        assert_ne!(f64eq::new(NAN), f64eq::new(42.));
+        assert_eq!(f64eq::new(NAN), f64eq::new(NAN));
+    }
+
+    lazy_static! { static ref RANDOM: RandomState = RandomState::new(); }
+
+    fn get_hash(x: f64eq) -> u64 {
+        let mut hasher = RANDOM.build_hasher();
+        x.hash(&mut hasher);
+        hasher.finish()
+    }
+
+    #[test]
+    fn test_hash() {
+        // While different values are not 100% guaranteed to have different hashes,
+        // it would be extremely suspicious of there is a collision in these few.
+        assert_eq!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(42.)));
+        assert_eq!(get_hash(f64eq::new(PI)), get_hash(f64eq::new(PI)));
+        assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(-42.)));
+        assert_eq!(get_hash(f64eq::new(0.)), get_hash(f64eq::new(-0.)));
+        assert_eq!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(INFINITY)));
+        assert_ne!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(NEG_INFINITY)));
+        assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(NAN)));
+        assert_ne!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(42.)));
+        assert_eq!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(NAN)));
+    }
+}
