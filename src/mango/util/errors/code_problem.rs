@@ -30,7 +30,7 @@ pub struct CodeProblem {
 }
 
 impl CodeProblem {
-    pub fn new(severity: Severity, description: Msg, context: Context) -> CodeProblem {
+    pub fn new(severity: Severity, description: Msg, context: Context) -> Self {
         CodeProblem {
             severity: severity,
             description: description,

@@ -10,7 +10,7 @@ pub struct ProblemCollector {
 }
 
 impl ProblemCollector {
-    pub fn new() -> ProblemCollector {
+    pub fn new() -> Self {
         ProblemCollector { problems: vec![] }
     }
 

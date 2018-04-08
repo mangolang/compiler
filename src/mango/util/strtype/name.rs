@@ -50,7 +50,7 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new(name: String) -> Result<Name, Msg> {
+    fn new(name: String) -> Result<Self, Msg> {
         let id = INTERNER.lock().unwrap().get_or_intern(name.to_string());
         match Name::validate(&name.to_string()) {
             Ok(_) => Ok(Name { name_id: id }),
