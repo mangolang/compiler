@@ -11,8 +11,7 @@ lazy_static! {
 }
 
 lazy_static! {
-    type SIType = Mutex<StringInterner<usize, RandomState>>
-    static ref INTERNER: SIType = Mutex::new(StringInterner::new());
+    static ref INTERNER: Mutex<StringInterner<usize, RandomState>> = Mutex::new(StringInterner::new());
 }
 
 /// Type for valid identifier names.
