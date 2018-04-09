@@ -10,8 +10,10 @@ lazy_static! {
     static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
 }
 
+// TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
+type SIType = Mutex<StringInterner<usize, RandomState>>;
 lazy_static! {
-    static ref INTERNER: Mutex<StringInterner<usize, RandomState>> = Mutex::new(StringInterner::new());
+    static ref INTERNER: SIType = Mutex::new(StringInterner::new());
 }
 
 /// Type for valid identifier names.

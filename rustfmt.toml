@@ -3,5 +3,3 @@ reorder_extern_crates_in_group = true
 reorder_imports = true
 reorder_imports_in_group = true
 reorder_imported_names = true
-# todo: this was necessary due to https://github.com/rust-lang-nursery/rustfmt/issues/2610 ; undo when possible
-error_on_line_overflow = false
