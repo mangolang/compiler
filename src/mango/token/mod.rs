@@ -1,5 +1,5 @@
-use std::fmt::Debug;
 use mango::util::encdec::ToText;
+use std::fmt::Debug;
 use std::hash::Hash;
 use std::hash::Hasher;
 

@@ -1,10 +1,10 @@
+use mango::ast_full::BaseAST;
+use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
 use mango::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
-use mango::util::encdec::ToText;
-use mango::ast_full::BaseAST;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]

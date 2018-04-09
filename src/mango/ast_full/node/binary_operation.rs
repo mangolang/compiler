@@ -1,7 +1,7 @@
-use mango::util::encdec::ToText;
 use mango::ast_full::AST;
-use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::BaseAST;
+use mango::ast_full::terminal::OperatorAST;
+use mango::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
 #[derive(Debug)]

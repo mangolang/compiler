@@ -1,7 +1,7 @@
-use std::fmt::{Display, Formatter};
+use mango::util::strtype::Msg;
 use std::cmp::Ordering;
 use std::fmt;
-use mango::util::strtype::Msg;
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Severity {
@@ -105,9 +105,9 @@ impl Display for CodeProblem {
 
 #[cfg(test)]
 mod tests {
-    use super::Severity;
-    use super::Context;
     use super::CodeProblem;
+    use super::Context;
+    use super::Severity;
     use mango::util::strtype::Msg;
     use mango::util::strtype::StrType;
 

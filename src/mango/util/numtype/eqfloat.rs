@@ -1,5 +1,5 @@
-use std::fmt;
 use std::cmp::Ordering;
+use std::fmt;
 use std::hash::Hash;
 use std::hash::Hasher;
 
@@ -53,7 +53,7 @@ impl Hash for f64eq {
         // Inspired by https://docs.rs/ordered-float/0.5.0/src/ordered_float/lib.rs.html#543
         if self.0 == -0. {
             (0f64).to_bits().hash(hasher);
-            return
+            return;
         }
         self.0.to_bits().hash(hasher);
     }
@@ -135,10 +135,10 @@ impl From<f64> for f64eq {
 #[cfg(test)]
 mod tests {
     use super::f64eq;
+    use std::collections::hash_map::RandomState;
     use std::f64::consts::PI;
     use std::f64::{INFINITY, NAN, NEG_INFINITY};
-    use std::hash::{Hash, Hasher, BuildHasher};
-    use std::collections::hash_map::RandomState;
+    use std::hash::{BuildHasher, Hash, Hasher};
 
     #[test]
     fn test_eq() {
@@ -153,7 +153,9 @@ mod tests {
         assert_eq!(f64eq::new(NAN), f64eq::new(NAN));
     }
 
-    lazy_static! { static ref RANDOM: RandomState = RandomState::new(); }
+    lazy_static! {
+        static ref RANDOM: RandomState = RandomState::new();
+    }
 
     fn get_hash(x: f64eq) -> u64 {
         let mut hasher = RANDOM.build_hasher();
@@ -169,8 +171,14 @@ mod tests {
         assert_eq!(get_hash(f64eq::new(PI)), get_hash(f64eq::new(PI)));
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(-42.)));
         assert_eq!(get_hash(f64eq::new(0.)), get_hash(f64eq::new(-0.)));
-        assert_eq!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(INFINITY)));
-        assert_ne!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(NEG_INFINITY)));
+        assert_eq!(
+            get_hash(f64eq::new(INFINITY)),
+            get_hash(f64eq::new(INFINITY))
+        );
+        assert_ne!(
+            get_hash(f64eq::new(INFINITY)),
+            get_hash(f64eq::new(NEG_INFINITY))
+        );
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(NAN)));
         assert_ne!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(42.)));
         assert_eq!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(NAN)));

@@ -1,6 +1,6 @@
+use mango::util::strtype::Msg;
 use std::fmt;
 use std::hash::Hash;
-use mango::util::strtype::Msg;
 
 /// A trait for types that wrap a string matching a certain structure.
 pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {

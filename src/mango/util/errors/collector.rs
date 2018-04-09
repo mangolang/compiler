@@ -45,8 +45,8 @@ impl<'a> IntoIterator for &'a ProblemCollector {
 #[cfg(test)]
 mod tests {
     use super::ProblemCollector;
-    use mango::util::strtype::Msg;
     use mango::util::errors::Context;
+    use mango::util::strtype::Msg;
     use mango::util::strtype::StrType;
 
     #[test]

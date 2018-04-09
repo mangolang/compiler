@@ -1,5 +1,5 @@
-use mango::util::encdec::ToText;
 use mango::ast_full::BaseAST;
+use mango::util::encdec::ToText;
 use mango::util::strtype::Name;
 
 /// A literal integer value.
