@@ -7,7 +7,7 @@ use mango::util::encdec::ToText;
 use mango::ast_full::BaseAST;
 
 /// The different operator symbols that are recognized.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Symbol {
     Plus,
     Dash,
@@ -16,7 +16,7 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new(symbol_txt: &str) -> Result<Symbol, Msg> {
+    pub fn new(symbol_txt: &str) -> Result<Self, Msg> {
         match symbol_txt {
             "+" => Ok(Symbol::Plus),
             "-" => Ok(Symbol::Dash),
@@ -46,7 +46,7 @@ impl Display for Symbol {
 }
 
 /// An operator (unary, binary, ...).
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct OperatorAST {
     symbol: Symbol,
 }

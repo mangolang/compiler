@@ -16,7 +16,7 @@ struct B {
 
 trait MyTrait {
 	fn as_any(&self) -> &Any;
-	fn my_hash(&self, hasher: &mut Hasher);
+	fn my_hash<H: Hasher>(&self, hasher: &mut Hasher);
 }
 
 trait AnyHasher {
@@ -30,7 +30,7 @@ impl<H: 'static + Hasher> AnyHasher for H {
 }
 
 // TODO: but now I want this not for everything
-impl<T: 'static + Hash, H: 'static + Hasher> MyTrait for T {
+impl<T: 'static + Hash> MyTrait for T {
 	fn as_any(&self) -> &Any {
 		self as &Any
 	}

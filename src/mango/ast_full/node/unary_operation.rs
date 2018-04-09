@@ -3,6 +3,7 @@ use mango::ast_full::AST;
 use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::BaseAST;
 
+//#[derive(Debug, Hash)]
 #[derive(Debug)]
 pub struct UnaryOperationAST {
     operator: OperatorAST,
@@ -10,7 +11,7 @@ pub struct UnaryOperationAST {
 }
 
 impl UnaryOperationAST {
-    pub fn new(operator: OperatorAST, subject: Box<AST>) -> UnaryOperationAST {
+    pub fn new(operator: OperatorAST, subject: Box<AST>) -> Self {
         return UnaryOperationAST { operator, subject };
     }
 }

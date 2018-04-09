@@ -3,6 +3,7 @@ use mango::ast_full::AST;
 use mango::ast_full::BaseAST;
 
 /// Type for an association, e.g. assignment, parameter binding.
+//#[derive(Debug, Hash)]
 #[derive(Debug)]
 pub struct AssignmentAST {
     assignee: Box<AST>,
@@ -10,7 +11,7 @@ pub struct AssignmentAST {
 }
 
 impl AssignmentAST {
-    pub fn new(assignee: Box<AST>, value: Box<AST>) -> AssignmentAST {
+    pub fn new(assignee: Box<AST>, value: Box<AST>) -> Self {
         return AssignmentAST { assignee, value };
     }
 }
@@ -20,12 +21,11 @@ impl ToText for AssignmentAST {
         return format!(
             "{0:} = ({1:})",
             self.assignee.to_text(),
-            self.value.to_text() // TODO: try without *
+            self.value.to_text()
         );
     }
 }
 
-// TODO: try without this, and without &*
 impl PartialEq for AssignmentAST {
     fn eq(&self, other: &AssignmentAST) -> bool {
         return &self.assignee == &other.assignee && &self.value == &other.value;

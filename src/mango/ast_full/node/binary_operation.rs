@@ -3,6 +3,7 @@ use mango::ast_full::AST;
 use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::BaseAST;
 
+//#[derive(Debug, Hash)]
 #[derive(Debug)]
 pub struct BinaryOperationAST {
     left: Box<AST>,
@@ -11,7 +12,7 @@ pub struct BinaryOperationAST {
 }
 
 impl BinaryOperationAST {
-    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> BinaryOperationAST {
+    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> Self {
         return BinaryOperationAST {
             left,
             operator,

@@ -46,7 +46,7 @@ struct Node {
     b: String,
 }
 impl Node {
-    fn new(a: i32, b: String) -> Node {
+    fn new(a: i32, b: String) -> Self {
         Node { a, b }
     }
 }
@@ -57,7 +57,7 @@ struct Another {
     c: f64,
 }
 impl Another {
-    fn new(c: f64) -> Another {
+    fn new(c: f64) -> Self {
         Another { c }
     }
 }
@@ -68,7 +68,7 @@ struct NotAST {
     d: u8,
 }
 impl NotAST {
-    fn new(d: u8) -> NotAST {
+    fn new(d: u8) -> Self {
         NotAST { d }
     }
 }

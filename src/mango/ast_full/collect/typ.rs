@@ -14,6 +14,9 @@ pub trait AST: BaseAST {
 
     /// Do the equality test.
     fn equals(&self, other: &AST) -> bool;
+
+    //    /// Create hash, but using a Hasher trait object instead of generic function.
+    //    fn as_hash(&self, state: &mut Hasher);
 }
 
 /// This makes all AST nodes comparable (Eq).
@@ -40,3 +43,15 @@ impl<'a> PartialEq for AST + 'a {
         self.equals(other)
     }
 }
+
+// todo: remove?
+//// Traits with generic methods cannot be made into trait objects.
+////
+//impl<'a> Hash for AST + 'a {
+//    fn hash<H>(&self, hasher: &mut H)
+//    where
+//        H: Hasher,
+//    {
+//        self.as_hash(&mut hasher)
+//    }
+//}

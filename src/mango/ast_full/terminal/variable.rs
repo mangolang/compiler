@@ -3,13 +3,13 @@ use mango::ast_full::BaseAST;
 use mango::util::strtype::Name;
 
 /// A literal integer value.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct VariableAST {
     name: Name,
 }
 
 impl VariableAST {
-    pub fn new(name: Name) -> VariableAST {
+    pub fn new(name: Name) -> Self {
         VariableAST { name }
     }
 }

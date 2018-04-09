@@ -3,7 +3,7 @@ use mango::ast_full::BaseAST;
 use mango::token::Token;
 
 /// Represents an unparseable list of tokens.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Hash)]
 pub struct UnparseableAST {
     tokens: Vec<Box<Token>>,
 }

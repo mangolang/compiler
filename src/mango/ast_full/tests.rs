@@ -24,7 +24,8 @@ fn test_ast_equality() {
         )),
     );
     assert_eq!(twin_one, twin_two);
-    //    assert_eq!(twin_one.hashCode(), twin_two.hashCode());
+    // todo: hash not implemented, so not tested yet
+    // assert_eq!(calculate_hash(&twin_one), calculate_hash(&twin_two));
 }
 
 #[test]
