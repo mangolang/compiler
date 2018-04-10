@@ -17,18 +17,18 @@ import kotlin.test.assertNotEquals
 class ASTEqualityTest {
     @Test
     fun testASTEquality() {
-        val twinOne = ConcreteBinaryOperation(
+        val twin_one = ConcreteBinaryOperation(
                 IntegerAST(IntegerToken(7)),
                 ConcreteBinaryOperator(OperatorToken("*")),
                 NegateOperationAST(IntegerAST(IntegerToken(3)))
         )
-        val twinTwo = ConcreteBinaryOperation(
+        val twin_two = ConcreteBinaryOperation(
                 IntegerAST(IntegerToken(7)),
                 ConcreteBinaryOperator(OperatorToken("*")),
                 NegateOperationAST(IntegerAST(IntegerToken(3)))
         )
-        assertEquals(twinOne, twinTwo)
-        assertEquals(twinOne.hashCode(), twinTwo.hashCode())
+        assertEquals(twin_one, twin_two)
+        assertEquals(twin_one.hashCode(), twin_two.hashCode())
     }
 
     @Test

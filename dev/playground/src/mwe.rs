@@ -22,7 +22,7 @@ trait MyTrait: PartialEq {
 struct MyObj {
     a: i32,
 } impl MyObj {
-    fn new(a: i32) -> MyObj {
+    fn new(a: i32) -> Self {
         MyObj { a }
     }
 }
