@@ -1,39 +1,51 @@
+use mango::ast_full::node::BinaryOperationAST;
+use mango::ast_full::node::UnaryOperationAST;
 use mango::ast_full::special::UnparseableAST;
+use mango::ast_full::terminal::IntLiteralAST;
+use mango::ast_full::terminal::OperatorAST;
+use mango::ast_full::terminal::Symbol;
 
 #[test]
 fn test_ast_equality() {
-    //    let twinOne = ConcreteBinaryOperation(
-    //        IntegerAST(IntegerToken(7)),
-    //        ConcreteBinaryOperator(OperatorToken("*")),
-    //        NegateOperationAST(IntegerAST(IntegerToken(3))),
-    //    )
-    //    let twinTwo = ConcreteBinaryOperation(
-    //        IntegerAST(IntegerToken(7)),
-    //        ConcreteBinaryOperator(OperatorToken("*")),
-    //        NegateOperationAST(IntegerAST(IntegerToken(3))),
-    //    )
-    //    assert_eq!(twinOne, twinTwo)
-    //    assert_eq!(twinOne.hashCode(), twinTwo.hashCode())
+    let twin_one = BinaryOperationAST::new(
+        Box::new(IntLiteralAST::new(7)),
+        OperatorAST::from_symbol(Symbol::Plus),
+        Box::new(UnaryOperationAST::new(
+            OperatorAST::from_symbol(Symbol::Plus),
+            Box::new(IntLiteralAST::new(3)),
+        )),
+    );
+    let twin_two = BinaryOperationAST::new(
+        Box::new(IntLiteralAST::new(7)),
+        OperatorAST::from_symbol(Symbol::Plus),
+        Box::new(UnaryOperationAST::new(
+            OperatorAST::from_symbol(Symbol::Plus),
+            Box::new(IntLiteralAST::new(3)),
+        )),
+    );
+    assert_eq!(twin_one, twin_two);
+    // todo: hash not implemented, so not tested yet
+    // assert_eq!(calculate_hash(&twin_one), calculate_hash(&twin_two));
 }
 
 #[test]
 fn test_ast_inequality() {
-    //    assert_ne!(IntegerAST(IntegerToken(7)), NegateOperationAST(IntegerAST(IntegerToken(7))))
-    //    assert_ne!(IntegerAST(IntegerToken(7)), IntegerAST(IntegerToken(8)))
-    //    assert_ne!(NegateOperationAST(IntegerAST(IntegerToken(7))), NegateOperationAST(IntegerAST(IntegerToken(8))))
-    //    assert_ne!(ConcreteBinaryOperator(OperatorToken("*")), ConcreteBinaryOperator(OperatorToken("/")))
-    //    assert_ne!(ConcreteBinaryOperation(IntegerAST(IntegerToken( + 7)), ConcreteBinaryOperator(OperatorToken("*")), IntegerAST(IntegerToken(3))),
-    //    ConcreteBinaryOperation(IntegerAST(IntegerToken(-7)), ConcreteBinaryOperator(OperatorToken("*")), IntegerAST(IntegerToken(3)))
+    //    assert_ne!(IntLiteralAST(IntegerToken(7)), UnaryOperationAST(IntLiteralAST(IntegerToken(7))))
+    //    assert_ne!(IntLiteralAST(IntegerToken(7)), IntLiteralAST(IntegerToken(8)))
+    //    assert_ne!(UnaryOperationAST(IntLiteralAST(IntegerToken(7))), UnaryOperationAST(IntLiteralAST(IntegerToken(8))))
+    //    assert_ne!(ConcreteBinaryOperator(OperatorAST("*")), ConcreteBinaryOperator(OperatorAST("/")))
+    //    assert_ne!(BinaryOperationAST(IntLiteralAST(IntegerToken( + 7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3))),
+    //    BinaryOperationAST(IntLiteralAST(IntegerToken(-7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3)))
     //    )
 }
 
 #[test]
 fn test_unparseable_equality() {
-        let unp: UnparseableAST;
-        unp = UnparseableAST::from_tokens(vec![]);
-        assert_eq!(unp, unp);
-//        let unp = UnparseableAST::from_tokens(vec![IntegerToken()]);
-//        assert_eq!(up, up)
-//        assert_ne!(UnparseableAST(null), UnparseableAST(null))
-//        assert_ne!(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
+    let unp: UnparseableAST;
+    unp = UnparseableAST::from_tokens(vec![]);
+    assert_eq!(unp, unp);
+    //        let unp = UnparseableAST::from_tokens(vec![IntegerToken()]);
+    //        assert_eq!(up, up)
+    //        assert_ne!(UnparseableAST(null), UnparseableAST(null))
+    //        assert_ne!(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
 }

@@ -1,88 +1,104 @@
-
-// https://stackoverflow.com/questions/25339603/how-to-test-for-equality-between-trait-objects
-
-// Any allows us to do dynamic typecasting.
+use std::collections::HashMap;
+use std::collections::hash_map::RandomState;
+use std::hash::Hasher;
+use std::hash::BuildHasher;
+use std::hash::Hash;
+use std::fmt::Debug;
 use std::any::Any;
-use std::f64::consts::PI;
 
-trait BaseAST {}
+#[derive(Hash, Debug)]
+struct A(i32);
 
-trait AST: BaseAST {
-    // Should return an &Any so that we can test equality on a casted value.
-    fn as_any(&self) -> &Any;
-
-    // Do the test.
-    fn equals(&self, other: &AST) -> bool;
+#[derive(Hash, Debug)]
+struct B {
+	val: String,
 }
 
-// This makes all AST nodes comparable.
-// I *think* that 'static here just refers to the type S (not instances)
-impl<S: 'static + BaseAST + PartialEq> AST for S {
-    fn as_any(&self) -> &Any {
-        self as &Any
-    }
-
-    fn equals(& self, other: &AST) -> bool {
-        // Do a type-safe casting. If types are differents
-        // return false, else test for equality.
-        match other.as_any().downcast_ref::<S>() {
-            None => false,
-            Some(a) => self == a,
-        }
-    }
+trait MyTrait {
+	fn as_any(&self) -> &Any;
+	fn my_hash<H: Hasher>(&self, hasher: &mut Hasher);
 }
 
-/// Actually implement PartialEq to delegate to .equals(...).
-// From https://stackoverflow.com/a/49138717/723090
-impl<'a> PartialEq for AST + 'a {
-    fn eq(&self, other: &AST) -> bool {
-        self.equals(other)
-    }
+trait AnyHasher {
+	fn as_any(&self) -> &Any;
 }
 
-#[derive(PartialEq)]
-struct Node {
-    a: i32,
-    b: String,
+impl<H: 'static + Hasher> AnyHasher for H {
+	fn as_any(&self) -> &Any {
+		self as &Any
+	}
 }
-impl Node {
-    fn new(a: i32, b: String) -> Node {
-        Node { a, b }
-    }
-}
-impl BaseAST for Node {}
 
-#[derive(PartialEq)]
-struct Another {
-    c: f64,
-}
-impl Another {
-    fn new(c: f64) -> Another {
-        Another { c }
-    }
-}
-impl BaseAST for Another {}
+// TODO: but now I want this not for everything
+impl<T: 'static + Hash> MyTrait for T {
+	fn as_any(&self) -> &Any {
+		self as &Any
+	}
 
-#[derive(PartialEq)]
-struct NotAST {
-    d: u8,
+	fn my_hash<H>(&self, hasher: &mut AnyHasher) {
+		let h = hasher.as_any().downcast_ref::<H>().unwrap();
+		self.as_any().downcast_ref::<T>().unwrap().hash(h)
+	}
 }
-impl NotAST {
-    fn new(d: u8) -> NotAST {
-        NotAST { d }
-    }
+
+//impl MyTrait for A {}
+//impl MyTrait for B {}
+
+impl Hash for MyTrait {
+	fn hash<H: Hasher>(&self, hasher: &mut H) {
+		self.my_hash(hasher)
+	}
 }
 
 fn main() {
-    assert!( to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(1, "hi".to_string())));
-    assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Node::new(2, "bye".to_string())));
-    assert!( to_trait_obj_and_compare(&Another::new(PI), &Another::new(PI)));
-    assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &Another::new(PI)));
-    // This does not compile, and it shouldn't, because only AST nodes should be comparable:
-    // assert!(!to_trait_obj_and_compare(&Node::new(1, "hi".to_string()), &NotAST::new(2)));
+	let s = RandomState::new();
+	let mut hasher = s.build_hasher();
+
+	let x: &MyTrait = &A(1);
+	x.hash(&mut hasher);
 }
 
-// todo: use AST instead of CompareAST
-fn to_trait_obj_and_compare(an_a: &AST, another_a: &AST) -> bool {
-    an_a == another_a
-}
+
+//trait PreS: Debug {}
+//
+//trait HasherAsAny {
+//	fn as_any(&self) -> &Any;
+//}
+//
+//trait PostS {
+//	fn as_any(&self) -> &Any;
+//
+//	fn _hash<H: Hasher>(&self, hasher: H);
+//}
+//
+//impl<T: 'static + Hasher> HasherAsAny for T {
+//	fn as_any(&self) -> &Any {
+//		self as &Any
+//	}
+//}
+//
+//impl<T: 'static + PreS> PostS for T {
+//	fn as_any(&self) -> &Any {
+//		self as &Any
+//	}
+//
+//	fn _hash<H: Hasher>(&self, hasher: H) {
+//		self.as_any().downcast_ref::<T>().hash(hasher)
+//	}
+//}
+//
+//impl PreS for A {}
+//
+//impl PreS for B {}
+//
+//impl Hash for PostS {
+//	fn hash(&self, hasher: &mut HasherAsAny) {
+//		self._hash(hasher.as_any().downcast_ref::<T>())
+//	}
+//}
+//
+//fn main() {
+//	let x: &PostS = &A(1);
+//	let m = HashMap::new();
+//	m.insert(x, 0);
+//}

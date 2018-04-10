@@ -12,7 +12,7 @@ import org.mangolang.token.mock.FixedTokenStream
 class TokenEqualityTest {
     @Test
     fun testTokenEquality() {
-        val twinOne = FixedTokenStream(listOf(
+        val twin_one = FixedTokenStream(listOf(
                 ParenthesisOpenToken(),
                 IntegerToken(7),
                 OperatorToken("*"),
@@ -20,7 +20,7 @@ class TokenEqualityTest {
                 ParenthesisCloseToken(),
                 StringToken("ok")
         ))
-        val twinTwo = FixedTokenStream(listOf(
+        val twin_two = FixedTokenStream(listOf(
                 ParenthesisOpenToken(),
                 IntegerToken(7),
                 OperatorToken("*"),
@@ -28,11 +28,11 @@ class TokenEqualityTest {
                 ParenthesisCloseToken(),
                 StringToken("ok")
         ))
-        assertEquals(twinOne, twinTwo)
-        assertEquals(twinOne.hashCode(), twinTwo.hashCode())
-        twinOne.take()
-        assertEquals(twinOne, twinTwo)
-        assertEquals(twinOne.hashCode(), twinTwo.hashCode())
+        assertEquals(twin_one, twin_two)
+        assertEquals(twin_one.hashCode(), twin_two.hashCode())
+        twin_one.take()
+        assertEquals(twin_one, twin_two)
+        assertEquals(twin_one.hashCode(), twin_two.hashCode())
     }
 
     @Test
