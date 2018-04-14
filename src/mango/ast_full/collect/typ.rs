@@ -1,6 +1,8 @@
 use mango::util::encdec::ToText;
 use std::any::Any;
+use std::collections::hash_map::DefaultHasher;
 use std::fmt::Debug;
+use std::hash::{Hash, Hasher};
 
 /// Trait to be implemented by everything in the full abstract syntax tree.
 //pub trait BaseAST: ToText + ToObjectNotation {  // todo: add ON again later
@@ -44,14 +46,25 @@ impl<'a> PartialEq for AST + 'a {
     }
 }
 
-// todo: remove?
-//// Traits with generic methods cannot be made into trait objects.
-////
-//impl<'a> Hash for AST + 'a {
-//    fn hash<H>(&self, hasher: &mut H)
-//    where
-//        H: Hasher,
-//    {
-//        self.as_hash(&mut hasher)
-//    }
-//}
+/// Create a trait that can be required by traits that
+/// 1) can be used as objects, and
+/// 2) should be hashable
+pub trait HashForTraitObj {
+    fn my_hash(&self) -> u64;
+}
+
+/// Implement my_hash by delegating to Hash.
+// Unfortunately uses `DefaultHasher`, but found no other waIt's a by.
+impl<T: 'static + BaseAST + Hash> HashForTraitObj for T {
+    fn my_hash(&self) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        self.hash(&mut hasher);
+        hasher.finish()
+    }
+}
+
+impl<'a> Hash for AST + 'a {
+    fn hash<H: Hasher>(&self, hasher: &mut H) {
+        hasher.write_u64(self.my_hash())
+    }
+}

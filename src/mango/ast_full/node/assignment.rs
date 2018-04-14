@@ -4,7 +4,7 @@ use mango::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
 //#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, Hash)]
 pub struct AssignmentAST {
     assignee: Box<AST>,
     value: Box<AST>,

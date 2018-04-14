@@ -7,3 +7,5 @@ pub mod format;
 pub mod encdec;
 
 pub mod errors;
+
+pub mod traitobj;

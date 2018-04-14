@@ -1,3 +1,6 @@
+
+// https://stackoverflow.com/questions/49711479/how-can-i-create-hashable-trait-objects-trait-objects-with-generic-method-para
+
 use std::collections::HashMap;
 use std::collections::hash_map::RandomState;
 use std::hash::Hasher;

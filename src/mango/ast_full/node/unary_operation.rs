@@ -4,7 +4,7 @@ use mango::ast_full::terminal::OperatorAST;
 use mango::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, Hash)]
 pub struct UnaryOperationAST {
     operator: OperatorAST,
     subject: Box<AST>,
