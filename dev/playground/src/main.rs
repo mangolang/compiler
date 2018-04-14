@@ -6,102 +6,72 @@ use std::collections::hash_map::RandomState;
 use std::hash::Hasher;
 use std::hash::BuildHasher;
 use std::hash::Hash;
-use std::fmt::Debug;
-use std::any::Any;
 
-#[derive(Hash, Debug)]
-struct A(i32);
-
-#[derive(Hash, Debug)]
-struct B {
-	val: String,
-}
+#[macro_use]
+extern crate lazy_static;
 
 trait MyTrait {
-	fn as_any(&self) -> &Any;
-	fn my_hash<H: Hasher>(&self, hasher: &mut Hasher);
+    fn to_text(&self) -> String;
 }
 
-trait AnyHasher {
-	fn as_any(&self) -> &Any;
+#[derive(Hash, PartialEq, Eq, Debug)]
+struct Alpha {
+    val: String,
 }
 
-impl<H: 'static + Hasher> AnyHasher for H {
-	fn as_any(&self) -> &Any {
-		self as &Any
-	}
+#[derive(Hash, PartialEq, Eq, Debug)]
+struct Beta {
+    nr: i32,
+    f: u8,
 }
 
-// TODO: but now I want this not for everything
-impl<T: 'static + Hash> MyTrait for T {
-	fn as_any(&self) -> &Any {
-		self as &Any
-	}
-
-	fn my_hash<H>(&self, hasher: &mut AnyHasher) {
-		let h = hasher.as_any().downcast_ref::<H>().unwrap();
-		self.as_any().downcast_ref::<T>().unwrap().hash(h)
-	}
+impl MyTrait for Alpha {
+    fn to_text(&self) -> String {
+        self.val.to_owned()
+    }
 }
 
-//impl MyTrait for A {}
-//impl MyTrait for B {}
+impl MyTrait for Beta {
+    fn to_text(&self) -> String {
+        format!("{}, {}", self.nr, self.f)
+    }
+}
 
-impl Hash for MyTrait {
-	fn hash<H: Hasher>(&self, hasher: &mut H) {
-		self.my_hash(hasher)
-	}
+#[derive(Hash, PartialEq, Eq, Debug)]
+enum MyEnum {
+    A(Alpha),
+    B(Beta),
+}
+
+impl MyTrait for MyEnum {
+    fn to_text(&self) -> String {
+        match self {
+            &MyEnum::A(ref alpha) => alpha.to_text(),
+            &MyEnum::B(ref beta) => beta.to_text(),
+        }
+    }
+}
+
+lazy_static! {
+    static ref RANDSTATE: RandomState = RandomState::new();
+}
+
+fn get_test_hash(x: &MyEnum) -> u64 {
+   	let mut hasher = RANDSTATE.build_hasher();
+    x.hash(&mut hasher);
+    hasher.finish()
 }
 
 fn main() {
-	let s = RandomState::new();
-	let mut hasher = s.build_hasher();
-
-	let x: &MyTrait = &A(1);
-	x.hash(&mut hasher);
+    let a1: MyEnum = MyEnum::A(Alpha { val: "Hello World".to_owned() });
+    let a2: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_owned() });
+    let a3: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_owned() });
+    let b: MyEnum = MyEnum::B(Beta { nr: 8, f: 2 });
+    let mut m = HashMap::new();
+    println!("{:?} {:?}", a1.to_text(), b.to_text());
+    println!("{:?} {:?} {:?}", get_test_hash(&a1), get_test_hash(&a2), get_test_hash(&a3));
+    m.insert(a1, 0);
+    m.insert(a2, 0);
+    m.insert(b, 0);
+    println!("{:?}", m);
 }
-
-
-//trait PreS: Debug {}
-//
-//trait HasherAsAny {
-//	fn as_any(&self) -> &Any;
-//}
-//
-//trait PostS {
-//	fn as_any(&self) -> &Any;
-//
-//	fn _hash<H: Hasher>(&self, hasher: H);
-//}
-//
-//impl<T: 'static + Hasher> HasherAsAny for T {
-//	fn as_any(&self) -> &Any {
-//		self as &Any
-//	}
-//}
-//
-//impl<T: 'static + PreS> PostS for T {
-//	fn as_any(&self) -> &Any {
-//		self as &Any
-//	}
-//
-//	fn _hash<H: Hasher>(&self, hasher: H) {
-//		self.as_any().downcast_ref::<T>().hash(hasher)
-//	}
-//}
-//
-//impl PreS for A {}
-//
-//impl PreS for B {}
-//
-//impl Hash for PostS {
-//	fn hash(&self, hasher: &mut HasherAsAny) {
-//		self._hash(hasher.as_any().downcast_ref::<T>())
-//	}
-//}
-//
-//fn main() {
-//	let x: &PostS = &A(1);
-//	let m = HashMap::new();
-//	m.insert(x, 0);
-//}
