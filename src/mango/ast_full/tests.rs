@@ -2,25 +2,27 @@ use mango::ast_full::node::BinaryOperationAST;
 use mango::ast_full::node::UnaryOperationAST;
 use mango::ast_full::special::UnparseableAST;
 use mango::ast_full::terminal::IntLiteralAST;
+use mango::ast_full::terminal::LiteralAST;
 use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::terminal::Symbol;
+use mango::ast_full::FullAST;
 
 #[test]
 fn test_ast_equality() {
     let twin_one = BinaryOperationAST::new(
-        Box::new(IntLiteralAST::new(7)),
+        FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         OperatorAST::from_symbol(Symbol::Plus),
-        Box::new(UnaryOperationAST::new(
+        FullAST::UnaryOperation(UnaryOperationAST::new(
             OperatorAST::from_symbol(Symbol::Plus),
-            Box::new(IntLiteralAST::new(3)),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
     let twin_two = BinaryOperationAST::new(
-        Box::new(IntLiteralAST::new(7)),
+        FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         OperatorAST::from_symbol(Symbol::Plus),
-        Box::new(UnaryOperationAST::new(
+        FullAST::UnaryOperation(UnaryOperationAST::new(
             OperatorAST::from_symbol(Symbol::Plus),
-            Box::new(IntLiteralAST::new(3)),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
     assert_eq!(twin_one, twin_two);
@@ -30,13 +32,14 @@ fn test_ast_equality() {
 
 #[test]
 fn test_ast_inequality() {
-    //    assert_ne!(IntLiteralAST(IntegerToken(7)), UnaryOperationAST(IntLiteralAST(IntegerToken(7))))
-    //    assert_ne!(IntLiteralAST(IntegerToken(7)), IntLiteralAST(IntegerToken(8)))
-    //    assert_ne!(UnaryOperationAST(IntLiteralAST(IntegerToken(7))), UnaryOperationAST(IntLiteralAST(IntegerToken(8))))
-    //    assert_ne!(ConcreteBinaryOperator(OperatorAST("*")), ConcreteBinaryOperator(OperatorAST("/")))
-    //    assert_ne!(BinaryOperationAST(IntLiteralAST(IntegerToken( + 7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3))),
-    //    BinaryOperationAST(IntLiteralAST(IntegerToken(-7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3)))
-    //    )
+    assert_eq!(1, 2); // TODO
+                      //    assert_ne!(IntLiteralAST(IntegerToken(7)), UnaryOperationAST(IntLiteralAST(IntegerToken(7))))
+                      //    assert_ne!(IntLiteralAST(IntegerToken(7)), IntLiteralAST(IntegerToken(8)))
+                      //    assert_ne!(UnaryOperationAST(IntLiteralAST(IntegerToken(7))), UnaryOperationAST(IntLiteralAST(IntegerToken(8))))
+                      //    assert_ne!(ConcreteBinaryOperator(OperatorAST("*")), ConcreteBinaryOperator(OperatorAST("/")))
+                      //    assert_ne!(BinaryOperationAST(IntLiteralAST(IntegerToken( + 7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3))),
+                      //    BinaryOperationAST(IntLiteralAST(IntegerToken(-7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3)))
+                      //    )
 }
 
 #[test]
