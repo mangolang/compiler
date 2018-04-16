@@ -1,16 +1,16 @@
+use mango::ast_full::node::AssignmentAST;
 use mango::ast_full::node::BinaryOperationAST;
 use mango::ast_full::node::UnaryOperationAST;
 use mango::ast_full::special::UnparseableAST;
+use mango::ast_full::terminal::FloatLiteralAST;
 use mango::ast_full::terminal::IntLiteralAST;
 use mango::ast_full::terminal::LiteralAST;
 use mango::ast_full::terminal::OperatorAST;
-use mango::ast_full::terminal::Symbol;
-use mango::ast_full::FullAST;
-use mango::ast_full::terminal::FloatLiteralAST;
 use mango::ast_full::terminal::StringLiteralAST;
+use mango::ast_full::terminal::Symbol;
 use mango::ast_full::terminal::VariableAST;
+use mango::ast_full::FullAST;
 use mango::util::strtype::Name;
-use mango::ast_full::node::AssignmentAST;
 use mango::util::strtype::StrType;
 
 #[test]
@@ -45,11 +45,13 @@ fn test_simple_ast_eq_ne() {
         FullAST::Literal(LiteralAST::String(StringLiteralAST::new("1".to_string()))),
         FullAST::UnaryOperation(UnaryOperationAST::new(
             OperatorAST::from_symbol(Symbol::Dash),
-            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))))),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
+        )),
         FullAST::BinaryOperation(BinaryOperationAST::new(
             FullAST::Literal(LiteralAST::Float(FloatLiteralAST::new(1.))),
             OperatorAST::from_symbol(Symbol::Plus),
-            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))))),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
+        )),
         FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
         FullAST::Assignment(AssignmentAST::new(
             FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
