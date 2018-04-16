@@ -4,16 +4,11 @@ use mango::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
 //#[derive(Debug, Hash)]
-#[derive(Debug)]
+// todo: use derive(new) everywhere
+#[derive(new, Debug)]
 pub struct AssignmentAST {
     assignee: Box<AST>,
     value: Box<AST>,
-}
-
-impl AssignmentAST {
-    pub fn new(assignee: Box<AST>, value: Box<AST>) -> Self {
-        return AssignmentAST { assignee, value };
-    }
 }
 
 impl ToText for AssignmentAST {
