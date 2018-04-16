@@ -1,9 +1,9 @@
-use mango::ast_full::BaseAST;
+use mango::ast_full::AST;
 use mango::token::Token;
 use mango::util::encdec::ToText;
 
 /// Represents an unparseable list of tokens.
-#[derive(Debug, PartialEq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableAST {
     tokens: Vec<Box<Token>>,
 }
@@ -27,4 +27,4 @@ impl ToText for UnparseableAST {
     }
 }
 
-impl BaseAST for UnparseableAST {}
+impl AST for UnparseableAST {}

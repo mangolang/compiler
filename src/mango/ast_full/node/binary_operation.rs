@@ -1,22 +1,22 @@
-use mango::ast_full::AST;
-use mango::ast_full::BaseAST;
 use mango::ast_full::terminal::OperatorAST;
+use mango::ast_full::FullAST;
+use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct BinaryOperationAST {
-    left: Box<AST>,
+    left: Box<FullAST>,
     operator: OperatorAST,
-    right: Box<AST>,
+    right: Box<FullAST>,
 }
 
 impl BinaryOperationAST {
-    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> Self {
+    pub fn new(left: FullAST, operator: OperatorAST, right: FullAST) -> Self {
         return BinaryOperationAST {
-            left,
+            left: Box::new(left),
             operator,
-            right,
+            right: Box::new(right),
         };
     }
 }
@@ -32,11 +32,4 @@ impl ToText for BinaryOperationAST {
     }
 }
 
-impl PartialEq for BinaryOperationAST {
-    fn eq(&self, other: &BinaryOperationAST) -> bool {
-        return self.operator == other.operator && &self.left == &other.left
-            && &self.right == &other.right;
-    }
-}
-
-impl BaseAST for BinaryOperationAST {}
+impl AST for BinaryOperationAST {}

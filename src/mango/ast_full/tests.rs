@@ -1,26 +1,34 @@
+use mango::ast_full::node::AssignmentAST;
 use mango::ast_full::node::BinaryOperationAST;
 use mango::ast_full::node::UnaryOperationAST;
 use mango::ast_full::special::UnparseableAST;
+use mango::ast_full::terminal::FloatLiteralAST;
 use mango::ast_full::terminal::IntLiteralAST;
+use mango::ast_full::terminal::LiteralAST;
 use mango::ast_full::terminal::OperatorAST;
+use mango::ast_full::terminal::StringLiteralAST;
 use mango::ast_full::terminal::Symbol;
+use mango::ast_full::terminal::VariableAST;
+use mango::ast_full::FullAST;
+use mango::util::strtype::Name;
+use mango::util::strtype::StrType;
 
 #[test]
-fn test_ast_equality() {
+fn test_nested_ast_eq() {
     let twin_one = BinaryOperationAST::new(
-        Box::new(IntLiteralAST::new(7)),
+        FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         OperatorAST::from_symbol(Symbol::Plus),
-        Box::new(UnaryOperationAST::new(
+        FullAST::UnaryOperation(UnaryOperationAST::new(
             OperatorAST::from_symbol(Symbol::Plus),
-            Box::new(IntLiteralAST::new(3)),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
     let twin_two = BinaryOperationAST::new(
-        Box::new(IntLiteralAST::new(7)),
+        FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         OperatorAST::from_symbol(Symbol::Plus),
-        Box::new(UnaryOperationAST::new(
+        FullAST::UnaryOperation(UnaryOperationAST::new(
             OperatorAST::from_symbol(Symbol::Plus),
-            Box::new(IntLiteralAST::new(3)),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
     assert_eq!(twin_one, twin_two);
@@ -29,14 +37,36 @@ fn test_ast_equality() {
 }
 
 #[test]
-fn test_ast_inequality() {
-    //    assert_ne!(IntLiteralAST(IntegerToken(7)), UnaryOperationAST(IntLiteralAST(IntegerToken(7))))
-    //    assert_ne!(IntLiteralAST(IntegerToken(7)), IntLiteralAST(IntegerToken(8)))
-    //    assert_ne!(UnaryOperationAST(IntLiteralAST(IntegerToken(7))), UnaryOperationAST(IntLiteralAST(IntegerToken(8))))
-    //    assert_ne!(ConcreteBinaryOperator(OperatorAST("*")), ConcreteBinaryOperator(OperatorAST("/")))
-    //    assert_ne!(BinaryOperationAST(IntLiteralAST(IntegerToken( + 7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3))),
-    //    BinaryOperationAST(IntLiteralAST(IntegerToken(-7)), ConcreteBinaryOperator(OperatorAST("*")), IntLiteralAST(IntegerToken(3)))
-    //    )
+fn test_simple_ast_eq_ne() {
+    let nodes = vec![
+        FullAST::Operator(OperatorAST::from_symbol(Symbol::Plus)),
+        FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
+        FullAST::Literal(LiteralAST::Float(FloatLiteralAST::new(1.))),
+        FullAST::Literal(LiteralAST::String(StringLiteralAST::new("1".to_string()))),
+        FullAST::UnaryOperation(UnaryOperationAST::new(
+            OperatorAST::from_symbol(Symbol::Dash),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
+        )),
+        FullAST::BinaryOperation(BinaryOperationAST::new(
+            FullAST::Literal(LiteralAST::Float(FloatLiteralAST::new(1.))),
+            OperatorAST::from_symbol(Symbol::Plus),
+            FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
+        )),
+        FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
+        FullAST::Assignment(AssignmentAST::new(
+            FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
+            FullAST::Literal(LiteralAST::String(StringLiteralAST::new("1".to_string()))),
+        )),
+    ];
+    for (i, left) in nodes.iter().enumerate() {
+        for (j, right) in nodes.iter().enumerate() {
+            if i == j {
+                assert_eq!(left, right);
+            } else {
+                assert_ne!(left, right);
+            }
+        }
+    }
 }
 
 #[test]
@@ -44,6 +74,7 @@ fn test_unparseable_equality() {
     let unp: UnparseableAST;
     unp = UnparseableAST::from_tokens(vec![]);
     assert_eq!(unp, unp);
+    // todo
     //        let unp = UnparseableAST::from_tokens(vec![IntegerToken()]);
     //        assert_eq!(up, up)
     //        assert_ne!(UnparseableAST(null), UnparseableAST(null))

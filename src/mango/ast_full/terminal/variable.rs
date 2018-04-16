@@ -1,4 +1,4 @@
-use mango::ast_full::BaseAST;
+use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 use mango::util::strtype::Name;
 
@@ -20,4 +20,4 @@ impl ToText for VariableAST {
     }
 }
 
-impl BaseAST for VariableAST {}
+impl AST for VariableAST {}

@@ -15,3 +15,4 @@ include = [
 regex = "0.2.*"
 string-interner = "0.6.*"
 lazy_static = "1.0.*"
+cargo-wasm = "0.4.*"
