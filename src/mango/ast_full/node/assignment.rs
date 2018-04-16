@@ -1,14 +1,14 @@
+use mango::ast_full::FullAST;
 use mango::ast_full::AST;
-use mango::ast_full::BaseAST;
 use mango::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
 //#[derive(Debug, Hash)]
 // todo: use derive(new) everywhere
-#[derive(new, Debug)]
+#[derive(new, Debug, PartialEq, Eq, Hash)]
 pub struct AssignmentAST {
-    assignee: Box<AST>,
-    value: Box<AST>,
+    assignee: Box<FullAST>, // todo: maybe this could be a subset instead of FullAST
+    value: Box<FullAST>,
 }
 
 impl ToText for AssignmentAST {
@@ -21,10 +21,4 @@ impl ToText for AssignmentAST {
     }
 }
 
-impl PartialEq for AssignmentAST {
-    fn eq(&self, other: &AssignmentAST) -> bool {
-        return &self.assignee == &other.assignee && &self.value == &other.value;
-    }
-}
-
-impl BaseAST for AssignmentAST {}
+impl AST for AssignmentAST {}

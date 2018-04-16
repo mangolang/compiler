@@ -6,6 +6,6 @@ before_script:
 sudo: false
 cache: cargo
 script:
-  - cargo fmt --verbose --all -- --write-mode=diff
+  - # cargo fmt --verbose --all -- --write-mode=diff
   - cargo build --verbose --all
   - cargo test --verbose --all

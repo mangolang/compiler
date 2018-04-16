@@ -16,9 +16,11 @@ There are dozens of pages of design notes, but the plan still lacks coherence, s
 How to use
 -------------------------------
 
-The compiler is written in Rust. You can run it using:
+The compiler is written in Rust for WebAssembly. You can run it using:
 
-    cargo run
+    rustup toolchain install nightly
+    cargo install cargo-wasm
+    cargo wasm build
 
 This compiles to native code, with WebAssembly to be added later (#34).
 

@@ -1,9 +1,10 @@
-use mango::ast_full::BaseAST;
+use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 use mango::util::format::to_double_quoted_str;
 use mango::util::numtype::f64eq;
 
 /// Closed collection of literal values
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum LiteralAST {
     Int(IntLiteralAST),
     Float(FloatLiteralAST),
@@ -69,6 +70,6 @@ impl ToText for StringLiteralAST {
 // TODO: I need to make sure than NaN == NaN to do this legitimately
 impl Eq for FloatLiteralAST {}
 
-impl BaseAST for IntLiteralAST {}
-impl BaseAST for FloatLiteralAST {}
-impl BaseAST for StringLiteralAST {}
+impl AST for IntLiteralAST {}
+impl AST for FloatLiteralAST {}
+impl AST for StringLiteralAST {}
