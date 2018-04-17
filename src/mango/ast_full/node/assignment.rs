@@ -3,12 +3,20 @@ use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
-//#[derive(Debug, Hash)]
-// todo: use derive(new) everywhere
-#[derive(new, Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct AssignmentAST {
     assignee: Box<FullAST>, // todo: maybe this could be a subset instead of FullAST
     value: Box<FullAST>,
+}
+
+impl AssignmentAST {
+    // No derive(new) because of boxing
+    pub fn new(assignee: FullAST, value: FullAST) -> Self {
+        return AssignmentAST {
+            assignee: Box::new(assignee),
+            value: Box::new(value),
+        };
+    }
 }
 
 impl ToText for AssignmentAST {

@@ -3,7 +3,6 @@ use mango::ast_full::FullAST;
 use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 
-//#[derive(Debug, Hash)]
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct BinaryOperationAST {
     left: Box<FullAST>,
@@ -12,6 +11,7 @@ pub struct BinaryOperationAST {
 }
 
 impl BinaryOperationAST {
+    // No derive(new) because of boxing
     pub fn new(left: FullAST, operator: OperatorAST, right: FullAST) -> Self {
         return BinaryOperationAST {
             left: Box::new(left),
