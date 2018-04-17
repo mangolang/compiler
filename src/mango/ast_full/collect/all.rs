@@ -15,8 +15,8 @@ pub enum FullAST {
     Literal(LiteralAST),
     UnaryOperation(UnaryOperationAST),
     BinaryOperation(BinaryOperationAST),
-    Assignment(AssignmentAST),
     Variable(VariableAST),
+    Assignment(AssignmentAST),
 
     Unparseable(UnparseableAST),
 }
