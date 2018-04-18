@@ -12,7 +12,7 @@ pub enum LiteralAST {
 }
 
 /// A literal integer value.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(new, Debug, PartialEq, Eq, Hash)]
 pub struct IntLiteralAST {
     value: i64,
 }
@@ -24,15 +24,9 @@ pub struct FloatLiteralAST {
 }
 
 /// A literal text value.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(new, Debug, PartialEq, Eq, Hash)]
 pub struct StringLiteralAST {
     value: String,
-}
-
-impl IntLiteralAST {
-    pub fn new(value: i64) -> Self {
-        IntLiteralAST { value }
-    }
 }
 
 impl FloatLiteralAST {
@@ -40,12 +34,6 @@ impl FloatLiteralAST {
         FloatLiteralAST {
             value: f64eq::new(value),
         }
-    }
-}
-
-impl StringLiteralAST {
-    pub fn new(value: String) -> Self {
-        StringLiteralAST { value }
     }
 }
 

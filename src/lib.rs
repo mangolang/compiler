@@ -3,6 +3,8 @@ extern crate core;
 extern crate lazy_static;
 extern crate regex;
 extern crate string_interner;
+#[macro_use]
+extern crate derive_new;
 
 pub mod mango {
     // Utilities
