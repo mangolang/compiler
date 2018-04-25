@@ -2,7 +2,7 @@ use mango::token::Token;
 use mango::util::encdec::ToText;
 
 /// Represents an unparseable list of tokens.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct UnlexableToken {
     text: String,
 }
