@@ -1,5 +1,3 @@
-use mango::ast_full::AST;
-use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
 use mango::util::strtype::StrType;
 use std::fmt::Display;

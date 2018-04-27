@@ -1,10 +1,6 @@
 use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
-use mango::util::strtype::StrType;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as fResult;
 use mango::util::symbols::Symbol;
 
 /// An operator (unary, binary, ...).
