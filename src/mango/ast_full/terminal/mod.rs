@@ -1,6 +1,5 @@
 mod operator;
 pub use self::operator::OperatorAST;
-pub use self::operator::Symbol;
 
 mod literal;
 pub use self::literal::FloatLiteralAST;

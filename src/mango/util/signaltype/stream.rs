@@ -1,4 +1,3 @@
-use mango::util::strtype::StrType;
 use regex::Regex;
 use std::fmt;
 
