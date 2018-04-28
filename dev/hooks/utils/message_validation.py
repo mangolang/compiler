@@ -24,8 +24,6 @@ class ValidationError(Exception):
 
 
 def validate_title(title):
-	if title[:5].lower() == 'merge':
-		return
 	if title[0] in string.ascii_lowercase:
 		raise ValidationError('Commit message title should start with a capital letter')
 	if title[-1] == '.':
@@ -64,6 +62,8 @@ def validate_tags(tags):
 
 
 def validate_commit_message(msg):
+	if msg[:5].lower() == 'merge':
+		return
 	title, tags, body = split_msg(msg)
 	validate_title(title)
 	validate_tags(tags)
