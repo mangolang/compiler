@@ -7,15 +7,9 @@ use std::hash::Hasher;
 /// by defining that NAN == NAN. It intentionally can't
 /// be used for arithmetic, as rounding errors would be bad
 /// for e.g. HashMap keys.
-#[derive(Debug, Clone, Copy)]
+#[derive(new, Debug, Clone, Copy)]
 #[allow(non_camel_case_types)]
 pub struct f64eq(f64);
-
-impl f64eq {
-    pub fn new(val: f64) -> Self {
-        f64eq(val)
-    }
-}
 
 impl fmt::Display for f64eq {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

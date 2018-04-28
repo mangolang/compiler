@@ -1,4 +1,4 @@
-use mango::ast_full::BaseAST;
+use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
 use mango::util::strtype::StrType;
@@ -75,7 +75,7 @@ impl ToText for OperatorAST {
     }
 }
 
-impl BaseAST for OperatorAST {}
+impl AST for OperatorAST {}
 
 //impl ToObjectNotation for OperatorAST {
 //    #[allow(non_snake_case)]

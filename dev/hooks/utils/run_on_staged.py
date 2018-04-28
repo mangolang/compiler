@@ -15,9 +15,10 @@ def run_on_staged(cmds):
 	def do_cmds(cmds):
 		for cmd in cmds:
 			try:
-				run(cmd, log=True)
+				run(cmd, allow_stderr=True, log=True)
 			except Exception as err:
 				stderr.write(str(err))
+				stderr.write('FAILED, cancelling commit\n')
 				return 1
 		return 0
 	
@@ -34,6 +35,7 @@ def run_on_staged(cmds):
 		return do_cmds(cmds)
 	# If we get here, there were unstaged changes to hide
 	branchname = git('rev-parse --abbrev-ref HEAD', errmsg='Could not get the current branch name').strip()
+	assert branchname != '' and branchname != 'HEAD', 'could not find branch (maybe detached head?)'
 	git('-c commit.gpgsign=false commit --no-verify -m "*** This is a temporary commit to run hooks; '
 		'it contains STAGED changed; you should not see it, revert it if you do ***"',
 		errmsg='Could not create temporary commit for planned changes')

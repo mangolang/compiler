@@ -11,7 +11,7 @@ def run(cmd, *, allow_stderr=False, log=False, errmsg=None):
 	"""
 	Run a shell command and return the output.
 	"""
-	if log or True:  # TODO
+	if log:
 		stdout.write('{0:s}\n'.format(cmd))
 	proc = Popen('{0:s}'.format(cmd), shell=True, stdout=PIPE, stderr=PIPE)
 	try:

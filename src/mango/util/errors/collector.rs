@@ -3,17 +3,14 @@ use mango::util::errors::Context;
 use mango::util::strtype::Msg;
 use std::slice;
 
-#[derive(Debug)]
+#[derive(new, Debug)]
 pub struct ProblemCollector {
     // Note that Vec is already heap-allocated, no need for box.
+    #[new(value = "vec![]")]
     problems: Vec<CodeProblem>,
 }
 
 impl ProblemCollector {
-    pub fn new() -> Self {
-        ProblemCollector { problems: vec![] }
-    }
-
     pub fn error(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::error(description, context);
         self.problems.push(problem);
