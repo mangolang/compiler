@@ -11,8 +11,7 @@ def run(cmd, *, allow_stderr=False, log=False, errmsg=None):
 	"""
 	Run a shell command and return the output.
 	"""
-	print('> ' + cmd)  # TODO
-	if log:
+	if log or True:  # TODO
 		stdout.write('{0:s}\n'.format(cmd))
 	proc = Popen('{0:s}'.format(cmd), shell=True, stdout=PIPE, stderr=PIPE)
 	try:
@@ -23,13 +22,19 @@ def run(cmd, *, allow_stderr=False, log=False, errmsg=None):
 			cmd,
 			str(ex),
 		))
+	stdres = (out + b'\n' + err).decode('utf-8')
+	if log:
+		stdout.write(stdres)
 	if proc.returncode:
-		raise CmdError('return code {0:d}\ncommand: {1:s}'.format(
+		raise CmdError('stopped because of return code {0:d}\ncommand: {1:s}'.format(
 			proc.returncode,
 			cmd,
 		))
+	stdres = (out + b'\n' + err).decode('utf-8')
+	if log:
+		stdout.write(stdres)
 	if allow_stderr:
-		return (out + b'\n' + err).decode('utf-8')
+		return stdres
 	if err.strip():
 		err = err.decode('utf-8')
 		raise CmdError('{0:s}\ncommand: {1:s}\nstderr message: {2:s}'.format(
