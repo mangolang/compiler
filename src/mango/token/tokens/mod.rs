@@ -1,2 +1,5 @@
-pub mod association_symbol;
-pub use self::association_symbol::AssociationSymbolToken;
+pub mod association;
+pub use self::association::AssociationToken;
+
+pub mod declaration;
+pub use self::declaration::DeclarationToken;

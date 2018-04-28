@@ -6,22 +6,23 @@ use mango::util::strtype::Msg;
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub struct AssociationSymbolToken {
+pub struct AssociationToken {
     symbol: Option<Symbol>,
 }
 
-impl AssociationSymbolToken {
-    pub fn from_str(symbol_txt: &str) -> Result<AssociationSymbolToken, Msg> {
-        Ok(AssociationSymbolToken::from_symbol(Symbol::new(symbol_txt)?))
+impl AssociationToken {
+    pub fn from_str(symbol_txt: &str) -> Result<AssociationToken, Msg> {
+        Ok(AssociationToken::from_symbol(Symbol::new(symbol_txt)?))
     }
 
-    pub fn from_symbol(symbol: Symbol) -> AssociationSymbolToken {
-        AssociationSymbolToken { symbol: Option::Some(symbol) }
+    pub fn from_symbol(symbol: Symbol) -> AssociationToken {
+        AssociationToken { symbol: Option::Some(symbol) }
     }
 }
 
-impl ToText for AssociationSymbolToken {
+impl ToText for AssociationToken {
     fn to_text(&self) -> String {
+        // LATER: this seems to compile, but IDEA flags it...
         match self.symbol {
             Option::None => " = ".to_owned(),
             Option::Some(ref sym) => format!(" {}= ", sym),
@@ -29,5 +30,4 @@ impl ToText for AssociationSymbolToken {
     }
 }
 
-impl Token for AssociationSymbolToken {}
-
+impl Token for AssociationToken {}
