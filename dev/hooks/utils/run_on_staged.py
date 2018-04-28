@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: UTF-8 -*-
+
 """
 Run a shell command on the staged changes only.
 """
@@ -64,6 +67,5 @@ def run_on_staged(cmds):
 	return return_code
 
 
-if __name__ == '__main__':
-	assert len(argv) >= 2
-	exit(run_on_staged(argv[1:]))
+assert len(argv) >= 2, 'Did not get enough argument for pre-commit test hook'
+exit(run_on_staged(argv[1:]))

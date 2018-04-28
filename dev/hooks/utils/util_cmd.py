@@ -23,19 +23,16 @@ def run(cmd, *, allow_stderr=False, log=False, errmsg=None):
 			str(ex),
 		))
 	stdres = (out + b'\n' + err).decode('utf-8')
-	if log:
-		stdout.write(stdres)
 	if proc.returncode:
+		stdout.write(stdres)
 		raise CmdError('stopped because of return code {0:d}\ncommand: {1:s}'.format(
 			proc.returncode,
 			cmd,
 		))
-	stdres = (out + b'\n' + err).decode('utf-8')
-	if log:
-		stdout.write(stdres)
 	if allow_stderr:
 		return stdres
 	if err.strip():
+		stdout.write(stdres)
 		err = err.decode('utf-8')
 		raise CmdError('{0:s}\ncommand: {1:s}\nstderr message: {2:s}'.format(
 			errmsg or "command failed",
