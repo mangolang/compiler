@@ -12,10 +12,8 @@ def run_on_staged(cmds):
 	
 	Note that `diff` cannot include untracked files, and `stash` has trouble retrieving by name, but was chosen anyway.
 	"""
-	print('### {} ###'.format(cmds))  # TODO
 	def do_cmds(cmds):
 		for cmd in cmds:
-			print('*** {} ***'.format(cmd))  # TODO
 			try:
 				run(cmd, log=True)
 			except Exception as err:
@@ -27,7 +25,6 @@ def run_on_staged(cmds):
 	staged = git('diff --staged --name-only', errmsg='Could not get the staged files').strip()
 	if not staged:
 		# Skip checks and let git deal with empty commit attempt
-		print('!!! NO STAGED')  # TODO
 		return 0
 	# See if there are any UNstaged changes
 	# if there are, we need to exclude those from tests
@@ -36,6 +33,7 @@ def run_on_staged(cmds):
 		# Skip all the setup and just run the tests
 		return do_cmds(cmds)
 	# If we get here, there were unstaged changes to hide
+	branchname = git('rev-parse --abbrev-ref HEAD', errmsg='Could not get the current branch name').strip()
 	git('-c commit.gpgsign=false commit --no-verify -m "*** This is a temporary commit to run hooks; '
 		'it contains STAGED changed; you should not see it, revert it if you do ***"',
 		errmsg='Could not create temporary commit for planned changes')
@@ -53,7 +51,7 @@ def run_on_staged(cmds):
 			try:
 				return_code = do_cmds(cmds)
 			finally:
-				git('checkout HEAD', allow_stderr=True, errmsg='Cannot go back to HEAD after checkout of "staged files" temporary commit')
+				git('checkout "{}"'.format(branchname), allow_stderr=True, errmsg='Cannot go back to HEAD after checkout of "staged files" temporary commit')
 		finally:
 			# Go back to before the 'unstaged' commit
 			git('reset --soft "{}"~1'.format(unstage_hash), errmsg='Could not undo temporary commit (ustaged)')
