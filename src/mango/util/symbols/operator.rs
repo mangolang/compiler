@@ -5,7 +5,7 @@ use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 
 /// The different operator symbols that are recognized.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Symbol {
     Plus,
     Dash,
