@@ -4,14 +4,20 @@ use mango::util::encdec::ToText;
 /// Open and close parentheses: (, )
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisOpen {}
+
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisClose {}
 
 impl ParenthesisOpen {
-    pub fn new() -> ParenthesisOpen {}
+    pub fn new() -> ParenthesisOpen {
+        ParenthesisOpen {}
+    }
 }
 
 impl ParenthesisClose {
-    pub fn new() -> ParenthesisClose {}
+    pub fn new() -> ParenthesisClose {
+        ParenthesisClose {}
+    }
 }
 
 impl ToText for ParenthesisOpen {
@@ -27,4 +33,5 @@ impl ToText for ParenthesisClose {
 }
 
 impl Token for ParenthesisOpen {}
+
 impl Token for ParenthesisClose {}
