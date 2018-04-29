@@ -4,7 +4,7 @@ use mango::util::encdec::ToText;
 /// Keyword(s) used to indicate a declaration.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct DeclarationToken {
-    is_mutable: bool
+    is_mutable: bool,
 }
 
 impl DeclarationToken {

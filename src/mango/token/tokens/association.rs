@@ -1,7 +1,7 @@
 use mango::token::Token;
 use mango::util::encdec::ToText;
-use mango::util::symbols::Symbol;
 use mango::util::strtype::Msg;
+use mango::util::symbols::Symbol;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -16,7 +16,9 @@ impl AssociationToken {
     }
 
     pub fn from_symbol(symbol: Symbol) -> AssociationToken {
-        AssociationToken { symbol: Option::Some(symbol) }
+        AssociationToken {
+            symbol: Option::Some(symbol),
+        }
     }
 }
 
