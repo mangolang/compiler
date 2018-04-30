@@ -11,7 +11,7 @@ use mango::ast_full::terminal::VariableAST;
 use mango::ast_full::FullAST;
 use mango::util::strtype::Name;
 use mango::util::strtype::StrType;
-use mango::util::symbols::Symbol;
+use mango::util::codeparts::Symbol;
 
 #[test]
 fn test_nested_ast_eq() {

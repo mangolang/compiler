@@ -4,7 +4,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 
-/// The different operator symbols that are recognized.
+/// The different operator codeparts that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Symbol {
     Plus,
