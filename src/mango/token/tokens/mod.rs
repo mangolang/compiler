@@ -1,8 +1,8 @@
 pub mod association;
 pub use self::association::AssociationToken;
 
-pub mod declaration;
-pub use self::declaration::DeclarationToken;
+//pub mod declaration;
+//pub use self::declaration::DeclarationToken;
 
 pub mod parentheses;
 pub use self::parentheses::ParenthesisClose;
