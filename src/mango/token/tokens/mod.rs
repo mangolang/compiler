@@ -16,5 +16,5 @@ pub use self::identifier::IdentifierToken;
 
 // todo: literal
 
-// todo: keyword
-
+pub mod keyword;
+pub use self::keyword::KeywordToken;
