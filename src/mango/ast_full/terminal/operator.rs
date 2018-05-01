@@ -1,7 +1,7 @@
 use mango::ast_full::AST;
+use mango::util::codeparts::Symbol;
 use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
-use mango::util::codeparts::Symbol;
 
 /// An operator (unary, binary, ...).
 #[derive(Debug, PartialEq, Eq, Hash)]

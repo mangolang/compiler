@@ -6,7 +6,7 @@ use mango::util::encdec::ToText;
 pub enum Tokens {
     //    Operator(OperatorAST),
     Unlexable(UnlexableToken), // todo: spelling
-    // TODO
+                               // TODO
 }
 
 impl ToText for Tokens {

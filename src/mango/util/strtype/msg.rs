@@ -25,7 +25,9 @@ impl fmt::Display for Msg {
 impl StrType for Msg {
     fn new(msg: String) -> Result<Self, Msg> {
         match Msg::validate(&msg) {
-            Ok(_) => Ok(Msg { msg: msg.to_owned() }),
+            Ok(_) => Ok(Msg {
+                msg: msg.to_owned(),
+            }),
             Err(msg) => Err(msg),
         }
     }

@@ -1,7 +1,7 @@
 use mango::token::Token;
+use mango::util::codeparts::Symbol;
 use mango::util::encdec::ToText;
 use mango::util::strtype::Msg;
-use mango::util::codeparts::Symbol;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
