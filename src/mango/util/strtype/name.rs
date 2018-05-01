@@ -21,7 +21,7 @@ lazy_static! {
 /// # Implementation
 ///
 /// * Name strings are interned for fast equality checking.
-#[derive(Debug, Hash, PartialEq, Eq)]
+#[derive(Debug, Hash, PartialEq, Eq, Clone)]
 pub struct Name {
     name_id: usize,
 }
