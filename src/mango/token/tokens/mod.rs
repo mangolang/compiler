@@ -14,7 +14,8 @@ pub use self::operator::OperatorToken;
 pub mod identifier;
 pub use self::identifier::IdentifierToken;
 
-// todo: literal
+pub mod literal;
+pub use self::literal::LiteralToken;
 
 pub mod keyword;
 pub use self::keyword::KeywordToken;
