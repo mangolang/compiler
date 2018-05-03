@@ -5,29 +5,29 @@ use mango::util::encdec::ToCode;
 use std::fs::File;
 use std::io;
 
-/// The numeric instructions
+/// Numeric operations
 // https://webassembly.github.io/spec/core/bikeshed/index.html#numeric-instructions%E2%91%A0
-pub enum WasmNumericInstruction {
+pub enum WasmNumeric {
     Add(WasmAdd),
 //    Sub(WasmSub),
 //    Mul(WasmMul),
 //    Div(WasmDiv),
 }
 
-impl ToText for WasmNumericInstruction {
+impl ToText for WasmNumeric {
     fn to_text(&self) -> String {
         match self {
-            WasmNumericInstruction::Add(op) => op.to_text(),
+            WasmNumeric::Add(op) => op.to_text(),
         }
     }
 }
 
-impl ToCode for WasmNumericInstruction {
+impl ToCode for WasmNumeric {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         match self {
-            WasmNumericInstruction::Add(op) => op.to_code(file),
+            WasmNumeric::Add(op) => op.to_code(file),
         }
     }
 }
 
-impl Wasm for WasmNumericInstruction {}
+impl Wasm for WasmNumeric {}
