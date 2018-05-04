@@ -34,4 +34,3 @@ impl ToCode for WasmOperation {
 }
 
 impl Wasm for WasmOperation {}
-

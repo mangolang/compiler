@@ -7,3 +7,5 @@ pub use self::function::WasmReturn;
 
 mod block;
 pub use self::block::WasmBlock;
+pub use self::block::WasmBranch;
+pub use self::block::WasmBranchIf;
