@@ -1,5 +1,5 @@
 use mango::util::encdec::ToText;
-use mango::towasm::instructions::WasmAdd;
+use mango::towasm::WasmAdd;
 use mango::towasm::Wasm;
 use mango::util::encdec::ToCode;
 use std::fs::File;

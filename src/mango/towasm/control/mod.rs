@@ -1,5 +1,9 @@
-mod functions;
-pub use self::functions::WasmAdd;
-
 mod typ;
-pub use self::typ::WasmControlInstruction;
+pub use self::typ::WasmControl;
+
+mod function;
+pub use self::function::WasmCall;
+pub use self::function::WasmReturn;
+
+mod block;
+pub use self::block::WasmBlock;

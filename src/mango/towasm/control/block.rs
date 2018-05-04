@@ -1,31 +1,27 @@
-use mango::util::encdec::ToText;
 use mango::util::encdec::ToCode;
 use std::fs::File;
 use std::io::Write;
 use std::io;
-use mango::towasm::Wasm;
+use mango::util::encdec::ToText;
 
-pub struct WasmAdd {
-}
+pub struct WasmBlock {}
 
-impl WasmAdd {
+impl WasmBlock {
     pub fn new() -> Self {
-        WasmAdd {}
+        WasmBlock {}
     }
 }
 
-impl ToText for WasmAdd {
+impl ToText for WasmBlock {
     fn to_text(&self) -> String {
-        " add ".to_owned()
+        " call ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmAdd {
+impl ToCode for WasmBlock {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" add ")?;
+        file.write(b" call ")?;
         Ok(())
     }
 }
-
-impl Wasm for WasmAdd {}
