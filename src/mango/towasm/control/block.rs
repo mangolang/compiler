@@ -3,78 +3,78 @@ use std::fs::File;
 use std::io::Write;
 use std::io;
 use mango::util::encdec::ToText;
-use mango::towasm::Wasm;
+use mango::towasm::IWasm;
 
-pub struct WasmBlock {}
+pub struct Block {}
 
-impl WasmBlock {
+impl Block {
     pub fn new() -> Self {
-        WasmBlock {}
+        Block {}
     }
 }
 
-impl ToText for WasmBlock {
+impl ToText for Block {
     fn to_text(&self) -> String {
         " call ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmBlock {
+impl ToCode for Block {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
 
-impl Wasm for WasmBlock {}
+impl IWasm for Block {}
 
 
-pub struct WasmBranch {}
+pub struct Branch {}
 
-impl WasmBranch {
+impl Branch {
     pub fn new() -> Self {
-        WasmBranch {}
+        Branch {}
     }
 }
 
-impl ToText for WasmBranch {
+impl ToText for Branch {
     fn to_text(&self) -> String {
         " br ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmBranch {
+impl ToCode for Branch {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
 
-impl Wasm for WasmBranch {}
+impl IWasm for Branch {}
 
 
-pub struct WasmBranchIf {}
+pub struct BranchIf {}
 
-impl WasmBranchIf {
+impl BranchIf {
     pub fn new() -> Self {
-        WasmBranchIf {}
+        BranchIf {}
     }
 }
 
-impl ToText for WasmBranchIf {
+impl ToText for BranchIf {
     fn to_text(&self) -> String {
         " br_if ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmBranchIf {
+impl ToCode for BranchIf {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
 
-impl Wasm for WasmBranchIf {}
+impl IWasm for BranchIf {}

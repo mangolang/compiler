@@ -2,56 +2,56 @@ use mango::util::encdec::ToCode;
 use std::io::Write;
 use std::io;
 use mango::util::encdec::ToText;
-use mango::towasm::Wasm;
+use mango::towasm::IWasm;
 use std::fs::File;
 
 // todo: call_indirect
 
-pub struct WasmCall {}
+pub struct Call {}
 
-impl WasmCall {
+impl Call {
     pub fn new() -> Self {
-        WasmCall {}
+        Call {}
     }
 }
 
-impl ToText for WasmCall {
+impl ToText for Call {
     fn to_text(&self) -> String {
         " call ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmCall {
+impl ToCode for Call {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
 
-impl Wasm for WasmCall {}
+impl IWasm for Call {}
 
 
-pub struct WasmReturn {}
+pub struct Return {}
 
-impl WasmReturn {
+impl Return {
     pub fn new() -> Self {
-        WasmReturn {}
+        Return {}
     }
 }
 
-impl ToText for WasmReturn {
+impl ToText for Return {
     fn to_text(&self) -> String {
         " call ".to_owned()
 //        format!(" add ")
     }
 }
 
-impl ToCode for WasmReturn {
+impl ToCode for Return {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
 
-impl Wasm for WasmReturn {}
+impl IWasm for Return {}
