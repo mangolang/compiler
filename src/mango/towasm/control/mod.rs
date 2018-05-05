@@ -1,6 +1,3 @@
-mod typ;
-pub use self::typ::Control;
-
 mod block;
 pub use self::block::Block;
 pub use self::block::Branch;

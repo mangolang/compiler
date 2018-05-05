@@ -1,6 +1,7 @@
-mod binop;
-pub use self::binop::Add;
-pub use self::binop::Mul;
+mod arithmetic;
+pub use self::arithmetic::Add;
+pub use self::arithmetic::Mul;
 
-mod typ;
-pub use self::typ::Numeric;
+mod logic;
+pub use self::logic::Gt;
+pub use self::logic::Lt;

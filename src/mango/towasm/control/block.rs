@@ -1,9 +1,9 @@
+use mango::towasm::Wasm;
 use mango::util::encdec::ToCode;
-use std::fs::File;
-use std::io::Write;
-use std::io;
 use mango::util::encdec::ToText;
-use mango::towasm::IWasm;
+use std::fs::File;
+use std::io;
+use std::io::Write;
 
 pub struct Block {}
 
@@ -16,7 +16,7 @@ impl Block {
 impl ToText for Block {
     fn to_text(&self) -> String {
         " call ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -27,8 +27,7 @@ impl ToCode for Block {
     }
 }
 
-impl IWasm for Block {}
-
+impl Wasm for Block {}
 
 pub struct Branch {}
 
@@ -41,7 +40,7 @@ impl Branch {
 impl ToText for Branch {
     fn to_text(&self) -> String {
         " br ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -52,8 +51,7 @@ impl ToCode for Branch {
     }
 }
 
-impl IWasm for Branch {}
-
+impl Wasm for Branch {}
 
 pub struct BranchIf {}
 
@@ -66,7 +64,7 @@ impl BranchIf {
 impl ToText for BranchIf {
     fn to_text(&self) -> String {
         " br_if ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -77,4 +75,4 @@ impl ToCode for BranchIf {
     }
 }
 
-impl IWasm for BranchIf {}
+impl Wasm for BranchIf {}

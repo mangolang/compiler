@@ -1,23 +1,25 @@
-use mango::util::encdec::ToText;
+use mango::towasm::collect::Type;
+use mango::towasm::Wasm;
 use mango::util::encdec::ToCode;
+use mango::util::encdec::ToText;
 use std::fs::File;
-use std::io::Write;
 use std::io;
-use mango::towasm::IWasm;
+use std::io::Write;
 
 pub struct Add {
+    typ: Type,
 }
 
 impl Add {
-    pub fn new() -> Self {
-        Add {}
+    pub fn new(typ: Type) -> Self {
+        Add { typ }
     }
 }
 
 impl ToText for Add {
     fn to_text(&self) -> String {
         " add ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -28,22 +30,22 @@ impl ToCode for Add {
     }
 }
 
-impl IWasm for Add {}
-
+impl Wasm for Add {}
 
 pub struct Mul {
+    typ: Type,
 }
 
 impl Mul {
-    pub fn new() -> Self {
-        Mul {}
+    pub fn new(typ: Type) -> Self {
+        Mul { typ }
     }
 }
 
 impl ToText for Mul {
     fn to_text(&self) -> String {
         " mul ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -54,4 +56,4 @@ impl ToCode for Mul {
     }
 }
 
-impl IWasm for Mul {}
+impl Wasm for Mul {}

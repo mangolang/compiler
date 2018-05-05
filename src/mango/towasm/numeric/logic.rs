@@ -1,3 +1,4 @@
+use mango::towasm::collect::Type;
 use mango::towasm::Wasm;
 use mango::util::encdec::ToCode;
 use mango::util::encdec::ToText;
@@ -5,52 +6,54 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
-// todo: call_indirect
+pub struct Lt {
+    typ: Type,
+}
 
-pub struct Call {}
-
-impl Call {
-    pub fn new() -> Self {
-        Call {}
+impl Lt {
+    pub fn new(typ: Type) -> Self {
+        Lt { typ }
     }
 }
 
-impl ToText for Call {
+impl ToText for Lt {
     fn to_text(&self) -> String {
-        " call ".to_owned()
+        " lt ".to_owned()
         //        format!(" add ")
     }
 }
 
-impl ToCode for Call {
+impl ToCode for Lt {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write(b" lt ")?;
         Ok(())
     }
 }
 
-impl Wasm for Call {}
+impl Wasm for Lt {}
 
-pub struct Return {}
+pub struct Gt {
+    typ: Type,
+}
 
-impl Return {
-    pub fn new() -> Self {
-        Return {}
+impl Gt {
+    pub fn new(typ: Type) -> Self {
+        Gt { typ }
     }
 }
 
-impl ToText for Return {
+impl ToText for Gt {
     fn to_text(&self) -> String {
-        " call ".to_owned()
+        " gt ".to_owned()
         //        format!(" add ")
     }
 }
 
-impl ToCode for Return {
+impl ToCode for Gt {
     fn to_code(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write(b" gt ")?;
         Ok(())
     }
 }
 
-impl Wasm for Return {}
+impl Wasm for Gt {}

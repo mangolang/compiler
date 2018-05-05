@@ -1,9 +1,9 @@
+use mango::towasm::Wasm;
 use mango::util::encdec::ToCode;
-use std::io::Write;
-use std::io;
 use mango::util::encdec::ToText;
-use mango::towasm::IWasm;
 use std::fs::File;
+use std::io;
+use std::io::Write;
 
 pub struct Module {}
 
@@ -16,7 +16,7 @@ impl Module {
 impl ToText for Module {
     fn to_text(&self) -> String {
         " module ".to_owned()
-//        format!(" add ")
+        //        format!(" add ")
     }
 }
 
@@ -27,4 +27,4 @@ impl ToCode for Module {
     }
 }
 
-impl IWasm for Module {}
+impl Wasm for Module {}

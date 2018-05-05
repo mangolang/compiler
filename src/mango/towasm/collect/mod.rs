@@ -1,5 +1,5 @@
 mod typ;
-pub use self::typ::IWasm;
+pub use self::typ::All;
 pub use self::typ::Wasm;
 
 mod datatype;

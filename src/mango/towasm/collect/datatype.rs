@@ -1,13 +1,12 @@
-
 // The unsigned integers etc are not included.
 // They're also not data types in wasm, the operation can choose signed/unsigned.
 // The reason they're not included though, is that I don't expect to use them.
 // If I do use them, I should probably add them here and break wasm 1-1.
 
-use mango::util::encdec::ToText;
 use mango::util::encdec::ToCode;
-use std::io;
+use mango::util::encdec::ToText;
 use std::fs::File;
+use std::io;
 
 pub enum Type {
     Int32,
