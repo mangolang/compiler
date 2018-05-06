@@ -18,7 +18,7 @@ impl Wasm for Block {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write(b" block ")?;
         Ok(())
     }
 }

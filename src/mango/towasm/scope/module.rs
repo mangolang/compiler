@@ -16,7 +16,15 @@ impl Module {
 
 impl Wasm for Module {
     fn as_wat(&self) -> String {
-        " module ".to_owned()
+        format!(
+            "(module\n{})",
+            self.functions
+                .iter()
+                .map(|func| func.as_wat())
+//                .collect()
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
         //        format!(" add ")
     }
 

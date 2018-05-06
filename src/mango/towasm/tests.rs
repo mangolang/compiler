@@ -1,12 +1,27 @@
-use mango::towasm::collect::All;
+use mango::towasm::collect::typ::Wasm;
+use mango::towasm::collect::Type;
+use mango::towasm::control::Block;
+use mango::towasm::control::Return;
 use mango::towasm::scope::Function;
 use mango::towasm::scope::Module;
-use mango::util::strtype::Name;
+use mango::towasm::scope::Output;
+use mango::towasm::scope::Parameter;
+use mango::towasm::util::Name;
 use mango::util::strtype::StrType;
 
 #[test]
 fn test_example_1() {
-    let wasm = Module::new(vec![Function::new()]);
+    let wasm = Module::new(vec![Function::new(
+        Name::new("fac".to_owned()).unwrap(),
+        vec![Parameter::new(
+            Name::new("n".to_owned()).unwrap(),
+            Type::Int32,
+        )],
+        vec![Output::new(Type::Int32)],
+        Block::new(),
+    )]);
+
+    println!("WAT:\n{}\n", wasm.as_wat());
 }
 
 //;; calculate faculty (n!)
