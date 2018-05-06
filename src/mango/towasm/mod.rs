@@ -12,5 +12,8 @@ pub use self::control::*;
 pub mod scope;
 pub use self::scope::*;
 
+pub mod util;
+pub use self::util::*;
+
 #[cfg(test)]
 mod tests;

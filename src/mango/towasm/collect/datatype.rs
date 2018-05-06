@@ -3,8 +3,7 @@
 // The reason they're not included though, is that I don't expect to use them.
 // If I do use them, I should probably add them here and break wasm 1-1.
 
-use mango::util::encdec::ToCode;
-use mango::util::encdec::ToText;
+use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 
@@ -16,8 +15,8 @@ pub enum Type {
     Bool,
 }
 
-impl ToText for Type {
-    fn to_text(&self) -> String {
+impl Wasm for Type {
+    fn as_wat(&self) -> String {
         match self {
             Type::Int32 => "i32",
             Type::Int64 => "i64",
@@ -26,10 +25,8 @@ impl ToText for Type {
             Type::Bool => "i32",
         }.to_owned()
     }
-}
 
-impl ToCode for Type {
-    fn to_code(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

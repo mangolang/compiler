@@ -1,6 +1,4 @@
 use mango::towasm::Wasm;
-use mango::util::encdec::ToCode;
-use mango::util::encdec::ToText;
 use std::fs::File;
 use std::io;
 use std::io::Write;
@@ -15,21 +13,17 @@ impl Call {
     }
 }
 
-impl ToText for Call {
-    fn to_text(&self) -> String {
+impl Wasm for Call {
+    fn as_wat(&self) -> String {
         " call ".to_owned()
         //        format!(" add ")
     }
-}
 
-impl ToCode for Call {
-    fn to_code(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
-
-impl Wasm for Call {}
 
 pub struct Return {}
 
@@ -39,18 +33,14 @@ impl Return {
     }
 }
 
-impl ToText for Return {
-    fn to_text(&self) -> String {
+impl Wasm for Return {
+    fn as_wat(&self) -> String {
         " call ".to_owned()
         //        format!(" add ")
     }
-}
 
-impl ToCode for Return {
-    fn to_code(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" call ")?;
         Ok(())
     }
 }
-
-impl Wasm for Return {}

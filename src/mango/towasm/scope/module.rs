@@ -1,30 +1,27 @@
+use mango::towasm::scope::Function;
 use mango::towasm::Wasm;
-use mango::util::encdec::ToCode;
-use mango::util::encdec::ToText;
 use std::fs::File;
 use std::io;
 use std::io::Write;
 
-pub struct Module {}
+pub struct Module {
+    functions: Vec<Function>,
+}
 
 impl Module {
-    pub fn new() -> Self {
-        Module {}
+    pub fn new(functions: Vec<Function>) -> Self {
+        Module { functions }
     }
 }
 
-impl ToText for Module {
-    fn to_text(&self) -> String {
+impl Wasm for Module {
+    fn as_wat(&self) -> String {
         " module ".to_owned()
         //        format!(" add ")
     }
-}
 
-impl ToCode for Module {
-    fn to_code(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" module ")?;
         Ok(())
     }
 }
-
-impl Wasm for Module {}
