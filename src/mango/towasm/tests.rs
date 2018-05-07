@@ -1,7 +1,6 @@
 use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Type;
 use mango::towasm::control::Block;
-use mango::towasm::control::Return;
 use mango::towasm::scope::Function;
 use mango::towasm::scope::Module;
 use mango::towasm::scope::Output;
@@ -18,7 +17,10 @@ fn test_example_1() {
             Type::Int32,
         )],
         vec![Output::new(Type::Int32)],
-        Block::new(),
+        Block::new(
+            // Function body
+
+        ),
     )]);
 
     println!("WAT:\n{}\n", wasm.as_wat());

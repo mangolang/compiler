@@ -30,3 +30,39 @@ impl Wasm for Type {
         unimplemented!()
     }
 }
+
+pub enum Value {
+    Int(i64),
+    Float(f64),
+}
+
+impl Value {
+    pub fn is_type(&self, typ: Type) -> bool {
+        match self {
+            Value::Int(_) => {
+                match typ {
+                    Type::Bool => false,
+                    _ => true, // int value can be stored in int or float
+                }
+            }
+            Value::Float(_) => match typ {
+                Type::Float32 => true,
+                Type::Float64 => true,
+                _ => false,
+            },
+        }
+    }
+}
+
+impl Wasm for Value {
+    fn as_wat(&self) -> String {
+        match self {
+            Value::Int(val) => format!("{}", val),
+            Value::Float(val) => format!("{}", val),
+        }.to_owned()
+    }
+
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+        unimplemented!()
+    }
+}
