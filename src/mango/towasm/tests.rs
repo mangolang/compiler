@@ -1,4 +1,6 @@
+use mango::towasm::collect::datatype::Value;
 use mango::towasm::collect::typ::Wasm;
+use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::control::Block;
 use mango::towasm::scope::Function;
@@ -6,6 +8,7 @@ use mango::towasm::scope::Module;
 use mango::towasm::scope::Output;
 use mango::towasm::scope::Parameter;
 use mango::towasm::util::Name;
+use mango::towasm::values::Local;
 use mango::util::strtype::StrType;
 
 #[test]
@@ -17,10 +20,17 @@ fn test_example_1() {
             Type::Int32,
         )],
         vec![Output::new(Type::Int32)],
-        Block::new(
+        Block::new(vec![
             // Function body
-
-        ),
+            Statement::Local(Local::new(
+                Name::new("fac_result".to_owned()).unwrap(),
+                Type::Int32,
+            )),
+            Statement::Local(Local::new(
+                Name::new("$loop_condition".to_owned()).unwrap(),
+                Type::Int32,
+            )),
+        ]),
     )]);
 
     println!("WAT:\n{}\n", wasm.as_wat());

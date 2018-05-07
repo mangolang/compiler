@@ -1,4 +1,5 @@
 use mango::towasm::collect::Type;
+use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
@@ -10,19 +11,17 @@ pub struct Local {
 }
 
 impl Local {
-    pub fn new(typ: Type) -> Self {
-        Local { typ }
+    pub fn new(name: Name, typ: Type) -> Self {
+        Local { name, typ }
     }
 }
 
 impl Wasm for Local {
     fn as_wat(&self) -> String {
-        " add ".to_owned()
-        //        format!(" add ")
+        format!("(local {} {})", self.name.as_wat(), self.typ.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" add ")?;
-        Ok(())
+        unimplemented!()
     }
 }

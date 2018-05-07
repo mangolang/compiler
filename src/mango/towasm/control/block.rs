@@ -1,13 +1,16 @@
+use mango::towasm::collect::Statement;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
 
-pub struct Block {}
+pub struct Block {
+    statements: Vec<Statement>,
+}
 
 impl Block {
-    pub fn new() -> Self {
-        Block {}
+    pub fn new(statements: Vec<Statement>) -> Self {
+        Block { statements }
     }
 }
 
