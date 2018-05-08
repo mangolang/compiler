@@ -1,5 +1,5 @@
 use mango::towasm::collect::Type;
-use mango::towasm::control::Block;
+use mango::towasm::control::Group;
 use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
@@ -90,11 +90,11 @@ impl Wasm for FunctionSignature {
 
 pub struct Function {
     signature: FunctionSignature,
-    body: Block,
+    body: Group,
 }
 
 impl Function {
-    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, body: Block) -> Self {
+    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, body: Group) -> Self {
         Function {
             signature: FunctionSignature {
                 name,

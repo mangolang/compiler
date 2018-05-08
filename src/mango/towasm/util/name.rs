@@ -9,6 +9,7 @@ pub struct Name {
 impl Name {
     pub fn new(name: String) -> Option<Self> {
         // todo: filter out illegal names
+        assert!(!name.starts_with("$"));
         return Some(Name { name });
     }
 

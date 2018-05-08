@@ -2,27 +2,25 @@ use mango::towasm::collect::datatype::Value;
 use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
-use mango::towasm::control::Block;
+use mango::towasm::control::Group;
 use mango::towasm::scope::Function;
 use mango::towasm::scope::Module;
 use mango::towasm::scope::Output;
 use mango::towasm::scope::Parameter;
 use mango::towasm::util::Name;
+use mango::towasm::values::Assign;
+use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Local;
 use mango::util::strtype::StrType;
 
 #[test]
 fn test_example_1() {
-    let loop_condition_decl = DeclareLocal::new(
-        Name::new("$loop_condition".to_owned()).unwrap(),
-        Type::Bool,
-    );
+    let loop_condition_decl =
+        DeclareLocal::new(Name::new("loop_condition".to_owned()).unwrap(), Type::Bool);
     let loop_condition = loop_condition_decl.local();
-    let fac_result_decl = DeclareLocal::new(
-        Name::new("fac_result".to_owned()).unwrap(),
-        Type::Int32,
-    );
+    let fac_result_decl =
+        DeclareLocal::new(Name::new("fac_result".to_owned()).unwrap(), Type::Int32);
     let fac_result = fac_result_decl.local();
     let wasm = Module::new(vec![Function::new(
         Name::new("fac".to_owned()).unwrap(),
@@ -31,10 +29,14 @@ fn test_example_1() {
             Type::Int32,
         )],
         vec![Output::new(Type::Int32)],
-        Block::new(vec![
+        Group::new(vec![
             // Function body
             Statement::Local(loop_condition_decl),
             Statement::Local(fac_result_decl),
+            Statement::Assign(Assign::new(
+                fac_result,
+                Const::new(Type::Int32, Value::Int(1)),
+            )),
         ]),
     )]);
 

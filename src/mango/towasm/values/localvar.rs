@@ -7,12 +7,14 @@ use std::io::Write;
 use std::rc::Rc;
 
 pub struct DeclareLocal {
-    local: Rc<Local>
+    local: Rc<Local>,
 }
 
 impl DeclareLocal {
     pub fn new(name: Name, typ: Type) -> Self {
-        DeclareLocal { local: Rc::new(Local { name, typ }) }
+        DeclareLocal {
+            local: Rc::new(Local { name, typ }),
+        }
     }
 
     pub fn local(&self) -> Rc<Local> {
@@ -22,7 +24,11 @@ impl DeclareLocal {
 
 impl Wasm for DeclareLocal {
     fn as_wat(&self) -> String {
-        format!("(local {} {})", self.local.name.as_wat(), self.local.typ.as_wat())
+        format!(
+            "(local {} {})",
+            self.local.name.as_wat(),
+            self.local.typ.as_wat()
+        )
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

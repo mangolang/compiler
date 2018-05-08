@@ -3,14 +3,15 @@ use mango::towasm::values::Local;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use std::rc::Rc;
 
 pub struct Assign {
-    assignee: Local, // todo
-    value: Const,    // todo
+    assignee: Rc<Local>, // todo
+    value: Const,        // todo
 }
 
 impl Assign {
-    pub fn new(assignee: Local, value: Const) -> Self {
+    pub fn new(assignee: Rc<Local>, value: Const) -> Self {
         // todo:
         //        assert!(assignee.typ.can_assign(value.typ));
         return Assign { assignee, value };
@@ -19,7 +20,11 @@ impl Assign {
 
 impl Wasm for Assign {
     fn as_wat(&self) -> String {
-        format!("{}\nset_local {}", self.value.as_wat(), self.assignee.as_wat())
+        format!(
+            "{}\nset_local {}",
+            self.value.as_wat(),
+            self.assignee.as_wat()
+        )
         //    set_local $fac_result
     }
 

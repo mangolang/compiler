@@ -1,5 +1,5 @@
-use mango::towasm::control::Block;
 use mango::towasm::control::Branch;
+use mango::towasm::control::Group;
 use mango::towasm::numeric::Add;
 use mango::towasm::numeric::Gt;
 use mango::towasm::numeric::Lt;
@@ -22,7 +22,7 @@ pub enum All {
     Lt(Lt),
     Gt(Gt),
 
-    Block(Block),
+    Block(Group),
     Branch(Branch),
 
     Module(Module),
