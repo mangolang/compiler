@@ -8,11 +8,22 @@ use mango::towasm::scope::Module;
 use mango::towasm::scope::Output;
 use mango::towasm::scope::Parameter;
 use mango::towasm::util::Name;
+use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Local;
 use mango::util::strtype::StrType;
 
 #[test]
 fn test_example_1() {
+    let loop_condition_decl = DeclareLocal::new(
+        Name::new("$loop_condition".to_owned()).unwrap(),
+        Type::Bool,
+    );
+    let loop_condition = loop_condition_decl.local();
+    let fac_result_decl = DeclareLocal::new(
+        Name::new("fac_result".to_owned()).unwrap(),
+        Type::Int32,
+    );
+    let fac_result = fac_result_decl.local();
     let wasm = Module::new(vec![Function::new(
         Name::new("fac".to_owned()).unwrap(),
         vec![Parameter::new(
@@ -22,14 +33,8 @@ fn test_example_1() {
         vec![Output::new(Type::Int32)],
         Block::new(vec![
             // Function body
-            Statement::Local(Local::new(
-                Name::new("fac_result".to_owned()).unwrap(),
-                Type::Int32,
-            )),
-            Statement::Local(Local::new(
-                Name::new("$loop_condition".to_owned()).unwrap(),
-                Type::Int32,
-            )),
+            Statement::Local(loop_condition_decl),
+            Statement::Local(fac_result_decl),
         ]),
     )]);
 

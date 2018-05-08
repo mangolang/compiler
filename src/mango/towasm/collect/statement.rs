@@ -1,5 +1,5 @@
-use mango::towasm::values::Local;
+use mango::towasm::values::DeclareLocal;
 
 pub enum Statement {
-    Local(Local),
+    Local(DeclareLocal),
 }
