@@ -39,7 +39,7 @@ impl Wasm for DeclareLocal {
 /// To create an instance of Local, make a [DeclareLocal] and call [local()]
 pub struct Local {
     name: Name,
-    typ: Type,
+    pub typ: Type,
 }
 
 impl Wasm for Local {

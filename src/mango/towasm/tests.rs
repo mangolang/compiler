@@ -14,7 +14,8 @@ use mango::towasm::values::Assign;
 use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Local;
-use mango::util::strtype::StrType;
+use mango::towasm::values::Expression;
+use mango::towasm::arithmetic::Add;
 
 #[test]
 fn test_example_1() {
@@ -38,10 +39,15 @@ fn test_example_1() {
             Statement::Local(fac_result_decl),
             Statement::Assign(Assign::new(
                 fac_result,
-                Const::new(Type::Int32, Value::Int(1)),
+                Expression::Const(Const::new(Type::Int32, Value::Int(1))),
             )),
             //            Statement::Block(Block::new_named("".to_owned(), vec![])),
-            Statement::Loop(Loop::new_named(loop_name.clone(), vec![])),
+            Statement::Loop(Loop::new_named(loop_name.clone(), vec![
+                Statement::Assign(Assign::new(
+                    loop_condition,
+                    Expression::Add(Add::new(Type::Int32))
+                )),
+            ])),
         ]),
     )]);
 

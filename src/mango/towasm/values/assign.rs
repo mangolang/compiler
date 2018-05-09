@@ -4,14 +4,16 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::rc::Rc;
+use mango::towasm::collect::datatype::Value;
+use mango::towasm::values::Expression;
 
 pub struct Assign {
     assignee: Rc<Local>, // todo
-    value: Const,        // todo
+    value: Expression,        // todo
 }
 
 impl Assign {
-    pub fn new(assignee: Rc<Local>, value: Const) -> Self {
+    pub fn new(assignee: Rc<Local>, value: Expression) -> Self {
         // todo:
         //        assert!(assignee.typ.can_assign(value.typ));
         return Assign { assignee, value };

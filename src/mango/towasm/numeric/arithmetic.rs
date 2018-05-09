@@ -6,7 +6,7 @@ use std::io::Write;
 
 #[derive(new)]
 pub struct Add {
-    typ: Type,
+    pub typ: Type,
 }
 
 impl Wasm for Add {
@@ -23,7 +23,7 @@ impl Wasm for Add {
 
 #[derive(new)]
 pub struct Mul {
-    typ: Type,
+    pub typ: Type,
 }
 
 impl Wasm for Mul {

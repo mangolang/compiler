@@ -6,7 +6,7 @@ use std::io;
 use std::io::Write;
 
 pub struct Const {
-    typ: Type,
+    pub typ: Type,
     value: Value,
 }
 

@@ -7,3 +7,6 @@ pub use self::localvar::Local;
 
 mod assign;
 pub use self::assign::Assign;
+
+pub mod expression;
+pub use self::expression::Expression;
