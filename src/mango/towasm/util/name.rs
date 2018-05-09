@@ -2,6 +2,7 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 
+#[derive(Clone)]
 pub struct Name {
     name: String,
 }

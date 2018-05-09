@@ -17,7 +17,7 @@ impl Module {
 impl Wasm for Module {
     fn as_wat(&self) -> String {
         format!(
-            "(module\n{})",
+            "(module\n{}\n) ;; module",
             self.functions
                 .iter()
                 .map(|func| func.as_wat())

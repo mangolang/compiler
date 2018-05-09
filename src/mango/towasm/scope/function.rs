@@ -108,7 +108,12 @@ impl Function {
 
 impl Wasm for Function {
     fn as_wat(&self) -> String {
-        format!("({}\n{})", self.signature.as_wat(), self.body.as_wat())
+        format!(
+            "({}\n{}\n) ;; func {}",
+            self.signature.as_wat(),
+            self.body.as_wat(),
+            self.signature.name.as_wat()
+        )
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

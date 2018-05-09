@@ -4,14 +4,9 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
+#[derive(new)]
 pub struct Add {
     typ: Type,
-}
-
-impl Add {
-    pub fn new(typ: Type) -> Self {
-        Add { typ }
-    }
 }
 
 impl Wasm for Add {
@@ -26,14 +21,9 @@ impl Wasm for Add {
     }
 }
 
+#[derive(new)]
 pub struct Mul {
     typ: Type,
-}
-
-impl Mul {
-    pub fn new(typ: Type) -> Self {
-        Mul { typ }
-    }
 }
 
 impl Wasm for Mul {
