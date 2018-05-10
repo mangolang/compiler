@@ -7,6 +7,7 @@ use mango::towasm::control::Block;
 use mango::towasm::control::BranchIf;
 use mango::towasm::control::Group;
 use mango::towasm::control::Loop;
+use mango::towasm::control::Return;
 use mango::towasm::numeric::Gt;
 use mango::towasm::numeric::Mul;
 use mango::towasm::scope::Function;
@@ -76,6 +77,7 @@ fn test_example_1() {
             )),
             //            Statement::Block(Block::new_named("".to_owned(), vec![])),
             Statement::Loop(the_loop),
+            Statement::Return(Return::new(Expression::Local(fac_result.get()))),
         ]),
     )]);
 
