@@ -1,18 +1,37 @@
 use mango::towasm::collect::Type;
+use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
 
-#[derive(new)]
 pub struct Add {
-    pub typ: Type,
+    left: Box<Expression>,
+    right: Box<Expression>,
+}
+
+impl Add {
+    pub fn new(left: Expression, right: Expression) -> Self {
+        assert!(left.typ() == right.typ());
+        Add {
+            left: Box::new(left),
+            right: Box::new(right),
+        }
+    }
+
+    pub fn typ(&self) -> &Type {
+        self.left.typ()
+    }
 }
 
 impl Wasm for Add {
     fn as_wat(&self) -> String {
-        " add ".to_owned()
-        //        format!(" add ")
+        format!(
+            "{}\n{}\n{}.add",
+            self.left.as_wat(),
+            self.right.as_wat(),
+            self.typ().as_wat(),
+        )
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -21,15 +40,33 @@ impl Wasm for Add {
     }
 }
 
-#[derive(new)]
 pub struct Mul {
-    pub typ: Type,
+    left: Box<Expression>,
+    right: Box<Expression>,
+}
+
+impl Mul {
+    pub fn new(left: Expression, right: Expression) -> Self {
+        assert!(left.typ() == right.typ());
+        Mul {
+            left: Box::new(left),
+            right: Box::new(right),
+        }
+    }
+
+    pub fn typ(&self) -> &Type {
+        self.left.typ()
+    }
 }
 
 impl Wasm for Mul {
     fn as_wat(&self) -> String {
-        " mul ".to_owned()
-        //        format!(" add ")
+        format!(
+            "{}\n{}\n{}.mul",
+            self.left.as_wat(),
+            self.right.as_wat(),
+            self.typ().as_wat(),
+        )
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

@@ -1,19 +1,33 @@
 use mango::towasm::collect::Type;
 use mango::towasm::control::Group;
 use mango::towasm::util::Name;
+use mango::towasm::values::DeclareLocal;
+use mango::towasm::values::Local;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::rc::Rc;
 
 pub struct Parameter {
+    declare_local: DeclareLocal,
     name: Name,
     typ: Type,
 }
 
 impl Parameter {
     pub fn new(name: Name, typ: Type) -> Self {
-        Parameter { name, typ }
+        // todo: should this store declare local AND name/type?
+        let declare_local = DeclareLocal::new(name.clone(), typ.clone());
+        Parameter {
+            declare_local,
+            name,
+            typ,
+        }
+    }
+
+    pub fn local(&self) -> Local {
+        self.declare_local.local()
     }
 }
 

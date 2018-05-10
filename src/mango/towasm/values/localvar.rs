@@ -7,17 +7,17 @@ use std::io::Write;
 use std::rc::Rc;
 
 pub struct DeclareLocal {
-    local: Rc<Local>,
+    local: Local,
 }
 
 impl DeclareLocal {
     pub fn new(name: Name, typ: Type) -> Self {
         DeclareLocal {
-            local: Rc::new(Local { name, typ }),
+            local: Local { name, typ },
         }
     }
 
-    pub fn local(&self) -> Rc<Local> {
+    pub fn local(&self) -> Local {
         self.local.clone()
     }
 }
@@ -37,14 +37,44 @@ impl Wasm for DeclareLocal {
 }
 
 /// To create an instance of Local, make a [DeclareLocal] and call [local()]
+#[derive(Clone)]
 pub struct Local {
     name: Name,
     pub typ: Type,
 }
 
+impl Local {
+    pub fn get(&self) -> GetLocal {
+        GetLocal {
+            local: self.clone(),
+        }
+    }
+}
+
 impl Wasm for Local {
     fn as_wat(&self) -> String {
         format!("{}", self.name.as_wat())
+    }
+
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+        unimplemented!()
+    }
+}
+
+/// To create an instance of GetLocal, call [get()] on a [Local]
+pub struct GetLocal {
+    local: Local,
+}
+
+impl GetLocal {
+    pub fn typ(&self) -> &Type {
+        &self.local.typ
+    }
+}
+
+impl Wasm for GetLocal {
+    fn as_wat(&self) -> String {
+        format!("get_local {}", self.local.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

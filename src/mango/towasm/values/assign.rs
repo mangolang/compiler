@@ -1,19 +1,19 @@
+use mango::towasm::collect::datatype::Value;
 use mango::towasm::values::Const;
+use mango::towasm::values::Expression;
 use mango::towasm::values::Local;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::rc::Rc;
-use mango::towasm::collect::datatype::Value;
-use mango::towasm::values::Expression;
 
 pub struct Assign {
-    assignee: Rc<Local>, // todo
-    value: Expression,        // todo
+    assignee: Local, // todo
+    value: Expression,
 }
 
 impl Assign {
-    pub fn new(assignee: Rc<Local>, value: Expression) -> Self {
+    pub fn new(assignee: Local, value: Expression) -> Self {
         // todo:
         //        assert!(assignee.typ.can_assign(value.typ));
         return Assign { assignee, value };

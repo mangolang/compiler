@@ -14,6 +14,8 @@ pub trait Wasm {
     fn write_wasm(&self, file: &mut File) -> io::Result<()>;
 }
 
+// TODO: remove this enum?
+
 /// WASM collection
 pub enum All {
     Add(Add),
