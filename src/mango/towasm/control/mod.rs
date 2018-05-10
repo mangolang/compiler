@@ -5,6 +5,7 @@ pub use self::block::Group;
 pub mod branch;
 pub use self::branch::Branch;
 pub use self::branch::BranchIf;
+pub use self::branch::Label;
 
 pub mod repeat;
 pub use self::repeat::Loop;

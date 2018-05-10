@@ -4,6 +4,7 @@ use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::control::Block;
+use mango::towasm::control::BranchIf;
 use mango::towasm::control::Group;
 use mango::towasm::control::Loop;
 use mango::towasm::numeric::Gt;
@@ -30,45 +31,51 @@ fn test_example_1() {
         DeclareLocal::new(Name::new("fac_result".to_owned()).unwrap(), Type::Int32);
     let fac_result = fac_result_decl.local();
     let loop_name = Name::new("fac_loop".to_owned()).unwrap();
+    let mut the_loop = Loop::new_named(
+        loop_name.clone(),
+        vec![
+            Statement::Assign(Assign::new(
+                fac_result.clone(),
+                Expression::Mul(Mul::new(
+                    Expression::Local(fac_result.get()),
+                    Expression::Local(var_n.get()),
+                )),
+            )),
+            Statement::Assign(Assign::new(
+                loop_condition.clone(),
+                Expression::Gt(Gt::new(
+                    Expression::Local(var_n.get()),
+                    Expression::Const(Const::new(Type::Int32, Value::Int(2))),
+                )),
+            )),
+            Statement::Assign(Assign::new(
+                var_n.clone(),
+                Expression::Add(Add::new(
+                    Expression::Local(var_n.get()),
+                    Expression::Const(Const::new(Type::Int32, Value::Int(-1))),
+                )),
+            )),
+        ],
+    );
+    let loop_label = the_loop.label();
+    the_loop.add(Statement::BranchIf(BranchIf::new(
+        Expression::Local(loop_condition.get()),
+        loop_label,
+    )));
     let wasm = Module::new(vec![Function::new(
         Name::new("fac".to_owned()).unwrap(),
         vec![param_n],
         vec![Output::new(Type::Int32)],
         Group::new(vec![
             // Function body
-            Statement::Local(loop_condition_decl),
             Statement::Local(fac_result_decl),
+            Statement::Local(loop_condition_decl),
             Statement::Assign(Assign::new(
                 fac_result.clone(),
                 Expression::Const(Const::new(Type::Int32, Value::Int(1))),
             )),
             //            Statement::Block(Block::new_named("".to_owned(), vec![])),
-            Statement::Loop(Loop::new_named(
-                loop_name.clone(),
-                vec![
-                    Statement::Assign(Assign::new(
-                        fac_result.clone(),
-                        Expression::Mul(Mul::new(
-                            Expression::Local(fac_result.get()),
-                            Expression::Local(var_n.get()),
-                        )),
-                    )),
-                    //                    Statement::Assign(Assign::new(
-                    //                        loop_condition,
-                    //                        Expression::Gt(Gt::new(
-                    //                            Expression::Local(var_n.get()),
-                    //                            Expression::Const(Const::new(Type::Int32, Value::Int(2))),
-                    //                        )),
-                    //                    )),
-                    Statement::Assign(Assign::new(
-                        var_n.clone(),
-                        Expression::Add(Add::new(
-                            Expression::Local(var_n.get()),
-                            Expression::Const(Const::new(Type::Int32, Value::Int(-1))),
-                        )),
-                    )),
-                ],
-            )),
+            Statement::Loop(the_loop),
         ]),
     )]);
 
@@ -81,9 +88,7 @@ fn test_example_1() {
 //    (local $fac_result i32) (local $loop_condition i32)
 //    i32.const 1
 //    set_local $fac_result
-//    i32.const 1
-//    set_local $fac_result
-//    loop $L1
+//    loop $fac_loop
 //      get_local $fac_result
 //      get_local $n
 //      i32.mul
@@ -97,7 +102,7 @@ fn test_example_1() {
 //      i32.add
 //      set_local $n
 //      get_local $loop_condition
-//      br_if $L1
+//      br_if $fac_loop
 //    end
 //    get_local $fac_result
 //  )

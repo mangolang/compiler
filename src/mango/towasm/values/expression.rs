@@ -1,5 +1,7 @@
 use mango::towasm::collect::Type;
 use mango::towasm::numeric::Add;
+use mango::towasm::numeric::Gt;
+use mango::towasm::numeric::Lt;
 use mango::towasm::numeric::Mul;
 use mango::towasm::values::localvar::GetLocal;
 use mango::towasm::values::Const;
@@ -14,6 +16,8 @@ pub enum Expression {
     Local(GetLocal),
     Mul(Mul),
     Add(Add),
+    Gt(Gt),
+    Lt(Lt),
 }
 
 impl Expression {
@@ -23,6 +27,8 @@ impl Expression {
             Expression::Local(op) => &op.typ(),
             Expression::Mul(op) => &op.typ(),
             Expression::Add(op) => &op.typ(),
+            Expression::Gt(op) => &op.typ(),
+            Expression::Lt(op) => &op.typ(),
         }
     }
 }
@@ -34,6 +40,8 @@ impl Wasm for Expression {
             Expression::Local(op) => op.as_wat(),
             Expression::Mul(op) => op.as_wat(),
             Expression::Add(op) => op.as_wat(),
+            Expression::Gt(op) => op.as_wat(),
+            Expression::Lt(op) => op.as_wat(),
         }
     }
 

@@ -1,5 +1,6 @@
 use mango::towasm::collect::Statement;
 use mango::towasm::control::Group;
+use mango::towasm::control::Label;
 use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
@@ -22,6 +23,14 @@ impl Loop {
             name,
             group: Group::new(statements),
         }
+    }
+
+    pub fn add(&mut self, statement: Statement) {
+        self.group.add(statement);
+    }
+
+    pub fn label(&self) -> Label {
+        Label::internal(self.name.clone())
     }
 }
 

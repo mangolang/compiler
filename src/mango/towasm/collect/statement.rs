@@ -1,4 +1,5 @@
 use mango::towasm::control::Block;
+use mango::towasm::control::BranchIf;
 use mango::towasm::control::Loop;
 use mango::towasm::values::Assign;
 use mango::towasm::values::DeclareLocal;
@@ -11,6 +12,7 @@ pub enum Statement {
     Assign(Assign),
     Block(Block),
     Loop(Loop),
+    BranchIf(BranchIf),
 }
 
 impl Wasm for Statement {
@@ -20,6 +22,7 @@ impl Wasm for Statement {
             Statement::Assign(op) => op.as_wat(),
             Statement::Block(op) => op.as_wat(),
             Statement::Loop(op) => op.as_wat(),
+            Statement::BranchIf(op) => op.as_wat(),
         }
     }
 

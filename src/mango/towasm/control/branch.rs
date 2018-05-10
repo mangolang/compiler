@@ -1,9 +1,32 @@
 use mango::towasm::collect::Statement;
+use mango::towasm::collect::Type;
 use mango::towasm::util::Name;
+use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+
+pub struct Label {
+    name: Name,
+}
+
+impl Label {
+    /// This constructor should not be called directly; blocks should create their own references.
+    pub fn internal(name: Name) -> Self {
+        Label { name }
+    }
+}
+
+impl Wasm for Label {
+    fn as_wat(&self) -> String {
+        self.name.as_wat()
+    }
+
+    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+        unimplemented!()
+    }
+}
 
 pub struct Branch {}
 
@@ -25,18 +48,21 @@ impl Wasm for Branch {
     }
 }
 
-pub struct BranchIf {}
+pub struct BranchIf {
+    condition: Expression,
+    label: Label,
+}
 
 impl BranchIf {
-    pub fn new() -> Self {
-        BranchIf {}
+    pub fn new(condition: Expression, label: Label) -> Self {
+        assert!(condition.typ() == &Type::Bool);
+        BranchIf { condition, label }
     }
 }
 
 impl Wasm for BranchIf {
     fn as_wat(&self) -> String {
-        " br_if ".to_owned()
-        //        format!(" add ")
+        format!("{}\nbr_if {}", self.condition.as_wat(), self.label.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

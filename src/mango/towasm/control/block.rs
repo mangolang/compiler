@@ -10,6 +10,12 @@ pub struct Group {
     statements: Vec<Statement>,
 }
 
+impl Group {
+    pub fn add(&mut self, statement: Statement) {
+        self.statements.push(statement);
+    }
+}
+
 impl Wasm for Group {
     fn as_wat(&self) -> String {
         self.statements
