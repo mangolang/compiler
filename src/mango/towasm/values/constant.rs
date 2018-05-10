@@ -3,7 +3,6 @@ use mango::towasm::collect::Type;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
-use std::io::Write;
 
 pub struct Const {
     pub typ: Type,

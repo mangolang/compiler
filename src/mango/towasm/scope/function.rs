@@ -7,23 +7,24 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use std::rc::Rc;
 
 pub struct Parameter {
     declare_local: DeclareLocal,
-    name: Name,
-    typ: Type,
 }
 
 impl Parameter {
     pub fn new(name: Name, typ: Type) -> Self {
         // todo: should this store declare local AND name/type?
         let declare_local = DeclareLocal::new(name.clone(), typ.clone());
-        Parameter {
-            declare_local,
-            name,
-            typ,
-        }
+        Parameter { declare_local }
+    }
+
+    pub fn name(&self) -> &Name {
+        self.declare_local.name()
+    }
+
+    pub fn typ(&self) -> &Type {
+        self.declare_local.typ()
     }
 
     pub fn local(&self) -> Local {
@@ -33,7 +34,7 @@ impl Parameter {
 
 impl Wasm for Parameter {
     fn as_wat(&self) -> String {
-        format!("(param {} {})", self.name.as_wat(), self.typ.as_wat())
+        format!("(param {} {})", self.name().as_wat(), self.typ().as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

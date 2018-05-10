@@ -3,8 +3,6 @@ use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
-use std::io::Write;
-use std::rc::Rc;
 
 pub struct DeclareLocal {
     local: Local,
@@ -15,6 +13,14 @@ impl DeclareLocal {
         DeclareLocal {
             local: Local { name, typ },
         }
+    }
+
+    pub fn name(&self) -> &Name {
+        &self.local.name
+    }
+
+    pub fn typ(&self) -> &Type {
+        &self.local.typ
     }
 
     pub fn local(&self) -> Local {

@@ -5,7 +5,6 @@ use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
-use std::io::Write;
 
 pub struct Loop {
     name: Name,

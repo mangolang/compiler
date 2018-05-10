@@ -3,7 +3,6 @@ use mango::towasm::collect::datatype::Value;
 use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
-use mango::towasm::control::Block;
 use mango::towasm::control::BranchIf;
 use mango::towasm::control::Group;
 use mango::towasm::control::Loop;
@@ -19,7 +18,6 @@ use mango::towasm::values::Assign;
 use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Expression;
-use mango::towasm::values::Local;
 
 #[test]
 fn test_example_1() {
@@ -63,7 +61,7 @@ fn test_example_1() {
         Expression::Local(loop_condition.get()),
         loop_label,
     )));
-    let wasm = Module::new(vec![Function::new(
+    let module = Module::new(vec![Function::new(
         Name::new("fac".to_owned()).unwrap(),
         vec![param_n],
         vec![Output::new(Type::Int32)],
@@ -81,7 +79,7 @@ fn test_example_1() {
         ]),
     )]);
 
-    println!("WAT:\n{}\n", wasm.as_wat());
+    println!("WAT:\n{}\n", module.as_wat());
 }
 
 //;; calculate faculty (n!)

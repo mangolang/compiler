@@ -1,4 +1,3 @@
-use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::util::Name;
 use mango::towasm::values::Expression;

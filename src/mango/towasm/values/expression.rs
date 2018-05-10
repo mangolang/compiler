@@ -5,7 +5,6 @@ use mango::towasm::numeric::Lt;
 use mango::towasm::numeric::Mul;
 use mango::towasm::values::localvar::GetLocal;
 use mango::towasm::values::Const;
-use mango::towasm::values::Local;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;

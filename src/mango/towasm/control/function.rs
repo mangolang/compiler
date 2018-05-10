@@ -26,14 +26,9 @@ impl Wasm for Call {
     }
 }
 
+#[derive(new)]
 pub struct Return {
     expression: Expression,
-}
-
-impl Return {
-    pub fn new(expression: Expression) -> Self {
-        Return { expression }
-    }
 }
 
 impl Wasm for Return {
