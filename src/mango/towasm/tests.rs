@@ -4,7 +4,6 @@ use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::control::BranchIf;
-use mango::towasm::control::Group;
 use mango::towasm::control::Loop;
 use mango::towasm::control::Return;
 use mango::towasm::numeric::Gt;
@@ -18,6 +17,7 @@ use mango::towasm::values::Assign;
 use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Expression;
+use mango::towasm::control::Label;
 
 #[test]
 fn test_example_1() {
@@ -32,7 +32,7 @@ fn test_example_1() {
     let loop_name = Name::new("fac_loop".to_owned()).unwrap();
     let mut the_loop = Loop::new_named(
         loop_name.clone(),
-        vec![
+        |loop_label: Label| vec![
             Statement::Assign(Assign::new(
                 fac_result.clone(),
                 Expression::Mul(Mul::new(
@@ -54,18 +54,18 @@ fn test_example_1() {
                     Expression::Const(Const::new(Type::Int32, Value::Int(-1))),
                 )),
             )),
-        ],
+            Statement::BranchIf(BranchIf::new(
+                Expression::Local(loop_condition.get()),
+                loop_label,
+            ))
+        ]
     );
-    let loop_label = the_loop.label();
-    the_loop.add(Statement::BranchIf(BranchIf::new(
-        Expression::Local(loop_condition.get()),
-        loop_label,
-    )));
+//    let loop_label = the_loop.label();
     let module = Module::new(vec![Function::new(
         Name::new("fac".to_owned()).unwrap(),
         vec![param_n],
         vec![Output::new(Type::Int32)],
-        Group::new(vec![
+        |func_label: Label| vec![
             // Function body
             Statement::Local(fac_result_decl),
             Statement::Local(loop_condition_decl),
@@ -76,7 +76,7 @@ fn test_example_1() {
             //            Statement::Block(Block::new_named("".to_owned(), vec![])),
             Statement::Loop(the_loop),
             Statement::Return(Return::new(Expression::Local(fac_result.get()))),
-        ]),
+        ]
     )]);
 
     println!("WAT:\n{}\n", module.as_wat());

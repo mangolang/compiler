@@ -7,6 +7,8 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use mango::towasm::control::Label;
+use mango::towasm::collect::Statement;
 
 pub struct Parameter {
     declare_local: DeclareLocal,
@@ -109,14 +111,14 @@ pub struct Function {
 }
 
 impl Function {
-    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, body: Group) -> Self {
+    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
         Function {
             signature: FunctionSignature {
-                name,
+                name: name.clone(),
                 parameters,
                 results,
             },
-            body,
+            body: Group::new(Label::internal(name), statements_gen),
         }
     }
 }

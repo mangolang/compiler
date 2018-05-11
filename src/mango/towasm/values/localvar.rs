@@ -3,6 +3,8 @@ use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use mango::towasm::values::Assign;
+use mango::towasm::values::Expression;
 
 pub struct DeclareLocal {
     local: Local,
@@ -54,6 +56,10 @@ impl Local {
         GetLocal {
             local: self.clone(),
         }
+    }
+
+    pub fn set(&self, expression: Expression) -> Assign {
+        Assign::new(self.clone(), expression)
     }
 }
 
