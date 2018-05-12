@@ -7,9 +7,9 @@ use mango::ast_full::terminal::IntLiteralAST;
 use mango::ast_full::terminal::LiteralAST;
 use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::terminal::StringLiteralAST;
-use mango::ast_full::terminal::Symbol;
 use mango::ast_full::terminal::VariableAST;
 use mango::ast_full::FullAST;
+use mango::util::codeparts::Symbol;
 use mango::util::strtype::Name;
 use mango::util::strtype::StrType;
 
