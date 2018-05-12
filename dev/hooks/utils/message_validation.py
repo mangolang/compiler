@@ -24,6 +24,8 @@ class ValidationError(Exception):
 
 
 def validate_title(title):
+	if not title:
+		raise ValidationError('Commit message should have at least one line (the title), with any hash(#) appearing at the end')
 	if title[0] in string.ascii_lowercase:
 		raise ValidationError('Commit message title should start with a capital letter')
 	if title[-1] == '.':
