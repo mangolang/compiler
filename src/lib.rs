@@ -26,4 +26,7 @@ pub mod mango {
     pub mod reducing;
     pub mod semanticating;
     pub mod typing;
+
+    // Targets
+    pub mod towasm;
 }

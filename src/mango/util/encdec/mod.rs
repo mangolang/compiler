@@ -5,3 +5,6 @@ pub use self::to_ON::ON;
 
 pub mod to_text;
 pub use self::to_text::ToText;
+
+mod to_code;
+pub use self::to_code::ToCode;
