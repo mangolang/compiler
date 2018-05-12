@@ -22,6 +22,8 @@ But if you want to play with it, or even help to complete it, here is how!
 
 These instructions were tested on Ubuntu 18.4 (using Bash). It should also work on other platforms, if you 'translate' the commands.
 
+* You will need `pkg-config`, `libssl-dev`, `git` and some way to run commands. Python is optional.
+
 * Get the code with (something like). 
 
 .. code:: bash
@@ -36,13 +38,14 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 
 	rustup toolchain install nightly
 	rustup override set nightly  # make sure you are in the mango directory
+	rustup target add wasm32-unknown-emscripten  # emscritem for now
 	
 * We need a few packages:
 
 .. code:: bash
 
 	rustup component add rustfmt-preview
-	
+	cargo install cargo-web
 
 * There are git commit hooks that you can use. They test that code is formatted well and compiles and commit messages are correctly formatted. You don't have to use them if you ensure these things yourself. If you want to use them:
 
@@ -54,12 +57,20 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 	ln -s $PWD/dev/hooks/ .git/hooks
 	chmod u+x .git/hooks
 
-* To format and test the code, run
+* The first build will be slow due to downloading and compiling dependencies. To format the code, test it, and launch the command line interface:
 
 .. code:: bash
 
 	cargo +nightly fmt
 	cargo test --all
+	cargo run --bin mango-cli
+
+* To deploy the web version in release mode:
+
+.. code:: bash
+
+	cargo web deploy --release
+	# then open target/deploy/index.html in a browser
 
 * You're now ready to make changes! If you want to help, you're very welcome! Have a glance at CONTRIBUTING.rst_ if you have a minute.
 
@@ -68,4 +79,4 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 .. _CLion: https://www.jetbrains.com/clion/
 .. _`Rust plugin`: https://intellij-rust.github.io/
 .. _`on this page`: https://www.rust-lang.org/en-US/install.html
-.. _CONTRIBUTING.rst: 
+.. _CONTRIBUTING.rst: https://github.com/mangolang/compiler/blob/dev/CONTRIBUTING.rst
