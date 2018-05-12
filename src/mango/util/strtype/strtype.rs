@@ -8,7 +8,7 @@ pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
     fn validate(value: &str) -> Result<(), Msg>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid.
-    fn new(txt: String) -> Result<Self, Msg>;
+    fn new<S: Into<String>>(txt: S) -> Result<Self, Msg>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid, by copying a string reference.
     fn copy_new(txt: &str) -> Result<Self, Msg> {

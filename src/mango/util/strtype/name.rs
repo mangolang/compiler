@@ -21,7 +21,8 @@ lazy_static! {
 /// # Implementation
 ///
 /// * Name strings are interned for fast equality checking.
-#[derive(Debug, Hash, PartialEq, Eq)]
+/// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
     name_id: usize,
 }
@@ -51,10 +52,13 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new(name: String) -> Result<Self, Msg> {
-        let id = INTERNER.lock().unwrap().get_or_intern(name.to_string());
-        match Name::validate(&name.to_string()) {
-            Ok(_) => Ok(Name { name_id: id }),
+    fn new<S: Into<String>>(name: S) -> Result<Self, Msg> {
+        let sname = name.into();
+        match Name::validate(&sname) {
+            Ok(_) => {
+                let id = INTERNER.lock().unwrap().get_or_intern(sname);
+                Ok(Name { name_id: id })
+            }
             Err(msg) => Err(msg),
         }
     }
