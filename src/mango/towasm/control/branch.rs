@@ -32,8 +32,8 @@ impl Wasm for Label {
 pub struct Branch {}
 
 impl Branch {
-    pub fn new() -> Self {
-        Branch {}
+    pub fn new() -> Box<Self> {
+        Box::new(Branch {})
     }
 }
 
@@ -55,9 +55,9 @@ pub struct BranchIf {
 }
 
 impl BranchIf {
-    pub fn new(condition: Box<Expression>, label: Label) -> Self {
+    pub fn new(condition: Box<Expression>, label: Label) -> Box<Self> {
         assert!(condition.typ() == &Type::Bool);
-        BranchIf { condition, label }
+        Box::new(BranchIf { condition, label })
     }
 }
 

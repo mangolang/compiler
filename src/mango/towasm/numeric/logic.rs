@@ -11,12 +11,12 @@ pub struct Gt {
 }
 
 impl Gt {
-    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Gt {
+        Box::new(Gt {
             left: left,
             right: right,
-        }
+        })
     }
 }
 
@@ -48,12 +48,12 @@ pub struct Lt {
 }
 
 impl Lt {
-    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Lt {
+        Box::new(Lt {
             left: left,
             right: right,
-        }
+        })
     }
 
     pub fn typ(&self) -> &Type {

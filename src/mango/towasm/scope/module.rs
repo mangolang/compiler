@@ -5,12 +5,12 @@ use std::io;
 use std::io::Write;
 
 pub struct Module {
-    functions: Vec<Function>,
+    functions: Vec<Box<Function>>,
 }
 
 impl Module {
-    pub fn new(functions: Vec<Function>) -> Self {
-        Module { functions }
+    pub fn new(functions: Vec<Box<Function>>) -> Box<Self> {
+        Box::new(Module { functions })
     }
 }
 
@@ -21,11 +21,9 @@ impl Wasm for Module {
             self.functions
                 .iter()
                 .map(|func| func.as_wat())
-//                .collect()
                 .collect::<Vec<_>>()
                 .join("\n")
         )
-        //        format!(" add ")
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

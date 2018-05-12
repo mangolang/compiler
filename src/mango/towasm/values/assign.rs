@@ -5,10 +5,15 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 
-#[derive(new)]
 pub struct Assign {
     assignee: Local, // todo
     value: Box<Expression>,
+}
+
+impl Assign {
+    pub fn new(assignee: Local, value: Box<Expression>) -> Box<Self> {
+        Box::new(Assign { assignee, value })
+    }
 }
 
 impl Wasm for Assign {

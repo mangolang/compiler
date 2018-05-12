@@ -11,14 +11,15 @@ use std::io;
 use std::io::Write;
 
 pub struct Parameter {
+    // Don't box here, it's just to reference those fields
     declare_local: DeclareLocal,
 }
 
 impl Parameter {
-    pub fn new(name: Name, typ: Type) -> Self {
+    pub fn new(name: Name, typ: Type) -> Box<Self> {
         // todo: should this store declare local AND name/type?
-        let declare_local = DeclareLocal::new(name.clone(), typ.clone());
-        Parameter { declare_local }
+        let declare_local = DeclareLocal::new_unboxed(name.clone(), typ.clone());
+        Box::new(Parameter { declare_local })
     }
 
     pub fn name(&self) -> &Name {
@@ -49,8 +50,8 @@ pub struct Output {
 }
 
 impl Output {
-    pub fn new(typ: Type) -> Self {
-        Output { typ }
+    pub fn new(typ: Type) -> Box<Self> {
+        Box::new(Output { typ })
     }
 }
 
@@ -66,12 +67,12 @@ impl Wasm for Output {
 
 pub struct FunctionSignature {
     name: Name,
-    parameters: Vec<Parameter>,
-    results: Vec<Output>,
+    parameters: Vec<Box<Parameter>>,
+    results: Vec<Box<Output>>,
 }
 
 impl FunctionSignature {
-    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>) -> Self {
+    pub fn new(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
         assert!(results.len() <= 1); //
         FunctionSignature {
             name,
@@ -114,18 +115,18 @@ impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
     pub fn new(
         name: Name,
-        parameters: Vec<Parameter>,
-        results: Vec<Output>,
+        parameters: Vec<Box<Parameter>>,
+        results: Vec<Box<Output>>,
         statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
-    ) -> Self {
-        Function {
+    ) -> Box<Self> {
+        Box::new(Function {
             signature: FunctionSignature {
                 name: name.clone(),
                 parameters,
                 results,
             },
             body: Group::new(Label::internal(name), statements_gen),
-        }
+        })
     }
 }
 

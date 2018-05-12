@@ -16,7 +16,6 @@ use mango::towasm::util::Name;
 use mango::towasm::values::Assign;
 use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
-use mango::towasm::values::Expression;
 
 #[test]
 fn test_example_1() {
@@ -37,37 +36,37 @@ fn test_example_1() {
             vec![
                 // Function body
                 // todo: get rid of clones
-                Box::new(fac_result_decl.clone()),
-                Box::new(loop_condition_decl.clone()),
-                Box::new(Assign::new(
+                fac_result_decl.clone(),
+                loop_condition_decl.clone(),
+                Assign::new(
                     fac_result.clone(),
-                    Box::new(Const::new(Type::Int32, Value::Int(1))),
-                )),
+                    Const::new(Type::Int32, Value::Int(1)),
+                ),
                 //            Statement::Block(Block::new_named("".to_owned(), vec![])),
-                Box::new(Loop::new_named(loop_name.clone(), &|loop_label: Label| {
+                Loop::new_named(loop_name.clone(), &|loop_label: Label| {
                     vec![
-                        Box::new(Assign::new(
+                        Assign::new(
                             fac_result.clone(),
-                            Box::new(Mul::new(fac_result.get(), var_n.get())),
-                        )),
-                        Box::new(Assign::new(
+                            Mul::new(fac_result.get(), var_n.get()),
+                        ),
+                        Assign::new(
                             loop_condition.clone(),
-                            Box::new(Gt::new(
+                            Gt::new(
                                 var_n.get(),
-                                Box::new(Const::new(Type::Int32, Value::Int(2))),
-                            )),
-                        )),
-                        Box::new(Assign::new(
+                                Const::new(Type::Int32, Value::Int(2)),
+                            ),
+                        ),
+                        Assign::new(
                             var_n.clone(),
-                            Box::new(Add::new(
+                            Add::new(
                                 var_n.get(),
-                                Box::new(Const::new(Type::Int32, Value::Int(-1))),
-                            )),
-                        )),
-                        Box::new(BranchIf::new(loop_condition.get(), loop_label)),
+                                Const::new(Type::Int32, Value::Int(-1)),
+                            ),
+                        ),
+                        BranchIf::new(loop_condition.get(), loop_label),
                     ]
-                })),
-                Box::new(Return::new(func_label, fac_result.get())),
+                }),
+                Return::new(func_label, fac_result.get()),
             ]
         },
     )]);

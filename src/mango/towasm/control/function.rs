@@ -11,8 +11,8 @@ use std::io::Write;
 pub struct Call {}
 
 impl Call {
-    pub fn new() -> Self {
-        Call {}
+    pub fn new() -> Box<Self> {
+        Box::new(Call {})
     }
 }
 
@@ -34,8 +34,8 @@ pub struct Return {
 
 impl Return {
     // Take label to make sure this inside a function, might be used in the future, or removed...
-    pub fn new(_label: Label, expression: Box<Expression>) -> Self {
-        Return { expression }
+    pub fn new(_label: Label, expression: Box<Expression>) -> Box<Self> {
+        Box::new(Return { expression })
     }
 }
 

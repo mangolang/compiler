@@ -1,7 +1,6 @@
 use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::util::Name;
-use mango::towasm::values::Assign;
 use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
@@ -13,7 +12,11 @@ pub struct DeclareLocal {
 }
 
 impl DeclareLocal {
-    pub fn new(name: Name, typ: Type) -> Self {
+    pub fn new(name: Name, typ: Type) -> Box<Self> {
+        Box::new(DeclareLocal::new_unboxed(name, typ))
+    }
+
+    pub fn new_unboxed(name: Name, typ: Type) -> Self {
         DeclareLocal {
             local: Local { name, typ },
         }
@@ -60,10 +63,6 @@ impl Local {
         Box::new(GetLocal {
             local: self.clone(),
         })
-    }
-
-    pub fn set(&self, expression: Box<Expression>) -> Assign {
-        Assign::new(self.clone(), expression)
     }
 }
 

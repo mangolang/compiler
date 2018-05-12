@@ -11,9 +11,9 @@ pub struct Const {
 }
 
 impl Const {
-    pub fn new(typ: Type, value: Value) -> Self {
+    pub fn new(typ: Type, value: Value) -> Box<Self> {
         assert!(value.is_type(&typ));
-        Const { typ, value }
+        Box::new(Const { typ, value })
     }
 }
 
