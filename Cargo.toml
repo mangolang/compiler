@@ -17,3 +17,18 @@ string-interner = "0.6.*"
 lazy_static = "1.0.*"
 derive-new = "0.5.*"
 cargo-wasm = "0.4.*"
+
+[profile.release]
+lto = true
+
+[lib]
+name = "mango"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mango"
+path = "src/mango/ui/cli/main.rs"
+
+#[[bin]]
+#name = "mango-webi"
+#path = "src/mango/ui/webi/compile_str.rs"

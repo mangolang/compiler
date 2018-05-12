@@ -1,0 +1,13 @@
+default-target = "wasm32-unknown-emscripten"
+#prepend-js = ["src/runtime.js", "src/mango/ui/webi/static/prepend-general.js"]
+
+[cargo-web]
+minimum-version = "0.6.0"
+
+[target.wasm32-unknown-emscripten]
+prepend-js = ["src/mango/ui/webi/static/prepend-general.js", "src/mango/ui/webi/static/prepend-emscripten.js"]
+link-args = ["-s", "USE_SDL=2", "-s", "EXPORTED_FUNCTIONS=['_compile_string']"]
+
+## You can also specify the target by its full name.
+#[target.wasm32-unknown-unknown]
+#prepend-js = "src/native_runtime.js"

@@ -8,8 +8,8 @@ extern crate derive_new;
 
 pub mod mango {
     // Utilities
-    pub mod cli;
     pub mod jit;
+    pub mod ui;
     pub mod util;
 
     // Types
