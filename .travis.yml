@@ -1,11 +1,9 @@
 language: rust
 rust:
-  - beta
+  - nightly
 before_script:
   - rustup component add rustfmt-preview
 sudo: false
 cache: cargo
 script:
-  - # cargo fmt --verbose --all -- --write-mode=diff
-  - cargo build --verbose --all
-  - cargo test --verbose --all
+  - cargo test --all

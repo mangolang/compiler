@@ -1,8 +1,8 @@
-mod strtype;
+pub mod strtype;
 pub use self::strtype::StrType;
 
-mod msg;
+pub mod msg;
 pub use self::msg::Msg;
 
-mod name;
+pub mod name;
 pub use self::name::Name;
