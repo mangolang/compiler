@@ -8,7 +8,7 @@ use std::io;
 #[derive(new)]
 pub struct Assign {
     assignee: Local, // todo
-    value: Expression,
+    value: Box<Expression>,
 }
 
 impl Wasm for Assign {

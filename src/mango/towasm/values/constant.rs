@@ -1,5 +1,6 @@
 use mango::towasm::collect::datatype::Value;
 use mango::towasm::collect::Type;
+use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
@@ -23,5 +24,11 @@ impl Wasm for Const {
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         unimplemented!()
+    }
+}
+
+impl Expression for Const {
+    fn typ(&self) -> &Type {
+        &self.typ
     }
 }

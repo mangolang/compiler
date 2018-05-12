@@ -56,13 +56,13 @@ pub struct Local {
 }
 
 impl Local {
-    pub fn get(&self) -> GetLocal {
-        GetLocal {
+    pub fn get(&self) -> Box<GetLocal> {
+        Box::new(GetLocal {
             local: self.clone(),
-        }
+        })
     }
 
-    pub fn set(&self, expression: Expression) -> Assign {
+    pub fn set(&self, expression: Box<Expression>) -> Assign {
         Assign::new(self.clone(), expression)
     }
 }
@@ -95,5 +95,11 @@ impl Wasm for GetLocal {
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         unimplemented!()
+    }
+}
+
+impl Expression for GetLocal {
+    fn typ(&self) -> &Type {
+        self.typ()
     }
 }

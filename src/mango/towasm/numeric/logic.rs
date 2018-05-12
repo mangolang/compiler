@@ -11,16 +11,12 @@ pub struct Gt {
 }
 
 impl Gt {
-    pub fn new(left: Expression, right: Expression) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
         assert!(left.typ() == right.typ());
         Gt {
-            left: Box::new(left),
-            right: Box::new(right),
+            left: left,
+            right: right,
         }
-    }
-
-    pub fn typ(&self) -> &Type {
-        &Type::Bool
     }
 }
 
@@ -40,17 +36,23 @@ impl Wasm for Gt {
     }
 }
 
+impl Expression for Gt {
+    fn typ(&self) -> &Type {
+        &Type::Bool
+    }
+}
+
 pub struct Lt {
     left: Box<Expression>,
     right: Box<Expression>,
 }
 
 impl Lt {
-    pub fn new(left: Expression, right: Expression) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
         assert!(left.typ() == right.typ());
         Lt {
-            left: Box::new(left),
-            right: Box::new(right),
+            left: left,
+            right: right,
         }
     }
 
@@ -72,5 +74,11 @@ impl Wasm for Lt {
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" lt+s ")?;
         Ok(())
+    }
+}
+
+impl Expression for Lt {
+    fn typ(&self) -> &Type {
+        &Type::Bool
     }
 }

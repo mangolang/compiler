@@ -11,11 +11,11 @@ pub struct Add {
 }
 
 impl Add {
-    pub fn new(left: Expression, right: Expression) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
         assert!(left.typ() == right.typ());
         Add {
-            left: Box::new(left),
-            right: Box::new(right),
+            left: left,
+            right: right,
         }
     }
 
@@ -40,17 +40,23 @@ impl Wasm for Add {
     }
 }
 
+impl Expression for Add {
+    fn typ(&self) -> &Type {
+        self.typ()
+    }
+}
+
 pub struct Mul {
     left: Box<Expression>,
     right: Box<Expression>,
 }
 
 impl Mul {
-    pub fn new(left: Expression, right: Expression) -> Self {
+    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Self {
         assert!(left.typ() == right.typ());
         Mul {
-            left: Box::new(left),
-            right: Box::new(right),
+            left: left,
+            right: right,
         }
     }
 
@@ -72,5 +78,11 @@ impl Wasm for Mul {
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" mul ")?;
         Ok(())
+    }
+}
+
+impl Expression for Mul {
+    fn typ(&self) -> &Type {
+        self.typ()
     }
 }

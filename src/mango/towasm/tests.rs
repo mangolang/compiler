@@ -41,39 +41,33 @@ fn test_example_1() {
                 Box::new(loop_condition_decl.clone()),
                 Box::new(Assign::new(
                     fac_result.clone(),
-                    Expression::Const(Const::new(Type::Int32, Value::Int(1))),
+                    Box::new(Const::new(Type::Int32, Value::Int(1))),
                 )),
                 //            Statement::Block(Block::new_named("".to_owned(), vec![])),
                 Box::new(Loop::new_named(loop_name.clone(), &|loop_label: Label| {
                     vec![
                         Box::new(Assign::new(
                             fac_result.clone(),
-                            Expression::Mul(Mul::new(
-                                Expression::Local(fac_result.get()),
-                                Expression::Local(var_n.get()),
-                            )),
+                            Box::new(Mul::new(fac_result.get(), var_n.get())),
                         )),
                         Box::new(Assign::new(
                             loop_condition.clone(),
-                            Expression::Gt(Gt::new(
-                                Expression::Local(var_n.get()),
-                                Expression::Const(Const::new(Type::Int32, Value::Int(2))),
+                            Box::new(Gt::new(
+                                var_n.get(),
+                                Box::new(Const::new(Type::Int32, Value::Int(2))),
                             )),
                         )),
                         Box::new(Assign::new(
                             var_n.clone(),
-                            Expression::Add(Add::new(
-                                Expression::Local(var_n.get()),
-                                Expression::Const(Const::new(Type::Int32, Value::Int(-1))),
+                            Box::new(Add::new(
+                                var_n.get(),
+                                Box::new(Const::new(Type::Int32, Value::Int(-1))),
                             )),
                         )),
-                        Box::new(BranchIf::new(
-                            Expression::Local(loop_condition.get()),
-                            loop_label,
-                        )),
+                        Box::new(BranchIf::new(loop_condition.get(), loop_label)),
                     ]
                 })),
-                Box::new(Return::new(func_label, Expression::Local(fac_result.get()))),
+                Box::new(Return::new(func_label, fac_result.get())),
             ]
         },
     )]);

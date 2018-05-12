@@ -29,12 +29,12 @@ impl Wasm for Call {
 }
 
 pub struct Return {
-    expression: Expression,
+    expression: Box<Expression>,
 }
 
 impl Return {
     // Take label to make sure this inside a function, might be used in the future, or removed...
-    pub fn new(_label: Label, expression: Expression) -> Self {
+    pub fn new(_label: Label, expression: Box<Expression>) -> Self {
         Return { expression }
     }
 }
