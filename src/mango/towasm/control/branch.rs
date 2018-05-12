@@ -6,6 +6,7 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
+/// Label for a block, if or loop
 pub struct Label {
     name: Name,
 }

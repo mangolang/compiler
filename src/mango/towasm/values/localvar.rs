@@ -1,11 +1,12 @@
 use mango::towasm::collect::Type;
 use mango::towasm::util::Name;
+use mango::towasm::values::Assign;
+use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
-use mango::towasm::values::Assign;
-use mango::towasm::values::Expression;
 
+#[derive(Clone)]
 pub struct DeclareLocal {
     local: Local,
 }

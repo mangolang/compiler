@@ -1,5 +1,7 @@
+use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::control::Group;
+use mango::towasm::control::Label;
 use mango::towasm::util::Name;
 use mango::towasm::values::DeclareLocal;
 use mango::towasm::values::Local;
@@ -7,8 +9,6 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use mango::towasm::control::Label;
-use mango::towasm::collect::Statement;
 
 pub struct Parameter {
     declare_local: DeclareLocal,
@@ -111,7 +111,13 @@ pub struct Function {
 }
 
 impl Function {
-    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
+    // This uses group, so it has a label, but this isn't final... It might be useless.
+    pub fn new(
+        name: Name,
+        parameters: Vec<Parameter>,
+        results: Vec<Output>,
+        statements_gen: &Fn(Label) -> Vec<Statement>,
+    ) -> Self {
         Function {
             signature: FunctionSignature {
                 name: name.clone(),

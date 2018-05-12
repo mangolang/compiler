@@ -24,13 +24,13 @@ impl Loop {
         }
     }
 
-//    pub fn add(&mut self, statement: Statement) {
-//        self.group.add(statement);
-//    }
+    //    pub fn add(&mut self, statement: Statement) {
+    //        self.group.add(statement);
+    //    }
 
-//    fn label(&self) -> Label {
-//        Label::internal(self.name.clone())
-//    }
+    //    fn label(&self) -> Label {
+    //        Label::internal(self.name.clone())
+    //    }
 }
 
 impl Wasm for Loop {

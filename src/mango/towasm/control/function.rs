@@ -1,3 +1,4 @@
+use mango::towasm::control::Label;
 use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
@@ -26,9 +27,15 @@ impl Wasm for Call {
     }
 }
 
-#[derive(new)]
 pub struct Return {
     expression: Expression,
+}
+
+impl Return {
+    // Take label to make sure this inside a function, might be used in the future, or removed...
+    pub fn new(_label: Label, expression: Expression) -> Self {
+        Return { expression }
+    }
 }
 
 impl Wasm for Return {

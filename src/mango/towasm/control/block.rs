@@ -1,10 +1,10 @@
 use mango::towasm::collect::Statement;
+use mango::towasm::control::Label;
 use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use mango::towasm::control::Label;
 
 pub struct Group {
     statements: Vec<Statement>,
@@ -12,16 +12,10 @@ pub struct Group {
 
 impl Group {
     pub fn new(label: Label, statements_gen: &Fn(Label) -> Vec<Statement>) -> Group {
-        Group { statements: statements_gen(label) }
+        Group {
+            statements: statements_gen(label),
+        }
     }
-
-//    pub fn add(&mut self, statement: Statement) {
-//        self.statements.push(statement);
-//    }
-//
-//    pub fn add_all(&mut self, statement: Vec<Statement>) {
-//        self.statements.extend(statement);
-//    }
 }
 
 impl Wasm for Group {
@@ -47,10 +41,7 @@ pub struct Block {
 impl Block {
     pub fn new(statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
         // todo: determine name automatically
-        Block::new_named(
-            Name::new("b".to_owned()).unwrap(),
-            statements_gen
-        )
+        Block::new_named(Name::new("b".to_owned()).unwrap(), statements_gen)
     }
 
     pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
@@ -58,10 +49,6 @@ impl Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
         }
-    }
-
-    fn label(&self) -> Label {
-        Label::internal(self.name.clone())
     }
 }
 
