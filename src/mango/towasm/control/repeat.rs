@@ -5,9 +5,10 @@ use mango::towasm::util::Name;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use std::rc::Rc;
 
 pub struct Loop {
-    name: Name,
+    name: Rc<Name>,
     group: Group,
 }
 
@@ -17,20 +18,15 @@ impl Loop {
         Loop::new_named(Name::new("l".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Box<Self> {
+    pub fn new_named(
+        name: Rc<Name>,
+        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
+    ) -> Box<Self> {
         Box::new(Loop {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
         })
     }
-
-    //    pub fn add(&mut self, statement: Statement) {
-    //        self.group.add(statement);
-    //    }
-
-    //    fn label(&self) -> Label {
-    //        Label::internal(self.name.clone())
-    //    }
 }
 
 impl Wasm for Loop {

@@ -1,6 +1,7 @@
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct Name {
@@ -8,10 +9,10 @@ pub struct Name {
 }
 
 impl Name {
-    pub fn new(name: String) -> Option<Self> {
+    pub fn new(name: String) -> Option<Rc<Self>> {
         // todo: filter out illegal names
         assert!(!name.starts_with("$"));
-        return Some(Name { name });
+        return Some(Rc::new(Name { name }));
     }
 
     pub fn pure_name(&self) -> String {

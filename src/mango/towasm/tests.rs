@@ -38,30 +38,18 @@ fn test_example_1() {
                 // todo: get rid of clones
                 fac_result_decl.clone(),
                 loop_condition_decl.clone(),
-                Assign::new(
-                    fac_result.clone(),
-                    Const::new(Type::Int32, Value::Int(1)),
-                ),
+                Assign::new(fac_result.clone(), Const::new(Type::Int32, Value::Int(1))),
                 //            Statement::Block(Block::new_named("".to_owned(), vec![])),
                 Loop::new_named(loop_name.clone(), &|loop_label: Label| {
                     vec![
-                        Assign::new(
-                            fac_result.clone(),
-                            Mul::new(fac_result.get(), var_n.get()),
-                        ),
+                        Assign::new(fac_result.clone(), Mul::new(fac_result.get(), var_n.get())),
                         Assign::new(
                             loop_condition.clone(),
-                            Gt::new(
-                                var_n.get(),
-                                Const::new(Type::Int32, Value::Int(2)),
-                            ),
+                            Gt::new(var_n.get(), Const::new(Type::Int32, Value::Int(2))),
                         ),
                         Assign::new(
                             var_n.clone(),
-                            Add::new(
-                                var_n.get(),
-                                Const::new(Type::Int32, Value::Int(-1)),
-                            ),
+                            Add::new(var_n.get(), Const::new(Type::Int32, Value::Int(-1))),
                         ),
                         BranchIf::new(loop_condition.get(), loop_label),
                     ]

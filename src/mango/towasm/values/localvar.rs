@@ -5,6 +5,7 @@ use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use std::rc::Rc;
 
 #[derive(Clone)]
 pub struct DeclareLocal {
@@ -12,11 +13,11 @@ pub struct DeclareLocal {
 }
 
 impl DeclareLocal {
-    pub fn new(name: Name, typ: Type) -> Box<Self> {
+    pub fn new(name: Rc<Name>, typ: Type) -> Box<Self> {
         Box::new(DeclareLocal::new_unboxed(name, typ))
     }
 
-    pub fn new_unboxed(name: Name, typ: Type) -> Self {
+    pub fn new_unboxed(name: Rc<Name>, typ: Type) -> Self {
         DeclareLocal {
             local: Local { name, typ },
         }
@@ -54,7 +55,7 @@ impl Statement for DeclareLocal {}
 /// To create an instance of Local, make a [DeclareLocal] and call [local()]
 #[derive(Clone)]
 pub struct Local {
-    name: Name,
+    name: Rc<Name>,
     pub typ: Type,
 }
 

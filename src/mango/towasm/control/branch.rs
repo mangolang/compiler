@@ -6,15 +6,16 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::rc::Rc;
 
 /// Label for a block, if or loop
 pub struct Label {
-    name: Name,
+    name: Rc<Name>,
 }
 
 impl Label {
     /// This constructor should not be called directly; blocks should create their own references.
-    pub fn internal(name: Name) -> Self {
+    pub fn internal(name: Rc<Name>) -> Self {
         Label { name }
     }
 }

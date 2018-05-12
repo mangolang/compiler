@@ -9,6 +9,7 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::rc::Rc;
 
 pub struct Parameter {
     // Don't box here, it's just to reference those fields
@@ -16,9 +17,9 @@ pub struct Parameter {
 }
 
 impl Parameter {
-    pub fn new(name: Name, typ: Type) -> Box<Self> {
+    pub fn new(name: Rc<Name>, typ: Type) -> Box<Self> {
         // todo: should this store declare local AND name/type?
-        let declare_local = DeclareLocal::new_unboxed(name.clone(), typ.clone());
+        let declare_local = DeclareLocal::new_unboxed(name, typ.clone());
         Box::new(Parameter { declare_local })
     }
 
@@ -66,13 +67,13 @@ impl Wasm for Output {
 }
 
 pub struct FunctionSignature {
-    name: Name,
+    name: Rc<Name>,
     parameters: Vec<Box<Parameter>>,
     results: Vec<Box<Output>>,
 }
 
 impl FunctionSignature {
-    pub fn new(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
+    pub fn new(name: Rc<Name>, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
         assert!(results.len() <= 1); //
         FunctionSignature {
             name,
@@ -114,7 +115,7 @@ pub struct Function {
 impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
     pub fn new(
-        name: Name,
+        name: Rc<Name>,
         parameters: Vec<Box<Parameter>>,
         results: Vec<Box<Output>>,
         statements_gen: &Fn(Label) -> Vec<Box<Statement>>,

@@ -5,6 +5,7 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::rc::Rc;
 
 pub struct Group {
     statements: Vec<Box<Statement>>,
@@ -34,7 +35,7 @@ impl Wasm for Group {
 }
 
 pub struct Block {
-    name: Name,
+    name: Rc<Name>,
     group: Group,
 }
 
@@ -44,7 +45,10 @@ impl Block {
         Block::new_named(Name::new("b".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Box<Self> {
+    pub fn new_named(
+        name: Rc<Name>,
+        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
+    ) -> Box<Self> {
         Box::new(Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
