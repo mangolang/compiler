@@ -1,3 +1,4 @@
+use mango::towasm::collect::Statement;
 use mango::towasm::values::Expression;
 use mango::towasm::values::Local;
 use mango::towasm::Wasm;
@@ -24,3 +25,5 @@ impl Wasm for Assign {
         unimplemented!()
     }
 }
+
+impl Statement for Assign {}

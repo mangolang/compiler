@@ -1,7 +1,6 @@
 use mango::towasm::arithmetic::Add;
 use mango::towasm::collect::datatype::Value;
 use mango::towasm::collect::typ::Wasm;
-use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::control::BranchIf;
 use mango::towasm::control::Label;
@@ -37,43 +36,44 @@ fn test_example_1() {
         &|func_label: Label| {
             vec![
                 // Function body
-                Statement::Local(fac_result_decl.clone()),
-                Statement::Local(loop_condition_decl.clone()),
-                Statement::Assign(Assign::new(
+                // todo: get rid of clones
+                Box::new(fac_result_decl.clone()),
+                Box::new(loop_condition_decl.clone()),
+                Box::new(Assign::new(
                     fac_result.clone(),
                     Expression::Const(Const::new(Type::Int32, Value::Int(1))),
                 )),
                 //            Statement::Block(Block::new_named("".to_owned(), vec![])),
-                Statement::Loop(Loop::new_named(loop_name.clone(), &|loop_label: Label| {
+                Box::new(Loop::new_named(loop_name.clone(), &|loop_label: Label| {
                     vec![
-                        Statement::Assign(Assign::new(
+                        Box::new(Assign::new(
                             fac_result.clone(),
                             Expression::Mul(Mul::new(
                                 Expression::Local(fac_result.get()),
                                 Expression::Local(var_n.get()),
                             )),
                         )),
-                        Statement::Assign(Assign::new(
+                        Box::new(Assign::new(
                             loop_condition.clone(),
                             Expression::Gt(Gt::new(
                                 Expression::Local(var_n.get()),
                                 Expression::Const(Const::new(Type::Int32, Value::Int(2))),
                             )),
                         )),
-                        Statement::Assign(Assign::new(
+                        Box::new(Assign::new(
                             var_n.clone(),
                             Expression::Add(Add::new(
                                 Expression::Local(var_n.get()),
                                 Expression::Const(Const::new(Type::Int32, Value::Int(-1))),
                             )),
                         )),
-                        Statement::BranchIf(BranchIf::new(
+                        Box::new(BranchIf::new(
                             Expression::Local(loop_condition.get()),
                             loop_label,
                         )),
                     ]
                 })),
-                Statement::Return(Return::new(func_label, Expression::Local(fac_result.get()))),
+                Box::new(Return::new(func_label, Expression::Local(fac_result.get()))),
             ]
         },
     )]);

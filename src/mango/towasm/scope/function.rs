@@ -116,7 +116,7 @@ impl Function {
         name: Name,
         parameters: Vec<Parameter>,
         results: Vec<Output>,
-        statements_gen: &Fn(Label) -> Vec<Statement>,
+        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
     ) -> Self {
         Function {
             signature: FunctionSignature {

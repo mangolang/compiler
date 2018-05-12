@@ -1,3 +1,4 @@
+use mango::towasm::collect::Statement;
 use mango::towasm::collect::Type;
 use mango::towasm::util::Name;
 use mango::towasm::values::Assign;
@@ -44,6 +45,8 @@ impl Wasm for DeclareLocal {
         unimplemented!()
     }
 }
+
+impl Statement for DeclareLocal {}
 
 /// To create an instance of Local, make a [DeclareLocal] and call [local()]
 #[derive(Clone)]

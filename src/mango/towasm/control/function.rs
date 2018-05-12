@@ -1,3 +1,4 @@
+use mango::towasm::collect::Statement;
 use mango::towasm::control::Label;
 use mango::towasm::values::Expression;
 use mango::towasm::Wasm;
@@ -47,3 +48,5 @@ impl Wasm for Return {
         unimplemented!();
     }
 }
+
+impl Statement for Return {}

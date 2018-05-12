@@ -12,12 +12,12 @@ pub struct Loop {
 }
 
 impl Loop {
-    pub fn new(statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
+    pub fn new(statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Self {
         // todo: determine name automatically
         Loop::new_named(Name::new("l".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
+    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Self {
         Loop {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
@@ -46,3 +46,5 @@ impl Wasm for Loop {
         unimplemented!()
     }
 }
+
+impl Statement for Loop {}

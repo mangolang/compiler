@@ -7,11 +7,11 @@ use std::io;
 use std::io::Write;
 
 pub struct Group {
-    statements: Vec<Statement>,
+    statements: Vec<Box<Statement>>,
 }
 
 impl Group {
-    pub fn new(label: Label, statements_gen: &Fn(Label) -> Vec<Statement>) -> Group {
+    pub fn new(label: Label, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Group {
         Group {
             statements: statements_gen(label),
         }
@@ -39,12 +39,12 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
+    pub fn new(statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Self {
         // todo: determine name automatically
         Block::new_named(Name::new("b".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Statement>) -> Self {
+    pub fn new_named(name: Name, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Self {
         Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
@@ -66,3 +66,5 @@ impl Wasm for Block {
         Ok(())
     }
 }
+
+impl Statement for Block {}
