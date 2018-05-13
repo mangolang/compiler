@@ -65,13 +65,7 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 	cargo test --all
 	cargo run --bin mango-cli
 
-* To deploy the web version in release mode:
-
-.. code:: bash
-
-	cargo +nightly build --target wasm32-unknown-unknown --release
-    wasm-bindgen --no-modules --no-typescript target/wasm32-unknown-unknown/release/mango.wasm --out-dir target/deploy/
-	# then open target/deploy/index.html in a browser
+* To deploy the web version in release mode, run the script `dev/build_web.sh` (or view it for the steps needed). It uses Python's SimpleHTTPServer, if you don't have that, you can still find the deployable code in `target/deploy`.
 
 * You're now ready to make changes! If you want to help, you're very welcome! Have a glance at CONTRIBUTING.rst_ if you have a minute.
 
