@@ -74,7 +74,7 @@
     </script>
     
      <!--Wasm Mango compiler-->
-    <script src="mango.js"></script>
+    <script src="mango.js" type="module"></script>
     <script type="text/javascript">
         Module.addOnInit(function () {
             let code = Module.cwrap('compile_string', 'string', ['string']);
