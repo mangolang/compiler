@@ -13,7 +13,7 @@ fn str_from_rust(internal_str: String) -> *mut c_char {
 }
 
 #[no_mangle]
-pub fn compile_string(codechrs: *const c_char) -> *mut c_char {
+pub fn compile_string_to_wat(codechrs: *const c_char) -> *mut c_char {
     let code = str_to_rust(codechrs);
     // TODO
     println!("compiling {}", code);
