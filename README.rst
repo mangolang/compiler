@@ -70,7 +70,7 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 .. code:: bash
 
 	cargo +nightly build --target wasm32-unknown-unknown --release
-    wasm-bindgen target/wasm32-unknown-unknown/release/mango.wasm --out-dir target/deploy/
+    wasm-bindgen --no-modules --no-typescript target/wasm32-unknown-unknown/release/mango.wasm --out-dir target/deploy/
 	# then open target/deploy/index.html in a browser
 
 * You're now ready to make changes! If you want to help, you're very welcome! Have a glance at CONTRIBUTING.rst_ if you have a minute.
