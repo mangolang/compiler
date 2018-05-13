@@ -13,15 +13,18 @@ pub struct Loop {
 }
 
 impl Loop {
-    pub fn new(statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Box<Self> {
+    pub fn new<F>(statements_gen: F) -> Box<Self>
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         // todo: determine name automatically
         Loop::new_named(Name::new("l".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(
-        name: Rc<Name>,
-        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
-    ) -> Box<Self> {
+    pub fn new_named<F>(name: Rc<Name>, statements_gen: F) -> Box<Self>
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         Box::new(Loop {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),

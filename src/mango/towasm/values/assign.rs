@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io;
 
 pub struct Assign {
-    assignee: Local, // todo
+    assignee: Local,
     value: Box<Expression>,
 }
 

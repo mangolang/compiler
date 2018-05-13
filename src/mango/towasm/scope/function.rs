@@ -19,7 +19,7 @@ pub struct Parameter {
 impl Parameter {
     pub fn new(name: Rc<Name>, typ: Type) -> Box<Self> {
         // todo: should this store declare local AND name/type?
-        let declare_local = DeclareLocal::new_unboxed(name, typ.clone());
+        let declare_local = DeclareLocal::new_unboxed(name, typ);
         Box::new(Parameter { declare_local })
     }
 
@@ -114,12 +114,15 @@ pub struct Function {
 
 impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
-    pub fn new(
+    pub fn new<F>(
         name: Rc<Name>,
         parameters: Vec<Box<Parameter>>,
         results: Vec<Box<Output>>,
-        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
-    ) -> Box<Self> {
+        statements_gen: F,
+    ) -> Box<Self>
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         Box::new(Function {
             signature: FunctionSignature {
                 name: name.clone(),

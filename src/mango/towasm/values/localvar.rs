@@ -19,16 +19,18 @@ impl DeclareLocal {
 
     pub fn new_unboxed(name: Rc<Name>, typ: Type) -> Self {
         DeclareLocal {
-            local: Local { name, typ },
+            local: Local {
+                inner: Rc::new(InnerLocal { name, typ }),
+            },
         }
     }
 
     pub fn name(&self) -> &Name {
-        &self.local.name
+        self.local.name()
     }
 
     pub fn typ(&self) -> &Type {
-        &self.local.typ
+        self.local.typ()
     }
 
     pub fn local(&self) -> Local {
@@ -40,8 +42,8 @@ impl Wasm for DeclareLocal {
     fn as_wat(&self) -> String {
         format!(
             "(local {} {})",
-            self.local.name.as_wat(),
-            self.local.typ.as_wat()
+            self.local.name().as_wat(),
+            self.local.typ().as_wat()
         )
     }
 
@@ -52,24 +54,39 @@ impl Wasm for DeclareLocal {
 
 impl Statement for DeclareLocal {}
 
+/// Use this inner type so [Local] can be a wrapper that uses [Rc] by default
+struct InnerLocal {
+    name: Rc<Name>,
+    typ: Type,
+}
+
 /// To create an instance of Local, make a [DeclareLocal] and call [local()]
 #[derive(Clone)]
 pub struct Local {
-    name: Rc<Name>,
-    pub typ: Type,
+    inner: Rc<InnerLocal>,
 }
 
 impl Local {
     pub fn get(&self) -> Box<GetLocal> {
         Box::new(GetLocal {
-            local: self.clone(),
+            local: Local {
+                inner: self.inner.clone(),
+            },
         })
+    }
+
+    pub fn name(&self) -> &Rc<Name> {
+        &self.inner.name
+    }
+
+    pub fn typ(&self) -> &Type {
+        &self.inner.typ
     }
 }
 
 impl Wasm for Local {
     fn as_wat(&self) -> String {
-        format!("{}", self.name.as_wat())
+        format!("{}", self.name().as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -84,7 +101,7 @@ pub struct GetLocal {
 
 impl GetLocal {
     pub fn typ(&self) -> &Type {
-        &self.local.typ
+        self.local.typ()
     }
 }
 

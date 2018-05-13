@@ -7,7 +7,7 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 
-#[derive(PartialEq, Eq, Clone)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum Type {
     Int32,
     Int64,

@@ -3,7 +3,6 @@ use std::fs::File;
 use std::io;
 use std::rc::Rc;
 
-#[derive(Clone)]
 pub struct Name {
     name: String,
 }

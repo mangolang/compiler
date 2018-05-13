@@ -12,7 +12,10 @@ pub struct Group {
 }
 
 impl Group {
-    pub fn new(label: Label, statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Self {
+    pub fn new<F>(label: Label, statements_gen: F) -> Self
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         Group {
             statements: statements_gen(label),
         }
@@ -40,15 +43,18 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(statements_gen: &Fn(Label) -> Vec<Box<Statement>>) -> Box<Self> {
+    pub fn new<F>(statements_gen: F) -> Box<Self>
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         // todo: determine name automatically
         Block::new_named(Name::new("b".to_owned()).unwrap(), statements_gen)
     }
 
-    pub fn new_named(
-        name: Rc<Name>,
-        statements_gen: &Fn(Label) -> Vec<Box<Statement>>,
-    ) -> Box<Self> {
+    pub fn new_named<F>(name: Rc<Name>, statements_gen: F) -> Box<Self>
+    where
+        F: FnOnce(Label) -> Vec<Box<Statement>>,
+    {
         Box::new(Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
