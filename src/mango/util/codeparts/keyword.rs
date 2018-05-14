@@ -67,6 +67,7 @@ impl Keyword {
             "do" => Ok(Reserved("do".to_owned())),
             "double" => Ok(Reserved("double".to_owned())),
             "dynamic" => Ok(Reserved("dynamic".to_owned())),
+            "elementwise" => Ok(Reserved("elementwise".to_owned())),
             "elif" => Ok(Reserved("elif".to_owned())),
             "end" => Ok(Reserved("end".to_owned())),
             "enum" => Ok(Reserved("enum".to_owned())),

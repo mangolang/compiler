@@ -14,15 +14,16 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new(symbol_txt: &str) -> Result<Self, Msg> {
-        match symbol_txt {
+    pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
+        let ssymbol_txt = symbol_txt.into();
+        match &*ssymbol_txt {
             "+" => Ok(Symbol::Plus),
             "-" => Ok(Symbol::Dash),
             "*" => Ok(Symbol::Asterisk),
             "/" => Ok(Symbol::Slash),
             _ => Err(Msg::from_valid(&format!(
                 "Unknown symbol: '{}'",
-                symbol_txt
+                ssymbol_txt
             ))),
         }
     }

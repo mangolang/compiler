@@ -5,8 +5,8 @@ pub use self::association::AssociationToken;
 //pub use self::declaration::DeclarationToken;
 
 pub mod parentheses;
-pub use self::parentheses::ParenthesisClose;
-pub use self::parentheses::ParenthesisOpen;
+pub use self::parentheses::ParenthesisCloseToken;
+pub use self::parentheses::ParenthesisOpenToken;
 
 pub mod operator;
 pub use self::operator::OperatorToken;

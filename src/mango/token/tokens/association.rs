@@ -11,11 +11,17 @@ pub struct AssociationToken {
 }
 
 impl AssociationToken {
-    pub fn from_str(symbol_txt: &str) -> Result<AssociationToken, Msg> {
+    pub fn from_unmutated() -> Self {
+        AssociationToken {
+            symbol: Option::None,
+        }
+    }
+
+    pub fn from_str<S: Into<String>>(symbol_txt: S) -> Result<AssociationToken, Msg> {
         Ok(AssociationToken::from_symbol(Symbol::new(symbol_txt)?))
     }
 
-    pub fn from_symbol(symbol: Symbol) -> AssociationToken {
+    pub fn from_symbol(symbol: Symbol) -> Self {
         AssociationToken {
             symbol: Option::Some(symbol),
         }
