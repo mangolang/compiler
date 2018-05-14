@@ -23,11 +23,10 @@ impl fmt::Display for Msg {
 }
 
 impl StrType for Msg {
-    fn new(msg: String) -> Result<Self, Msg> {
-        match Msg::validate(&msg) {
-            Ok(_) => Ok(Msg {
-                msg: msg.to_owned(),
-            }),
+    fn new<S: Into<String>>(msg: S) -> Result<Self, Msg> {
+        let smsg = msg.into();
+        match Msg::validate(&smsg) {
+            Ok(_) => Ok(Msg { msg: smsg }),
             Err(msg) => Err(msg),
         }
     }
