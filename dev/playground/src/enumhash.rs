@@ -27,11 +27,7 @@ struct Beta {
 
 impl MyTrait for Alpha {
     fn to_text(&self) -> String {
-<<<<<<< Updated upstream
         self.val.to_owned()
-=======
-        self.val.clone()
->>>>>>> Stashed changes
     }
 }
 

@@ -21,7 +21,8 @@ lazy_static! {
 /// # Implementation
 ///
 /// * Name strings are interned for fast equality checking.
-#[derive(Debug, Hash, PartialEq, Eq, Clone)]
+/// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
     name_id: usize,
 }

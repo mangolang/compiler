@@ -19,9 +19,10 @@ pub enum Keyword {
 }
 
 impl Keyword {
-    pub fn from_str(symbol_txt: &str) -> Result<Self, Msg> {
+    pub fn from_str<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
+        let ssymbol_txt = symbol_txt.into();
         use self::Keyword::*;
-        match symbol_txt {
+        match &*ssymbol_txt {
             "let" => Ok(Let),
             "mut" => Ok(Mut),
             "if" => Ok(If),
@@ -163,7 +164,7 @@ impl Keyword {
 
             _ => Err(Msg::from_valid(&format!(
                 "Unknown keywords: '{}'",
-                symbol_txt
+                ssymbol_txt
             ))),
         }
     }

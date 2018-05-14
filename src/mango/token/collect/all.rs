@@ -1,5 +1,6 @@
 use mango::token::special::UnlexableToken;
 use mango::token::tokens::AssociationToken;
+use mango::token::tokens::EndStatementToken;
 use mango::token::tokens::IdentifierToken;
 use mango::token::tokens::KeywordToken;
 use mango::token::tokens::LiteralToken;
@@ -18,15 +19,25 @@ pub enum Tokens {
     Operator(OperatorToken),
     ParenthesisOpen(ParenthesisOpenToken),
     ParenthesisClose(ParenthesisCloseToken),
-    Unlexable(UnlexableToken), // todo: spelling
-                               // TODO
+    EndStatement(EndStatementToken),
+    Unlexable(UnlexableToken),
 }
 
 impl ToText for Tokens {
     fn to_text(&self) -> String {
+        // todo: this seems inefficient, and code bloat
+        // todo: but perhaps good for parsing, hard to get type back from trait obj
+        use self::Tokens::*;
         match self {
-            //            Tokens::Operator(operator) => operator.to_text(),
-            _ => unimplemented!(), // TODO
+            Association(token) => token.to_text(),
+            Identifier(token) => token.to_text(),
+            Keyword(token) => token.to_text(),
+            Literal(token) => token.to_text(),
+            Operator(token) => token.to_text(),
+            ParenthesisOpen(token) => token.to_text(),
+            ParenthesisClose(token) => token.to_text(),
+            EndStatement(token) => token.to_text(),
+            Unlexable(token) => token.to_text(),
         }
     }
 }

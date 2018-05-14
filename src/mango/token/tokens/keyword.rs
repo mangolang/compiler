@@ -10,9 +10,9 @@ pub struct KeywordToken {
 }
 
 impl KeywordToken {
-    pub fn from_str(word: String) -> Result<KeywordToken, Msg> {
+    pub fn from_str<S: Into<String>>(word: S) -> Result<KeywordToken, Msg> {
         Result::Ok(KeywordToken {
-            word: Keyword::from_str(&word)?,
+            word: Keyword::from_str(word)?,
         })
     }
 }

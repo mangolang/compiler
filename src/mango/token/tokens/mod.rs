@@ -19,3 +19,6 @@ pub use self::literal::LiteralToken;
 
 pub mod keyword;
 pub use self::keyword::KeywordToken;
+
+pub mod end_statement;
+pub use self::end_statement::EndStatementToken;

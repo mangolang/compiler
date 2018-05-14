@@ -11,10 +11,13 @@ pub struct IdentifierToken {
 }
 
 impl IdentifierToken {
-    pub fn from_str(text: String) -> Result<IdentifierToken, Msg> {
-        Result::Ok(IdentifierToken {
-            name: Name::new(text)?,
-        })
+    pub fn from_str(text: String) -> Result<Self, Msg> {
+        let name = Name::new(text)?;
+        Ok(Self::from_name(name))
+    }
+
+    pub fn from_name(name: Name) -> Self {
+        IdentifierToken { name }
     }
 }
 

@@ -12,25 +12,27 @@ pub trait TokenStream {
     fn peek(&mut self) -> StreamElem<&Tokens>;
 }
 
-#[derive(Debug)]
 /// A [TokenStream] that simply iterates over an in-memory list. Intended for testing.
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct MemoryTokenStream {
     index: usize,
     tokens: Vec<Tokens>,
 }
 
 impl MemoryTokenStream {
+    #[allow(dead_code)]
     pub fn new(tokens: Vec<Tokens>) -> MemoryTokenStream {
         MemoryTokenStream { index: 0, tokens }
     }
 
     pub fn to_text(&self) -> String {
         format!(
-            "{}",
+            " {}",
             self.tokens
                 .iter()
-                .map(|token| token.to_text())
-                .fold(String::new(), |s, a| s + &a)
+                .map(|token: &Tokens| token.to_text())
+                .collect::<Vec<_>>()
+                .join(" ")
         )
     }
 }
