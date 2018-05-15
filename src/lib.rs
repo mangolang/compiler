@@ -9,6 +9,7 @@ extern crate derive_new;
 pub mod mango {
     // Utilities
     pub mod cli;
+    pub mod io;
     pub mod jit;
     pub mod util;
 
