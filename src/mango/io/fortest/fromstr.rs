@@ -1,5 +1,5 @@
 use mango::io::typ::Reader;
-use regex::Regex;
+use mango::io::util::REXCACHE;
 
 /// Implementation of [Reader] that reads from a pre-provided string.
 /// Mostly for testing purposes.
@@ -23,7 +23,11 @@ impl Reader for StringReader {
         false
     }
 
-    fn matches(&mut self, pattern: Regex) -> Option<String> {
-        unimplemented!() // TODO
+    fn matches(&mut self, subpattern: String) -> Option<String> {
+        REXCACHE.with(|rl| {
+            let mut rexlib = rl.borrow_mut();
+            //            let rex = rexlib.make_or_get(subpattern);
+        });
+        Option::None // TODO
     }
 }

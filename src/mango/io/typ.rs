@@ -6,7 +6,7 @@ pub trait Reader {
     fn equals(&mut self, text: &str) -> bool;
 
     /// Checks whether the code from the current position matches a regex pattern.
-    fn matches(&mut self, pattern: Regex) -> Option<String>;
+    fn matches(&mut self, subpattern: String) -> Option<String>;
 }
 
 pub trait Writer {
