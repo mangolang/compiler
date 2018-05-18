@@ -23,10 +23,10 @@ impl Reader for StringReader {
         false
     }
 
-    fn matches(&mut self, subpattern: String) -> Option<String> {
+    fn matches(&mut self, subpattern: &str) -> Option<String> {
         REXCACHE.with(|rl| {
             let mut rexlib = rl.borrow_mut();
-            //            let rex = rexlib.make_or_get(subpattern);
+            let rex = rexlib.make_or_get(subpattern);
         });
         Option::None // TODO
     }
