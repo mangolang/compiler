@@ -1,4 +1,5 @@
 use mango::io::typ::Reader;
+use mango::io::typ::ReaderResult;
 use mango::io::util::REXCACHE;
 
 /// Implementation of [Reader] that reads from a pre-provided string.
@@ -15,19 +16,21 @@ impl StringReader {
 }
 
 impl Reader for StringReader {
-    fn equals(&mut self, text: &str) -> bool {
-        if &self.code[self.index..self.index + text.len()] == text {
-            self.index += text.len();
-            return true;
-        }
-        false
-    }
+    //    fn equals(&mut self, texts: Vec<&str>) -> ReaderResult {
+    //        for text in texts {
+    //            if &self.code[self.index..self.index + text.len()] == text {
+    //                self.index += text.len();
+    //                return ReaderResult::Match(self.code[self.index..self.index + text.len()])
+    //            }
+    //        }
+    //        ReaderResult::NoMatch()
+    //    }
 
-    fn matches(&mut self, subpattern: &str) -> Option<String> {
+    fn matches(&mut self, subpattern: &str) -> ReaderResult {
         REXCACHE.with(|rl| {
             let mut rexlib = rl.borrow_mut();
             let rex = rexlib.make_or_get(subpattern);
         });
-        Option::None // TODO
+        ReaderResult::NoMatch() // TODO
     }
 }

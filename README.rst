@@ -65,6 +65,12 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 	cargo test --all
 	cargo run --bin mango-cli
 
+  or to build a fast, release-mode native binary:
+
+.. code:: bash
+
+    RUSTFLAGS="-C target-cpu=native" cargo build --release
+
 * To deploy the web version in release mode:
 
 .. code:: bash
