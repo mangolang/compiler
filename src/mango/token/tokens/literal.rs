@@ -25,6 +25,10 @@ impl LiteralToken {
     pub fn real(value: f64) -> LiteralToken {
         LiteralToken::Real(f64eq::new(value))
     }
+
+    pub fn subpattern_int() -> &'static str {
+        "[a-z]?\""
+    }
 }
 
 impl ToText for LiteralToken {
