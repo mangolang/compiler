@@ -3,17 +3,20 @@ use mango::io::typ::ReaderResult::*;
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
 use mango::token::special::UnlexableToken;
+use mango::token::tokens::EndBlockToken;
+use mango::token::tokens::EndStatementToken;
 use mango::token::tokens::ParenthesisCloseToken;
 use mango::token::tokens::ParenthesisOpenToken;
+use mango::token::tokens::StartBlockToken;
 use mango::token::Tokens;
 use mango::util::codeparts::Keyword;
-use std::collections::VecDeque;
+use mango::util::collection::Queue;
 
 pub struct CodeLexer<'r> {
     reader: &'r mut Reader,
     indent: i32,
-    // This is unfortunate, would not be needed with 'yield' but is now for indents
-    buffer: VecDeque<Tokens>,
+    // This is unfortunate, would not be needed with 'yield' but is now for indents.
+    buffer: Queue<Tokens>,
 }
 
 impl<'r> CodeLexer<'r> {
@@ -21,17 +24,42 @@ impl<'r> CodeLexer<'r> {
         CodeLexer {
             reader,
             indent: 0,
-            buffer: VecDeque::with_capacity(16),
+            buffer: Queue::new(),
         }
+    }
+
+    fn lex_indents(&mut self) -> MaybeToken {
+        let mut line_indent = 0;
+        while let Match(_) = self.reader.matches("\\t") {
+            line_indent += 1;
+        }
+        for _ in line_indent..self.indent {
+            // This line is dedented, make end tokens.
+            if let Match(_) = self.reader.matches("end") {
+                // If this is followed by an 'end' keyword, then that 'end' is redundant.
+                self.buffer
+                    .push(Tokens::EndBlock(EndBlockToken::new(true, true)));
+            } else {
+                self.buffer
+                    .push(Tokens::EndBlock(EndBlockToken::new(true, false)));
+            }
+        }
+        for _ in self.indent..line_indent {
+            // This line is indented, make start tokens.
+            self.buffer.push(Tokens::StartBlock(StartBlockToken::new()));
+        }
+        self.indent = line_indent;
+        self.lex()
     }
 }
 
 impl<'r> Lexer<'r> for CodeLexer<'r> {
     fn lex(&mut self) -> MaybeToken {
         // If there is a buffer due to indentation or continuations, return from that.
-        if !self.buffer.is_empty() {
-            return MaybeToken::Token(self.buffer.pop_front().unwrap());
+        if let Some(token) = self.buffer.pop() {
+            return MaybeToken::Token(token);
         }
+        // Past this point, we assume that hte buffer is empty. When adding stuff, pop it or re-enter lex() soon.
         if let Match(word) = self.reader.matches("\\.\\.\\.") {
             // Line continuation has no token, it just continues on the next line.
             if let Match(word) = self.reader.matches("\\n\\r?") {
@@ -39,11 +67,32 @@ impl<'r> Lexer<'r> for CodeLexer<'r> {
             } else if let Match(word) = self.reader.matches("[^\\n]*\\n\\r?") {
                 return MaybeToken::Token(Tokens::Unlexable(UnlexableToken::new(word)));
             } else {
-                // TODO: I don't know yet how to deal with continuation followed by end of file
+                // TODO: I don't know yet how to deal with ... followed by end-of-file
                 panic!()
             }
+            // This is a new line, so there may be indents.
+            return self.lex_indents();
         }
+        if let Match(word) = self.reader.matches("\\n\\r?") {
+            // Newline WITHOUT line continuation.
+            return MaybeToken::Token(Tokens::EndStatement(EndStatementToken::new_end_line()));
+        }
+        if let Match(word) = self.reader.matches(";") {
+            // Semicolon, which ends a statement.
+            // Need to do some extra work with buffer, because there may be a newline followed by indentation, which ; should precede.
+            self.buffer
+                .push(Tokens::EndStatement(EndStatementToken::new_semicolon()));
+            if let Match(word) = self.reader.matches("\\n\\r?") {
+                // If semicolon is followed by a newline (redundant), then we need to deal with indents (but ignore the newline itself).
+                // This will return the queue of tokens, including the semicolon.
+                return self.lex_indents();
+            }
+            // No newline, can just return the semicolon (which is certainly on the queue, and should be the only thing, but it is fine here if not).
+            return MaybeToken::Token(self.buffer.pop().unwrap());
+        }
+        //
         // Indentation done; do the rest of lexing.
+        //
         if let Match(word) = self.reader.matches("(") {
             return MaybeToken::Token(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
         }
