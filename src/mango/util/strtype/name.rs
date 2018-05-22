@@ -6,8 +6,10 @@ use std::fmt;
 use std::sync::Mutex;
 use string_interner::StringInterner;
 
+const VALID_IDENTIFIER_SUBPATTERN: &'static str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
-    static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
+    static ref VALID_IDENTIFIER: Regex =
+        Regex::new(&format!("{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
@@ -37,6 +39,11 @@ impl Name {
             .resolve(self.name_id)
             .unwrap()
             .to_string()
+    }
+
+    /// Generate an eager subpattern to match names, that can be composed in a regular expression.
+    pub fn subpattern() -> &'static str {
+        &VALID_IDENTIFIER_SUBPATTERN.clone()
     }
 }
 
