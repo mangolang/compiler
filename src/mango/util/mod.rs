@@ -1,3 +1,5 @@
+pub mod collection;
+
 pub mod strtype;
 
 pub mod numtype;
