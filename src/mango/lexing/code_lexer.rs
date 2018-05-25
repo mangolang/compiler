@@ -20,10 +20,11 @@ enum ReaderOrDelegate {
 }
 
 impl ReaderOrDelegate {
-    fn end_delegation(&mut self) {
-        *self = match self {
-            ReaderOrDelegate::Delegate(delegate) => ReaderOrDelegate::Reader(delegate.consume()),
-            ReaderOrDelegate::Reader(reader) => ReaderOrDelegate::Reader(*reader),
+    fn end_delegation(self) -> Self {
+        use self::ReaderOrDelegate::*;
+        match self {
+            Delegate(delegate) => Reader(delegate.consume()),
+            read => read,
         }
     }
 }
@@ -87,7 +88,7 @@ impl Lexer for CodeLexer {
                 }
                 // Code to stop delegation cannot be here, because `self` is still mutably borrowed through `delegate`
             }
-            ReaderOrDelegate::Reader(mut reader) => {
+            ReaderOrDelegate::Reader(ref mut reader) => {
                 // todo: maybe this branch could be a separate function?
 
                 // If there is a buffer due to indentation or continuations, return from that.

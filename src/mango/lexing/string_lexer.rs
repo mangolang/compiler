@@ -30,6 +30,7 @@ impl StringLexer {
 
 impl Lexer for StringLexer {
     fn lex(&mut self) -> MaybeToken {
+        // TODO: perhaps there's a library that does parsing a string with escape characters
         // TODO: doesn't handle escaping etc at all now
         // TODO: this is going to have a problem if `matches` automatically eats whitespace
         match self.reader.matches("[^\"\\n]*") {
