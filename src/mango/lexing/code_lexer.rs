@@ -1,3 +1,5 @@
+#![feature(nll)]
+
 use mango::io::typ::Reader;
 use mango::io::typ::ReaderResult::*;
 use mango::lexing::string_lexer::StringLexer;
@@ -108,7 +110,7 @@ impl Lexer for CodeLexer {
                         panic!()
                     }
                     // This is a new line, so there may be indents.
-                    return self.lex_indents(reader);
+                    return self.lex_indents(&mut *reader);
                 }
                 if let Match(_) = reader.matches("\\n\\r?") {
                     // Newline WITHOUT line continuation.
@@ -122,7 +124,7 @@ impl Lexer for CodeLexer {
                     if let Match(_) = reader.matches("\\n\\r?") {
                         // If semicolon is followed by a newline (redundant), then we need to deal with indents (but ignore the newline itself).
                         // This will return the queue of tokens, including the semicolon.
-                        return self.lex_indents(reader);
+                        return self.lex_indents(&mut *reader);
                     }
                     // No newline, can just return the semicolon (which is certainly on the queue, and should be the only thing, but it is fine here if not).
                     return Token(self.buffer.pop().unwrap());
@@ -163,10 +165,10 @@ impl Lexer for CodeLexer {
         }
     }
 
-    fn get_reader(&self) -> &Rc<RefCell<Reader>> {
+    fn get_reader(&self) -> Rc<RefCell<Reader>> {
         match self.reader_or_delegate {
-            ReaderOrDelegate::Reader(reader) => &reader,
-            ReaderOrDelegate::Delegate(delegate) => delegate.get_reader(),
+            ReaderOrDelegate::Reader(ref reader) => reader.clone(),
+            ReaderOrDelegate::Delegate(ref delegate) => delegate.get_reader(),
         }
     }
 }

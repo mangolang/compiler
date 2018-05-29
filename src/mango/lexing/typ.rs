@@ -17,5 +17,5 @@ pub trait Lexer {
     /// Every call to lex returns a token until the end of the input.
     fn lex(&mut self) -> MaybeToken;
 
-    fn get_reader(&self) -> &Rc<RefCell<Reader>>;
+    fn get_reader(&self) -> Rc<RefCell<Reader>>;
 }
