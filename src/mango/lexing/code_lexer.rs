@@ -1,5 +1,3 @@
-#![feature(nll)]
-
 use mango::io::typ::Reader;
 use mango::io::typ::ReaderResult::*;
 use mango::lexing::string_lexer::StringLexer;
