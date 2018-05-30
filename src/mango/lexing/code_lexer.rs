@@ -20,7 +20,7 @@ use std::rc::Rc;
 // TODO: see this SO question: https://stackoverflow.com/questions/50535022/borrow-checker-problems-for-parser-that-can-delegate
 
 enum ReaderOrDelegate {
-    Reader(Rc<RefCell<Reader>>),
+    Reader(),
     Delegate(Box<Lexer>),
 }
 
@@ -28,6 +28,7 @@ pub struct CodeLexer {
     //    reader: Rc<RefCell<Reader>>,
     indent: i32,
 
+    reader: Rc<RefCell<Reader>>,
     // This delegate deals with nested structures, like string literals and comments.
     reader_or_delegate: ReaderOrDelegate,
     // This is unfortunate, would not be needed with 'yield' but is now for indents.
@@ -37,21 +38,22 @@ pub struct CodeLexer {
 impl CodeLexer {
     fn new(reader: Rc<RefCell<Reader>>) -> Self {
         CodeLexer {
-            reader_or_delegate: ReaderOrDelegate::Reader(reader),
+            reader: reader,
+            reader_or_delegate: ReaderOrDelegate::Reader(),
             indent: 0,
             buffer: Queue::new(),
         }
     }
 
-    fn lex_indents(&mut self, reader: &mut Reader) -> MaybeToken {
+    fn lex_indents(&mut self) -> MaybeToken {
         let mut line_indent = 0;
-        while let Match(_) = reader.matches("\\t") {
+        while let Match(_) = self.reader.borrow_mut().matches("\\t") {
             line_indent += 1;
         }
         for _ in line_indent..self.indent {
             // This line is dedented, make end tokens.
             // TODO: turn this "new" into a constant
-            if let Match(_) = reader.matches("end") {
+            if let Match(_) = self.reader.borrow_mut().matches("end") {
                 // If this is followed by an 'end' keyword, then that 'end' is redundant.
                 self.buffer
                     .push(Tokens::EndBlock(EndBlockToken::new(true, true)));
@@ -81,15 +83,14 @@ impl Lexer for CodeLexer {
                     End => {
                         // Swap back from delegation to direct mode.
                         let reader = delegate.get_reader().clone();
-                        self.reader_or_delegate = ReaderOrDelegate::Reader(reader);
+                        self.reader_or_delegate = ReaderOrDelegate::Reader();
                         self.lex()
                     }
                     Token(token) => Token(token),
                 }
                 // Code to stop delegation cannot be here, because `self` is still mutably borrowed through `delegate`
             }
-            ReaderOrDelegate::Reader(ref mut reader_refcell) => {
-                let mut reader = reader_refcell.borrow_mut();
+            ReaderOrDelegate::Reader() => {
                 // todo: maybe this branch could be a separate function?
 
                 // If there is a buffer due to indentation or continuations, return from that.
@@ -97,32 +98,31 @@ impl Lexer for CodeLexer {
                     return Token(token);
                 }
                 // Past this point, we assume that hte buffer is empty. When adding stuff, pop it or re-enter lex() soon.
-                if let Match(_) = reader.matches("\\.\\.\\.") {
+                if let Match(_) = self.reader.borrow_mut().matches("\\.\\.\\.") {
                     // Line continuation has no token, it just continues on the next line.
-                    if let Match(_) = reader.matches("\\n\\r?") {
+                    if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
                         // There should always be a newline after continuations, so that they can be ignored together.
-                    } else if let Match(word) = reader.matches("[^\\n]*\\n\\r?") {
+                    } else if let Match(word) = self.reader.borrow_mut().matches("[^\\n]*\\n\\r?") {
                         return Token(Tokens::Unlexable(UnlexableToken::new(word)));
                     } else {
                         // TODO: I don't know yet how to deal with '...' followed by end-of-file
                         panic!()
                     }
                     // This is a new line, so there may be indents.
-                    return self.lex_indents(&mut *reader);
+                    return self.lex_indents();
                 }
-                if let Match(_) = reader.matches("\\n\\r?") {
+                if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
                     // Newline WITHOUT line continuation.
                     return Token(Tokens::EndStatement(EndStatementToken::new_end_line()));
                 }
-                if let Match(_) = reader.matches(";") {
+                if let Match(_) = self.reader.borrow_mut().matches(";") {
                     // Semicolon, which ends a statement.
                     // Need to do some extra work with buffer, because there may be a newline followed by indentation, which ; should precede.
-                    self.buffer
-                        .push(Tokens::EndStatement(EndStatementToken::new_semicolon()));
-                    if let Match(_) = reader.matches("\\n\\r?") {
+                    self.buffer.push(Tokens::EndStatement(EndStatementToken::new_semicolon()));
+                    if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
                         // If semicolon is followed by a newline (redundant), then we need to deal with indents (but ignore the newline itself).
                         // This will return the queue of tokens, including the semicolon.
-                        return self.lex_indents(&mut *reader);
+                        return self.lex_indents();
                     }
                     // No newline, can just return the semicolon (which is certainly on the queue, and should be the only thing, but it is fine here if not).
                     return Token(self.buffer.pop().unwrap());
@@ -131,7 +131,7 @@ impl Lexer for CodeLexer {
                 // Indentation done; do the rest of lexing.
                 //
                 // Parse identifers and keywords. This assumes that keywords are a subset of identifiers.
-                if let Match(word) = reader.matches(IdentifierToken::subpattern()) {
+                if let Match(word) = self.reader.borrow_mut().matches(IdentifierToken::subpattern()) {
                     // later: maybe turn identifier into keyword to avoid a string copy? kind of elaborate...
                     if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
                         return Token(Tokens::Keyword(keyword));
@@ -139,9 +139,9 @@ impl Lexer for CodeLexer {
                     return Token(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
                 }
                 // Literal
-                if let Match(_) = reader.matches("[a-z]?\"") {
+                if let Match(_) = self.reader.borrow_mut().matches("[a-z]?\"") {
                     let sublexer: Box<Lexer> =
-                        Box::new(StringLexer::new_double_quoted(reader_refcell.clone()));
+                        Box::new(StringLexer::new_double_quoted(self.reader.clone()));
                     self.reader_or_delegate = ReaderOrDelegate::Delegate(sublexer);
                     return self.lex();
                 }
@@ -150,10 +150,10 @@ impl Lexer for CodeLexer {
                 // Association
                 // todo
                 // Grouping symbols
-                if let Match(_) = reader.matches("(") {
+                if let Match(_) = self.reader.borrow_mut().matches("(") {
                     return Token(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
                 }
-                if let Match(_) = reader.matches(")") {
+                if let Match(_) = self.reader.borrow_mut().matches(")") {
                     return Token(Tokens::ParenthesisClose(ParenthesisCloseToken::new()));
                 }
 
@@ -165,7 +165,7 @@ impl Lexer for CodeLexer {
 
     fn get_reader(&self) -> Rc<RefCell<Reader>> {
         match self.reader_or_delegate {
-            ReaderOrDelegate::Reader(ref reader) => reader.clone(),
+            ReaderOrDelegate::Reader() => self.reader.clone(),
             ReaderOrDelegate::Delegate(ref delegate) => delegate.get_reader(),
         }
     }
