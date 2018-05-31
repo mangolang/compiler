@@ -98,7 +98,8 @@ impl Lexer for CodeLexer {
                     return Token(token);
                 }
                 // Past this point, we assume that hte buffer is empty. When adding stuff, pop it or re-enter lex() soon.
-                if let Match(_) = self.reader.borrow_mut().matches("\\.\\.\\.") {
+                let continue_match_res = self.reader.borrow_mut().matches("\\.\\.\\.");
+                if let Match(_) = continue_match_res {
                     // Line continuation has no token, it just continues on the next line.
                     if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
                         // There should always be a newline after continuations, so that they can be ignored together.
@@ -115,11 +116,14 @@ impl Lexer for CodeLexer {
                     // Newline WITHOUT line continuation.
                     return Token(Tokens::EndStatement(EndStatementToken::new_end_line()));
                 }
-                if let Match(_) = self.reader.borrow_mut().matches(";") {
+                let end_statement_match_res = self.reader.borrow_mut().matches(";");
+                if let Match(_) = end_statement_match_res {
                     // Semicolon, which ends a statement.
                     // Need to do some extra work with buffer, because there may be a newline followed by indentation, which ; should precede.
-                    self.buffer.push(Tokens::EndStatement(EndStatementToken::new_semicolon()));
-                    if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
+                    self.buffer
+                        .push(Tokens::EndStatement(EndStatementToken::new_semicolon()));
+                    let end_line_match_res = self.reader.borrow_mut().matches("\\n\\r?");
+                    if let Match(_) = end_line_match_res {
                         // If semicolon is followed by a newline (redundant), then we need to deal with indents (but ignore the newline itself).
                         // This will return the queue of tokens, including the semicolon.
                         return self.lex_indents();
@@ -131,7 +135,11 @@ impl Lexer for CodeLexer {
                 // Indentation done; do the rest of lexing.
                 //
                 // Parse identifers and keywords. This assumes that keywords are a subset of identifiers.
-                if let Match(word) = self.reader.borrow_mut().matches(IdentifierToken::subpattern()) {
+                if let Match(word) = self
+                    .reader
+                    .borrow_mut()
+                    .matches(IdentifierToken::subpattern())
+                {
                     // later: maybe turn identifier into keyword to avoid a string copy? kind of elaborate...
                     if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
                         return Token(Tokens::Keyword(keyword));
@@ -139,7 +147,8 @@ impl Lexer for CodeLexer {
                     return Token(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
                 }
                 // Literal
-                if let Match(_) = self.reader.borrow_mut().matches("[a-z]?\"") {
+                let string_match_res = self.reader.borrow_mut().matches("[a-z]?\"");
+                if let Match(_) = string_match_res {
                     let sublexer: Box<Lexer> =
                         Box::new(StringLexer::new_double_quoted(self.reader.clone()));
                     self.reader_or_delegate = ReaderOrDelegate::Delegate(sublexer);

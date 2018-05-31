@@ -2,7 +2,8 @@
 /// string when parsed by a typical language.
 pub fn to_double_quoted_str(txt: &str) -> String {
     // todo: performance? mostly I'd like to add the quotes as part of the stream, but it seems difficult
-    let esc: String = txt.chars()
+    let esc: String = txt
+        .chars()
         .map(|c| match c {
             '\\' => r"\\".to_string(),
             '\"' => "\\\"".to_string(),
