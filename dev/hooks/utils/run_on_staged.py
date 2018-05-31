@@ -21,7 +21,7 @@ def run_on_staged(cmds):
 				run(cmd, allow_stderr=True, log=True)
 			except Exception as err:
 				stderr.write(str(err))
-				stderr.write('FAILED, cancelling commit\n')
+				stderr.write('\nFAILED, cancelling commit\n')
 				return 1
 		return 0
 	
