@@ -27,6 +27,11 @@ impl Symbol {
             ))),
         }
     }
+
+    /// Generate an eager subpattern to match tokens, that can be composed in a regular expression.
+    pub fn subpattern() -> &'static str {
+        r"(\+|\-|\*|\/)"
+    }
 }
 
 impl Display for Symbol {

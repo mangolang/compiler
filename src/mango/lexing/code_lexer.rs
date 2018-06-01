@@ -8,6 +8,7 @@ use mango::token::tokens::EndBlockToken;
 use mango::token::tokens::EndStatementToken;
 use mango::token::tokens::IdentifierToken;
 use mango::token::tokens::KeywordToken;
+use mango::token::tokens::OperatorToken;
 use mango::token::tokens::ParenthesisCloseToken;
 use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
@@ -134,7 +135,7 @@ impl Lexer for CodeLexer {
                 //
                 // Indentation done; do the rest of lexing.
                 //
-                // Parse identifers and keywords. This assumes that keywords are a subset of identifiers.
+                // Parse identifiers and keywords. This assumes that keywords are a subset of identifiers.
                 if let Match(word) = self
                     .reader
                     .borrow_mut()
@@ -155,7 +156,13 @@ impl Lexer for CodeLexer {
                     return self.lex();
                 }
                 // Operator
-                // todo
+                let operator_match_res = self
+                    .reader
+                    .borrow_mut()
+                    .matches(OperatorToken::subpattern());
+                if let Match(token) = operator_match_res {
+                    return Token(Tokens::Operator(OperatorToken::from_str(&token).unwrap()));
+                }
                 // Association
                 // todo
                 // Grouping symbols
