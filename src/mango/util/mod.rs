@@ -2,6 +2,8 @@ pub mod collection;
 
 pub mod strtype;
 
+pub mod strslice;
+
 pub mod numtype;
 
 pub mod signaltype;
