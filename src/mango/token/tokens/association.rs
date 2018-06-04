@@ -11,7 +11,7 @@ pub struct AssociationToken {
 }
 
 impl AssociationToken {
-    pub fn from_unmutated() -> Self {
+    pub fn from_unprefixed() -> Self {
         AssociationToken {
             symbol: Option::None,
         }
@@ -25,6 +25,10 @@ impl AssociationToken {
         AssociationToken {
             symbol: Option::Some(symbol),
         }
+    }
+
+    pub fn subpattern() -> String {
+        format!("{}=", Symbol::subpattern())
     }
 }
 

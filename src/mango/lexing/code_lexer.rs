@@ -4,6 +4,7 @@ use mango::lexing::string_lexer::StringLexer;
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
 use mango::token::special::UnlexableToken;
+use mango::token::tokens::AssociationToken;
 use mango::token::tokens::EndBlockToken;
 use mango::token::tokens::EndStatementToken;
 use mango::token::tokens::IdentifierToken;
@@ -155,6 +156,19 @@ impl Lexer for CodeLexer {
                     self.reader_or_delegate = ReaderOrDelegate::Delegate(sublexer);
                     return self.lex();
                 }
+                // Association (before operator)
+                let association_match_res = self
+                    .reader
+                    .borrow_mut()
+                    .matches(&AssociationToken::subpattern());
+                if let Match(token) = association_match_res {
+                    if token.chars().last().unwrap() == '=' {
+                        //                        return Token(Tokens::Association(AssociationToken::from_str(token[..1]).unwrap()));
+                        return Token(Tokens::Association(AssociationToken::from_unprefixed())); // TODO
+                    } else {
+                        return Token(Tokens::Association(AssociationToken::from_unprefixed()));
+                    }
+                }
                 // Operator
                 let operator_match_res = self
                     .reader
@@ -163,8 +177,6 @@ impl Lexer for CodeLexer {
                 if let Match(token) = operator_match_res {
                     return Token(Tokens::Operator(OperatorToken::from_str(&token).unwrap()));
                 }
-                // Association
-                // todo
                 // Grouping symbols
                 if let Match(_) = self.reader.borrow_mut().matches("(") {
                     return Token(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
