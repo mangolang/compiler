@@ -15,12 +15,17 @@ impl RegexCache {
         }
     }
 
-    pub fn make_or_get(&mut self, subpattern: &str) -> Result<&Regex, Error> {
+    pub fn make_or_get(&mut self, subpattern: &str) -> &Regex {
         if !self.cache.contains_key(subpattern) {
-            let regex = Regex::new(&format!("^ *{}", subpattern))?;
-            self.cache.insert(subpattern.to_owned(), regex);
+            match Regex::new(&format!("^ *{}", subpattern)) {
+                Err(err) => panic!(format!("Invalid regular expression while adding to library; this is a bug:\n{:?}", err)),
+                Ok(regex) => {
+                    self.cache.insert(subpattern.to_owned(), regex);
+                }
+            }
+
         }
-        Result::Ok(self.cache.get(subpattern).unwrap())
+        self.cache.get(subpattern).unwrap()
     }
 }
 

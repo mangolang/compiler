@@ -29,9 +29,9 @@ impl Reader for StringReader {
     fn matches(&mut self, subpattern: &str) -> ReaderResult {
         REXCACHE.with(|rl| {
             let mut rexlib = rl.borrow_mut();
-            let rex = rexlib.make_or_get(subpattern);
-            println!("{:?}", rex);
+            let regex = rexlib.make_or_get(subpattern);
+            println!("{:?}", regex);
         });
-        ReaderResult::NoMatch() // TODO
+        ReaderResult::EOF() // TODO
     }
 }

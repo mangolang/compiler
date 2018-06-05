@@ -178,20 +178,18 @@ impl Lexer for CodeLexer {
                     return Token(Tokens::Operator(OperatorToken::from_str(&token).unwrap()));
                 }
                 // Grouping symbols
-                if let Match(_) = self.reader.borrow_mut().matches("(") {
+                if let Match(_) = self.reader.borrow_mut().matches(r"\(") {
                     return Token(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
                 }
-                if let Match(_) = self.reader.borrow_mut().matches(")") {
+                if let Match(_) = self.reader.borrow_mut().matches(r"\)") {
                     return Token(Tokens::ParenthesisClose(ParenthesisCloseToken::new()));
                 }
 
-                // TODO: specify the unlexable word
                 let unknown_word = self.reader.borrow_mut().matches(" *[^\\s]+");
-                if let Match(word) = unknown_word {
-                    return Token(Tokens::Unlexable(UnlexableToken::new(word)));
-                } else {
-                    // todo: handle better someday
-                    panic!("Do not know how to proceed with parsing");
+                match unknown_word {
+                    Match(word) => return Token(Tokens::Unlexable(UnlexableToken::new(word))),
+                    NoMatch() => panic!("Do not know how to proceed with parsing"),
+                    EOF() => End,
                 }
             }
         }

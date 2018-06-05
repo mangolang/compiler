@@ -13,7 +13,7 @@ pub trait Reader {
 
     /// Checks whether the code from the current position matches a regex pattern.
     ///
-    /// This has to eventually return EOF, after which it should not be called again.
+    /// This has to eventually return EOF, and keep returning EOF forever after that.
     fn matches(&mut self, subpattern: &str) -> ReaderResult;
 }
 
