@@ -12,6 +12,8 @@ pub trait Reader {
     //    fn equals(&mut self, texts: Vec<&str>) -> ReaderResult;
 
     /// Checks whether the code from the current position matches a regex pattern.
+    ///
+    /// This has to eventually return EOF, after which it should not be called again.
     fn matches(&mut self, subpattern: &str) -> ReaderResult;
 }
 

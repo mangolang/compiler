@@ -30,6 +30,7 @@ impl Reader for StringReader {
         REXCACHE.with(|rl| {
             let mut rexlib = rl.borrow_mut();
             let rex = rexlib.make_or_get(subpattern);
+            println!("{:?}", rex);
         });
         ReaderResult::NoMatch() // TODO
     }

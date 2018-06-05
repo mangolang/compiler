@@ -12,10 +12,6 @@ pub fn charslice<S: Into<String>>(text: S, start: isize, end: isize) -> String {
             -start as usize <= charcount,
             "charslice: if 'start' is negative, the magnitude may not exceed the length"
         );
-        println!(
-            ">> charcount as isize + start = {} + {}",
-            charcount as isize, start
-        );
         from = (charcount as isize + start) as usize;
     } else {
         from = start as usize;

@@ -38,7 +38,7 @@ pub struct CodeLexer {
 }
 
 impl CodeLexer {
-    fn new(reader: Rc<RefCell<Reader>>) -> Self {
+    pub fn new(reader: Rc<RefCell<Reader>>) -> Self {
         CodeLexer {
             reader: reader,
             reader_or_delegate: ReaderOrDelegate::Reader(),
@@ -186,7 +186,13 @@ impl Lexer for CodeLexer {
                 }
 
                 // TODO: specify the unlexable word
-                return Token(Tokens::Unlexable(UnlexableToken::new("TODO".to_owned())));
+                let unknown_word = self.reader.borrow_mut().matches(" *[^\\s]+");
+                if let Match(word) = unknown_word {
+                    return Token(Tokens::Unlexable(UnlexableToken::new(word)));
+                } else {
+                    // todo: handle better someday
+                    panic!("Do not know how to proceed with parsing");
+                }
             }
         }
     }
@@ -197,4 +203,28 @@ impl Lexer for CodeLexer {
             ReaderOrDelegate::Delegate(ref delegate) => delegate.get_reader(),
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::CodeLexer;
+    use mango::io::fortest::StringReader;
+    use mango::io::typ::Reader;
+    use mango::lexing::util::lex_all::{lex_all, LexList};
+    use std::cell::RefCell;
+    use std::rc::Rc;
+
+    #[test]
+    fn test_lexing() {
+        assert_eq!(
+            LexList::from_tokens(vec![]),
+            lex_all(Rc::new(RefCell::new(StringReader::new(
+                "let x = 0\nfor x < 128\n\tx += 1\n".to_owned(),
+            ))))
+        )
+        //        assert_eq!(1, cnt, "No item in ProblemCollector");
+    }
+
+    #[test]
+    fn test_lexing_delegation() {}
 }
