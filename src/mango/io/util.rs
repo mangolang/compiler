@@ -1,4 +1,3 @@
-use regex::Error;
 use regex::Regex;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -18,12 +17,14 @@ impl RegexCache {
     pub fn make_or_get(&mut self, subpattern: &str) -> &Regex {
         if !self.cache.contains_key(subpattern) {
             match Regex::new(&format!("^ *{}", subpattern)) {
-                Err(err) => panic!(format!("Invalid regular expression while adding to library; this is a bug:\n{:?}", err)),
+                Err(err) => panic!(format!(
+                    "Invalid regular expression while adding to library; this is a bug:\n{:?}",
+                    err
+                )),
                 Ok(regex) => {
                     self.cache.insert(subpattern.to_owned(), regex);
                 }
             }
-
         }
         self.cache.get(subpattern).unwrap()
     }

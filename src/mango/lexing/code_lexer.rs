@@ -84,7 +84,7 @@ impl Lexer for CodeLexer {
                 match delegated_token {
                     End => {
                         // Swap back from delegation to direct mode.
-                        let reader = delegate.get_reader().clone();
+                        //                        let reader = delegate.get_reader().clone();
                         self.reader_or_delegate = ReaderOrDelegate::Reader();
                         self.lex()
                     }
@@ -207,19 +207,17 @@ impl Lexer for CodeLexer {
 mod tests {
     use super::CodeLexer;
     use mango::io::fortest::StringReader;
-    use mango::io::typ::Reader;
     use mango::lexing::util::lex_all::{lex_all, LexList};
     use std::cell::RefCell;
     use std::rc::Rc;
 
     #[test]
     fn test_lexing() {
-        assert_eq!(
-            LexList::from_tokens(vec![]),
-            lex_all(Rc::new(RefCell::new(StringReader::new(
-                "let x = 0\nfor x < 128\n\tx += 1\n".to_owned(),
-            ))))
-        )
+        let lexed = lex_all(&mut CodeLexer::new(Rc::new(RefCell::new(
+            StringReader::new("let x = 0\nfor x < 128\n\tx += 1\n".to_owned()),
+        ))));
+        println!("LEXED: {:?}", lexed);
+        assert_eq!(LexList::from_tokens(vec![]), lexed)
         //        assert_eq!(1, cnt, "No item in ProblemCollector");
     }
 

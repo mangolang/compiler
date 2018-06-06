@@ -63,15 +63,9 @@ fn get_test_hash(x: &MyEnum) -> u64 {
 }
 
 fn main() {
-<<<<<<< Updated upstream
     let a1: MyEnum = MyEnum::A(Alpha { val: "Hello World".to_owned() });
     let a2: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_owned() });
     let a3: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_owned() });
-=======
-    let a1: MyEnum = MyEnum::A(Alpha { val: "Hello World".to_string() });
-    let a2: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_string() });
-    let a3: MyEnum = MyEnum::A(Alpha { val: "Bye World".to_string() });
->>>>>>> Stashed changes
     let b: MyEnum = MyEnum::B(Beta { nr: 8, f: 2 });
     let mut m = HashMap::new();
     println!("{:?} {:?}", a1.to_text(), b.to_text());

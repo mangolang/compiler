@@ -35,7 +35,6 @@ pub fn charslice<S: Into<String>>(text: S, start: isize, end: isize) -> String {
         );
         length = end as usize - from;
     }
-    println!("from: {}, length: {}", from, length);
     stext.chars().skip(from).take(length).collect()
 }
 

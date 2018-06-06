@@ -1,11 +1,6 @@
-use mango::io::typ::Reader;
-use mango::lexing::code_lexer::CodeLexer;
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
-use mango::token::Token;
 use mango::token::Tokens;
-use std::cell::RefCell;
-use std::rc::Rc;
 
 /// Represents all the lex tokens in a source.
 #[derive(PartialEq, Eq, Debug)]
@@ -18,14 +13,13 @@ impl LexList {
         LexList { tokens }
     }
 
-    pub fn from_reader(reader: Rc<RefCell<Reader>>) -> Self {
-        lex_all(reader)
+    pub fn from_reader(lexer: &mut Lexer) -> Self {
+        lex_all(lexer)
     }
 }
 
-pub fn lex_all(reader: Rc<RefCell<Reader>>) -> LexList {
+pub fn lex_all(lexer: &mut Lexer) -> LexList {
     let mut list = Vec::with_capacity(512);
-    let mut lexer = CodeLexer::new(reader);
     while let MaybeToken::Token(token) = lexer.lex() {
         list.push(token)
     }

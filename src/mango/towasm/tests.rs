@@ -1,6 +1,5 @@
 use mango::towasm::arithmetic::Add;
 use mango::towasm::collect::datatype::Value;
-use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Type;
 use mango::towasm::control::BranchIf;
 use mango::towasm::control::Label;
@@ -18,6 +17,7 @@ use mango::towasm::values::Const;
 use mango::towasm::values::DeclareLocal;
 
 #[test]
+#[allow(unused_variables)]
 fn test_example_1() {
     let param_n = Parameter::new(Name::new("n".to_owned()).unwrap(), Type::Int32);
     let var_n = param_n.local();
@@ -62,5 +62,5 @@ fn test_example_1() {
         },
     )]);
 
-    println!("WAT:\n{}\n", module.as_wat());
+    //    println!("WAT:\n{}\n", module.as_wat());
 }
