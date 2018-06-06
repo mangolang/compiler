@@ -1,5 +1,7 @@
 // TODO: I should perhaps separate the splitting that happens here from the actual reading
 
+use std::fmt::Debug;
+
 pub enum ReaderResult {
     Match(String),
     NoMatch(),
@@ -7,7 +9,7 @@ pub enum ReaderResult {
 }
 
 /// A reader represents a source 'file', which may be a file, webpage, string, ...
-pub trait Reader {
+pub trait Reader: Debug {
     /// Checks whether the `text` is found starting from the current position.
     //    fn equals(&mut self, texts: Vec<&str>) -> ReaderResult;
 
