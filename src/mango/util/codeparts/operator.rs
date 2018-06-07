@@ -21,6 +21,11 @@ impl Symbol {
             "-" => Ok(Symbol::Dash),
             "*" => Ok(Symbol::Asterisk),
             "/" => Ok(Symbol::Slash),
+            "<" => Ok(Symbol::Slash),
+            ">" => Ok(Symbol::Slash),
+            "==" => Ok(Symbol::Slash),
+            ">=" => Ok(Symbol::Slash),
+            "<=" => Ok(Symbol::Slash),
             _ => Err(Msg::from_valid(&format!(
                 "Unknown symbol: '{}'",
                 ssymbol_txt

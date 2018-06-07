@@ -4,6 +4,7 @@ use mango::lexing::string_lexer::StringLexer;
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
 use mango::token::special::UnlexableToken;
+use mango::token::Tokens;
 use mango::token::tokens::AssociationToken;
 use mango::token::tokens::EndBlockToken;
 use mango::token::tokens::EndStatementToken;
@@ -13,7 +14,6 @@ use mango::token::tokens::OperatorToken;
 use mango::token::tokens::ParenthesisCloseToken;
 use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
-use mango::token::Tokens;
 use mango::util::collection::Queue;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -103,20 +103,29 @@ impl Lexer for CodeLexer {
                 let continue_match_res = self.reader.borrow_mut().matches("\\.\\.\\.");
                 if let Match(_) = continue_match_res {
                     // Line continuation has no token, it just continues on the next line.
-                    if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
+                    let newline_match_res = self.reader.borrow_mut().matches("\\n\\r?");
+                    if let Match(_) = newline_match_res {
                         // There should always be a newline after continuations, so that they can be ignored together.
-                    } else if let Match(word) = self.reader.borrow_mut().matches("[^\\n]*\\n\\r?") {
-                        return Token(Tokens::Unlexable(UnlexableToken::new(word)));
                     } else {
-                        // TODO: I don't know yet how to deal with '...' followed by end-of-file
-                        panic!()
+                        let newline_match_res = self.reader.borrow_mut().matches("[^\\n]*\\n\\r?");
+                        if let Match(word) = newline_match_res {
+                            self.buffer.push(Tokens::Unlexable(UnlexableToken::new(word)));
+                            // This is a new line, so there may be indents.
+                            self.lex_indents();
+                            return self.lex();
+                        } else {
+                            // TODO: I don't know yet how to deal with '...' followed by end-of-file
+                            panic!()
+                        }
                     }
-                    // This is a new line, so there may be indents.
-                    return self.lex_indents();
                 }
-                if let Match(_) = self.reader.borrow_mut().matches("\\n\\r?") {
+                let newline_match_res = self.reader.borrow_mut().matches("\\n\\r?");
+                if let Match(_) = newline_match_res {
                     // Newline WITHOUT line continuation.
-                    return Token(Tokens::EndStatement(EndStatementToken::new_end_line()));
+                    // This is a new line, so there may be indents.
+                    self.buffer.push(Tokens::EndStatement(EndStatementToken::new_end_line()));
+                    self.lex_indents();
+                    return self.lex();
                 }
                 let end_statement_match_res = self.reader.borrow_mut().matches(";");
                 if let Match(_) = end_statement_match_res {
@@ -141,13 +150,13 @@ impl Lexer for CodeLexer {
                     .reader
                     .borrow_mut()
                     .matches(IdentifierToken::subpattern())
-                {
-                    // later: maybe turn identifier into keyword to avoid a string copy? kind of elaborate...
-                    if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
-                        return Token(Tokens::Keyword(keyword));
+                    {
+                        // later: maybe turn identifier into keyword to avoid a string copy? kind of elaborate...
+                        if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
+                            return Token(Tokens::Keyword(keyword));
+                        }
+                        return Token(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
                     }
-                    return Token(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
-                }
                 // Literal
                 let string_match_res = self.reader.borrow_mut().matches("[a-z]?\"");
                 if let Match(_) = string_match_res {
@@ -189,7 +198,7 @@ impl Lexer for CodeLexer {
                 match unknown_word {
                     Match(word) => return Token(Tokens::Unlexable(UnlexableToken::new(word))),
                     NoMatch() => {
-                        println!("END {:?}", self.reader.borrow());
+                        println!("END {:?}", self.reader.borrow()); // TODO
                         panic!("Do not know how to proceed with parsing")
                     }
                     EOF() => End,
@@ -208,20 +217,50 @@ impl Lexer for CodeLexer {
 
 #[cfg(test)]
 mod tests {
-    use super::CodeLexer;
     use mango::io::fortest::StringReader;
     use mango::lexing::util::lex_all::{lex_all, LexList};
+    use mango::token::Tokens;
     use std::cell::RefCell;
     use std::rc::Rc;
+    use super::CodeLexer;
+
+    use mango::token::tokens::AssociationToken;
+    use mango::token::tokens::EndBlockToken;
+    use mango::token::tokens::EndStatementToken;
+    use mango::token::tokens::IdentifierToken;
+    use mango::token::tokens::KeywordToken;
+    use mango::token::tokens::OperatorToken;
+    use mango::token::tokens::ParenthesisCloseToken;
+    use mango::token::tokens::ParenthesisOpenToken;
+    use mango::token::tokens::StartBlockToken;
+    use mango::token::tokens::LiteralToken;
 
     #[test]
     fn test_lexing() {
-        //        let lexed = lex_all(&mut CodeLexer::new(Rc::new(RefCell::new(
-        //            StringReader::new("let x = 0\nfor x < 128\n\tx += 1\n".to_owned()),
-        //        ))));
-        //        println!("LEXED: {:?}", lexed);
-        //        assert_eq!(LexList::from_tokens(vec![]), lexed)
-        //        assert_eq!(1, cnt, "No item in ProblemCollector");
+
+        // TODO: do indenting as a decorator? I do already have the indent on CodeLexer, and if I do a decorator I need a new type...
+
+        assert_eq!(
+            LexList::from_tokens(vec![
+                Tokens::Keyword(KeywordToken::from_str("let".to_owned()).unwrap()),
+                Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
+                Tokens::Association(AssociationToken::from_unprefixed()),
+                Tokens::Literal(LiteralToken::Int(0)),
+                Tokens::EndStatement(EndStatementToken::new_end_line()),
+                Tokens::Keyword(KeywordToken::from_str("for".to_owned()).unwrap()),
+                Tokens::Operator(OperatorToken::from_str("<").unwrap()),
+                Tokens::Literal(LiteralToken::Int(128)),
+                Tokens::EndStatement(EndStatementToken::new_end_line()),
+                Tokens::StartBlock(StartBlockToken::new()),
+                Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
+                Tokens::Association(AssociationToken::from_str("+".to_owned()).unwrap()),
+                Tokens::Literal(LiteralToken::Int(1)),
+                Tokens::EndBlock(EndBlockToken::new(true, false)),
+            ]),
+            lex_all(&mut CodeLexer::new(Rc::new(RefCell::new(
+                StringReader::new("let x = 0\nfor x < 128\n\tx += 1\n".to_owned()),
+            ))))
+        )
     }
 
     #[test]
