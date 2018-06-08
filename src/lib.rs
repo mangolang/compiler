@@ -1,4 +1,5 @@
 #![feature(nll)]
+#![feature(generators, generator_trait)]
 
 extern crate core;
 #[macro_use]

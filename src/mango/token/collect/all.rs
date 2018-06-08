@@ -47,3 +47,14 @@ impl ToText for Tokens {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use mango::token::Tokens;
+    use std::mem::size_of;
+
+    #[test]
+    fn test_tokens_size() {
+        assert!(size_of::<Tokens>() < 32);
+    }
+}
