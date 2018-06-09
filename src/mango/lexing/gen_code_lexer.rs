@@ -2,7 +2,7 @@ use mango::io::typ::Reader;
 use mango::token::tokens::LiteralToken;
 use mango::token::Tokens;
 use std::cell::RefCell;
-use std::ops::Generator;
+use std::ops::{Generator, GeneratorState};
 use std::rc::Rc;
 
 /// This generator does the real lexing work, but is wrapped in a normal
@@ -22,13 +22,23 @@ struct Container<G: Generator<Yield = i32, Return = ()>> {
     generator: G,
 }
 
-impl<G: Generator<Yield = i32, Return = ()>> Container<G> {
-    pub fn new() -> Self {
-        let mut reader: Rc<RefCell<Reader>>;
-        Container {
-            generator: || {
-                yield 0;
-            },
+impl Container<Box<Generator<Yield = i32, Return = ()>>> {
+    pub fn new() -> Box<Self> {
+        let q = 42;
+        Box::new(Container {
+            generator: Box::new(move || {
+                yield 1i32 * q;
+                yield 2i32 * q;
+                yield 3i32 * q;
+            }),
+        })
+    }
+
+    pub fn next(&mut self) -> Option<i32> {
+        // Hide the unsafe part.
+        match unsafe { self.generator.resume() } {
+            GeneratorState::Yielded(nr) => Option::Some(nr),
+            GeneratorState::Complete(_) => Option::None,
         }
     }
 }
