@@ -48,6 +48,10 @@ pub fn charsliceto<S: Into<String>>(text: S, end: isize) -> String {
     charslice(text, 0, end)
 }
 
+pub fn glyphat<S: Into<String>>(text: S, pos: isize) -> String {
+    charslice(text, pos, pos+1)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -58,9 +62,10 @@ mod tests {
         assert_eq!("你好", charslice("你好!", 0, 2));
         assert_eq!("!", charslicefrom("你好!", 2));
         assert_eq!("你好", charsliceto("你好!", 2));
+        assert_eq!("好", glyphat("你好!", 1));
         // Negative indices should match Python 3 behaviour:
         assert_eq!("你好", charslice("你好!", -3, -1));
         assert_eq!("!", charslicefrom("你好!", -1));
-        assert_eq!("你好", charsliceto("你好!", -1));
+        assert_eq!("好", glyphat("你好!", -2));
     }
 }
