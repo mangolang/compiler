@@ -1,4 +1,4 @@
-use mango::util::strslice::char_ops::char_drop;
+use mango::util::strslice::char_ops::CharOps;
 use regex::Regex;
 
 #[derive(Debug)]
@@ -40,7 +40,7 @@ pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
                             // TODO: implement
                             panic!(format!(
                                 "Do not yet know how to deal with {} in base {}",
-                                char_drop(value.as_str(), &'_'),
+                                value.as_str().without_char(&'_'),
                                 base.as_str()
                             ))
                         } else {
@@ -53,7 +53,7 @@ pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
                 Some(value) => {
                     // This is a 'normal' (base10) value.
                     // TODO: check for over/underflow
-                    return Ok(char_drop(value.as_str(), &'_').parse::<i64>().unwrap());
+                    return Ok(value.as_str().without_char(&'_').parse::<i64>().unwrap());
                 }
             }
         }

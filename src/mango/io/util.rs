@@ -18,7 +18,8 @@ impl RegexCache {
         if !self.cache.contains_key(subpattern) {
             match Regex::new(&format!("^ *{}", subpattern)) {
                 Err(err) => panic!(format!(
-                    "Invalid regular expression while adding to library; this is a bug:\n{:?}",
+                    "Invalid regular expression '{}' while adding to library; this is a bug:\n{:?}",
+                    subpattern,
                     err
                 )),
                 Ok(regex) => {

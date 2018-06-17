@@ -1,4 +1,4 @@
-use mango::util::strslice::char_ops::char_drop;
+use mango::util::strslice::char_ops::CharOps;
 use regex::Regex;
 
 #[derive(Debug)]
@@ -29,7 +29,7 @@ pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> 
     {
         None => return Err(RealParseFailReason::Invalid),
         Some(captures) => {
-            let multiplier = char_drop(captures.name("multiplier").unwrap().as_str(), &'_')
+            let multiplier = captures.name("multiplier").unwrap().as_str().without_char(&'_')
                 .parse::<f64>()
                 .unwrap();
             match captures.name("exponent") {
@@ -39,7 +39,7 @@ pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> 
                 }
                 Some(exponent_match) => {
                     // This real is in exponential notation
-                    let exponent = char_drop(exponent_match.as_str(), &'_')
+                    let exponent = exponent_match.as_str().without_char(&'_')
                         .parse::<f64>()
                         .unwrap();
                     // TODO: is there a numerically smarter way to do this?

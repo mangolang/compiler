@@ -1,7 +1,5 @@
 use mango::io::typ::Reader;
 use mango::io::typ::ReaderResult::*;
-use mango::lexing::typ::Lexer;
-use mango::lexing::typ::MaybeToken;
 use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::SubLexerResult;
 use mango::token::tokens::LiteralToken;

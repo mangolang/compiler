@@ -43,7 +43,7 @@ impl LiteralToken {
         // TODO: do I want to allow numbers to start with a period?
         // TODO: for now, only base10 for reals (would 8b11e2 be 9*8^2 or 9*10^2?)
         // TODO: does not deal with NaN of infinity
-        r"(?:\+|-*)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*)(?:e(?:\+|-|)\d(?:_?\d)*)?"
+        r"(?:\+|-*)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*)(?:e(?:\+|-?)\d(?:_?\d)*)?"
     }
 
     /// Parse a string matching [subpattern_int] to an i64 integer. Overflow is possible.

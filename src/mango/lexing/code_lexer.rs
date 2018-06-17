@@ -142,19 +142,16 @@ impl SubLexer for CodeLexer {
             return SubLexerResult::single(Tokens::Literal(LiteralToken::Real(value)));
         }
 
-        //        // Association (before operator)
-        //        let association_match_res = self
-        //            .reader
-        //            .borrow_mut()
-        //            .matches(&AssociationToken::subpattern());
-        //        if let Match(token) = association_match_res {
-        //            if token.chars().last().unwrap() == '=' {
-        //                //                        return Token(Tokens::Association(AssociationToken::from_str(token[..1]).unwrap()));
-        //                return Token(Tokens::Association(AssociationToken::from_unprefixed())); // TODO
-        //            } else {
-        //                return Token(Tokens::Association(AssociationToken::from_unprefixed()));
-        //            }
-        //        }
+        // Association (before operator)
+        if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
+            debug_assert!(token.chars().last().unwrap() == '=');
+            if token.chars().count() > 1 {
+                panic!(); // TODO
+                return SubLexerResult::single((Tokens::Association(AssociationToken::from_unprefixed())));
+            } else {
+                return SubLexerResult::single((Tokens::Association(AssociationToken::from_unprefixed())));
+            }
+        }
         //        // Operator
         //        let operator_match_res = self
         //            .reader
