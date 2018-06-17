@@ -6,6 +6,7 @@ use mango::lexing::typ::MaybeToken;
 use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::SubLexerResult;
 use mango::token::special::UnlexableToken;
+use mango::token::tokens::literal::LiteralToken;
 use mango::token::tokens::AssociationToken;
 use mango::token::tokens::EndBlockToken;
 use mango::token::tokens::EndStatementToken;
@@ -17,8 +18,6 @@ use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
 use mango::token::Tokens;
 use mango::util::collection::Queue;
-use std::cell::RefCell;
-use std::rc::Rc;
 
 pub struct CodeLexer {
     indent: i32,
@@ -130,14 +129,19 @@ impl SubLexer for CodeLexer {
                 IdentifierToken::from_str(word).unwrap(),
             ));
         }
-        //        // Literal
-        //        let string_match_res = reader.matches("[a-z]?\"");
-        //        if let Match(_) = string_match_res {
-        //            let sublexer: Box<Lexer> =
-        //                Box::new(StringLexer::new_double_quoted(self.reader.clone()));
-        //            self.reader_or_delegate = ReaderOrDelegate::Delegate(sublexer);
-        //            return self.lex();
-        //        }
+        // Literal
+        if let Match(_) = reader.matches("[a-z]?\"") {
+            return Delegate(Box::new(StringLexer::new_double_quoted()));
+        }
+        if let Match(nr) = reader.matches(LiteralToken::subpattern_int()) {
+            let value = LiteralToken::parse_int(nr);
+            return SubLexerResult::single(Tokens::Literal(LiteralToken::Int(value)));
+        }
+        if let Match(nr) = reader.matches(LiteralToken::subpattern_real()) {
+            let value = LiteralToken::parse_real(nr);
+            return SubLexerResult::single(Tokens::Literal(LiteralToken::Real(value)));
+        }
+
         //        // Association (before operator)
         //        let association_match_res = self
         //            .reader

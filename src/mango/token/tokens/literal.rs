@@ -1,6 +1,8 @@
 use mango::token::Token;
 use mango::util::encdec::ToText;
 use mango::util::numtype::f64eq;
+use mango::util::parsetxt::int::parse_int;
+use mango::util::parsetxt::real::parse_real;
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 
@@ -40,7 +42,18 @@ impl LiteralToken {
     pub fn subpattern_real() -> &'static str {
         // TODO: do I want to allow numbers to start with a period?
         // TODO: for now, only base10 for reals (would 8b11e2 be 9*8^2 or 9*10^2?)
+        // TODO: does not deal with NaN of infinity
         r"(?:\+|-*)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*)(?:e(?:\+|-|)\d(?:_?\d)*)?"
+    }
+
+    /// Parse a string matching [subpattern_int] to an i64 integer. Overflow is possible.
+    pub fn parse_int(text: String) -> i64 {
+        parse_int(text).unwrap()
+    }
+
+    /// Parse a string matching [subpattern_real] to a f64 real. Loss of precision or overflow are possible.
+    pub fn parse_real(text: String) -> f64eq {
+        f64eq::new(parse_real(text).unwrap())
     }
 }
 

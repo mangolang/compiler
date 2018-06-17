@@ -1,26 +1,12 @@
 use mango::io::typ::Reader;
-use mango::io::typ::ReaderResult::*;
 use mango::lexing::code_lexer::CodeLexer;
-use mango::lexing::string_lexer::StringLexer;
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
 use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::SubLexerResult;
-use mango::token::special::UnlexableToken;
-use mango::token::tokens::AssociationToken;
-use mango::token::tokens::EndBlockToken;
-use mango::token::tokens::EndStatementToken;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::KeywordToken;
-use mango::token::tokens::OperatorToken;
-use mango::token::tokens::ParenthesisCloseToken;
-use mango::token::tokens::ParenthesisOpenToken;
-use mango::token::tokens::StartBlockToken;
 use mango::token::Tokens;
 use mango::util::collection::Queue;
 use mango::util::collection::Stack;
-use std::cell::RefCell;
-use std::rc::Rc;
 
 pub struct CombiLexer {
     reader: Box<Reader>,
