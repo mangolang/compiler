@@ -8,6 +8,12 @@ pub enum SubLexerResult {
     End,
 }
 
+impl SubLexerResult {
+    pub fn single(token: Tokens) -> Self {
+        SubLexerResult::Result(vec![token])
+    }
+}
+
 // TODO: I don't want this to be public outside the crate
 pub trait SubLexer {
     /// Does one iteration of a sublexer, which should either delegate or return tokens.

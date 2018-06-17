@@ -1,4 +1,3 @@
-
 /// A one-ended queue. See also [Stack].
 /// This is just a wrapper around vec so nobody pushes or pops the wrong end.
 pub struct Queue<T> {

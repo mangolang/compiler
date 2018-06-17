@@ -3,11 +3,10 @@ use mango::io::typ::ReaderResult::*;
 use mango::lexing::code_lexer::CodeLexer;
 use mango::lexing::string_lexer::StringLexer;
 use mango::lexing::typ::Lexer;
-use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::MaybeToken;
+use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::SubLexerResult;
 use mango::token::special::UnlexableToken;
-use mango::token::Tokens;
 use mango::token::tokens::AssociationToken;
 use mango::token::tokens::EndBlockToken;
 use mango::token::tokens::EndStatementToken;
@@ -17,11 +16,11 @@ use mango::token::tokens::OperatorToken;
 use mango::token::tokens::ParenthesisCloseToken;
 use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
+use mango::token::Tokens;
 use mango::util::collection::Queue;
 use mango::util::collection::Stack;
 use std::cell::RefCell;
 use std::rc::Rc;
-
 
 pub struct CombiLexer {
     reader: Box<Reader>,
@@ -43,7 +42,6 @@ impl CombiLexer {
 
 impl Lexer for CombiLexer {
     fn lex(&mut self) -> MaybeToken {
-
         // If there are tokens in the buffer, return from there;
         if let Option::Some(token) = self.buffer.pop() {
             return MaybeToken::Token(token);
@@ -64,29 +62,28 @@ impl Lexer for CombiLexer {
                             // TODO: check reader state
                             self.lex()
                         }
-                    },
+                    }
                     SubLexerResult::Delegate(lexer) => {
                         // Switch to a different delegate lexer.
                         self.lexers.push(lexer);
                         self.lex()
-                    },
+                    }
                     SubLexerResult::End => {
                         // The sublexer is done, remove it from the stack and continue with the next.
-                        self.lexers.pop();  // This needs non-lexical lifetimes
+                        self.lexers.pop(); // This needs non-lexical lifetimes
                         self.lex()
-                    },
+                    }
                 }
             }
         }
     }
-
 }
 
 #[cfg(test)]
 mod tests {
+    use super::CombiLexer;
     use mango::io::fortest::StringReader;
     use mango::lexing::util::lex_all::{lex_all, LexList};
-    use mango::token::Tokens;
     use mango::token::tokens::AssociationToken;
     use mango::token::tokens::EndBlockToken;
     use mango::token::tokens::EndStatementToken;
@@ -97,16 +94,16 @@ mod tests {
     use mango::token::tokens::ParenthesisCloseToken;
     use mango::token::tokens::ParenthesisOpenToken;
     use mango::token::tokens::StartBlockToken;
+    use mango::token::Tokens;
     use std::cell::RefCell;
     use std::rc::Rc;
-    use super::CombiLexer;
 
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
         assert_eq!(
             LexList::from_tokens(tokens),
-            lex_all(&mut CombiLexer::new(Box::new(
-                StringReader::new(text.to_owned())
-            )))
+            lex_all(&mut CombiLexer::new(Box::new(StringReader::new(
+                text.to_owned()
+            ))))
         )
     }
 

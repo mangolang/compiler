@@ -49,7 +49,7 @@ pub fn charsliceto<S: Into<String>>(text: S, end: isize) -> String {
 }
 
 pub fn glyphat<S: Into<String>>(text: S, pos: isize) -> String {
-    charslice(text, pos, pos+1)
+    charslice(text, pos, pos + 1)
 }
 
 #[cfg(test)]
