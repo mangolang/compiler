@@ -1,23 +1,27 @@
-use std::collections::VecDeque;
 
-/// A one-ended queue.
-/// This is just a wrapper around deque so nobody pushes or pops the wrong end.
+/// A one-ended queue. See also [Stack].
+/// This is just a wrapper around vec so nobody pushes or pops the wrong end.
 pub struct Queue<T> {
-    deque: VecDeque<T>,
+    items: Vec<T>,
 }
 
 impl<T> Queue<T> {
     pub fn new() -> Self {
         Queue {
-            deque: VecDeque::with_capacity(16),
+            items: Vec::with_capacity(16),
         }
     }
 
     pub fn push(&mut self, value: T) {
-        self.deque.push_back(value)
+        self.items.push(value)
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        self.deque.pop_front()
+        self.items.pop()
+    }
+
+    /// Moves all the elements from a vector into the queue.
+    pub fn append(&mut self, mut other: Vec<T>) {
+        self.items.append(&mut other);
     }
 }

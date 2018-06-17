@@ -17,6 +17,10 @@ pub trait Reader: Debug {
     ///
     /// This has to eventually return EOF, and keep returning EOF forever after that.
     fn matches(&mut self, subpattern: &str) -> ReaderResult;
+
+    /// Return a number that can be used to check whether the state has changed.
+    /// This need not correspond to a specific position, but should be unique for the progress.
+    fn get_progress(&self) -> usize;
 }
 
 pub trait Writer {

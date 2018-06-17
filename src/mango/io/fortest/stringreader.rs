@@ -52,6 +52,10 @@ impl Reader for StringReader {
             };
         })
     }
+
+    fn get_progress(&self) -> usize {
+        self.index
+    }
 }
 
 // TODO: tests (spaces, end)
