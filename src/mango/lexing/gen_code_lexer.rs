@@ -36,61 +36,59 @@ use mango::util::strslice::slice::glyphat;
 //    }
 //}
 
-struct Container<G: Generator<Yield = Tokens, Return = ()>> {
+// TODO: this is problematic because the generator wants references to the container,
+// TODO: and the container obviously stores the generator
+
+struct CodeLexer<G: Generator<Yield = Tokens, Return = ()>> {
     indent: i32,
     delegate: Option<Box<Lexer>>,
     reader: Rc<RefCell<Reader>>,
+    // TODO: https://stackoverflow.com/questions/50895121/rust-expects-two-levels-of-boxing-for-generator-while-i-only-specified-one
     generator: G,
 }
 
-impl Container<Box<Generator<Yield = Tokens, Return = ()>>> {
+impl CodeLexer<Box<Generator<Yield = Tokens, Return = ()>>> {
 
     fn lex_indents(&mut self) -> Vec<Tokens> {
         let mut line_indent = 0;
         let mut res = Vec::with_capacity(12);
-        while let Match(_) = self.reader.borrow_mut().matches("\\t") {
+        // TODO: I don't need * in MWE but I do here (and other places), can I get rid of it?
+        while let Match(_) = (*self.reader).borrow_mut().matches("\\t") {
             line_indent += 1;
         }
         for _ in line_indent..self.indent {
             // This line is dedented, make end tokens.
             // TODO: turn this "new" into a constant
-            if let Match(_) = self.reader.borrow_mut().matches("end") {
+            if let Match(_) = (*self.reader).borrow_mut().matches("end") {
                 // If this is followed by an 'end' keyword, then that 'end' is redundant.
-                yield Tokens::EndBlock(EndBlockToken::new(true, true));
+                res.push(Tokens::EndBlock(EndBlockToken::new(true, true)));
             } else {
-                yield Tokens::EndBlock(EndBlockToken::new(true, false));
+                res.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
             }
         }
         for _ in self.indent..line_indent {
             // This line is indented, make start tokens.
-            self.buffer.push(Tokens::StartBlock(StartBlockToken::new()));
+            res.push(Tokens::StartBlock(StartBlockToken::new()));
         }
         self.indent = line_indent;
-        self.lex()
+        res
     }
 
-    pub fn new(&mut self, reader: Rc<RefCell<Reader>>) -> Box<Self> {
-        let q = 42;
-        Box::new(Container {
-            indent: 0,
-            reader: reader,
-            delegate: Option::None,
-            generator: Box::new(move || {
-
-                loop {
-
-                    // Delegate to another lexer if one is set.
-                    if let Option::Some(delegate) = self.delegate {
-                        match delegate.lex() {
-                            MaybeToken::Token(token) => {
-                                yield token;
-                                continue;
-                            }
-                            MaybeToken::End => {
-                                self.delegate = Option::None;
-                            }
+    pub fn new(reader: Rc<RefCell<Reader>>) -> Box<Self> {
+        let generator: Box<Generator<Yield=Tokens, Return=()> + 'static> = Box::new(|| {
+            loop {
+                // Delegate to another lexer if one is set.
+                if let Option::Some(ref mut delegate) = self.delegate {
+                    match delegate.lex() {
+                        MaybeToken::Token(token) => {
+                            yield token;
+                            continue;
+                        }
+                        MaybeToken::End => {
+                            self.delegate = Option::None;
                         }
                     }
+                }
 
 //                    // TODO: see if all these match_res can be removed (they couldn't before due to borrowchecker, even with non-lexical lifetimes)
 //                    let continue_match_res = self.reader.borrow_mut().matches("\\.\\.\\.");
@@ -203,9 +201,14 @@ impl Container<Box<Generator<Yield = Tokens, Return = ()>>> {
 //                            return
 //                        }
 //                    }
-                }
+            }
 
-            }),
+        });
+        Box::new(CodeLexer {
+            indent: 0,
+            reader: reader,
+            delegate: Option::None,
+            generator: generator,
         })
     }
 
