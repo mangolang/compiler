@@ -53,8 +53,8 @@ impl Lexer for CombiLexer {
             // No more lexers to delegate to; lexing is finished.
             Option::None => MaybeToken::End,
             Option::Some(ref mut lexer) => {
-                match lexer.lex_pass(self.reader) {
-                    SubLexerResult::Tokens(tokens) => {
+                match lexer.lex_pass(&mut self.reader) {
+                    SubLexerResult::Result(tokens) => {
                         if tokens.len() > 0 {
                             // The sublexer produced tokens, queue them.
                             self.buffer.append(tokens);
@@ -104,9 +104,9 @@ mod tests {
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
         assert_eq!(
             LexList::from_tokens(tokens),
-            lex_all(&mut CombiLexer::new(Rc::new(RefCell::new(
+            lex_all(&mut CombiLexer::new(Box::new(
                 StringReader::new(text.to_owned())
-            ))))
+            )))
         )
     }
 
