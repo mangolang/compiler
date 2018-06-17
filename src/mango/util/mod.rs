@@ -15,3 +15,5 @@ pub mod encdec;
 pub mod errors;
 
 pub mod codeparts;
+
+pub mod parsetxt;
