@@ -29,7 +29,11 @@ pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> 
     {
         None => return Err(RealParseFailReason::Invalid),
         Some(captures) => {
-            let multiplier = captures.name("multiplier").unwrap().as_str().without_char(&'_')
+            let multiplier = captures
+                .name("multiplier")
+                .unwrap()
+                .as_str()
+                .without_char(&'_')
                 .parse::<f64>()
                 .unwrap();
             match captures.name("exponent") {
@@ -39,7 +43,9 @@ pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> 
                 }
                 Some(exponent_match) => {
                     // This real is in exponential notation
-                    let exponent = exponent_match.as_str().without_char(&'_')
+                    let exponent = exponent_match
+                        .as_str()
+                        .without_char(&'_')
                         .parse::<f64>()
                         .unwrap();
                     // TODO: is there a numerically smarter way to do this?

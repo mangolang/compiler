@@ -147,40 +147,45 @@ impl SubLexer for CodeLexer {
             debug_assert!(token.chars().last().unwrap() == '=');
             if token.chars().count() > 1 {
                 panic!(); // TODO
-                return SubLexerResult::single((Tokens::Association(AssociationToken::from_unprefixed())));
+                return SubLexerResult::single(
+                    (Tokens::Association(AssociationToken::from_unprefixed())),
+                );
             } else {
-                return SubLexerResult::single((Tokens::Association(AssociationToken::from_unprefixed())));
+                return SubLexerResult::single(
+                    (Tokens::Association(AssociationToken::from_unprefixed())),
+                );
             }
         }
-        //        // Operator
-        //        let operator_match_res = self
-        //            .reader
-        //            .borrow_mut()
-        //            .matches(OperatorToken::subpattern());
-        //        if let Match(token) = operator_match_res {
-        //            return Token(Tokens::Operator(OperatorToken::from_str(&token).unwrap()));
-        //        }
-        //        // Grouping symbols
-        //        if let Match(_) = reader.matches(r"\(") {
-        //            return Token(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
-        //        }
-        //        if let Match(_) = reader.matches(r"\)") {
-        //            return Token(Tokens::ParenthesisClose(ParenthesisCloseToken::new()));
-        //        }
-        //
-        //        let unknown_word = reader.matches("[^\\s]+");
-        //        match unknown_word {
-        //            Match(word) => return Token(Tokens::Unlexable(UnlexableToken::new(word))),
-        //            NoMatch() => {
-        //                println!("END {:?}", self.reader.borrow()); // TODO
-        //                panic!("Do not know how to proceed with parsing")
-        //            }
-        //            EOF() => {
-        //                // TODO: also dedent and end statement here
-        //                End
-        //            }
-        //        }
+        // Operator
+        if let Match(token) = reader.matches(OperatorToken::subpattern()) {
+            return SubLexerResult::single(Tokens::Operator(
+                OperatorToken::from_str(&token).unwrap(),
+            ));
+        }
+        // Grouping symbols
+        if let Match(_) = reader.matches(r"\(") {
+            return SubLexerResult::single(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
+        }
+        if let Match(_) = reader.matches(r"\)") {
+            return SubLexerResult::single(Tokens::ParenthesisClose(ParenthesisCloseToken::new()));
+        }
 
-        panic!() // TODO TMP
+        // If the code gets here, it did not recognize the text as any token
+        return match reader.matches(r"[^\s]+") {
+            Match(word) => SubLexerResult::single(Tokens::Unlexable(UnlexableToken::new(word))),
+            NoMatch() => {
+                println!("END {:?}", reader); // todo: tmp
+                panic!("Do not know how to proceed with parsing")
+            }
+            EOF() => {
+                // TODO: also dedent and end statement here
+                let mut tokens = vec![Tokens::EndStatement(EndStatementToken::new_end_line())];
+                for _ in 0..self.indent {
+                    // This line is dedented, make end tokens.
+                    tokens.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
+                }
+                SubLexerResult::Result(tokens)
+            }
+        };
     }
 }

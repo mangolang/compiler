@@ -1,4 +1,3 @@
-
 pub trait CharOps {
     /// Remove all matching characters from the string.
     // Signature may be changed to support a set of characters, if the need arises.
@@ -19,10 +18,12 @@ impl<'a> CharOps for &'a str {
 
 impl CharOps for String {
     fn without_char(&self, strip: &char) -> String {
+        println!("String.without_char");
         (&self).without_char(strip)
     }
 
     fn char_len(&self) -> usize {
+        println!("String.char_len");
         (&self).char_len()
     }
 }
