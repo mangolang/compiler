@@ -1,9 +1,11 @@
-pub mod typ;
+mod typ;
 
-pub mod code_lexer;
+mod combi_lexer;
 
-pub mod comment_lexer;
+mod code_lexer;
 
-pub mod string_lexer;
+mod comment_lexer;
 
-pub mod util;
+mod string_lexer;
+
+mod util;

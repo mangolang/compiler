@@ -42,7 +42,7 @@ impl Lexer for StringLexer {
         }
     }
 
-    fn get_reader(&self) -> Rc<RefCell<Reader>> {
-        self.reader.clone()
-    }
+//    fn get_reader(&self) -> Rc<RefCell<Reader>> {
+//        self.reader.clone()
+//    }
 }

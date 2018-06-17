@@ -17,6 +17,8 @@ use mango::token::Tokens;
 use mango::util::collection::Queue;
 use std::cell::RefCell;
 use std::rc::Rc;
+use mango::lexing::typ::SubLexer;
+use mango::lexing::typ::SubLexerResult;
 
 // TODO: Preferably there'd be only one Lexer at a time which has a Reader, but I did not get that to work,
 // TODO: see this SO question: https://stackoverflow.com/questions/50535022/borrow-checker-problems-for-parser-that-can-delegate
@@ -30,7 +32,6 @@ pub struct CodeLexer {
     //    reader: Rc<RefCell<Reader>>,
     indent: i32,
 
-    reader: Rc<RefCell<Reader>>,
     // This delegate deals with nested structures, like string literals and comments.
     reader_or_delegate: ReaderOrDelegate,
     // This is unfortunate, would not be needed with 'yield' but is now for indents.
@@ -38,16 +39,15 @@ pub struct CodeLexer {
 }
 
 impl CodeLexer {
-    pub fn new(reader: Rc<RefCell<Reader>>) -> Self {
+    pub fn new() -> Self {
         CodeLexer {
-            reader: reader,
             reader_or_delegate: ReaderOrDelegate::Reader(),
             indent: 0,
             buffer: Queue::new(),
         }
     }
 
-    fn lex_indents(&mut self) -> MaybeToken {
+    fn lex_indents(&mut self, reader: Box<Reader>) -> MaybeToken {
         let mut line_indent = 0;
         while let Match(_) = self.reader.borrow_mut().matches("\\t") {
             line_indent += 1;
@@ -73,10 +73,10 @@ impl CodeLexer {
     }
 }
 
-impl Lexer for CodeLexer {
+impl SubLexer for CodeLexer {
     // TODO: TURN THIS AROUND: MAKE A FUNCTION THAT RETURNS FROM A QUEUE, AND CALLS ANOTHER TO FILL THE QUEUE IF NO RETURN
 
-    fn lex(&mut self) -> MaybeToken {
+    fn lex_pass(&mut self, reader: Box<Reader>) -> SubLexerResult {
         use self::MaybeToken::*;
 
         // If currently delegating to a sub-lexer, return from that.
@@ -214,12 +214,12 @@ impl Lexer for CodeLexer {
         }
     }
 
-    fn get_reader(&self) -> Rc<RefCell<Reader>> {
-        match self.reader_or_delegate {
-            ReaderOrDelegate::Reader() => self.reader.clone(),
-            ReaderOrDelegate::Delegate(ref delegate) => delegate.get_reader(),
-        }
-    }
+//    fn get_reader(&self) -> Rc<RefCell<Reader>> {
+//        match self.reader_or_delegate {
+//            ReaderOrDelegate::Reader() => self.reader.clone(),
+//            ReaderOrDelegate::Delegate(ref delegate) => delegate.get_reader(),
+//        }
+//    }
 }
 
 #[cfg(test)]
@@ -239,7 +239,6 @@ mod tests {
     use mango::token::tokens::StartBlockToken;
     use mango::token::Tokens;
     use std::cell::RefCell;
-    use std::ops::Generator;
     use std::rc::Rc;
 
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
@@ -287,15 +286,4 @@ mod tests {
 
     #[test]
     fn test_lexing_delegation() {}
-
-    #[test]
-    fn generators() {
-        let mut gen = || {
-            yield Tokens::Keyword(KeywordToken::from_str("let".to_owned()).unwrap());
-            yield Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap());
-            yield Tokens::Association(AssociationToken::from_unprefixed());
-            return;
-        };
-        let first = unsafe { gen.resume() };
-    }
 }

@@ -42,6 +42,7 @@ use mango::util::strslice::slice::glyphat;
 // TODO: this is problematic because the generator wants references to the container,
 // TODO: and the container obviously stores the generator
 
+// TODO: use generator: Box<Generator<Yield = Tokens, Return = ()>> directory
 struct CodeLexer<G: Generator<Yield = Tokens, Return = ()>> {
     indent: i32,
     delegate: Option<Box<Lexer>>,
