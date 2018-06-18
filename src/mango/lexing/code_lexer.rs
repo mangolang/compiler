@@ -178,12 +178,16 @@ impl SubLexer for CodeLexer {
                 panic!("Do not know how to proceed with parsing")
             }
             EOF() => {
-                // TODO: also dedent and end statement here
+                if self.indent <= 0 {
+                    return SubLexerResult::End;
+                }
+                // TODO: currently the EndStatement is only made if the file stops on an indented line
                 let mut tokens = vec![Tokens::EndStatement(EndStatementToken::new_end_line())];
                 for _ in 0..self.indent {
                     // This line is dedented, make end tokens.
                     tokens.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
                 }
+                self.indent = 0;
                 SubLexerResult::Result(tokens)
             }
         };

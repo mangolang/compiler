@@ -18,12 +18,10 @@ impl<'a> CharOps for &'a str {
 
 impl CharOps for String {
     fn without_char(&self, strip: &char) -> String {
-        println!("String.without_char");
-        (&self).without_char(strip)
+        self.chars().filter(|chr| chr != strip).collect()
     }
 
     fn char_len(&self) -> usize {
-        println!("String.char_len");
-        (&self).char_len()
+        self.chars().count()
     }
 }
