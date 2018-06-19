@@ -16,7 +16,7 @@ impl RegexCache {
 
     pub fn make_or_get(&mut self, subpattern: &str) -> &Regex {
         if !self.cache.contains_key(subpattern) {
-            match Regex::new(&format!("^ *{}", subpattern)) {
+            match Regex::new(&format!(r"^ *{}", subpattern)) {
                 Err(err) => panic!(format!(
                     "Invalid regular expression '{}' while adding to library; this is a bug:\n{:?}",
                     subpattern, err

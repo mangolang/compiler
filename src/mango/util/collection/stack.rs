@@ -25,3 +25,18 @@ impl<T> Stack<T> {
         self.items.back_mut()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Stack;
+
+    #[test]
+    fn test_stack() {
+        let mut stack: Stack<i32> = Stack::new();
+        stack.push(1);
+        stack.push(2);
+        assert_eq!(2, stack.pop().unwrap());
+        assert_eq!(1, stack.pop().unwrap());
+        assert!(stack.pop().is_none());
+    }
+}

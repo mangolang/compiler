@@ -23,17 +23,13 @@ use mango::util::strslice::charsliceto;
 
 pub struct CodeLexer {
     indent: i32,
-    buffer: Queue<Tokens>,
 }
 
 // TODO: keep the regexes in thread local global scope storage
 
 impl CodeLexer {
     pub fn new() -> Self {
-        CodeLexer {
-            indent: 0,
-            buffer: Queue::new(),
-        }
+        CodeLexer { indent: 0 }
     }
 
     fn lex_indents(&mut self, reader: &mut Box<Reader>) -> Vec<Tokens> {
@@ -43,7 +39,7 @@ impl CodeLexer {
         }
         let mut tokens: Vec<Tokens> = Vec::with_capacity(8);
         if line_indent < self.indent {
-            if let Match(_) = reader.matches(r"end\s") {
+            if let Match(_) = reader.matches(r"end") {
                 // If this is followed by an 'end' keyword, then that 'end' is redundant.
                 tokens.push(Tokens::EndBlock(EndBlockToken::new(true, true)));
             } else {
@@ -53,11 +49,12 @@ impl CodeLexer {
                 // This line is dedented, make end tokens.
                 tokens.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
             }
-        }
-        for _ in self.indent..line_indent {
-            // This line is indented, make start tokens.
-            // TODO: increasing indent by more than one should be a warning
-            self.buffer.push(Tokens::StartBlock(StartBlockToken::new()));
+        } else {
+            for _ in self.indent..line_indent {
+                // This line is indented, make start tokens.
+                // TODO: increasing indent by more than one should be a warning
+                tokens.push(Tokens::StartBlock(StartBlockToken::new()));
+            }
         }
         self.indent = line_indent;
         tokens
@@ -144,6 +141,12 @@ impl SubLexer for CodeLexer {
             return SubLexerResult::single(Tokens::Literal(LiteralToken::Real(value)));
         }
 
+        // Operator (before association)
+        if let Match(token) = reader.matches(OperatorToken::subpattern()) {
+            return SubLexerResult::single(Tokens::Operator(
+                OperatorToken::from_str(&token).unwrap(),
+            ));
+        }
         // Association (before operator)
         if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
             debug_assert!(token.chars().last().unwrap() == '=');
@@ -159,12 +162,6 @@ impl SubLexer for CodeLexer {
                     (Tokens::Association(AssociationToken::from_unprefixed())),
                 );
             }
-        }
-        // Operator
-        if let Match(token) = reader.matches(OperatorToken::subpattern()) {
-            return SubLexerResult::single(Tokens::Operator(
-                OperatorToken::from_str(&token).unwrap(),
-            ));
         }
         // Grouping symbols
         if let Match(_) = reader.matches(r"\(") {

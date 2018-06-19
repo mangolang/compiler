@@ -40,6 +40,10 @@ impl Lexer for CombiLexer {
                 match lexer.lex_pass(&mut self.reader) {
                     SubLexerResult::Result(tokens) => {
                         if tokens.len() > 0 {
+                            if tokens.len() > 1 {
+                                // TODO
+                                println!(">> GOING TO ADD: {:?}", tokens);
+                            }
                             // The sublexer produced tokens, queue them.
                             self.buffer.append(tokens);
                             self.lex() // TODO: if every branch does this, move it down
@@ -93,7 +97,7 @@ mod tests {
         assert_eq!(
             expected,
             actual,
-            "expected: {}\nactual:   {}",
+            "\nexpected:\n{}\nactual:\n{}",
             expected.to_text(),
             actual.to_text(),
         );
