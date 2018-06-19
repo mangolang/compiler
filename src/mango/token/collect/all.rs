@@ -55,6 +55,6 @@ mod tests {
 
     #[test]
     fn test_tokens_size() {
-        assert!(size_of::<Tokens>() < 32, size_of::<Tokens>());
+        assert!(size_of::<Tokens>() <= 40, size_of::<Tokens>());
     }
 }

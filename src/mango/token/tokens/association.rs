@@ -28,7 +28,7 @@ impl AssociationToken {
     }
 
     pub fn subpattern() -> String {
-        format!("{}=", Symbol::subpattern())
+        format!(r"(?:{})?=", Symbol::subpattern())
     }
 }
 

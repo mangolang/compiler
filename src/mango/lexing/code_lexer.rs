@@ -18,6 +18,8 @@ use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
 use mango::token::Tokens;
 use mango::util::collection::Queue;
+use mango::util::strslice::char_ops::CharOps;
+use mango::util::strslice::charsliceto;
 
 pub struct CodeLexer {
     indent: i32,
@@ -145,11 +147,13 @@ impl SubLexer for CodeLexer {
         // Association (before operator)
         if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
             debug_assert!(token.chars().last().unwrap() == '=');
-            if token.chars().count() > 1 {
-                panic!(); // TODO
-                return SubLexerResult::single(
-                    (Tokens::Association(AssociationToken::from_unprefixed())),
-                );
+            if token.char_len() > 1 {
+                match AssociationToken::from_str(charsliceto(token, -1)) {
+                    Ok(association) => {
+                        return SubLexerResult::single((Tokens::Association(association)))
+                    }
+                    Err(msg) => panic!(format!("Invalid association prefix: {}", msg)),
+                }
             } else {
                 return SubLexerResult::single(
                     (Tokens::Association(AssociationToken::from_unprefixed())),
@@ -173,10 +177,7 @@ impl SubLexer for CodeLexer {
         // If the code gets here, it did not recognize the text as any token
         return match reader.matches(r"[^\s]+") {
             Match(word) => SubLexerResult::single(Tokens::Unlexable(UnlexableToken::new(word))),
-            NoMatch() => {
-                println!("END {:?}", reader); // todo: tmp
-                panic!("Do not know how to proceed with parsing")
-            }
+            NoMatch() => panic!("Do not know how to proceed with parsing"),
             EOF() => {
                 if self.indent <= 0 {
                     return SubLexerResult::End;

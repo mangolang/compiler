@@ -1,6 +1,7 @@
 use mango::lexing::typ::Lexer;
 use mango::lexing::typ::MaybeToken;
 use mango::token::Tokens;
+use mango::util::encdec::ToText;
 
 /// Represents all the lex tokens in a source.
 #[derive(PartialEq, Eq, Debug)]
@@ -15,6 +16,16 @@ impl LexList {
 
     pub fn from_reader(lexer: &mut Lexer) -> Self {
         lex_all(lexer)
+    }
+}
+
+impl ToText for LexList {
+    fn to_text(&self) -> String {
+        self.tokens
+            .iter()
+            .map(|token| token.to_text())
+            .collect::<Vec<_>>()
+            .join(" ")
     }
 }
 
