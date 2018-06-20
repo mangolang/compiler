@@ -26,10 +26,7 @@ mod tests {
         assert_eq!("\"hello\\nworld\"", to_double_quoted_str("hello\nworld"));
         assert_eq!("\"hello\\\\ world\"", to_double_quoted_str("hello\\ world"));
         assert_eq!("\"hello\\\"world\"", to_double_quoted_str("hello\"world"));
-        assert_eq!(
-            "\"\\\"\\\"\\\"\\n\\\\\"",
-            to_double_quoted_str("\"\"\"\n\\")
-        );
+        assert_eq!("\"\\\"\\\"\\\"\\n\\\\\"", to_double_quoted_str("\"\"\"\n\\"));
         assert_eq!("\"\\\\n\"", to_double_quoted_str("\\n"));
         assert_eq!("\"\\\\\\n\"", to_double_quoted_str("\\\n"));
     }

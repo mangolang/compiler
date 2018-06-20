@@ -18,10 +18,7 @@ pub fn int_pattern() -> &'static str {
 /// Convert a String that matches [int_pattern] to an i64 integer. Overflow is possible.
 pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
     let text = text.into();
-    match Regex::new(&format!("^{}$", int_pattern()))
-        .unwrap()
-        .captures(&text)
-    {
+    match Regex::new(&format!("^{}$", int_pattern())).unwrap().captures(&text) {
         None => return Err(IntParseFailReason::Invalid),
         Some(captures) => {
             //            // Sign
@@ -78,6 +75,7 @@ mod tests {
         assert_eq!(9, parse_int("09").unwrap());
     }
 
+    #[test]
     fn test_invalid_b10_ints() {
         assert!(parse_int("0x9").is_err());
         assert!(parse_int("A").is_err());
@@ -86,6 +84,7 @@ mod tests {
         // TODO: over/underflow
     }
 
+    #[test]
     fn test_parse_based_ints() {
         // TODO: not implemented yet
     }

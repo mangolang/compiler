@@ -77,19 +77,13 @@ mod tests {
     use mango::token::tokens::KeywordToken;
     use mango::token::tokens::LiteralToken;
     use mango::token::tokens::OperatorToken;
-    use mango::token::tokens::ParenthesisCloseToken;
-    use mango::token::tokens::ParenthesisOpenToken;
     use mango::token::tokens::StartBlockToken;
     use mango::token::Tokens;
     use mango::util::encdec::to_text::ToText;
-    use std::cell::RefCell;
-    use std::rc::Rc;
 
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
         let expected = LexList::from_tokens(tokens);
-        let actual = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(
-            text.to_owned(),
-        ))));
+        let actual = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(text.to_owned()))));
         assert_eq!(
             expected,
             actual,
@@ -97,18 +91,6 @@ mod tests {
             expected.to_text(),
             actual.to_text(),
         );
-    }
-
-    #[test]
-    fn test_lexing_individual() {
-        assert_text_to_tokens(
-            "if",
-            vec![
-                Tokens::Keyword(KeywordToken::from_str("if".to_owned()).unwrap()),
-                Tokens::EndStatement(EndStatementToken::new_end_line()),
-            ],
-        );
-        // todo: more
     }
 
     #[test]

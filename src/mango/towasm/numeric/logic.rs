@@ -13,21 +13,13 @@ pub struct Gt {
 impl Gt {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Gt {
-            left: left,
-            right: right,
-        })
+        Box::new(Gt { left: left, right: right })
     }
 }
 
 impl Wasm for Gt {
     fn as_wat(&self) -> String {
-        format!(
-            "{}\n{}\n{}.gt_s",
-            self.left.as_wat(),
-            self.right.as_wat(),
-            self.typ().as_wat(),
-        )
+        format!("{}\n{}\n{}.gt_s", self.left.as_wat(), self.right.as_wat(), self.typ().as_wat(),)
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -50,10 +42,7 @@ pub struct Lt {
 impl Lt {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Lt {
-            left: left,
-            right: right,
-        })
+        Box::new(Lt { left: left, right: right })
     }
 
     pub fn typ(&self) -> &Type {
@@ -63,12 +52,7 @@ impl Lt {
 
 impl Wasm for Lt {
     fn as_wat(&self) -> String {
-        format!(
-            "{}\n{}\n{}.lt_s",
-            self.left.as_wat(),
-            self.right.as_wat(),
-            self.typ().as_wat(),
-        )
+        format!("{}\n{}\n{}.lt_s", self.left.as_wat(), self.right.as_wat(), self.typ().as_wat(),)
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

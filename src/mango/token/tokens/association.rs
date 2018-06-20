@@ -12,9 +12,7 @@ pub struct AssociationToken {
 
 impl AssociationToken {
     pub fn from_unprefixed() -> Self {
-        AssociationToken {
-            symbol: Option::None,
-        }
+        AssociationToken { symbol: Option::None }
     }
 
     pub fn from_str<S: Into<String>>(symbol_txt: S) -> Result<AssociationToken, Msg> {

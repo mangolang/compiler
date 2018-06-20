@@ -40,11 +40,7 @@ impl DeclareLocal {
 
 impl Wasm for DeclareLocal {
     fn as_wat(&self) -> String {
-        format!(
-            "(local {} {})",
-            self.local.name().as_wat(),
-            self.local.typ().as_wat()
-        )
+        format!("(local {} {})", self.local.name().as_wat(), self.local.typ().as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -69,9 +65,7 @@ pub struct Local {
 impl Local {
     pub fn get(&self) -> Box<GetLocal> {
         Box::new(GetLocal {
-            local: Local {
-                inner: self.inner.clone(),
-            },
+            local: Local { inner: self.inner.clone() },
         })
     }
 

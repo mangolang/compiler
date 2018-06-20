@@ -14,6 +14,7 @@ impl LexList {
         LexList { tokens }
     }
 
+    #[allow(unused)]
     pub fn from_reader(lexer: &mut Lexer) -> Self {
         lex_all(lexer)
     }
@@ -21,11 +22,7 @@ impl LexList {
 
 impl ToText for LexList {
     fn to_text(&self) -> String {
-        self.tokens
-            .iter()
-            .map(|token| token.to_text())
-            .collect::<Vec<_>>()
-            .join(" ")
+        self.tokens.iter().map(|token| token.to_text()).collect::<Vec<_>>().join(" ")
     }
 }
 
@@ -35,5 +32,5 @@ pub fn lex_all(lexer: &mut Lexer) -> LexList {
         list.push(token)
     }
     list.shrink_to_fit();
-    LexList { tokens: list }
+    LexList::from_tokens(list)
 }

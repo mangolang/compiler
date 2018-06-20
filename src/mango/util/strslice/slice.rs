@@ -23,10 +23,7 @@ pub fn charslice<S: Into<String>>(text: S, start: isize, end: isize) -> String {
             "charslice: if 'end' is negative, the magnitude may not exceed the length"
         );
         let new_end = (charcount as isize + end) as usize;
-        assert!(
-            new_end >= from,
-            "charslice: 'start' may not be before 'end' (end was negative)"
-        );
+        assert!(new_end >= from, "charslice: 'start' may not be before 'end' (end was negative)");
         length = new_end - from;
     } else {
         assert!(

@@ -22,11 +22,7 @@ impl UnaryOperationAST {
 
 impl ToText for UnaryOperationAST {
     fn to_text(&self) -> String {
-        return format!(
-            "({0:} {1:})",
-            self.operator.to_text(),
-            self.subject.to_text()
-        );
+        return format!("({0:} {1:})", self.operator.to_text(), self.subject.to_text());
     }
 }
 

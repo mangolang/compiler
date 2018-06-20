@@ -13,10 +13,7 @@ pub struct Add {
 impl Add {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Add {
-            left: left,
-            right: right,
-        })
+        Box::new(Add { left: left, right: right })
     }
 
     pub fn typ(&self) -> &Type {
@@ -26,12 +23,7 @@ impl Add {
 
 impl Wasm for Add {
     fn as_wat(&self) -> String {
-        format!(
-            "{}\n{}\n{}.add",
-            self.left.as_wat(),
-            self.right.as_wat(),
-            self.typ().as_wat(),
-        )
+        format!("{}\n{}\n{}.add", self.left.as_wat(), self.right.as_wat(), self.typ().as_wat(),)
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -54,10 +46,7 @@ pub struct Mul {
 impl Mul {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Mul {
-            left: left,
-            right: right,
-        })
+        Box::new(Mul { left: left, right: right })
     }
 
     pub fn typ(&self) -> &Type {
@@ -67,12 +56,7 @@ impl Mul {
 
 impl Wasm for Mul {
     fn as_wat(&self) -> String {
-        format!(
-            "{}\n{}\n{}.mul",
-            self.left.as_wat(),
-            self.right.as_wat(),
-            self.typ().as_wat(),
-        )
+        format!("{}\n{}\n{}.mul", self.left.as_wat(), self.right.as_wat(), self.typ().as_wat(),)
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

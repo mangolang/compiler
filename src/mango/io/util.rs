@@ -9,9 +9,7 @@ pub struct RegexCache {
 impl RegexCache {
     // Not public to prevent having more than one instance.
     fn new() -> Self {
-        RegexCache {
-            cache: HashMap::new(),
-        }
+        RegexCache { cache: HashMap::new() }
     }
 
     pub fn make_or_get(&mut self, subpattern: &str) -> &Regex {

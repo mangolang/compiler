@@ -166,10 +166,7 @@ impl Keyword {
             "xor" => Ok(Reserved("xor".to_owned())),
             "yield" => Ok(Reserved("yield".to_owned())),
 
-            _ => Err(Msg::from_valid(&format!(
-                "Unknown keywords: '{}'",
-                ssymbol_txt
-            ))),
+            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", ssymbol_txt))),
         }
     }
 }

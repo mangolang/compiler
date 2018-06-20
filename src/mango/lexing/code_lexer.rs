@@ -1,8 +1,6 @@
 use mango::io::typ::Reader;
 use mango::io::typ::ReaderResult::*;
 use mango::lexing::string_lexer::StringLexer;
-use mango::lexing::typ::Lexer;
-use mango::lexing::typ::MaybeToken;
 use mango::lexing::typ::SubLexer;
 use mango::lexing::typ::SubLexerResult;
 use mango::token::special::UnlexableToken;
@@ -17,7 +15,6 @@ use mango::token::tokens::ParenthesisCloseToken;
 use mango::token::tokens::ParenthesisOpenToken;
 use mango::token::tokens::StartBlockToken;
 use mango::token::Tokens;
-use mango::util::collection::Queue;
 use mango::util::strslice::char_ops::CharOps;
 use mango::util::strslice::charsliceto;
 
@@ -72,8 +69,6 @@ impl SubLexer for CodeLexer {
     fn lex_pass(&mut self, reader: &mut Box<Reader>) -> SubLexerResult {
         use self::SubLexerResult::*;
 
-        // TODO: put all these match results inline
-
         // End of line continuation
         if let Match(_) = reader.matches(r"\.\.\.") {
             // Line continuation has no token, it just continues on the next line, ignoring indents (for now).
@@ -83,8 +78,7 @@ impl SubLexer for CodeLexer {
                 // The rest of this line is unparsable.
                 if let Match(word) = reader.matches("[^\\n]*\\n\\r?") {
                     // This is a new line, so there may be indents.
-                    return self
-                        .token_and_indents(reader, Tokens::Unlexable(UnlexableToken::new(word)));
+                    return self.token_and_indents(reader, Tokens::Unlexable(UnlexableToken::new(word)));
                 } else {
                     // TODO: I don't know yet how to deal with '...' followed by end-of-file
                     panic!()
@@ -95,24 +89,16 @@ impl SubLexer for CodeLexer {
         if let Match(_) = reader.matches("\\n\\r?") {
             // Newline WITHOUT line continuation.
             // This is a new line, so there may be indents.
-            return self.token_and_indents(
-                reader,
-                Tokens::EndStatement(EndStatementToken::new_end_line()),
-            );
+            return self.token_and_indents(reader, Tokens::EndStatement(EndStatementToken::new_end_line()));
         }
         // End of statement
         if let Match(_) = reader.matches(";") {
             // Semicolon, which ends a statement.
             if let Match(_) = reader.matches("\\n\\r?") {
                 // If semicolon is followed by a newline, it is redundant. Deal with indents (but ignore the newline itself).
-                return self.token_and_indents(
-                    reader,
-                    Tokens::EndStatement(EndStatementToken::new_semicolon()),
-                );
+                return self.token_and_indents(reader, Tokens::EndStatement(EndStatementToken::new_semicolon()));
             } else {
-                return SubLexerResult::single(Tokens::EndStatement(
-                    EndStatementToken::new_semicolon(),
-                ));
+                return SubLexerResult::single(Tokens::EndStatement(EndStatementToken::new_semicolon()));
             }
         }
         //
@@ -124,9 +110,7 @@ impl SubLexer for CodeLexer {
             if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
                 return SubLexerResult::single(Tokens::Keyword(keyword));
             }
-            return SubLexerResult::single(Tokens::Identifier(
-                IdentifierToken::from_str(word).unwrap(),
-            ));
+            return SubLexerResult::single(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
         }
         // Literal
         if let Match(_) = reader.matches("[a-z]?\"") {
@@ -146,22 +130,16 @@ impl SubLexer for CodeLexer {
             debug_assert!(token.chars().last().unwrap() == '=');
             if token.char_len() > 1 {
                 match AssociationToken::from_str(charsliceto(token, -1)) {
-                    Ok(association) => {
-                        return SubLexerResult::single((Tokens::Association(association)))
-                    }
+                    Ok(association) => return SubLexerResult::single(Tokens::Association(association)),
                     Err(msg) => panic!(format!("Invalid association prefix: {}", msg)),
                 }
             } else {
-                return SubLexerResult::single(
-                    (Tokens::Association(AssociationToken::from_unprefixed())),
-                );
+                return SubLexerResult::single(Tokens::Association(AssociationToken::from_unprefixed()));
             }
         }
         // Operator (after association)
         if let Match(token) = reader.matches(OperatorToken::subpattern()) {
-            return SubLexerResult::single(Tokens::Operator(
-                OperatorToken::from_str(&token).unwrap(),
-            ));
+            return SubLexerResult::single(Tokens::Operator(OperatorToken::from_str(&token).unwrap()));
         }
         // Grouping symbols
         if let Match(_) = reader.matches(r"\(") {
@@ -188,5 +166,25 @@ impl SubLexer for CodeLexer {
                 SubLexerResult::Result(tokens)
             }
         };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use mango::lexing::util::test_util::assert_text_to_tokens;
+    use mango::token::tokens::EndStatementToken;
+    use mango::token::tokens::KeywordToken;
+    use mango::token::Tokens;
+
+    #[test]
+    fn test_lexing_individual() {
+        assert_text_to_tokens(
+            "if",
+            vec![
+                Tokens::Keyword(KeywordToken::from_str("if".to_owned()).unwrap()),
+                Tokens::EndStatement(EndStatementToken::new_end_line()),
+            ],
+        );
+        // todo: more
     }
 }

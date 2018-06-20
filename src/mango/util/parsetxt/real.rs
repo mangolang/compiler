@@ -23,10 +23,7 @@ pub fn real_pattern() -> &'static str {
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
 pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
     let text = text.into();
-    match Regex::new(&format!("^{}$", real_pattern()))
-        .unwrap()
-        .captures(&text)
-    {
+    match Regex::new(&format!("^{}$", real_pattern())).unwrap().captures(&text) {
         None => return Err(RealParseFailReason::Invalid),
         Some(captures) => {
             let multiplier = captures
@@ -43,11 +40,7 @@ pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> 
                 }
                 Some(exponent_match) => {
                     // This real is in exponential notation
-                    let exponent = exponent_match
-                        .as_str()
-                        .without_char(&'_')
-                        .parse::<f64>()
-                        .unwrap();
+                    let exponent = exponent_match.as_str().without_char(&'_').parse::<f64>().unwrap();
                     // TODO: is there a numerically smarter way to do this?
                     return Ok(10f64.powf(exponent) * multiplier);
                 }
@@ -80,17 +73,11 @@ mod tests {
         assert!(close(-0.1, parse_real("-.1e0").unwrap()));
         assert!(close(-1., parse_real("-1.e0").unwrap()));
         assert!(close(42., parse_real("42.0e+0").unwrap()));
-        assert!(close(
-            12345.6789,
-            parse_real("1_2_3_4_5.6_7_8_9e0").unwrap()
-        ));
+        assert!(close(12345.6789, parse_real("1_2_3_4_5.6_7_8_9e0").unwrap()));
         assert!(close(0.42, parse_real("42.0e-2").unwrap()));
         assert!(close(-0.001, parse_real("-.1e-2").unwrap()));
         assert!(close(-0.01, parse_real("-1.e-2").unwrap()));
-        assert!(close(
-            123.456789,
-            parse_real("1_2_3_4_5.6_7_8_9e-2").unwrap()
-        ));
+        assert!(close(123.456789, parse_real("1_2_3_4_5.6_7_8_9e-2").unwrap()));
         assert!(close(42.0, parse_real("42.0e-0_0_0").unwrap()));
     }
 

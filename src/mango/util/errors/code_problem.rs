@@ -109,17 +109,8 @@ mod tests {
 
     #[test]
     fn test_new_problem() {
-        CodeProblem::error(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        CodeProblem::warning(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        CodeProblem::debug(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
+        CodeProblem::error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::warning(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::debug(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
     }
 }

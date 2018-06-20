@@ -31,9 +31,7 @@ pub struct StringLiteralAST {
 
 impl FloatLiteralAST {
     pub fn new(value: f64) -> Self {
-        FloatLiteralAST {
-            value: f64eq::new(value),
-        }
+        FloatLiteralAST { value: f64eq::new(value) }
     }
 }
 

@@ -20,10 +20,7 @@ impl StartBlockToken {
 impl EndBlockToken {
     pub fn new(is_dedent: bool, is_end_keyword: bool) -> Self {
         assert!(is_dedent || is_end_keyword);
-        EndBlockToken {
-            is_dedent,
-            is_end_keyword,
-        }
+        EndBlockToken { is_dedent, is_end_keyword }
     }
 }
 

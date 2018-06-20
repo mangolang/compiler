@@ -37,10 +37,7 @@ impl Symbol {
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
-            _ => Err(Msg::from_valid(&format!(
-                "Unknown symbol: '{}'",
-                ssymbol_txt
-            ))),
+            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", ssymbol_txt))),
         }
     }
 

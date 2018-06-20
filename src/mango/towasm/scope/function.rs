@@ -75,11 +75,7 @@ pub struct FunctionSignature {
 impl FunctionSignature {
     pub fn new(name: Rc<Name>, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
         assert!(results.len() <= 1); //
-        FunctionSignature {
-            name,
-            parameters,
-            results,
-        }
+        FunctionSignature { name, parameters, results }
     }
 }
 
@@ -89,16 +85,8 @@ impl Wasm for FunctionSignature {
             "func {} (export \"{}\") {} {}",
             self.name.as_wat(),
             self.name.pure_name(),
-            self.parameters
-                .iter()
-                .map(|func| func.as_wat())
-                .collect::<Vec<_>>()
-                .join("\n"),
-            self.results
-                .iter()
-                .map(|func| func.as_wat())
-                .collect::<Vec<_>>()
-                .join("\n")
+            self.parameters.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n"),
+            self.results.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
         )
     }
 
@@ -114,12 +102,7 @@ pub struct Function {
 
 impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
-    pub fn new<F>(
-        name: Rc<Name>,
-        parameters: Vec<Box<Parameter>>,
-        results: Vec<Box<Output>>,
-        statements_gen: F,
-    ) -> Box<Self>
+    pub fn new<F>(name: Rc<Name>, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>, statements_gen: F) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {

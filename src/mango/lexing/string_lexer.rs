@@ -5,6 +5,7 @@ use mango::lexing::typ::SubLexerResult;
 use mango::token::tokens::LiteralToken;
 use mango::token::Tokens;
 
+#[allow(dead_code)] // TODO: TMP
 pub enum StringType {
     SingleQuotedInline,
     DoubleQuotedInline,
@@ -13,6 +14,7 @@ pub enum StringType {
 
 /// Lexes a string literal token.
 // Starts after the opening quote and expected to consume until closing quote.
+#[allow(dead_code)] // TODO: TMP
 pub struct StringLexer {
     typ: StringType,
 }
@@ -32,13 +34,9 @@ impl SubLexer for StringLexer {
         // TODO: doesn't handle escaping etc at all now
         // TODO: this is going to have a problem if `matches` automatically eats whitespace
         match reader.matches("[^\"\\n]*") {
-            Match(value) => {
-                return SubLexerResult::single(Tokens::Literal(LiteralToken::string(value)))
-            }
+            Match(value) => return SubLexerResult::single(Tokens::Literal(LiteralToken::string(value))),
             NoMatch() => panic!("failed to parse string"), // This can't really go wrong since empty pattern matches
-            EOF() => {
-                return SubLexerResult::single(Tokens::Literal(LiteralToken::string("".to_owned())))
-            } // Unclosed string literal, let code parser deal with it
+            EOF() => return SubLexerResult::single(Tokens::Literal(LiteralToken::string("".to_owned()))), // Unclosed string literal, let code parser deal with it
         }
     }
 }
