@@ -20,11 +20,12 @@ pub struct MemoryTokenStream {
 }
 
 impl MemoryTokenStream {
-    #[allow(dead_code)]
+    #[allow(dead_code)] // TODO: for now
     pub fn new(tokens: Vec<Tokens>) -> MemoryTokenStream {
         MemoryTokenStream { index: 0, tokens }
     }
 
+    #[allow(dead_code)] // TODO: for now
     pub fn to_text(&self) -> String {
         format!(
             " {}",

@@ -1,0 +1,3 @@
+/**
+ * Mango: General javascript prefix.
+ */

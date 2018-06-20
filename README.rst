@@ -38,14 +38,14 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 
 	rustup toolchain install nightly
 	rustup override set nightly  # make sure you are in the mango directory
-	rustup target add wasm32-unknown-emscripten  # emscritem for now
+	rustup target add wasm32-unknown-unknown --toolchain nightly
 	
 * We need a few packages:
 
 .. code:: bash
 
 	rustup component add rustfmt-preview
-	cargo install cargo-web
+    cargo install wasm-bindgen-cli
 
 * There are git commit hooks that you can use. They test that code is formatted well and compiles and commit messages are correctly formatted. You don't have to use them if you ensure these things yourself. If you want to use them:
 
@@ -71,12 +71,7 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 
     RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-* To deploy the web version in release mode:
-
-.. code:: bash
-
-	cargo web deploy --release
-	# then open target/deploy/index.html in a browser
+* To deploy the web version in release mode, run the script `dev/build_web.sh` (or view it for the steps needed). It uses Python's SimpleHTTPServer, if you don't have that, you can still find the deployable code in `target/deploy`.
 
 * You're now ready to make changes! If you want to help, you're very welcome! Have a glance at CONTRIBUTING.rst_ if you have a minute.
 

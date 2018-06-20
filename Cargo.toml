@@ -16,4 +16,22 @@ regex = "0.2.*"
 string-interner = "0.6.*"
 lazy_static = "1.0.*"
 derive-new = "0.5.*"
-cargo-wasm = "0.4.*"
+#cargo-wasm = "0.4.*"
+wasm-bindgen = "0.2.*"
+
+[profile.release]
+lto = true
+opt-level = 's'
+
+[lib]
+crate-type = ["cdylib"]
+name = "mango"
+path = "src/lib.rs"
+
+#[[bin]]
+#name = "mangoc"
+#path = "src/mango/ui/cli/main.rs"
+
+#[[bin]]
+#name = "mango-webi"
+#path = "src/mango/ui/webi/compile_str.rs"
