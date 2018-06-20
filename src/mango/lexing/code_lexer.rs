@@ -22,7 +22,7 @@ use mango::util::strslice::char_ops::CharOps;
 use mango::util::strslice::charsliceto;
 
 pub struct CodeLexer {
-    indent: i32,
+    indent: i32, // -1: finished
 }
 
 // TODO: keep the regexes in thread local global scope storage
@@ -141,12 +141,6 @@ impl SubLexer for CodeLexer {
             return SubLexerResult::single(Tokens::Literal(LiteralToken::Real(value)));
         }
 
-        // Operator (before association)
-        if let Match(token) = reader.matches(OperatorToken::subpattern()) {
-            return SubLexerResult::single(Tokens::Operator(
-                OperatorToken::from_str(&token).unwrap(),
-            ));
-        }
         // Association (before operator)
         if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
             debug_assert!(token.chars().last().unwrap() == '=');
@@ -163,6 +157,12 @@ impl SubLexer for CodeLexer {
                 );
             }
         }
+        // Operator (after association)
+        if let Match(token) = reader.matches(OperatorToken::subpattern()) {
+            return SubLexerResult::single(Tokens::Operator(
+                OperatorToken::from_str(&token).unwrap(),
+            ));
+        }
         // Grouping symbols
         if let Match(_) = reader.matches(r"\(") {
             return SubLexerResult::single(Tokens::ParenthesisOpen(ParenthesisOpenToken::new()));
@@ -176,16 +176,15 @@ impl SubLexer for CodeLexer {
             Match(word) => SubLexerResult::single(Tokens::Unlexable(UnlexableToken::new(word))),
             NoMatch() => panic!("Do not know how to proceed with parsing"),
             EOF() => {
-                if self.indent <= 0 {
+                if self.indent < 0 {
                     return SubLexerResult::End;
                 }
-                // TODO: currently the EndStatement is only made if the file stops on an indented line
                 let mut tokens = vec![Tokens::EndStatement(EndStatementToken::new_end_line())];
                 for _ in 0..self.indent {
                     // This line is dedented, make end tokens.
                     tokens.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
                 }
-                self.indent = 0;
+                self.indent = -1;
                 SubLexerResult::Result(tokens)
             }
         };

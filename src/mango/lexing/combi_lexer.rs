@@ -40,10 +40,6 @@ impl Lexer for CombiLexer {
                 match lexer.lex_pass(&mut self.reader) {
                     SubLexerResult::Result(tokens) => {
                         if tokens.len() > 0 {
-                            if tokens.len() > 1 {
-                                // TODO
-                                println!(">> GOING TO ADD: {:?}", tokens);
-                            }
                             // The sublexer produced tokens, queue them.
                             self.buffer.append(tokens);
                             self.lex() // TODO: if every branch does this, move it down
@@ -107,9 +103,10 @@ mod tests {
     fn test_lexing_individual() {
         assert_text_to_tokens(
             "if",
-            vec![Tokens::Keyword(
-                KeywordToken::from_str("if".to_owned()).unwrap(),
-            )],
+            vec![
+                Tokens::Keyword(KeywordToken::from_str("if".to_owned()).unwrap()),
+                Tokens::EndStatement(EndStatementToken::new_end_line()),
+            ],
         );
         // todo: more
     }
@@ -133,6 +130,7 @@ mod tests {
                 Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
                 Tokens::Association(AssociationToken::from_str("+".to_owned()).unwrap()),
                 Tokens::Literal(LiteralToken::Int(1)),
+                Tokens::EndStatement(EndStatementToken::new_end_line()),
                 Tokens::EndBlock(EndBlockToken::new(true, false)),
             ],
         );
