@@ -1,6 +1,5 @@
 #![feature(nll)]
 //#![feature(generators, generator_trait)]
-
 #![feature(proc_macro, wasm_custom_section, wasm_import_module)]
 extern crate core;
 extern crate wasm_bindgen;
@@ -13,9 +12,7 @@ extern crate derive_new;
 
 pub mod mango {
     // Utilities
-    pub mod cli;
     pub mod io;
-
     pub mod jit;
     pub mod ui;
     pub mod util;
