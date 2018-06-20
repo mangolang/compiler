@@ -18,11 +18,7 @@ impl Assign {
 
 impl Wasm for Assign {
     fn as_wat(&self) -> String {
-        format!(
-            "{}\nset_local {}",
-            self.value.as_wat(),
-            self.assignee.as_wat()
-        )
+        format!("{}\nset_local {}", self.value.as_wat(), self.assignee.as_wat())
         //    set_local $fac_result
     }
 

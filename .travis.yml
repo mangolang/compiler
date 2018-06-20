@@ -6,4 +6,5 @@ before_script:
 sudo: false
 cache: cargo
 script:
+  - cargo +nightly fmt --all -- --check
   - cargo test --all

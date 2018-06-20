@@ -18,11 +18,7 @@ impl Wasm for Module {
     fn as_wat(&self) -> String {
         format!(
             "(module\n{}\n) ;; module",
-            self.functions
-                .iter()
-                .map(|func| func.as_wat())
-                .collect::<Vec<_>>()
-                .join("\n")
+            self.functions.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
         )
     }
 

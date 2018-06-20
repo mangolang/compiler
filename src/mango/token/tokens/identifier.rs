@@ -19,6 +19,10 @@ impl IdentifierToken {
     pub fn from_name(name: Name) -> Self {
         IdentifierToken { name }
     }
+
+    pub fn subpattern() -> &'static str {
+        Name::subpattern()
+    }
 }
 
 impl ToText for IdentifierToken {

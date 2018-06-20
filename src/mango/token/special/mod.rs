@@ -1,2 +1,2 @@
-mod unlexable;
+pub mod unlexable;
 pub use self::unlexable::UnlexableToken;

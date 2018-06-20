@@ -94,6 +94,8 @@ impl Keyword {
             "int" => Ok(Reserved("int".to_owned())),
             "interface" => Ok(Reserved("interface".to_owned())),
             "internal" => Ok(Reserved("internal".to_owned())),
+            "intersect" => Ok(Reserved("intersect".to_owned())),
+            "intersection" => Ok(Reserved("intersection".to_owned())),
             "is" => Ok(Reserved("is".to_owned())),
             "it" => Ok(Reserved("it".to_owned())),
             "lambda" => Ok(Reserved("lambda".to_owned())),
@@ -149,6 +151,8 @@ impl Keyword {
             "try" => Ok(Reserved("try".to_owned())),
             "type" => Ok(Reserved("type".to_owned())),
             "unsafe" => Ok(Reserved("unsafe".to_owned())),
+            "unite" => Ok(Reserved("unite".to_owned())),
+            "union" => Ok(Reserved("union".to_owned())),
             "until" => Ok(Reserved("until".to_owned())),
             "use" => Ok(Reserved("use".to_owned())),
             "val" => Ok(Reserved("val".to_owned())),
@@ -162,10 +166,7 @@ impl Keyword {
             "xor" => Ok(Reserved("xor".to_owned())),
             "yield" => Ok(Reserved("yield".to_owned())),
 
-            _ => Err(Msg::from_valid(&format!(
-                "Unknown keywords: '{}'",
-                ssymbol_txt
-            ))),
+            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", ssymbol_txt))),
         }
     }
 }

@@ -49,33 +49,17 @@ mod tests {
     #[test]
     fn test_iter_collector() {
         let mut collector = ProblemCollector::new();
-        collector.error(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
+        collector.error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
         let cnt = collector.into_iter().count();
         assert_eq!(1, cnt, "No item in ProblemCollector");
-        assert_eq!(
-            cnt,
-            collector.into_iter().count(),
-            "Failed to iterate over ProblemCollector twice"
-        )
+        assert_eq!(cnt, collector.into_iter().count(), "Failed to iterate over ProblemCollector twice")
     }
 
     #[test]
     fn test_new_problem() {
         let mut collector = ProblemCollector::new();
-        collector.error(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        collector.warning(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        collector.debug(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
+        collector.error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        collector.warning(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        collector.debug(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
     }
 }

@@ -21,11 +21,7 @@ impl AssignmentAST {
 
 impl ToText for AssignmentAST {
     fn to_text(&self) -> String {
-        return format!(
-            "{0:} = ({1:})",
-            self.assignee.to_text(),
-            self.value.to_text()
-        );
+        return format!("{0:} = ({1:})", self.assignee.to_text(), self.value.to_text());
     }
 }
 

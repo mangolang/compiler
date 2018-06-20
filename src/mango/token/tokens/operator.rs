@@ -34,6 +34,10 @@ impl OperatorToken {
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
     }
+
+    pub fn subpattern() -> &'static str {
+        Symbol::subpattern()
+    }
 }
 
 impl ToText for OperatorToken {

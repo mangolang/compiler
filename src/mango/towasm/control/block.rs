@@ -64,11 +64,7 @@ impl Block {
 
 impl Wasm for Block {
     fn as_wat(&self) -> String {
-        format!(
-            "(block {0:}\n{1:}\n) ;; block {0:}",
-            self.name.as_wat(),
-            self.group.as_wat()
-        )
+        format!("(block {0:}\n{1:}\n) ;; block {0:}", self.name.as_wat(), self.group.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

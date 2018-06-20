@@ -34,11 +34,7 @@ impl Loop {
 
 impl Wasm for Loop {
     fn as_wat(&self) -> String {
-        format!(
-            "loop {0:}\n{1:}\nend ;; loop {0:}",
-            self.name.as_wat(),
-            self.group.as_wat()
-        )
+        format!("loop {0:}\n{1:}\nend ;; loop {0:}", self.name.as_wat(), self.group.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

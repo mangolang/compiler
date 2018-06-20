@@ -11,34 +11,60 @@ pub enum Symbol {
     Dash,
     Asterisk,
     Slash,
+    LT,
+    GT,
+    Eq,
+    LE,
+    GE,
+    Exclamation,
+    Question,
 }
 
 impl Symbol {
     pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
+        use self::Symbol::*;
         let ssymbol_txt = symbol_txt.into();
         match &*ssymbol_txt {
-            "+" => Ok(Symbol::Plus),
-            "-" => Ok(Symbol::Dash),
-            "*" => Ok(Symbol::Asterisk),
-            "/" => Ok(Symbol::Slash),
-            _ => Err(Msg::from_valid(&format!(
-                "Unknown symbol: '{}'",
-                ssymbol_txt
-            ))),
+            "+" => Ok(Plus),
+            "-" => Ok(Dash),
+            "*" => Ok(Asterisk),
+            "/" => Ok(Slash),
+            // TODO: how do I know < is an operator, rather than e.g. a generic?
+            "<" => Ok(LT),
+            ">" => Ok(GT),
+            "==" => Ok(Eq),
+            "<=" => Ok(LE),
+            ">=" => Ok(GE),
+            "!" => Ok(Exclamation),
+            "?" => Ok(Question),
+            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", ssymbol_txt))),
         }
+    }
+
+    /// Generate an eager subpattern to match tokens, that can be composed in a regular expression.
+    pub fn subpattern() -> &'static str {
+        r"(?:\+|-|\*|/|<=|>=|==|>|<)"
     }
 }
 
 impl Display for Symbol {
     fn fmt(&self, f: &mut Formatter) -> fResult {
+        use self::Symbol::*;
         write!(
             f,
             "{}",
             match *self {
-                Symbol::Plus => "+",
-                Symbol::Dash => "-",
-                Symbol::Asterisk => "*",
-                Symbol::Slash => "/",
+                Plus => "+",
+                Dash => "-",
+                Asterisk => "*",
+                Slash => "/",
+                LT => "<",
+                GT => ">",
+                Eq => "==",
+                LE => "<=",
+                GE => ">=",
+                Exclamation => "!",
+                Question => "?",
             }
         )
     }

@@ -165,14 +165,8 @@ mod tests {
         assert_eq!(get_hash(f64eq::new(PI)), get_hash(f64eq::new(PI)));
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(-42.)));
         assert_eq!(get_hash(f64eq::new(0.)), get_hash(f64eq::new(-0.)));
-        assert_eq!(
-            get_hash(f64eq::new(INFINITY)),
-            get_hash(f64eq::new(INFINITY))
-        );
-        assert_ne!(
-            get_hash(f64eq::new(INFINITY)),
-            get_hash(f64eq::new(NEG_INFINITY))
-        );
+        assert_eq!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(INFINITY)));
+        assert_ne!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(NEG_INFINITY)));
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(NAN)));
         assert_ne!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(42.)));
         assert_eq!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(NAN)));
