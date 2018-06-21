@@ -5,6 +5,7 @@ use mango::util::encdec::ToText;
 /// Represents an unparseable list of tokens.
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableAST {
+    // should I box the tokens to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
     tokens: Vec<Box<Tokens>>,
 }
 

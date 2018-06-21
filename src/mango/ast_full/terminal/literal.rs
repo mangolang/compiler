@@ -18,7 +18,7 @@ pub struct IntLiteralAST {
 }
 
 /// A literal float value.
-#[derive(Debug, PartialEq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct FloatLiteralAST {
     value: f64eq,
 }
@@ -53,8 +53,15 @@ impl ToText for StringLiteralAST {
     }
 }
 
-// TODO: I need to make sure than NaN == NaN to do this legitimately
-impl Eq for FloatLiteralAST {}
+impl ToText for LiteralAST {
+    fn to_text(&self) -> String {
+        match self {
+            LiteralAST::Int(val) => val.to_text(),
+            LiteralAST::Float(val) => val.to_text(),
+            LiteralAST::String(val) => val.to_text(),
+        }
+    }
+}
 
 impl AST for IntLiteralAST {}
 impl AST for FloatLiteralAST {}

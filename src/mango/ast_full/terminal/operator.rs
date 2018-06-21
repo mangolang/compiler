@@ -10,7 +10,6 @@ pub struct OperatorAST {
 }
 
 impl OperatorAST {
-    // todo: are these next two methods redundant if we can just link to token?
     pub fn from_str(symbol_txt: &str) -> Result<OperatorAST, Msg> {
         Ok(OperatorAST::from_symbol(Symbol::new(symbol_txt)?))
     }
@@ -35,10 +34,3 @@ impl ToText for OperatorAST {
 }
 
 impl AST for OperatorAST {}
-
-//impl ToObjectNotation for OperatorAST {
-//    #[allow(non_snake_case)]
-//    fn to_ON(&self) -> ON {
-//        return ON::Null;  // todo
-//    }
-//}
