@@ -2,29 +2,35 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::rc::Rc;
+use std::hash::Hash;
+use std::cell::RefCell;
 
-pub struct Name {
-    name: String,
+#[derive(Hash, PartialEq, Eq)]
+pub struct KnownName {
+    name: String
 }
 
-impl Name {
-    pub fn new(name: String) -> Option<Rc<Self>> {
-        // todo: filter out illegal names
+impl KnownName {
+    pub fn new(name: String) -> Option<Name> {
+        // todo: filter out illegal names (thread_lcoal!)
         assert!(!name.starts_with("$"));
-        return Some(Rc::new(Name { name }));
-    }
-
-    pub fn pure_name(&self) -> String {
-        return self.name.to_owned();
+        Some(Rc::new(RefCell::new(RawName::Known(KnownName { name }))))
     }
 }
 
-impl Wasm for Name {
-    fn as_wat(&self) -> String {
-        format!("${}", self.name)
-    }
+#[derive(Hash, PartialEq, Eq)]
+pub struct PendingName {}
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        unimplemented!()
+impl PendingName {
+    pub fn new() -> Name {
+        Rc::new(RefCell::new(RawName::Pending()))
     }
 }
+
+#[derive(Hash, PartialEq, Eq)]
+pub enum RawName {
+    Known(KnownName),
+    Pending(PendingName),
+}
+
+type Name = Rc<RefCell<RawName>>;

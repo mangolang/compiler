@@ -16,7 +16,7 @@ fn test_tokens_eq() {
         Keyword(KeywordToken::from_str("mut").unwrap()),
         Identifier(IdentifierToken::from_name(my_var)),
         Association(AssociationToken::from_unprefixed()),
-        Literal(LiteralToken::int(21)),
+        Literal(LiteralToken::Int(21)),
         EndStatement(EndStatementToken::new_semicolon()),
         Identifier(IdentifierToken::from_name(my_var)),
         Association(AssociationToken::from_str("+").unwrap()),
