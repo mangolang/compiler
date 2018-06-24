@@ -5,12 +5,8 @@
 /// * Names, anonymous or otherwise, should not conflict.
 /// * It should be possible to provide prefixes.
 /// * Anonymous names should be short.
-
 mod name;
-pub use self::name::Name;
+pub use self::name::{KnownName, Name, PendingName, RawName};
 
-mod given_name;
-pub use self::given_name::GivenName;
-
-mod anonymous;
-pub use self::anonymous::AnonymousName;
+mod pool;
+pub use self::pool::NamePool;

@@ -1,6 +1,8 @@
 use mango::towasm::collect::Statement;
 use mango::towasm::control::Label;
 use mango::towasm::util::Name;
+use mango::towasm::util::NamePool;
+use mango::towasm::util::NamePool;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
@@ -48,10 +50,10 @@ impl Block {
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         // todo: determine name automatically
-        Block::new_named(Name::new("b".to_owned()).unwrap(), statements_gen)
+        Block::new_named(NamePool.borrow_mut().anonymous_prefix("block_"), statements_gen)
     }
 
-    pub fn new_named<F>(name: Rc<Name>, statements_gen: F) -> Box<Self>
+    pub fn new_named<F>(name: Name, statements_gen: F) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {

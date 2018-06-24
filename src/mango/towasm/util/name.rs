@@ -1,30 +1,31 @@
 use mango::towasm::Wasm;
-use std::fs::File;
-use std::io;
-use std::rc::Rc;
-use std::hash::Hash;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 #[derive(Hash, PartialEq, Eq)]
 pub struct KnownName {
-    name: String
+    name: String,
 }
 
 impl KnownName {
-    pub fn new(name: String) -> Option<Name> {
-        // todo: filter out illegal names (thread_lcoal!)
-        assert!(!name.starts_with("$"));
-        Some(Rc::new(RefCell::new(RawName::Known(KnownName { name }))))
-    }
+    //    fn new(name: String) -> Option<Name> {
+    //         todo: filter out illegal names (thread_lcoal!)
+    //        assert!(!name.starts_with("$"));
+    //        Some(Rc::new(RefCell::new(RawName::Known(KnownName { name }))))
+    //    }
 }
 
 #[derive(Hash, PartialEq, Eq)]
-pub struct PendingName {}
+pub struct PendingName {
+    prefix: Option<String>,
+    id: u32,
+}
+// TODO: change Hash, Eq etc to only use id, not prefix, since ids are unique anyway
 
 impl PendingName {
-    pub fn new() -> Name {
-        Rc::new(RefCell::new(RawName::Pending()))
-    }
+    //    fn new() -> Name {
+    //        Rc::new(RefCell::new(RawName::Pending()))
+    //    }
 }
 
 #[derive(Hash, PartialEq, Eq)]
@@ -33,4 +34,6 @@ pub enum RawName {
     Pending(PendingName),
 }
 
-type Name = Rc<RefCell<RawName>>;
+impl RawName {}
+
+pub type Name = Rc<RefCell<RawName>>;
