@@ -1,7 +1,7 @@
 use mango::towasm::collect::Statement;
 use mango::towasm::control::Label;
+use mango::towasm::module::Scope;
 use mango::towasm::util::Name;
-use mango::towasm::util::NamePool;
 use mango::towasm::util::NamePool;
 use mango::towasm::Wasm;
 use std::fs::File;
@@ -42,24 +42,27 @@ impl Wasm for Group {
 pub struct Block {
     name: Rc<Name>,
     group: Group,
+    scope: Scope,
 }
 
 impl Block {
-    pub fn new<F>(statements_gen: F) -> Box<Self>
+    pub fn new<F>(statements_gen: F, parent: &mut Scope) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         // todo: determine name automatically
-        Block::new_named(NamePool.borrow_mut().anonymous_prefix("block_"), statements_gen)
+        Block::new_named(scope.names.anonymous_prefix("block_"), statements_gen, parent)
     }
 
-    pub fn new_named<F>(name: Name, statements_gen: F) -> Box<Self>
+    pub fn new_named<F>(name: Name, statements_gen: F, parent: &mut Scope) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
+        let scope = Scope::new(parent);
         Box::new(Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
+            scope: scope,
         })
     }
 }

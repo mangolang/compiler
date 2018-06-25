@@ -2,7 +2,9 @@
 //use std::fs::File;
 //use std::io;
 //use std::rc::Rc;
-//
+
+// TODO: REMOVE
+
 //pub enum AnonymousName {
 //    Pending(AnonymousToken),
 //    Resolved(AnonymousChoice),

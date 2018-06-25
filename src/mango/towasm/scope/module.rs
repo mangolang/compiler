@@ -1,8 +1,10 @@
 use mango::towasm::scope::Function;
+use mango::towasm::util::NamePool;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use std::rc::Rc;
 
 pub struct Module {
     functions: Vec<Box<Function>>,
@@ -25,5 +27,16 @@ impl Wasm for Module {
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
         file.write(b" module ")?;
         Ok(())
+    }
+}
+
+pub struct Scope {
+    names: NamePool,
+}
+
+impl Scope {
+    pub fn new(parent: &mut Scope) -> Self {
+        names = NamePool::new(parent.names);
+        Scope { names }
     }
 }
