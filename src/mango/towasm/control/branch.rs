@@ -6,23 +6,22 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use std::rc::Rc;
 
 /// Label for a block, if or loop
 pub struct Label {
-    name: Rc<Name>,
+    name: Name,
 }
 
 impl Label {
     /// This constructor should not be called directly; blocks should create their own references.
-    pub fn internal(name: Rc<Name>) -> Self {
+    pub fn internal(name: Name) -> Self {
         Label { name }
     }
 }
 
 impl Wasm for Label {
     fn as_wat(&self) -> String {
-        self.name.as_wat()
+        self.name.borrow().as_wat()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

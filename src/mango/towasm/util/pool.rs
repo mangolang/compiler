@@ -34,16 +34,24 @@ impl RawNamePool {
     pub fn reuse(&self, name: String) -> Option<Name> {}
 
     pub fn anonymous(&self) -> Name {
+        self.anonymous_prefix_option(Option::None)
+    }
+
+    pub fn anonymous_prefix(&self, prefix: String) -> Name {
+        self.anonymous_prefix_option(Option::Some(prefix))
+    }
+
+    fn anonymous_prefix_option(&self, prefix: Option<String>) -> Name {
         self.counter += 1;
         let name: Name = Rc::new(RefCell::new(RawName::Pending(PendingName {
-            prefix: Option::None,
+            prefix: prefix,
             id: self.counter,
         })));
         self.names.insert(name);
         name
     }
-
-    pub fn anonymous_prefix(&self, prefix: String) -> Name {}
 }
 
 pub type NamePool = Rc<RefCell<RawNamePool>>;
+
+impl NamePool {}

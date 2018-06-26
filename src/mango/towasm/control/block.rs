@@ -1,13 +1,11 @@
+use mango::towasm::collect::typ::Wasm;
 use mango::towasm::collect::Statement;
 use mango::towasm::control::Label;
-use mango::towasm::module::Scope;
+use mango::towasm::scope::module::Scope;
 use mango::towasm::util::Name;
-use mango::towasm::util::NamePool;
-use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use std::rc::Rc;
 
 pub struct Group {
     statements: Vec<Box<Statement>>,
@@ -40,7 +38,7 @@ impl Wasm for Group {
 }
 
 pub struct Block {
-    name: Rc<Name>,
+    name: Name,
     group: Group,
     scope: Scope,
 }
@@ -51,7 +49,11 @@ impl Block {
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         // todo: determine name automatically
-        Block::new_named(scope.names.anonymous_prefix("block_"), statements_gen, parent)
+        Block::new_named(
+            parent.names.borrow_mut().anonymous_prefix("block_".to_owned()),
+            statements_gen,
+            parent,
+        )
     }
 
     pub fn new_named<F>(name: Name, statements_gen: F, parent: &mut Scope) -> Box<Self>
@@ -69,7 +71,11 @@ impl Block {
 
 impl Wasm for Block {
     fn as_wat(&self) -> String {
-        format!("(block {0:}\n{1:}\n) ;; block {0:}", self.name.as_wat(), self.group.as_wat())
+        format!(
+            "(block {0:}\n{1:}\n) ;; block {0:}",
+            self.name.borrow().as_wat(),
+            self.group.as_wat()
+        )
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

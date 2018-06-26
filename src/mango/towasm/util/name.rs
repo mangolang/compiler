@@ -1,5 +1,7 @@
 use mango::towasm::Wasm;
 use std::cell::RefCell;
+use std::fs::File;
+use std::io::Error;
 use std::rc::Rc;
 
 #[derive(Hash, PartialEq, Eq)]
@@ -37,3 +39,13 @@ pub enum RawName {
 impl RawName {}
 
 pub type Name = Rc<RefCell<RawName>>;
+
+impl Wasm for RawName {
+    fn as_wat(&self) -> String {
+        unimplemented!() // todo
+    }
+
+    fn write_wasm(&self, file: &mut File) -> Result<(), Error> {
+        unimplemented!() // todo
+    }
+}
