@@ -36,6 +36,21 @@ pub enum RawName {
     Pending(PendingName),
 }
 
+impl RawName {
+    pub fn resolved(&self) -> &KnownName {
+        match self {
+            RawName::Known(name) => &name,
+            RawName::Pending(name) => {
+                self = RawName::Known(KnownName {
+                    // TODO: can I just use choose_name, or need pool to take prefix into account? (do I need id in that case?)
+                    name: format!("{}", self.id), //                    format!("{}{}", name.prefix, 1)
+                });
+                &name
+            }
+        }
+    }
+}
+
 impl RawName {}
 
 pub type Name = Rc<RefCell<RawName>>;

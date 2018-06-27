@@ -1,5 +1,6 @@
 use mango::towasm::scope::Function;
-use mango::towasm::util::NamePool;
+use mango::towasm::util::pool::new_name_pool;
+use mango::towasm::util::pool::NamePool;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
@@ -35,7 +36,7 @@ pub struct Scope {
 
 impl Scope {
     pub fn new(parent: &mut Scope) -> Self {
-        let names = NamePool::new(parent.names);
+        let names = new_name_pool(&mut parent.names);
         Scope { names }
     }
 }

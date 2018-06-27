@@ -8,5 +8,4 @@
 mod name;
 pub use self::name::{KnownName, Name, PendingName, RawName};
 
-mod pool;
-pub use self::pool::NamePool;
+pub mod pool;

@@ -54,4 +54,6 @@ impl RawNamePool {
 
 pub type NamePool = Rc<RefCell<RawNamePool>>;
 
-impl NamePool {}
+pub fn new_name_pool(parent: &mut NamePool) -> NamePool {
+    Rc::new(RefCell::new(RawNamePool::new(parent)))
+}
