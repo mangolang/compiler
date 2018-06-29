@@ -4,6 +4,8 @@ use std::fs::File;
 use std::io::Error;
 use std::rc::Rc;
 
+//todo: Should the name be connected to the scope it is defined in?
+
 #[derive(Hash, PartialEq, Eq)]
 pub struct KnownName {
     name: String,
@@ -17,12 +19,9 @@ impl KnownName {
     //    }
 }
 
-#[derive(Hash, PartialEq, Eq)]
 pub struct PendingName {
     prefix: Option<String>,
-    id: u32,
 }
-// TODO: change Hash, Eq etc to only use id, not prefix, since ids are unique anyway
 
 impl PendingName {
     //    fn new() -> Name {
@@ -30,7 +29,6 @@ impl PendingName {
     //    }
 }
 
-#[derive(Hash, PartialEq, Eq)]
 pub enum RawName {
     Known(KnownName),
     Pending(PendingName),

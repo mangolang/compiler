@@ -21,6 +21,8 @@ impl RawNamePool {
         }))
     }
 
+    /// Declare a known name.
+    /// (This name may not show up in the final output)
     pub fn declare(&self, name: String) -> Result<Name, ()> {
         return if self.names.contains(name) {
             Result::Err(())
@@ -31,17 +33,12 @@ impl RawNamePool {
         };
     }
 
+    /// Reuse a known name.
     pub fn reuse(&self, name: String) -> Option<Name> {}
 
-    pub fn anonymous(&self) -> Name {
-        self.anonymous_prefix_option(Option::None)
-    }
-
-    pub fn anonymous_prefix(&self, prefix: String) -> Name {
-        self.anonymous_prefix_option(Option::Some(prefix))
-    }
-
-    fn anonymous_prefix_option(&self, prefix: Option<String>) -> Name {
+    /// Declare a variable without known name but starting with a specific prefix.
+    /// (This prefix may not show up in the final output)
+    pub fn anonymous(&self, prefix: String) -> Name {
         self.counter += 1;
         let name: Name = Rc::new(RefCell::new(RawName::Pending(PendingName {
             prefix: prefix,

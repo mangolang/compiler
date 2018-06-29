@@ -122,7 +122,7 @@ impl Wasm for Function {
             "({}\n{}\n) ;; func {}",
             self.signature.as_wat(),
             self.body.as_wat(),
-            self.signature.name.as_wat()
+            self.signature.name.borrow().as_wat()
         )
     }
 
