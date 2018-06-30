@@ -30,7 +30,7 @@ path = "src/lib.rs"
 
 #[[bin]]
 #name = "mangoc"
-#path = "src/mango/ui/cli/main.rs"
+#path = "src/mango/ui/cli/morehashing.rs"
 
 #[[bin]]
 #name = "mango-webi"
