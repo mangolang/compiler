@@ -10,4 +10,3 @@ mod name;
 pub use self::name::{KnownName, Name, PendingName, RawName};
 
 pub mod pool;
-

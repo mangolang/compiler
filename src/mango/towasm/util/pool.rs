@@ -1,12 +1,12 @@
+use mango::towasm::util::name::NameCheck;
 use mango::towasm::util::KnownName;
 use mango::towasm::util::Name;
 use mango::towasm::util::PendingName;
 use mango::towasm::util::RawName;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::rc::Rc;
 use std::collections::HashSet;
-use mango::towasm::util::name::NameCheck;
+use std::rc::Rc;
 
 // todo: it may be possible to use arena here; there is a lot of Rc going on, but all the names can die with the pool
 
@@ -54,7 +54,7 @@ impl RawNamePool {
     pub fn new(parent: Option<&mut NamePool>) -> NamePool {
         let parent = match parent {
             Some(parent) => Some(parent.clone()),
-            None => None
+            None => None,
         };
         Rc::new(RefCell::new(RawNamePool {
             parent: parent,
@@ -70,10 +70,8 @@ impl NameScope for RawNamePool {
     }
 
     fn register(&mut self, prefix: String) -> NameRegisterResult {
-        if let NameCheck::Valid(name) = RawName::prefix(prefix) {
-
-        }
-        self.local_names.insert(name, )
+        if let NameCheck::Valid(name) = RawName::prefix(prefix) {}
+        self.local_names.insert(name)
     }
 
     fn determine(&mut self, name: Name) -> KnownName {
@@ -97,32 +95,32 @@ impl NameScope for RawNamePool {
         ChildNameRegisterResult::Ok
     }
 
-//    /// Declare a known name.
-//    /// (This name may not show up in the final output)
-//    pub fn declare(&self, name: String) -> Result<Name, ()> {
-//        return if self.names.contains(name) {
-//            Result::Err(())
-//        } else {
-//            let name: Name = Rc::new(RefCell::new(RawName::Known(KnownName { name })));
-//            self.names.insert(name.clone());
-//            Result::Ok(name)
-//        };
-//    }
-//
-//    /// Reuse a known name.
-//    pub fn reuse(&self, name: String) -> Option<Name> {}
-//
-//    /// Declare a variable without known name but starting with a specific prefix.
-//    /// (This prefix may not show up in the final output)
-//    pub fn anonymous(&self, prefix: String) -> Name {
-//        self.counter += 1;
-//        let name: Name = Rc::new(RefCell::new(RawName::Pending(PendingName {
-//            prefix: prefix,
-//            id: self.counter,
-//        })));
-//        self.names.insert(name);
-//        name
-//    }
+    //    /// Declare a known name.
+    //    /// (This name may not show up in the final output)
+    //    pub fn declare(&self, name: String) -> Result<Name, ()> {
+    //        return if self.names.contains(name) {
+    //            Result::Err(())
+    //        } else {
+    //            let name: Name = Rc::new(RefCell::new(RawName::Known(KnownName { name })));
+    //            self.names.insert(name.clone());
+    //            Result::Ok(name)
+    //        };
+    //    }
+    //
+    //    /// Reuse a known name.
+    //    pub fn reuse(&self, name: String) -> Option<Name> {}
+    //
+    //    /// Declare a variable without known name but starting with a specific prefix.
+    //    /// (This prefix may not show up in the final output)
+    //    pub fn anonymous(&self, prefix: String) -> Name {
+    //        self.counter += 1;
+    //        let name: Name = Rc::new(RefCell::new(RawName::Pending(PendingName {
+    //            prefix: prefix,
+    //            id: self.counter,
+    //        })));
+    //        self.names.insert(name);
+    //        name
+    //    }
 }
 
 pub type NamePool = Rc<RefCell<RawNamePool>>;

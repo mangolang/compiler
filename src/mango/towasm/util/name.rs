@@ -1,10 +1,10 @@
+use mango::towasm::util::pool::RawNamePool;
 use mango::towasm::Wasm;
+use regex::Regex;
 use std::cell::RefCell;
 use std::fs::File;
 use std::io::Error;
 use std::rc::Rc;
-use regex::Regex;
-use mango::towasm::util::pool::RawNamePool;
 
 //todo: Should the name be connected to the scope it is defined in?
 
@@ -60,23 +60,23 @@ impl RawName {
             // todo: or can it?
             return NameCheck::Invalid("name prefix cannot be empty");
         }
-        if ! VALID_NAME_RE.is_match(prefix) {
+        if !VALID_NAME_RE.is_match(prefix) {
             return NameCheck::Invalid("name contains illegal characters");
         }
         NameCheck::Valid(Rc::new(RefCell::new(RawName::Pending(PendingName { prefix }))))
     }
-//    pub fn resolved(&self) -> &KnownName {
-//        match self {
-//            RawName::Known(name) => &name,
-//            RawName::Pending(name) => {
-//                self = RawName::Known(KnownName {
-//                    // TODO: can I just use choose_name, or need pool to take prefix into account? (do I need id in that case?)
-//                    name: format!("{}", self.id), //                    format!("{}{}", name.prefix, 1)
-//                });
-//                &name
-//            }
-//        }
-//    }
+    //    pub fn resolved(&self) -> &KnownName {
+    //        match self {
+    //            RawName::Known(name) => &name,
+    //            RawName::Pending(name) => {
+    //                self = RawName::Known(KnownName {
+    //                    // TODO: can I just use choose_name, or need pool to take prefix into account? (do I need id in that case?)
+    //                    name: format!("{}", self.id), //                    format!("{}{}", name.prefix, 1)
+    //                });
+    //                &name
+    //            }
+    //        }
+    //    }
 }
 
 impl RawName {}
@@ -95,8 +95,8 @@ impl Wasm for RawName {
 
 #[cfg(test)]
 mod tests {
-    use std::mem::size_of;
     use mango::towasm::util::RawName;
+    use std::mem::size_of;
 
     #[test]
     fn test_name_size() {
