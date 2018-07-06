@@ -1,27 +1,28 @@
 
-/// A 'HashSet' for integers where the integers are their own hash.
-/// This particular implementation uses at most 1 item per bin.
-/// It is not currently possible to get the values in the set (though it can theoretically be done).
+/// A 'HashSet' that can use specific values for the hash (which is rarely what one would want).
+/// This particular implementation uses at most 1 item per bin and grows as needed.
 // This is mostly out of interest, it's doubtful that this was a bottleneck.
 
 // Value 16 (4 bits) leads to nicely rounded values: exactly 8 levels for i32, 16 for i64.
 const BINS: usize = 16;
 
 #[derive(Debug)]
-enum Bin<T> {
-    SubSet(IntSet<T>),
-    Exists(T),
+enum Bin<T, V> {
+    // todo: box here?
+    SubSet(IntSet<T, V>),
+    Exists(T, V),
     Empty,
 }
 
+// todo: I need modulo to yield an integer; if floats are Mod+Div it won't work
 #[derive(Debug)]
-pub struct IntSet<T: Mod + Div> {
-    has_0: bool,
-    bins: Vec<Bin<T>>,
+pub struct IntSet<T: Mod + Div, V: Eq> {
+//    has_0: bool,
+    bins: Vec<Bin<T, U>>,
 }
 
 #[derive(Debug)]
-impl<T: Mod + Div> IntSet<T> {
+impl<T: Mod + Div> IntSet<T, V> {
     /// Create a new empty integer set.
     pub fn new() -> Self {
         let mut bins = Vec::with_capacity(BINS);
@@ -29,48 +30,49 @@ impl<T: Mod + Div> IntSet<T> {
             bins.append(Bin::Empty);
         }
         IntSet {
-            has_0: false,
+//            has_0: false,
             bins: bins,
         }
     }
 
     /// Insert he value into the set. Returns whether an insert was done.
-    pub fn insert(&mut self, val: T) -> bool {
-        if val == 0 {
-            if self.has_0 {
-                return false;
-            }
-            self.has_0 = true;
-            return true;
-        }
-        let rem = self.bins[val % BINS];
+    pub fn insert_at(&mut self, pos: T, val: V) -> bool {
+//        if pos == 0 {
+//            if self.has_0 {
+//                return false;
+//            }
+//            self.has_0 = true;
+//            return true;
+//        }
+        let rem = self.bins[pos % BINS];
         match rem {
-            Bin::SubSet(ref mut set) => set.insert(val / BINS),
-            Bin::Exists(existing) => {
-                if val == existing {
+            Bin::SubSet(ref mut set) => set.insert(pos / BINS),
+            Bin::Exists(existing_pos, existing_val) => {
+                if pos == existing_pos {
                     return false;
                 }
                 let mut subset = Bin::SubSet(IntSet::new());
-                subset.insert(existing);
-                subset.insert(val);
-                self.bins[val % BINS] = subset;
+                subset.insert(existing_pos, existing_val);
+                subset.insert(pos, val);
+                self.bins[pos % BINS] = subset;
                 return true;
             },
             Bin::Empty => {
-                self.bins[val % BINS] = Bin::Exists(val);
+                self.bins[pos % BINS] = Bin::Exists(pos, val);
                 return true;
             },
         }
     }
 
-    /// Check whether the set contains the integer value.
-    pub fn contains(&self, val: T) -> bool {
-        if val == 0 {
-            return self.has_0;
-        }
+    /// Check whether the set contains the integer key (note that it does not take the value).
+    ///
+    pub fn contains(&self, pos: T, val: V) -> bool {
+//        if val == 0 {
+//            return self.has_0;
+//        }
         match self.bins[val % BINS] {
             Bin::SubSet(set) => set.contains(val / BINS),
-            Bin::Exists(_) => true,
+            Bin::Exists(existing_val) => existing_val == val,
             Bin::Empty => false,
         }
     }

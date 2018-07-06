@@ -30,33 +30,36 @@ fn calculate_hash<T: Hash>(obj: &T) -> u64 {
 /// * has O(1) indexing (order is deterministic but not meaningful).
 /// * has O(1) contains checking.
 /// * Does not use Rc or clone values.
-struct IndexableHashContainer<T: Hash> {
-    cache: HashSet<u64>,
-    data: Vec<T>,
+struct IndexableHashContainer {
+    known_name_cache: HashSet<u64>,
+    name_data: Vec<T>,
 }
 
-impl<T: Hash> IndexableHashContainer<T> {
+impl IndexableHashContainer {
     pub fn new() -> Self {
         IndexableHashContainer {
-            cache: HashSet::new(),
-            data: Vec::new(),
+            known_name_cache: HashSet::new(),
+            name_data: Vec::new(),
         }
     }
 
-    // todo: only cache known names for contains?
-
-    fn contains(&self, value: &T) -> bool {
-        // todo: this hashes twice, which is wasteful...
-        self.cache.contains(&calculate_hash(value))
+    fn contains(&self, value: NameValue) -> bool {
+        match value {
+            NameValue::Known(known) => {
+                // todo: this hashes twice, which is wasteful...
+                self.known_name_cache.contains(&calculate_hash(&known))
+            },
+            NameValue::Pending(_) => false
+        }
     }
 
     fn get(&self, index: usize) -> Option<&T> {
-        self.data.get(index)
+        self.name_data.get(index)
     }
 
     /// Update the value for an existing index
     fn update(&self, index: usize) -> Option<&T> {
-        self.data.get(index)
+        self.name_data.get(index)
     }
 }
 
