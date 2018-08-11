@@ -1,6 +1,6 @@
 /// This infrastructure is for generating identifiers for constructs that are anonymous
 /// There are several requirements:
-/// * There could be scoping, with no shadowing of outer scopes.
+/// * Names can repeat for sibling scopes, but no shadowing of parents.
 /// * Things should have exactly one name.
 /// * Names, anonymous or otherwise, should not conflict.
 /// * It should be possible to provide prefixes.

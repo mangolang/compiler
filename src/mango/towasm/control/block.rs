@@ -49,11 +49,13 @@ impl Block {
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         // todo: determine name automatically
-        Block::new_named(
-            parent.names.borrow_mut().anonymous_prefix("block_".to_owned()),
-            statements_gen,
-            parent,
-        )
+        match parent.names.borrow_mut().register("block_".to_owned()) {
+            Block::new_named(
+                ,
+                statements_gen,
+                parent,
+            )
+        }
     }
 
     pub fn new_named<F>(name: Name, statements_gen: F, parent: &mut Scope) -> Box<Self>

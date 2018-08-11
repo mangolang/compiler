@@ -39,7 +39,6 @@ pub trait NameScope {
     /// Register a name with the whole parent scope chain.
     /// These names cannot be used by the parent, but can by other children.
     /// This is called automatically by [register].
-    // todo: name: Name
     fn register_child_name(&mut self, name: Name) -> ChildNameRegisterResult;
 }
 
@@ -70,13 +69,18 @@ impl NameScope for RawNamePool {
     }
 
     fn register(&mut self, prefix: String) -> NameRegisterResult {
-        if let NameCheck::Valid(name) = RawName::prefix(prefix) {}
-        self.local_names.insert(name)
+        //TODO @mark: why is there a Taken option? shouldn't it just find the next available name?
+        if let NameCheck::Valid(name) = RawName::prefix(prefix) {
+            match self.local_names.insert(name) {
+
+            }
+        }
     }
 
     fn determine(&mut self, name: Name) -> KnownName {
         // Note that this also registers for the current class.
-        if let ChildNameRegisterResult::Taken = self.register_child_name(text) {
+        if let ChildNameRegisterResult::Taken = self.register_child_name(name) {
+            unimplemented!("create variations here");
             return NameRegisterResult::Taken;
         }
         unimplemented!()

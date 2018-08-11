@@ -58,10 +58,10 @@ impl RawName {
     pub fn prefix(prefix: String) -> NameCheck {
         if prefix.len() <= 0 {
             // todo: or can it?
-            return NameCheck::Invalid("name prefix cannot be empty");
+            return NameCheck::Invalid("name prefix cannot be empty".to_owned());
         }
         if !VALID_NAME_RE.is_match(prefix) {
-            return NameCheck::Invalid("name contains illegal characters");
+            return NameCheck::Invalid("name contains illegal characters".to_owned());
         }
         NameCheck::Valid(Rc::new(RefCell::new(RawName::Pending(PendingName { prefix }))))
     }
