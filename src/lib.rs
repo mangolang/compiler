@@ -1,6 +1,6 @@
 #![feature(nll)]
 //#![feature(generators, generator_trait)]
-#![feature(wasm_custom_section, wasm_import_module)]
+//#![feature(wasm_custom_section, wasm_import_module)]
 #![feature(use_extern_macros)]
 extern crate core;
 extern crate wasm_bindgen;
@@ -34,5 +34,6 @@ pub mod mango {
     pub mod typing;
 
     // Targets
-    pub mod towasm;
+    //TODO @mark: back on
+    //    pub mod towasm;
 }

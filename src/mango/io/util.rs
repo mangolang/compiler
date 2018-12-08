@@ -4,7 +4,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 
 // TODO: Use regex! instead of Regex::new to check at compile time. (Also its not on heap). This is actually slower according to 2y old benchmark though. But semantically makes more sense.
-thread_local!{
+thread_local! {
     static re: Regex = Regex::new("abc").unwrap();
 }
 

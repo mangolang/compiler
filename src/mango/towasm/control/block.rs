@@ -51,7 +51,7 @@ impl Block {
         // todo: determine name automatically
         match parent.names.borrow_mut().register("block_".to_owned()) {
             Block::new_named(
-                ,
+                parent.names.borrow_mut().anonymous_prefix("block_".to_owned()),,
                 statements_gen,
                 parent,
             )
