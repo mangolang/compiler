@@ -1,6 +1,4 @@
 use mango::towasm::scope::Function;
-use mango::towasm::util::pool::new_name_pool;
-use mango::towasm::util::pool::NamePool;
 use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;

@@ -35,5 +35,5 @@ pub mod mango {
 
     // Targets
     //TODO @mark: back on
-    //    pub mod towasm;
+    pub mod towasm;
 }

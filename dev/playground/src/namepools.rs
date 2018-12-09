@@ -106,7 +106,7 @@ enum NameValue {
     Pending(PendingName),
 }
 
-#[derive(Hash, PartialEq, Eq, Clone, Debug, Display)]
+#[derive(Hash, PartialEq, Eq, Clone, Debug)]
 pub struct KnownName {
     value: String,
 }
