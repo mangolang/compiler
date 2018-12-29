@@ -27,3 +27,14 @@ impl Wasm for Module {
         Ok(())
     }
 }
+
+pub struct Scope {
+    pub names: NamePool,
+}
+
+impl Scope {
+    pub fn new(parent: &mut Scope) -> Self {
+        let names = new_name_pool(&mut parent.names);
+        Scope { names }
+    }
+}

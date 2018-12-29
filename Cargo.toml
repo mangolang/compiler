@@ -19,6 +19,9 @@ derive-new = "0.5.*"
 #cargo-wasm = "0.4.*"
 wasm-bindgen = "0.2.*"
 
+# TODO: Temporary, indirect dependency that needs version bound to work
+proc-macro2 = ">=0.4.24"
+
 [profile.release]
 lto = true
 opt-level = 's'
@@ -30,7 +33,7 @@ path = "src/lib.rs"
 
 #[[bin]]
 #name = "mangoc"
-#path = "src/mango/ui/cli/main.rs"
+#path = "src/mango/ui/cli/morehashing.rs"
 
 #[[bin]]
 #name = "mango-webi"

@@ -24,7 +24,8 @@ impl Wasm for Type {
             Type::Float32 => "f32",
             Type::Float64 => "f64",
             Type::Bool => "i32",
-        }.to_owned()
+        }
+        .to_owned()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -60,7 +61,8 @@ impl Wasm for Value {
         match self {
             Value::Int(val) => format!("{}", val),
             Value::Float(val) => format!("{}", val),
-        }.to_owned()
+        }
+        .to_owned()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

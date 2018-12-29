@@ -9,6 +9,10 @@ use mango::ast_full::terminal::OperatorAST;
 use mango::ast_full::terminal::StringLiteralAST;
 use mango::ast_full::terminal::VariableAST;
 use mango::ast_full::FullAST;
+use mango::token::tokens::IdentifierToken;
+use mango::token::tokens::LiteralToken;
+use mango::token::tokens::OperatorToken;
+use mango::token::Tokens;
 use mango::util::codeparts::Symbol;
 use mango::util::strtype::Name;
 use mango::util::strtype::StrType;
@@ -54,7 +58,7 @@ fn test_simple_ast_eq_ne() {
         )),
         FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
         FullAST::Assignment(AssignmentAST::new(
-            FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),
+            VariableAST::new(Name::from_valid("my_var")),
             FullAST::Literal(LiteralAST::String(StringLiteralAST::new("1".to_string()))),
         )),
     ];
@@ -72,11 +76,16 @@ fn test_simple_ast_eq_ne() {
 #[test]
 fn test_unparseable_equality() {
     let unp: UnparseableAST;
-    unp = UnparseableAST::from_tokens(vec![]);
+    unp = UnparseableAST::from_tokens(vec![
+        Box::new(Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap())),
+        Box::new(Tokens::Operator(OperatorToken::from_str("<").unwrap())),
+        Box::new(Tokens::Literal(LiteralToken::Int(128))),
+    ]);
     assert_eq!(unp, unp);
-    // todo
-    //        let unp = UnparseableAST::from_tokens(vec![IntegerToken()]);
-    //        assert_eq!(up, up)
-    //        assert_ne!(UnparseableAST(null), UnparseableAST(null))
-    //        assert_ne!(UnparseableAST(IntegerToken(7)), UnparseableAST(IntegerToken(7)))
+    let unp2 = UnparseableAST::from_tokens(vec![
+        Box::new(Tokens::Identifier(IdentifierToken::from_str("y".to_owned()).unwrap())),
+        Box::new(Tokens::Operator(OperatorToken::from_str("<").unwrap())),
+        Box::new(Tokens::Literal(LiteralToken::Int(128))),
+    ]);
+    assert_ne!(unp, unp2);
 }

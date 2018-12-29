@@ -22,11 +22,15 @@ pub enum FullAST {
 }
 
 impl ToText for FullAST {
-    // todo: any way to generate this?
     fn to_text(&self) -> String {
         match self {
-            FullAST::Operator(operator) => operator.to_text(),
-            _ => unimplemented!(), // TODO
+            FullAST::Operator(val) => val.to_text(),
+            FullAST::Literal(val) => val.to_text(),
+            FullAST::UnaryOperation(val) => val.to_text(),
+            FullAST::BinaryOperation(val) => val.to_text(),
+            FullAST::Variable(val) => val.to_text(),
+            FullAST::Assignment(val) => val.to_text(),
+            FullAST::Unparseable(val) => val.to_text(),
         }
     }
 }

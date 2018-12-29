@@ -9,7 +9,6 @@ use mango::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use std::rc::Rc;
 
 pub struct Parameter {
     // Don't box here, it's just to reference those fields
@@ -17,7 +16,7 @@ pub struct Parameter {
 }
 
 impl Parameter {
-    pub fn new(name: Rc<Name>, typ: Type) -> Box<Self> {
+    pub fn new(name: Name, typ: Type) -> Box<Self> {
         // todo: should this store declare local AND name/type?
         let declare_local = DeclareLocal::new_unboxed(name, typ);
         Box::new(Parameter { declare_local })
@@ -38,7 +37,7 @@ impl Parameter {
 
 impl Wasm for Parameter {
     fn as_wat(&self) -> String {
-        format!("(param {} {})", self.name().as_wat(), self.typ().as_wat())
+        format!("(param {} {})", self.name().borrow().as_wat(), self.typ().as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -67,13 +66,13 @@ impl Wasm for Output {
 }
 
 pub struct FunctionSignature {
-    name: Rc<Name>,
+    name: Name,
     parameters: Vec<Box<Parameter>>,
     results: Vec<Box<Output>>,
 }
 
 impl FunctionSignature {
-    pub fn new(name: Rc<Name>, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
+    pub fn new(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
         assert!(results.len() <= 1); //
         FunctionSignature { name, parameters, results }
     }
@@ -83,8 +82,8 @@ impl Wasm for FunctionSignature {
     fn as_wat(&self) -> String {
         format!(
             "func {} (export \"{}\") {} {}",
-            self.name.as_wat(),
-            self.name.pure_name(),
+            self.name.borrow().as_wat(),
+            self.name.borrow().pure_name(),
             self.parameters.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n"),
             self.results.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
         )
@@ -102,7 +101,7 @@ pub struct Function {
 
 impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
-    pub fn new<F>(name: Rc<Name>, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>, statements_gen: F) -> Box<Self>
+    pub fn new<F>(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>, statements_gen: F) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
@@ -123,7 +122,7 @@ impl Wasm for Function {
             "({}\n{}\n) ;; func {}",
             self.signature.as_wat(),
             self.body.as_wat(),
-            self.signature.name.as_wat()
+            self.signature.name.borrow().as_wat()
         )
     }
 

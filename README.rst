@@ -77,6 +77,15 @@ These instructions were tested on Ubuntu 18.4 (using Bash). It should also work 
 
 * For IDEs, Rust support isn't on the level of e.g. Java yet, but JetBrain's CLion_ with `Rust plugin`_ is not bad if you have a license.
 
+Contributing
+-------------------------------
+
+The Mango compiler is `Apache 2.0 licensed`_. For notes on how to contribute, see `contributing`_. Please `behave`_.
+
+.. _`Apache 2.0 licensed`: https://github.com/mangolang/mango/blob/master/LICENSE.rst
+.. _`contributing`: https://github.com/mangolang/mango/blob/master/CONTRIBUTING.rst
+.. _`behave`: https://github.com/mangolang/mango/blob/master/CODE_OF_CONDUCT.rst
+
 .. _CLion: https://www.jetbrains.com/clion/
 .. _`Rust plugin`: https://intellij-rust.github.io/
 .. _`on this page`: https://www.rust-lang.org/en-US/install.html

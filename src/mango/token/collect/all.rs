@@ -29,8 +29,6 @@ pub enum Tokens {
 
 impl ToText for Tokens {
     fn to_text(&self) -> String {
-        // todo: this seems inefficient, and code bloat
-        // todo: but perhaps good for parsing, hard to get type back from trait obj
         use self::Tokens::*;
         match self {
             Association(token) => token.to_text(),

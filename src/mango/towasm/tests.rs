@@ -22,7 +22,7 @@ fn test_example_1() {
     let param_n = Parameter::new(Name::new("n".to_owned()).unwrap(), Type::Int32);
     let var_n = param_n.local();
     let module = Module::new(vec![Function::new(
-        Name::new("fac".to_owned()).unwrap(),
+        Name::new("fac".to_owned()),
         vec![param_n],
         vec![Output::new(Type::Int32)],
         |func_label: Label| {

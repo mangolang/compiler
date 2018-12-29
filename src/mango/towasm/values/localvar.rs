@@ -13,11 +13,11 @@ pub struct DeclareLocal {
 }
 
 impl DeclareLocal {
-    pub fn new(name: Rc<Name>, typ: Type) -> Box<Self> {
+    pub fn new(name: Name, typ: Type) -> Box<Self> {
         Box::new(DeclareLocal::new_unboxed(name, typ))
     }
 
-    pub fn new_unboxed(name: Rc<Name>, typ: Type) -> Self {
+    pub fn new_unboxed(name: Name, typ: Type) -> Self {
         DeclareLocal {
             local: Local {
                 inner: Rc::new(InnerLocal { name, typ }),
@@ -52,7 +52,7 @@ impl Statement for DeclareLocal {}
 
 /// Use this inner type so [Local] can be a wrapper that uses [Rc] by default
 struct InnerLocal {
-    name: Rc<Name>,
+    name: Name,
     typ: Type,
 }
 
@@ -69,7 +69,7 @@ impl Local {
         })
     }
 
-    pub fn name(&self) -> &Rc<Name> {
+    pub fn name(&self) -> &Name {
         &self.inner.name
     }
 

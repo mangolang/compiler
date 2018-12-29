@@ -14,20 +14,7 @@ pub enum LiteralToken {
     Real(f64eq),
 }
 
-// TODO: this is actually pretty useless, since enum constructors are always public
 impl LiteralToken {
-    pub fn string(value: String) -> LiteralToken {
-        LiteralToken::Text(value)
-    }
-
-    pub fn int(value: i64) -> LiteralToken {
-        LiteralToken::Int(value)
-    }
-
-    pub fn real(value: f64) -> LiteralToken {
-        LiteralToken::Real(f64eq::new(value))
-    }
-
     /// This matches integer literals, either just numbers in base 10, or base 2-36 with prefix.
     /// The syntax for -37 in base 16 is -16b25 and 2748 is 16bABC.
     /// Incorrect values like 4b7 or 0b0 are not handled at the lexing stage.
