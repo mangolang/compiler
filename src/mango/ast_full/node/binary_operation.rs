@@ -1,6 +1,6 @@
-use mango::ast_full::AST;
-use mango::ast_full::BaseAST;
 use mango::ast_full::terminal::OperatorAST;
+use mango::ast_full::BaseAST;
+use mango::ast_full::AST;
 use mango::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
@@ -34,7 +34,8 @@ impl ToText for BinaryOperationAST {
 
 impl PartialEq for BinaryOperationAST {
     fn eq(&self, other: &BinaryOperationAST) -> bool {
-        return self.operator == other.operator && &self.left == &other.left
+        return self.operator == other.operator
+            && &self.left == &other.left
             && &self.right == &other.right;
     }
 }

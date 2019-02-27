@@ -61,11 +61,13 @@ impl StrType for Name {
 
     fn validate(name: &str) -> Result<(), Msg> {
         match name.chars().next() {
-            Some(chr) => if chr.is_digit(10) {
-                return Err(Msg::from_valid(
-                    "Identifier names may not start with a digit.",
-                ));
-            },
+            Some(chr) => {
+                if chr.is_digit(10) {
+                    return Err(Msg::from_valid(
+                        "Identifier names may not start with a digit.",
+                    ));
+                }
+            }
             None => return Ok(()), // empty string
         }
         if !VALID_IDENTIFIER.is_match(&name.to_string()) {
