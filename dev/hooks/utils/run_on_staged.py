@@ -18,7 +18,7 @@ def run_on_staged(cmds):
 				print(run(cmd, log=True)) # TODO
 				run(cmd, log=True)
 			except Exception as err:
-				stderr.write(err)
+				stderr.write(str(err))
 				return 1
 		return 0
 	
