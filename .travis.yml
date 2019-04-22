@@ -1,10 +1,13 @@
 language: rust
 rust:
-  - beta
+# - stable
+# - beta
+  - nightly
 before_script:
-  - rustup component add rustfmt-preview
-sudo: false
-cache: cargo
+  - rustup component add rustfmt
+  - rustup component add clippy
 script:
-  - cargo fmt --verbose --all -- --write-mode=diff
-  - cargo test --all
+  - cargo fmt --all -- --check
+  - cargo clippy --all-targets --all-features -- -D warnings
+  - cargo build
+  - cargo test
