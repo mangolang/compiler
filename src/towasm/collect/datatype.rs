@@ -28,7 +28,7 @@ impl Wasm for Type {
         .to_owned()
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }
@@ -65,7 +65,7 @@ impl Wasm for Value {
         .to_owned()
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

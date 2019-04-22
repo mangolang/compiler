@@ -40,7 +40,7 @@ impl Wasm for Parameter {
         format!("(param {} {})", self.name().as_wat(), self.typ().as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }
@@ -60,7 +60,7 @@ impl Wasm for Output {
         format!("(result {})", self.typ.as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }
@@ -89,7 +89,7 @@ impl Wasm for FunctionSignature {
         )
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

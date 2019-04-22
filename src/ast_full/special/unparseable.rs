@@ -11,7 +11,7 @@ pub struct UnparseableAST {
 
 impl UnparseableAST {
     pub fn from_tokens(tokens: Vec<Box<Tokens>>) -> UnparseableAST {
-        UnparseableAST { tokens: tokens }
+        UnparseableAST { tokens }
     }
 }
 

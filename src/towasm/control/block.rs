@@ -7,7 +7,7 @@ use crate::towasm::collect::Statement;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::towasm::typ::Wasm;
-use crate::util::strtype::strtype::StrType;
+use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Name;
 
 pub struct Group {
@@ -27,10 +27,10 @@ impl Group {
 
 impl Wasm for Group {
     fn as_wat(&self) -> String {
-        self.statements
-            .iter()
+        self.statements.iter()
             .map(|statement| statement.as_wat())
             .collect::<Vec<_>>()
+            .as_slice()
             .join("\n")
     }
 
@@ -71,7 +71,7 @@ impl Block {
         Box::new(Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
-            scope: scope,
+            scope,
         })
     }
 }

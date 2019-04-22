@@ -55,7 +55,7 @@ impl OperatorAST {
     }
 
     pub fn from_symbol(symbol: BinOpSymbol) -> OperatorAST {
-        OperatorAST { symbol: symbol }
+        OperatorAST { symbol }
     }
 
     pub fn is_add_sub(&self) -> bool {

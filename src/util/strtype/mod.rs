@@ -1,5 +1,5 @@
-pub mod strtype;
-pub use self::strtype::StrType;
+pub mod typ;
+pub use self::typ::StrType;
 
 pub mod msg;
 pub use self::msg::Msg;

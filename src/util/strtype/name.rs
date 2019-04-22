@@ -83,7 +83,7 @@ impl StrType for Name {
 #[cfg(test)]
 mod tests {
     use super::Name;
-    use crate::util::strtype::strtype::StrType;
+    use crate::util::strtype::typ::StrType;
 
     #[test]
     fn test_valid_names() {

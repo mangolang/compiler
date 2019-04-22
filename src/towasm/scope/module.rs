@@ -34,7 +34,7 @@ pub struct Scope {
 }
 
 impl Scope {
-    pub fn new(parent: &mut Scope) -> Self {
+    pub fn new(_parent: &mut Scope) -> Self {
         //        let names = new_name_pool(&mut parent.names);
         //        Scope { names }
         Scope {}

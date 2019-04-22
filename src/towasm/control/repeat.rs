@@ -6,7 +6,7 @@ use crate::towasm::control::Group;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::towasm::Wasm;
-use crate::util::strtype::strtype::StrType;
+use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Name;
 
 pub struct Loop {
@@ -15,7 +15,7 @@ pub struct Loop {
 }
 
 impl Loop {
-    pub fn new<F>(statements_gen: F, scope: &Scope) -> Box<Self>
+    pub fn new<F>(statements_gen: F, _scope: &Scope) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
@@ -40,7 +40,7 @@ impl Wasm for Loop {
         format!("loop {0:}\n{1:}\nend ;; loop {0:}", self.name.as_wat(), self.group.as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

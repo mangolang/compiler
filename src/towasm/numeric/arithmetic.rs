@@ -13,7 +13,7 @@ pub struct Add {
 impl Add {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Add { left: left, right: right })
+        Box::new(Add { left, right })
     }
 
     pub fn typ(&self) -> &Type {
@@ -46,7 +46,7 @@ pub struct Mul {
 impl Mul {
     pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
-        Box::new(Mul { left: left, right: right })
+        Box::new(Mul { left, right })
     }
 
     pub fn typ(&self) -> &Type {

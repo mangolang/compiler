@@ -24,7 +24,7 @@ impl Wasm for Label {
         self.name.as_wat()
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

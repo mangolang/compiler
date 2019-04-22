@@ -1,6 +1,6 @@
 use crate::token::Token;
 use crate::util::encdec::ToText;
-use crate::util::strtype::strtype::StrType;
+use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Msg;
 use crate::util::strtype::Name;
 

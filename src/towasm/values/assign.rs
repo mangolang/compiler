@@ -22,7 +22,7 @@ impl Wasm for Assign {
         //    set_local $fac_result
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

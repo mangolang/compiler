@@ -44,7 +44,7 @@ impl Wasm for DeclareLocal {
         format!("(local {} {})", self.local.name().as_wat(), self.local.typ().as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }
@@ -84,7 +84,7 @@ impl Wasm for Local {
         format!("{}", self.name().as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }
@@ -105,7 +105,7 @@ impl Wasm for GetLocal {
         format!("get_local {}", self.local.as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

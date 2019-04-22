@@ -22,7 +22,7 @@ impl Wasm for Const {
         format!("{}.const {}", self.typ.as_wat(), self.value.as_wat())
     }
 
-    fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+    fn write_wasm(&self, _file: &mut File) -> io::Result<()> {
         unimplemented!()
     }
 }

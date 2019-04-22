@@ -16,7 +16,7 @@ impl OperatorToken {
     }
 
     pub fn from_symbol(symbol: Symbol) -> OperatorToken {
-        OperatorToken { symbol: symbol }
+        OperatorToken { symbol }
     }
 
     pub fn is_negate(&self) -> bool {

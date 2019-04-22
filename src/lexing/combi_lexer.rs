@@ -19,8 +19,8 @@ impl CombiLexer {
         let mut lexers: Stack<Box<SubLexer>> = Stack::new();
         lexers.push(Box::new(CodeLexer::new()));
         CombiLexer {
-            reader: reader,
-            lexers: lexers,
+            reader,
+            lexers,
             buffer: Queue::new(),
         }
     }
