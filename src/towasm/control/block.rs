@@ -3,12 +3,12 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
-use crate::towasm::collect::typ::Wasm;
 use crate::towasm::collect::Statement;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::util::strtype::Name;
 use crate::util::strtype::strtype::StrType;
+use crate::towasm::typ::Wasm;
 
 pub struct Group {
     statements: Vec<Box<Statement>>,

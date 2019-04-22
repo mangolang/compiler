@@ -35,7 +35,7 @@ impl Wasm for Loop {
     fn as_wat(&self) -> String {
         format!(
             "loop {0:}\n{1:}\nend ;; loop {0:}",
-            self.name.borrow().as_wat(),
+            self.name.as_wat(),
             self.group.as_wat()
         )
     }

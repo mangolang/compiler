@@ -83,7 +83,7 @@ impl Wasm for FunctionSignature {
         format!(
             "func {} (export \"{}\") {} {}",
             self.name.as_wat(),
-            self.name.pure_name(),
+            self.name,
             self.parameters.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n"),
             self.results.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
         )
@@ -122,7 +122,7 @@ impl Wasm for Function {
             "({}\n{}\n) ;; func {}",
             self.signature.as_wat(),
             self.body.as_wat(),
-            self.signature.name.borrow().as_wat()
+            self.signature.name.as_wat()
         )
     }
 

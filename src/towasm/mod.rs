@@ -1,7 +1,9 @@
 // TODO: possibly extract this to a separate crate
 
+pub mod typ;
+pub use typ::Wasm;
+
 pub mod collect;
-pub use self::collect::Wasm;
 
 pub mod numeric;
 pub use self::numeric::*;
