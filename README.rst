@@ -1,4 +1,17 @@
 
+.. image:: https://travis-ci.org/mangolang/compiler.svg?branch=master
+    :target: https://travis-ci.org/mangolang/compiler
+
+.. image:: https://deps.rs/repo/github/mangolang/compiler/status.svg
+    :target: https://deps.rs/repo/github/mangolang/compiler
+
+.. image:: https://readthedocs.org/projects/mangolang/badge/?version=latest
+    :target: https://mangolang.readthedocs.io/en/latest/?badge=latest
+
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+
+
 Mango
 ===============================
 
