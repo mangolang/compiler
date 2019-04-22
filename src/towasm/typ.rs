@@ -12,10 +12,11 @@ pub trait Wasm {
 
 impl Wasm for Name {
     fn as_wat(&self) -> String {
-        unimplemented!() //TODO @mark
+        self.value()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
+        //TODO @mark: that's not actually valid wasm, is it?
         file.write_all(format!(" {} ", self.value()).as_bytes())?;
         Ok(())
     }

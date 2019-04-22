@@ -81,7 +81,7 @@ impl Local {
 
 impl Wasm for Local {
     fn as_wat(&self) -> String {
-        format!("{}", self.name().as_wat())
+        self.name().as_wat().to_string()
     }
 
     fn write_wasm(&self, _file: &mut File) -> io::Result<()> {

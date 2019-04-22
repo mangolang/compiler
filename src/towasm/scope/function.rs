@@ -84,8 +84,8 @@ impl Wasm for FunctionSignature {
             "func {} (export \"{}\") {} {}",
             self.name.as_wat(),
             self.name,
-            self.parameters.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n"),
-            self.results.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
+            self.parameters.iter().map(Wasm::as_wat).collect::<Vec<_>>().join("\n"),
+            self.results.iter().map(Wasm::as_wat).collect::<Vec<_>>().join("\n")
         )
     }
 
@@ -106,11 +106,7 @@ impl Function {
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         Function {
-            signature: FunctionSignature {
-                name: name.clone(),
-                parameters,
-                results,
-            },
+            signature: FunctionSignature { name, parameters, results },
             body: Group::new(Label::internal(name), statements_gen),
         }
     }
@@ -127,7 +123,7 @@ impl Wasm for Function {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" func ")?;
+        file.write_all(b" func ")?;
         Ok(())
     }
 }

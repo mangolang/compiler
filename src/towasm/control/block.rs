@@ -25,6 +25,8 @@ impl Group {
     }
 }
 
+// Allow the closure because removing it does not work with Box
+#[allow(clippy::redundant_closure)]
 impl Wasm for Group {
     fn as_wat(&self) -> String {
         self.statements
