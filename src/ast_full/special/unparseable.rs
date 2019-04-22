@@ -1,15 +1,16 @@
-use crate::ast_full::BaseAST;
-use crate::token::Token;
+use crate::ast_full::AST;
+use crate::token::Tokens;
 use crate::util::encdec::ToText;
 
 /// Represents an unparseable list of tokens.
-#[derive(Debug, PartialEq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableAST {
-    tokens: Vec<Box<Token>>,
+    // should I box the tokens to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
+    tokens: Vec<Box<Tokens>>,
 }
 
 impl UnparseableAST {
-    pub fn from_tokens(tokens: Vec<Box<Token>>) -> UnparseableAST {
+    pub fn from_tokens(tokens: Vec<Box<Tokens>>) -> UnparseableAST {
         UnparseableAST { tokens: tokens }
     }
 }
@@ -20,11 +21,11 @@ impl ToText for UnparseableAST {
             " [cannot parse: {}] ",
             self.tokens
                 .iter()
-                .map(|token: &Box<Token>| token.to_text())
+                .map(|token: &Box<Tokens>| token.to_text())
                 .collect::<Vec<String>>()
                 .join(" / ")
         )
     }
 }
 
-impl BaseAST for UnparseableAST {}
+impl AST for UnparseableAST {}

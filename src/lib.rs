@@ -1,8 +1,3 @@
-extern crate core;
-#[macro_use]
-extern crate lazy_static;
-extern crate regex;
-extern crate string_interner;
 
 // Utilities
 pub mod cli;
@@ -23,3 +18,5 @@ pub mod parsing;
 pub mod reducing;
 pub mod semanticating;
 pub mod typing;
+
+pub mod towasm;

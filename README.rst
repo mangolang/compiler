@@ -11,12 +11,14 @@ Status
 
 This project is still in early development stage. It is not ready to use, not even experimentally.
 
-There are dhundreds of pages of design notes, but the plan still lacks coherence, so is unpublished.
+There are hundreds of pages of design notes, but the plan still lacks coherence, so is unpublished.
 
 How to use
 -------------------------------
 
 The compiler is written in Rust. You can run it using:
+
+.. code:: bash
 
     cargo test
 

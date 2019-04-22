@@ -1,17 +1,11 @@
-use crate::ast_full::BaseAST;
+use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
 
 /// A literal integer value.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(new, Debug, PartialEq, Eq, Hash)]
 pub struct VariableAST {
     name: Name,
-}
-
-impl VariableAST {
-    pub fn new(name: Name) -> Self {
-        VariableAST { name }
-    }
 }
 
 impl ToText for VariableAST {
@@ -20,4 +14,4 @@ impl ToText for VariableAST {
     }
 }
 
-impl BaseAST for VariableAST {}
+impl AST for VariableAST {}

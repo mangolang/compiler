@@ -1,22 +1,22 @@
-use crate::ast_full::terminal::OperatorAST;
-use crate::ast_full::BaseAST;
-use crate::ast_full::AST;
-use crate::util::encdec::ToText;
+use mango::ast_full::terminal::OperatorAST;
+use mango::ast_full::FullAST;
+use mango::ast_full::AST;
+use mango::util::encdec::ToText;
 
-//#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct BinaryOperationAST {
-    left: Box<AST>,
+    left: Box<FullAST>,
     operator: OperatorAST,
-    right: Box<AST>,
+    right: Box<FullAST>,
 }
 
 impl BinaryOperationAST {
-    pub fn new(left: Box<AST>, operator: OperatorAST, right: Box<AST>) -> Self {
+    // No derive(new) because of boxing
+    pub fn new(left: FullAST, operator: OperatorAST, right: FullAST) -> Self {
         return BinaryOperationAST {
-            left,
+            left: Box::new(left),
             operator,
-            right,
+            right: Box::new(right),
         };
     }
 }
@@ -41,3 +41,4 @@ impl PartialEq for BinaryOperationAST {
 }
 
 impl BaseAST for BinaryOperationAST {}
+impl AST for BinaryOperationAST {}

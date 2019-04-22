@@ -10,35 +10,21 @@ pub enum Severity {
     Debug,
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(new, Debug, Eq, PartialEq)]
 pub struct Context {
     code: String, // todo: change this type when there is a specific one
 }
 
-impl Context {
-    pub fn new(code: String) -> Context {
-        Context { code: code }
-    }
-}
-
-#[derive(Debug, Eq, PartialEq)]
+#[derive(new, Debug, Eq, PartialEq)]
 pub struct CodeProblem {
     severity: Severity,
     description: Msg,
     context: Context,
+    #[new(value = "vec![]")]
     hints: Vec<Msg>,
 }
 
 impl CodeProblem {
-    pub fn new(severity: Severity, description: Msg, context: Context) -> Self {
-        CodeProblem {
-            severity: severity,
-            description: description,
-            context: context,
-            hints: vec![],
-        }
-    }
-
     pub fn error(description: Msg, context: Context) -> CodeProblem {
         Self::new(Severity::Error, description, context)
     }
@@ -123,17 +109,8 @@ mod tests {
 
     #[test]
     fn test_new_problem() {
-        CodeProblem::error(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        CodeProblem::warning(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
-        CodeProblem::debug(
-            Msg::copy_new("test problem").unwrap(),
-            Context::new("test context".to_string()),
-        );
+        CodeProblem::error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::warning(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::debug(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
     }
 }

@@ -7,15 +7,9 @@ use std::hash::Hasher;
 /// by defining that NAN == NAN. It intentionally can't
 /// be used for arithmetic, as rounding errors would be bad
 /// for e.g. HashMap keys.
-#[derive(Debug, Clone, Copy)]
+#[derive(new, Debug, Clone, Copy)]
 #[allow(non_camel_case_types)]
 pub struct f64eq(f64);
-
-impl f64eq {
-    pub fn new(val: f64) -> Self {
-        f64eq(val)
-    }
-}
 
 impl fmt::Display for f64eq {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -171,14 +165,8 @@ mod tests {
         assert_eq!(get_hash(f64eq::new(PI)), get_hash(f64eq::new(PI)));
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(-42.)));
         assert_eq!(get_hash(f64eq::new(0.)), get_hash(f64eq::new(-0.)));
-        assert_eq!(
-            get_hash(f64eq::new(INFINITY)),
-            get_hash(f64eq::new(INFINITY))
-        );
-        assert_ne!(
-            get_hash(f64eq::new(INFINITY)),
-            get_hash(f64eq::new(NEG_INFINITY))
-        );
+        assert_eq!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(INFINITY)));
+        assert_ne!(get_hash(f64eq::new(INFINITY)), get_hash(f64eq::new(NEG_INFINITY)));
         assert_ne!(get_hash(f64eq::new(42.)), get_hash(f64eq::new(NAN)));
         assert_ne!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(42.)));
         assert_eq!(get_hash(f64eq::new(NAN)), get_hash(f64eq::new(NAN)));

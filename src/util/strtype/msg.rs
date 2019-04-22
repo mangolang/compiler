@@ -23,9 +23,10 @@ impl fmt::Display for Msg {
 }
 
 impl StrType for Msg {
-    fn new(msg: String) -> Result<Self, Msg> {
-        match Msg::validate(&msg) {
-            Ok(_) => Ok(Msg { msg: msg }),
+    fn new<S: Into<String>>(msg: S) -> Result<Self, Msg> {
+        let smsg = msg.into();
+        match Msg::validate(&smsg) {
+            Ok(_) => Ok(Msg { msg: smsg }),
             Err(msg) => Err(msg),
         }
     }
@@ -33,9 +34,7 @@ impl StrType for Msg {
     fn validate(msg: &str) -> Result<(), Msg> {
         if !VALID_MESSAGE.is_match(&msg.to_string()) {
             // Make sure this is a valid string, otherwise it causes an infinite loop making error messages for it!
-            return Err(Msg::from_valid(
-                "Messages should consist of printable text.",
-            ));
+            return Err(Msg::from_valid("Messages should consist of printable text."));
         }
         Ok(())
     }

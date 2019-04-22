@@ -1,35 +1,29 @@
 use crate::ast_full::terminal::OperatorAST;
-use crate::ast_full::BaseAST;
+use crate::ast_full::FullAST;
 use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnaryOperationAST {
     operator: OperatorAST,
-    subject: Box<AST>,
+    subject: Box<FullAST>,
 }
 
 impl UnaryOperationAST {
-    pub fn new(operator: OperatorAST, subject: Box<AST>) -> Self {
-        return UnaryOperationAST { operator, subject };
+    // No derive(new) because of boxing
+    pub fn new(operator: OperatorAST, subject: FullAST) -> Self {
+        return UnaryOperationAST {
+            operator,
+            subject: Box::new(subject),
+        };
     }
 }
 
 impl ToText for UnaryOperationAST {
     fn to_text(&self) -> String {
-        return format!(
-            "({0:} {1:})",
-            self.operator.to_text(),
-            self.subject.to_text()
-        );
+        return format!("({0:} {1:})", self.operator.to_text(), self.subject.to_text());
     }
 }
 
-impl PartialEq for UnaryOperationAST {
-    fn eq(&self, other: &UnaryOperationAST) -> bool {
-        return self.operator == other.operator && &self.subject == &other.subject;
-    }
-}
-
-impl BaseAST for UnaryOperationAST {}
+impl AST for UnaryOperationAST {}

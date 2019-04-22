@@ -1,35 +1,29 @@
 use crate::ast_full::BaseAST;
+use mango::ast_full::FullAST;
 use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
-//#[derive(Debug, Hash)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct AssignmentAST {
-    assignee: Box<AST>,
-    value: Box<AST>,
+    assignee: Box<VariableAST>,
+    value: Box<FullAST>,
 }
 
 impl AssignmentAST {
-    pub fn new(assignee: Box<AST>, value: Box<AST>) -> Self {
-        return AssignmentAST { assignee, value };
+    // No derive(new) because of boxing
+    pub fn new(assignee: VariableAST, value: FullAST) -> Self {
+        return AssignmentAST {
+            assignee: Box::new(assignee),
+            value: Box::new(value),
+        };
     }
 }
 
 impl ToText for AssignmentAST {
     fn to_text(&self) -> String {
-        return format!(
-            "{0:} = ({1:})",
-            self.assignee.to_text(),
-            self.value.to_text()
-        );
+        return format!("{0:} = ({1:})", self.assignee.to_text(), self.value.to_text());
     }
 }
 
-impl PartialEq for AssignmentAST {
-    fn eq(&self, other: &AssignmentAST) -> bool {
-        return &self.assignee == &other.assignee && &self.value == &other.value;
-    }
-}
-
-impl BaseAST for AssignmentAST {}
+impl AST for AssignmentAST {}

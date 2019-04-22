@@ -6,8 +6,9 @@ use std::fmt;
 use std::sync::Mutex;
 use string_interner::StringInterner;
 
+const VALID_IDENTIFIER_SUBPATTERN: &'static str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
-    static ref VALID_IDENTIFIER: Regex = Regex::new(r"^[a-zA-Z_][a-zA-Z0-9_]*$").unwrap();
+    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!("{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
@@ -21,7 +22,8 @@ lazy_static! {
 /// # Implementation
 ///
 /// * Name strings are interned for fast equality checking.
-#[derive(Debug, Hash, PartialEq, Eq)]
+/// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
+#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
     name_id: usize,
 }
@@ -30,31 +32,30 @@ impl Name {
     pub fn value(&self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        INTERNER
-            .lock()
-            .unwrap()
-            .resolve(self.name_id)
-            .unwrap()
-            .to_string()
+        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string()
+    }
+
+    /// Generate an eager subpattern to match names, that can be composed in a regular expression.
+    pub fn subpattern() -> &'static str {
+        &VALID_IDENTIFIER_SUBPATTERN.clone()
     }
 }
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Use interner directly instead of .value(), because that creates a copy
-        write!(
-            f,
-            "{}",
-            INTERNER.lock().unwrap().resolve(self.name_id).unwrap()
-        )
+        write!(f, "{}", INTERNER.lock().unwrap().resolve(self.name_id).unwrap())
     }
 }
 
 impl StrType for Name {
-    fn new(name: String) -> Result<Self, Msg> {
-        let id = INTERNER.lock().unwrap().get_or_intern(name.to_string());
-        match Name::validate(&name.to_string()) {
-            Ok(_) => Ok(Name { name_id: id }),
+    fn new<S: Into<String>>(name: S) -> Result<Self, Msg> {
+        let sname = name.into();
+        match Name::validate(&sname) {
+            Ok(_) => {
+                let id = INTERNER.lock().unwrap().get_or_intern(sname);
+                Ok(Name { name_id: id })
+            }
             Err(msg) => Err(msg),
         }
     }
@@ -63,9 +64,7 @@ impl StrType for Name {
         match name.chars().next() {
             Some(chr) => {
                 if chr.is_digit(10) {
-                    return Err(Msg::from_valid(
-                        "Identifier names may not start with a digit.",
-                    ));
+                    return Err(Msg::from_valid("Identifier names may not start with a digit."));
                 }
             }
             None => return Ok(()), // empty string

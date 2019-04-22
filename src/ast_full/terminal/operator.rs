@@ -1,10 +1,13 @@
-use crate::ast_full::BaseAST;
-use crate::util::encdec::ToText;
-use crate::util::strtype::Msg;
-use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
+
+use mango::ast_full::AST;
+use mango::ast_full::BaseAST;
+use mango::util::codeparts::Symbol;
+use mango::util::encdec::ToText;
+use mango::util::strtype::Msg;
+use mango::util::strtype::StrType;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -75,11 +78,4 @@ impl ToText for OperatorAST {
     }
 }
 
-impl BaseAST for OperatorAST {}
-
-//impl ToObjectNotation for OperatorAST {
-//    #[allow(non_snake_case)]
-//    fn to_ON(&self) -> ON {
-//        return ON::Null;  // todo
-//    }
-//}
+impl AST for OperatorAST {}
