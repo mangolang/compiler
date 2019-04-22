@@ -29,7 +29,7 @@ impl StringLexer {
 }
 
 impl SubLexer for StringLexer {
-    fn lex_pass(&mut self, reader: &mut Box<Reader>) -> SubLexerResult {
+    fn lex_pass(&mut self, reader: &mut Reader) -> SubLexerResult {
         // TODO: perhaps there's a library that does parsing a string with escape characters
         // TODO: doesn't handle escaping etc at all now
         // TODO: this is going to have a problem if `matches` automatically eats whitespace

@@ -37,7 +37,7 @@ impl Lexer for CombiLexer {
             // No more lexers to delegate to; lexing is finished.
             Option::None => MaybeToken::End,
             Option::Some(ref mut lexer) => {
-                match lexer.lex_pass(&mut self.reader) {
+                match lexer.lex_pass(&mut *self.reader) {
                     SubLexerResult::Result(tokens) => {
                         if tokens.len() > 0 {
                             // The sublexer produced tokens, queue them.

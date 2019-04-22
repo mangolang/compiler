@@ -31,7 +31,7 @@ impl CodeLexer {
         CodeLexer { indent: 0 }
     }
 
-    fn lex_indents(&mut self, reader: &mut Box<Reader>) -> Vec<Tokens> {
+    fn lex_indents(&mut self, reader: &mut Reader) -> Vec<Tokens> {
         let mut line_indent = 0;
         while let Match(_) = reader.matches("\\t") {
             line_indent += 1;
@@ -59,7 +59,7 @@ impl CodeLexer {
         tokens
     }
 
-    fn token_and_indents(&mut self, reader: &mut Box<Reader>, token: Tokens) -> SubLexerResult {
+    fn token_and_indents(&mut self, reader: &mut Reader, token: Tokens) -> SubLexerResult {
         let mut tokens: Vec<Tokens> = vec![token];
         // This is a new line, so there may be indents.
         tokens.append(&mut self.lex_indents(reader));
@@ -68,7 +68,7 @@ impl CodeLexer {
 }
 
 impl SubLexer for CodeLexer {
-    fn lex_pass(&mut self, reader: &mut Box<Reader>) -> SubLexerResult {
+    fn lex_pass(&mut self, reader: &mut Reader) -> SubLexerResult {
         use self::SubLexerResult::*;
 
         // End of line continuation

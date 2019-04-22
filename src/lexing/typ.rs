@@ -18,7 +18,7 @@ impl SubLexerResult {
 pub trait SubLexer {
     /// Does one iteration of a sublexer, which should either delegate or return tokens.
     /// If an empty vector of tokens is returned, the reader should have advanced (to prevent infinite loops).
-    fn lex_pass(&mut self, reader: &mut Box<Reader>) -> SubLexerResult;
+    fn lex_pass(&mut self, reader: &mut Reader) -> SubLexerResult;
 }
 
 pub enum MaybeToken {
