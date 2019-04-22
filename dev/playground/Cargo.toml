@@ -1,7 +1,0 @@
-[package]
-name = "playground"
-version = "0.1.0"
-authors = ["Mark <mverleg.noreply@gmail.com>"]
-
-[dependencies]
-lazy_static = "1.0.*"
