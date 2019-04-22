@@ -7,7 +7,7 @@ use std::fmt;
 use std::sync::Mutex;
 use string_interner::StringInterner;
 
-const VALID_IDENTIFIER_SUBPATTERN: &'static str = r"[a-zA-Z_][a-zA-Z0-9_]*";
+const VALID_IDENTIFIER_SUBPATTERN: &str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
     static ref VALID_IDENTIFIER: Regex = Regex::new(&format!("{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
 }
@@ -30,7 +30,7 @@ pub struct Name {
 }
 
 impl Name {
-    pub fn value(&self) -> String {
+    pub fn value(self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
         INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string()
@@ -39,7 +39,7 @@ impl Name {
     /// Generate an eager subpattern to match names, that can be composed in a regular expression.
     //TODO @mark: does this need to be cloned here? Can't the constant just be public?
     pub fn subpattern() -> &'static str {
-        &VALID_IDENTIFIER_SUBPATTERN.clone()
+        VALID_IDENTIFIER_SUBPATTERN
     }
 }
 

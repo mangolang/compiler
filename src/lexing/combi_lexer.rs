@@ -80,6 +80,7 @@ mod tests {
     use crate::token::tokens::StartBlockToken;
     use crate::token::Tokens;
     use crate::util::encdec::to_text::ToText;
+    use std::str::FromStr;
 
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
         let expected = LexList::from_tokens(tokens);
@@ -98,19 +99,19 @@ mod tests {
         assert_text_to_tokens(
             "let x = 0\nfor x < 128\n\tx += 1",
             vec![
-                Tokens::Keyword(KeywordToken::from_str("let".to_owned()).unwrap()),
-                Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
+                Tokens::Keyword(KeywordToken::from_str("let").unwrap()),
+                Tokens::Identifier(IdentifierToken::from_str("x").unwrap()),
                 Tokens::Association(AssociationToken::from_unprefixed()),
                 Tokens::Literal(LiteralToken::Int(0)),
                 Tokens::EndStatement(EndStatementToken::new_end_line()),
-                Tokens::Keyword(KeywordToken::from_str("for".to_owned()).unwrap()),
-                Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
+                Tokens::Keyword(KeywordToken::from_str("for").unwrap()),
+                Tokens::Identifier(IdentifierToken::from_str("x").unwrap()),
                 Tokens::Operator(OperatorToken::from_str("<").unwrap()),
                 Tokens::Literal(LiteralToken::Int(128)),
                 Tokens::EndStatement(EndStatementToken::new_end_line()),
                 Tokens::StartBlock(StartBlockToken::new()),
-                Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap()),
-                Tokens::Association(AssociationToken::from_str("+".to_owned()).unwrap()),
+                Tokens::Identifier(IdentifierToken::from_str("x").unwrap()),
+                Tokens::Association(AssociationToken::from_str("+").unwrap()),
                 Tokens::Literal(LiteralToken::Int(1)),
                 Tokens::EndStatement(EndStatementToken::new_end_line()),
                 Tokens::EndBlock(EndBlockToken::new(true, false)),

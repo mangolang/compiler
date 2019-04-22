@@ -1,20 +1,22 @@
+use std::str::FromStr;
+
 use crate::io::typ::Reader;
 use crate::io::typ::ReaderResult::*;
 use crate::lexing::string_lexer::StringLexer;
 use crate::lexing::typ::SubLexer;
 use crate::lexing::typ::SubLexerResult;
 use crate::token::special::UnlexableToken;
-use crate::token::tokens::literal::LiteralToken;
+use crate::token::Tokens;
 use crate::token::tokens::AssociationToken;
 use crate::token::tokens::EndBlockToken;
 use crate::token::tokens::EndStatementToken;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::KeywordToken;
+use crate::token::tokens::literal::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::token::tokens::StartBlockToken;
-use crate::token::Tokens;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
 
@@ -61,7 +63,7 @@ impl CodeLexer {
         let mut tokens: Vec<Tokens> = vec![token];
         // This is a new line, so there may be indents.
         tokens.append(&mut self.lex_indents(reader));
-        return SubLexerResult::Result(tokens);
+        SubLexerResult::Result(tokens)
     }
 }
 
@@ -107,10 +109,10 @@ impl SubLexer for CodeLexer {
         // Parse identifiers and keywords. This assumes that keywords are a subset of identifiers.
         if let Match(word) = reader.matches(IdentifierToken::subpattern()) {
             // TODO: maybe turn identifier into keyword to avoid a string copy? kind of elaborate...
-            if let Ok(keyword) = KeywordToken::from_str(word.clone()) {
+            if let Ok(keyword) = KeywordToken::from_str(&word) {
                 return SubLexerResult::single(Tokens::Keyword(keyword));
             }
-            return SubLexerResult::single(Tokens::Identifier(IdentifierToken::from_str(word).unwrap()));
+            return SubLexerResult::single(Tokens::Identifier(IdentifierToken::from_str(&word).unwrap()));
         }
         // Literal
         if let Match(_) = reader.matches("[a-z]?\"") {
@@ -150,7 +152,7 @@ impl SubLexer for CodeLexer {
         }
 
         // If the code gets here, it did not recognize the text as any token
-        return match reader.matches(r"[^\s]+") {
+        match reader.matches(r"[^\s]+") {
             Match(word) => SubLexerResult::single(Tokens::Unlexable(UnlexableToken::new(word))),
             NoMatch() => panic!("Do not know how to proceed with parsing"),
             EOF() => {
@@ -165,23 +167,24 @@ impl SubLexer for CodeLexer {
                 self.indent = -1;
                 SubLexerResult::Result(tokens)
             }
-        };
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::lexing::util::test_util::assert_text_to_tokens;
+    use crate::token::Tokens;
     use crate::token::tokens::EndStatementToken;
     use crate::token::tokens::KeywordToken;
-    use crate::token::Tokens;
+    use std::str::FromStr;
 
     #[test]
     fn test_lexing_individual() {
         assert_text_to_tokens(
             "if",
             vec![
-                Tokens::Keyword(KeywordToken::from_str("if".to_owned()).unwrap()),
+                Tokens::Keyword(KeywordToken::from_str("if").unwrap()),
                 Tokens::EndStatement(EndStatementToken::new_end_line()),
             ],
         );

@@ -19,7 +19,7 @@ pub fn int_pattern() -> &'static str {
 pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
     let text = text.into();
     match Regex::new(&format!("^{}$", int_pattern())).unwrap().captures(&text) {
-        None => return Err(IntParseFailReason::Invalid),
+        None => Err(IntParseFailReason::Invalid),
         Some(captures) => {
             //            // Sign
             //            let sign_str = captures.name("sign").unwrap().as_str();
@@ -37,7 +37,7 @@ pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
                             // TODO: implement
                             panic!(format!(
                                 "Do not yet know how to deal with {} in base {}",
-                                value.as_str().without_char(&'_'),
+                                value.as_str().without_char('_'),
                                 base.as_str()
                             ))
                         } else {
@@ -50,7 +50,7 @@ pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
                 Some(value) => {
                     // This is a 'normal' (base10) value.
                     // TODO: check for over/underflow
-                    return Ok(value.as_str().without_char(&'_').parse::<i64>().unwrap());
+                    Ok(value.as_str().without_char('_').parse::<i64>().unwrap())
                 }
             }
         }
@@ -67,8 +67,8 @@ mod tests {
     fn test_parse_b10_int() {
         assert_eq!(42, parse_int("42").unwrap());
         assert_eq!(42, parse_int("4_2").unwrap());
-        assert_eq!(123456789, parse_int("+1_2_3_4_5_6_7_8_9").unwrap());
-        assert_eq!(-123456789, parse_int("-123456789").unwrap());
+        assert_eq!(123_456_789, parse_int("+1_2_3_4_5_6_7_8_9").unwrap());
+        assert_eq!(-123_456_789, parse_int("-123456789").unwrap());
         assert_eq!(0, parse_int("-0").unwrap());
         assert_eq!(-1, parse_int("-1").unwrap());
         // Weird bases with 0 prefix are not supported.

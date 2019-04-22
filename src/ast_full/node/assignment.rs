@@ -12,16 +12,16 @@ pub struct AssignmentAST {
 impl AssignmentAST {
     // No derive(new) because of boxing
     pub fn new(assignee: VariableAST, value: FullAST) -> Self {
-        return AssignmentAST {
+        AssignmentAST {
             assignee: Box::new(assignee),
             value: Box::new(value),
-        };
+        }
     }
 }
 
 impl ToText for AssignmentAST {
     fn to_text(&self) -> String {
-        return format!("{0:} = ({1:})", self.assignee.to_text(), self.value.to_text());
+        format!("{0:} = ({1:})", self.assignee.to_text(), self.value.to_text())
     }
 }
 

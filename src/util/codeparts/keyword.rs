@@ -3,6 +3,7 @@ use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
+use std::str::FromStr;
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)
@@ -18,11 +19,12 @@ pub enum Keyword {
     Reserved(String),
 }
 
-impl Keyword {
-    pub fn from_str<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
-        let ssymbol_txt = symbol_txt.into();
+impl FromStr for Keyword {
+    type Err = Msg;
+
+    fn from_str(symbol_txt: &str) -> Result<Self, Msg> {
         use self::Keyword::*;
-        match &*ssymbol_txt {
+        match symbol_txt {
             "let" => Ok(Let),
             "mut" => Ok(Mut),
             "if" => Ok(If),
@@ -166,7 +168,7 @@ impl Keyword {
             "xor" => Ok(Reserved("xor".to_owned())),
             "yield" => Ok(Reserved("yield".to_owned())),
 
-            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", ssymbol_txt))),
+            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", symbol_txt))),
         }
     }
 }

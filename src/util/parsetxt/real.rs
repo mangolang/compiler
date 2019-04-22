@@ -24,25 +24,25 @@ pub fn real_pattern() -> &'static str {
 pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
     let text = text.into();
     match Regex::new(&format!("^{}$", real_pattern())).unwrap().captures(&text) {
-        None => return Err(RealParseFailReason::Invalid),
+        None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
             let multiplier = captures
                 .name("multiplier")
                 .unwrap()
                 .as_str()
-                .without_char(&'_')
+                .without_char('_')
                 .parse::<f64>()
                 .unwrap();
             match captures.name("exponent") {
                 None => {
                     // This is a 'normal' real, no exponential notation
-                    return Ok(multiplier);
+                    Ok(multiplier)
                 }
                 Some(exponent_match) => {
                     // This real is in exponential notation
-                    let exponent = exponent_match.as_str().without_char(&'_').parse::<f64>().unwrap();
+                    let exponent = exponent_match.as_str().without_char('_').parse::<f64>().unwrap();
                     // TODO: is there a numerically smarter way to do this?
-                    return Ok(10f64.powf(exponent) * multiplier);
+                    Ok(10f64.powf(exponent) * multiplier)
                 }
             }
         }
@@ -77,7 +77,7 @@ mod tests {
         assert!(close(0.42, parse_real("42.0e-2").unwrap()));
         assert!(close(-0.001, parse_real("-.1e-2").unwrap()));
         assert!(close(-0.01, parse_real("-1.e-2").unwrap()));
-        assert!(close(123.456789, parse_real("1_2_3_4_5.6_7_8_9e-2").unwrap()));
+        assert!(close(123.456_789, parse_real("1_2_3_4_5.6_7_8_9e-2").unwrap()));
         assert!(close(42.0, parse_real("42.0e-0_0_0").unwrap()));
     }
 

@@ -27,7 +27,8 @@ impl Group {
 
 impl Wasm for Group {
     fn as_wat(&self) -> String {
-        self.statements.iter()
+        self.statements
+            .iter()
             .map(|statement| statement.as_wat())
             .collect::<Vec<_>>()
             .as_slice()
@@ -43,7 +44,7 @@ impl Wasm for Group {
 pub struct Block {
     name: Name,
     group: Group,
-    scope: Scope,
+    _scope: Scope,
 }
 
 impl Block {
@@ -71,7 +72,7 @@ impl Block {
         Box::new(Block {
             name: name.clone(),
             group: Group::new(Label::internal(name), statements_gen),
-            scope,
+            _scope: scope,
         })
     }
 }

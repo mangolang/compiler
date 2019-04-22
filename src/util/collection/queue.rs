@@ -2,6 +2,7 @@ use std::collections::VecDeque;
 
 /// A one-ended queue. See also [Stack].
 /// This is just a wrapper around vec so nobody pushes or pops the wrong end.
+#[derive(Default)]
 pub struct Queue<T> {
     items: VecDeque<T>,
 }

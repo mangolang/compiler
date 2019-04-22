@@ -1,3 +1,6 @@
+use std::str::FromStr;
+
+use crate::ast_full::FullAST;
 use crate::ast_full::node::AssignmentAST;
 use crate::ast_full::node::BinaryOperationAST;
 use crate::ast_full::node::UnaryOperationAST;
@@ -9,11 +12,10 @@ use crate::ast_full::terminal::LiteralAST;
 use crate::ast_full::terminal::OperatorAST;
 use crate::ast_full::terminal::StringLiteralAST;
 use crate::ast_full::terminal::VariableAST;
-use crate::ast_full::FullAST;
+use crate::token::Tokens;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
-use crate::token::Tokens;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
 
@@ -77,13 +79,13 @@ fn test_simple_ast_eq_ne() {
 fn test_unparseable_equality() {
     let unp: UnparseableAST;
     unp = UnparseableAST::from_tokens(vec![
-        Box::new(Tokens::Identifier(IdentifierToken::from_str("x".to_owned()).unwrap())),
+        Box::new(Tokens::Identifier(IdentifierToken::from_str("x").unwrap())),
         Box::new(Tokens::Operator(OperatorToken::from_str("<").unwrap())),
         Box::new(Tokens::Literal(LiteralToken::Int(128))),
     ]);
     assert_eq!(unp, unp);
     let unp2 = UnparseableAST::from_tokens(vec![
-        Box::new(Tokens::Identifier(IdentifierToken::from_str("y".to_owned()).unwrap())),
+        Box::new(Tokens::Identifier(IdentifierToken::from_str("y").unwrap())),
         Box::new(Tokens::Operator(OperatorToken::from_str("<").unwrap())),
         Box::new(Tokens::Literal(LiteralToken::Int(128))),
     ]);

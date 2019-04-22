@@ -47,9 +47,9 @@ impl Display for Severity {
             f,
             "{}",
             match self {
-                &Severity::Error => "error",
-                &Severity::Warning => "warning",
-                &Severity::Debug => "debug",
+                Severity::Error => "error",
+                Severity::Warning => "warning",
+                Severity::Debug => "debug",
             }
         )
     }
@@ -58,20 +58,20 @@ impl Display for Severity {
 impl PartialOrd for Severity {
     fn partial_cmp(&self, other: &Severity) -> Option<Ordering> {
         match self {
-            &Severity::Error => match other {
-                &Severity::Error => Some(Ordering::Equal),
-                &Severity::Warning => Some(Ordering::Greater),
-                &Severity::Debug => Some(Ordering::Greater),
+            Severity::Error => match other {
+                Severity::Error => Some(Ordering::Equal),
+                Severity::Warning => Some(Ordering::Greater),
+                Severity::Debug => Some(Ordering::Greater),
             },
-            &Severity::Warning => match other {
-                &Severity::Error => Some(Ordering::Less),
-                &Severity::Warning => Some(Ordering::Equal),
-                &Severity::Debug => Some(Ordering::Greater),
+            Severity::Warning => match other {
+                Severity::Error => Some(Ordering::Less),
+                Severity::Warning => Some(Ordering::Equal),
+                Severity::Debug => Some(Ordering::Greater),
             },
-            &Severity::Debug => match other {
-                &Severity::Error => Some(Ordering::Less),
-                &Severity::Warning => Some(Ordering::Less),
-                &Severity::Debug => Some(Ordering::Equal),
+            Severity::Debug => match other {
+                Severity::Error => Some(Ordering::Less),
+                Severity::Warning => Some(Ordering::Less),
+                Severity::Debug => Some(Ordering::Equal),
             },
         }
     }

@@ -34,9 +34,9 @@ impl SubLexer for StringLexer {
         // TODO: doesn't handle escaping etc at all now
         // TODO: this is going to have a problem if `matches` automatically eats whitespace
         match reader.matches("[^\"\\n]*") {
-            Match(value) => return SubLexerResult::single(Tokens::Literal(LiteralToken::Text(value))),
+            Match(value) => SubLexerResult::single(Tokens::Literal(LiteralToken::Text(value))),
             NoMatch() => panic!("failed to parse string"), // This can't really go wrong since empty pattern matches
-            EOF() => return SubLexerResult::single(Tokens::Literal(LiteralToken::Text("".to_owned()))), // Unclosed string literal, let code parser deal with it
+            EOF() => SubLexerResult::single(Tokens::Literal(LiteralToken::Text("".to_owned()))), // Unclosed string literal, let code parser deal with it
         }
     }
 }

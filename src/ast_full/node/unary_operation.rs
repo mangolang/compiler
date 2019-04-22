@@ -13,10 +13,10 @@ pub struct UnaryOperationAST {
 impl UnaryOperationAST {
     // No derive(new) because of boxing
     pub fn new(operator: OperatorAST, subject: FullAST) -> Self {
-        return UnaryOperationAST {
+        UnaryOperationAST {
             operator,
             subject: Box::new(subject),
-        };
+        }
     }
 }
 

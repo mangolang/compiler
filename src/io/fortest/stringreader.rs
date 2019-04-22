@@ -24,18 +24,15 @@ impl Reader for StringReader {
             // Check for end of file
             // TODO: is there a better/faster way for this? maybe try this after a match and set a flag?
             let regex = rexlib.make_or_get(r"\s*$");
-            match regex.find(&self.code[self.index..]) {
-                Some(mtch) => {
-                    if self.index + mtch.as_str().len() == self.code.len() {
-                        self.index += mtch.as_str().len();
-                        return ReaderResult::EOF();
-                    }
+            if let Some(mtch) = regex.find(&self.code[self.index..]) {
+                if self.index + mtch.as_str().len() == self.code.len() {
+                    self.index += mtch.as_str().len();
+                    return ReaderResult::EOF();
                 }
-                None => (),
             }
             // Check for subpattern
             let regex = rexlib.make_or_get(subpattern);
-            return match regex.find(&self.code[self.index..]) {
+            match regex.find(&self.code[self.index..]) {
                 Some(mtch) => {
                     self.index += mtch.as_str().len();
                     // Remove leading spaces
@@ -49,7 +46,7 @@ impl Reader for StringReader {
                     ReaderResult::Match((&mtch.as_str()[k..]).to_owned())
                 }
                 None => ReaderResult::NoMatch(),
-            };
+            }
         })
     }
 

@@ -13,11 +13,11 @@ pub struct BinaryOperationAST {
 impl BinaryOperationAST {
     // No derive(new) because of boxing
     pub fn new(left: FullAST, operator: OperatorAST, right: FullAST) -> Self {
-        return BinaryOperationAST {
+        BinaryOperationAST {
             left: Box::new(left),
             operator,
             right: Box::new(right),
-        };
+        }
     }
 }
 
