@@ -1,7 +1,7 @@
-use mango::ast_full::BaseAST;
-use mango::util::encdec::ToText;
-use mango::util::format::to_double_quoted_str;
-use mango::util::numtype::f64eq;
+use crate::ast_full::BaseAST;
+use crate::util::encdec::ToText;
+use crate::util::format::to_double_quoted_str;
+use crate::util::numtype::f64eq;
 
 /// Closed collection of literal values
 pub enum LiteralAST {

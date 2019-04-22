@@ -1,4 +1,4 @@
-use mango::util::encdec::ToText;
+use crate::util::encdec::ToText;
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::hash::Hasher;

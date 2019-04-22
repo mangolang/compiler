@@ -1,6 +1,6 @@
-use mango::util::errors::CodeProblem;
-use mango::util::errors::Context;
-use mango::util::strtype::Msg;
+use crate::util::errors::CodeProblem;
+use crate::util::errors::Context;
+use crate::util::strtype::Msg;
 use std::slice;
 
 #[derive(Debug)]
@@ -45,9 +45,9 @@ impl<'a> IntoIterator for &'a ProblemCollector {
 #[cfg(test)]
 mod tests {
     use super::ProblemCollector;
-    use mango::util::errors::Context;
-    use mango::util::strtype::Msg;
-    use mango::util::strtype::StrType;
+    use crate::util::errors::Context;
+    use crate::util::strtype::Msg;
+    use crate::util::strtype::StrType;
 
     #[test]
     fn test_iter_collector() {

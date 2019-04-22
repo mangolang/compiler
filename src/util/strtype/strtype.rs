@@ -1,4 +1,4 @@
-use mango::util::strtype::Msg;
+use crate::util::strtype::Msg;
 use std::fmt;
 use std::hash::Hash;
 

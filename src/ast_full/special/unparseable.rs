@@ -1,6 +1,6 @@
-use mango::ast_full::BaseAST;
-use mango::token::Token;
-use mango::util::encdec::ToText;
+use crate::ast_full::BaseAST;
+use crate::token::Token;
+use crate::util::encdec::ToText;
 
 /// Represents an unparseable list of tokens.
 #[derive(Debug, PartialEq, Hash)]

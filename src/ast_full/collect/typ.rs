@@ -1,4 +1,4 @@
-use mango::util::encdec::ToText;
+use crate::util::encdec::ToText;
 use std::any::Any;
 use std::fmt::Debug;
 

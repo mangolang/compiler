@@ -1,9 +1,9 @@
-use mango::ast_full::node::BinaryOperationAST;
-use mango::ast_full::node::UnaryOperationAST;
-use mango::ast_full::special::UnparseableAST;
-use mango::ast_full::terminal::IntLiteralAST;
-use mango::ast_full::terminal::OperatorAST;
-use mango::ast_full::terminal::Symbol;
+use crate::ast_full::node::BinaryOperationAST;
+use crate::ast_full::node::UnaryOperationAST;
+use crate::ast_full::special::UnparseableAST;
+use crate::ast_full::terminal::IntLiteralAST;
+use crate::ast_full::terminal::OperatorAST;
+use crate::ast_full::terminal::Symbol;
 
 #[test]
 fn test_ast_equality() {

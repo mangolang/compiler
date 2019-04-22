@@ -1,6 +1,6 @@
-use mango::ast_full::BaseAST;
-use mango::ast_full::AST;
-use mango::util::encdec::ToText;
+use crate::ast_full::BaseAST;
+use crate::ast_full::AST;
+use crate::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
 //#[derive(Debug, Hash)]

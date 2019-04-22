@@ -1,4 +1,4 @@
-use mango::util::strtype::Msg;
+use crate::util::strtype::Msg;
 use std::cmp::Ordering;
 use std::fmt;
 use std::fmt::{Display, Formatter};
@@ -108,8 +108,8 @@ mod tests {
     use super::CodeProblem;
     use super::Context;
     use super::Severity;
-    use mango::util::strtype::Msg;
-    use mango::util::strtype::StrType;
+    use crate::util::strtype::Msg;
+    use crate::util::strtype::StrType;
 
     #[test]
     fn test_severity_ord() {

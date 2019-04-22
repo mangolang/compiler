@@ -1,6 +1,6 @@
-use mango::ast_full::BaseAST;
-use mango::util::encdec::ToText;
-use mango::util::strtype::Name;
+use crate::ast_full::BaseAST;
+use crate::util::encdec::ToText;
+use crate::util::strtype::Name;
 
 /// A literal integer value.
 #[derive(Debug, PartialEq, Eq, Hash)]

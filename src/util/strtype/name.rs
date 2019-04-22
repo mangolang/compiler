@@ -1,5 +1,5 @@
-use mango::util::strtype::Msg;
-use mango::util::strtype::StrType;
+use crate::util::strtype::Msg;
+use crate::util::strtype::StrType;
 use regex::Regex;
 use std::collections::hash_map::RandomState;
 use std::fmt;
@@ -82,7 +82,7 @@ impl StrType for Name {
 #[cfg(test)]
 mod tests {
     use super::Name;
-    use mango::util::strtype::strtype::StrType;
+    use crate::util::strtype::strtype::StrType;
 
     #[test]
     fn test_valid_names() {
