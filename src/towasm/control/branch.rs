@@ -44,7 +44,7 @@ impl Wasm for Branch {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write_all(b" call ")?;
         Ok(())
     }
 }
@@ -67,7 +67,7 @@ impl Wasm for BranchIf {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write_all(b" call ")?;
         Ok(())
     }
 }

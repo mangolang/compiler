@@ -29,7 +29,7 @@ impl Loop {
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
         Box::new(Loop {
-            name: name.clone(),
+            name,
             group: Group::new(Label::internal(name), statements_gen),
         })
     }

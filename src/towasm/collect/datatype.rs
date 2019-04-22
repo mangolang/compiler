@@ -39,7 +39,7 @@ pub enum Value {
 }
 
 impl Value {
-    pub fn is_type(&self, typ: &Type) -> bool {
+    pub fn is_type(&self, typ: Type) -> bool {
         match self {
             Value::Int(_) => {
                 match typ {

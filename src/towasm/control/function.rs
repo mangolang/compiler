@@ -23,7 +23,7 @@ impl Wasm for Call {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" call ")?;
+        file.write_all(b" call ")?;
         Ok(())
     }
 }

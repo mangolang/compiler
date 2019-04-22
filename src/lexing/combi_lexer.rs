@@ -39,7 +39,7 @@ impl Lexer for CombiLexer {
             Option::Some(ref mut lexer) => {
                 match lexer.lex_pass(&mut *self.reader) {
                     SubLexerResult::Result(tokens) => {
-                        if tokens.len() > 0 {
+                        if !tokens.is_empty() {
                             // The sublexer produced tokens, queue them.
                             self.buffer.append(tokens);
                             self.lex() // TODO: if every branch does this, move it down

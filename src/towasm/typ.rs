@@ -16,7 +16,7 @@ impl Wasm for Name {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(format!(" {} ", self.value()).as_bytes())?;
+        file.write_all(format!(" {} ", self.value()).as_bytes())?;
         Ok(())
     }
 }

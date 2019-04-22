@@ -36,7 +36,7 @@ impl Wasm for Group {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" block ")?;
+        file.write_all(b" block ")?;
         Ok(())
     }
 }
@@ -70,7 +70,7 @@ impl Block {
     {
         let scope = Scope::new(parent);
         Box::new(Block {
-            name: name.clone(),
+            name,
             group: Group::new(Label::internal(name), statements_gen),
             _scope: scope,
         })
@@ -87,7 +87,7 @@ impl Wasm for Block {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" block ")?;
+        file.write_all(b" block ")?;
         Ok(())
     }
 }

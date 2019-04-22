@@ -27,7 +27,7 @@ impl Wasm for Add {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" add ")?;
+        file.write_all(b" add ")?;
         Ok(())
     }
 }
@@ -60,7 +60,7 @@ impl Wasm for Mul {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" mul ")?;
+        file.write_all(b" mul ")?;
         Ok(())
     }
 }

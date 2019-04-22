@@ -23,7 +23,7 @@ impl Wasm for Gt {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" gt_s ")?;
+        file.write_all(b" gt_s ")?;
         Ok(())
     }
 }
@@ -56,7 +56,7 @@ impl Wasm for Lt {
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
-        file.write(b" lt+s ")?;
+        file.write_all(b" lt+s ")?;
         Ok(())
     }
 }

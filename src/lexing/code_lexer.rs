@@ -129,7 +129,7 @@ impl SubLexer for CodeLexer {
 
         // Association (before operator)
         if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
-            debug_assert!(token.chars().last().unwrap() == '=');
+            debug_assert!(token.ends_with('='));
             if token.char_len() > 1 {
                 match AssociationToken::from_str(&charsliceto(token, -1)) {
                     Ok(association) => return SubLexerResult::single(Tokens::Association(association)),

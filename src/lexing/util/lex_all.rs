@@ -22,7 +22,7 @@ impl LexList {
 
 impl ToText for LexList {
     fn to_text(&self) -> String {
-        self.tokens.iter().map(|token| token.to_text()).collect::<Vec<_>>().join(" ")
+        self.tokens.iter().map(ToText::to_text).collect::<Vec<_>>().join(" ")
     }
 }
 

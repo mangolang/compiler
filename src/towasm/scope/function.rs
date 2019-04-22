@@ -16,10 +16,10 @@ pub struct Parameter {
 }
 
 impl Parameter {
-    pub fn new(name: Name, typ: Type) -> Box<Self> {
+    pub fn new(name: Name, typ: Type) -> Self {
         // todo: should this store declare local AND name/type?
         let declare_local = DeclareLocal::new_unboxed(name, typ);
-        Box::new(Parameter { declare_local })
+        Parameter { declare_local }
     }
 
     pub fn name(&self) -> &Name {
@@ -50,8 +50,8 @@ pub struct Output {
 }
 
 impl Output {
-    pub fn new(typ: Type) -> Box<Self> {
-        Box::new(Output { typ })
+    pub fn new(typ: Type) -> Self {
+        Output { typ }
     }
 }
 
@@ -67,12 +67,12 @@ impl Wasm for Output {
 
 pub struct FunctionSignature {
     name: Name,
-    parameters: Vec<Box<Parameter>>,
-    results: Vec<Box<Output>>,
+    parameters: Vec<Parameter>,
+    results: Vec<Output>,
 }
 
 impl FunctionSignature {
-    pub fn new(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>) -> Self {
+    pub fn new(name: Name, parameters: Vec<Parameter>, results: Vec<Output>) -> Self {
         assert!(results.len() <= 1); //
         FunctionSignature { name, parameters, results }
     }
@@ -101,18 +101,18 @@ pub struct Function {
 
 impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
-    pub fn new<F>(name: Name, parameters: Vec<Box<Parameter>>, results: Vec<Box<Output>>, statements_gen: F) -> Box<Self>
+    pub fn new<F>(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, statements_gen: F) -> Self
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
-        Box::new(Function {
+        Function {
             signature: FunctionSignature {
                 name: name.clone(),
                 parameters,
                 results,
             },
             body: Group::new(Label::internal(name), statements_gen),
-        })
+        }
     }
 }
 
