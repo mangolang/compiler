@@ -1,6 +1,6 @@
-use mango::io::typ::Reader;
-use mango::io::typ::ReaderResult;
-use mango::io::util::REXCACHE;
+use crate::io::typ::Reader;
+use crate::io::typ::ReaderResult;
+use crate::io::util::REXCACHE;
 
 /// Implementation of [Reader] that reads from a pre-provided string.
 /// Mostly for testing purposes.

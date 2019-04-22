@@ -1,5 +1,5 @@
-use mango::token::Token;
-use mango::util::encdec::ToText;
+use crate::token::Token;
+use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]

@@ -1,7 +1,7 @@
-use mango::lexing::typ::Lexer;
-use mango::lexing::typ::MaybeToken;
-use mango::token::Tokens;
-use mango::util::encdec::ToText;
+use crate::lexing::typ::Lexer;
+use crate::lexing::typ::MaybeToken;
+use crate::token::Tokens;
+use crate::util::encdec::ToText;
 
 /// Represents all the lex tokens in a source.
 #[derive(PartialEq, Eq, Debug)]

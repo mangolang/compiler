@@ -1,4 +1,4 @@
-use mango::util::strslice::char_ops::CharOps;
+use crate::util::strslice::char_ops::CharOps;
 use regex::Regex;
 
 #[derive(Debug)]

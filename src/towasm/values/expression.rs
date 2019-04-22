@@ -1,5 +1,5 @@
-use mango::towasm::collect::Type;
-use mango::towasm::Wasm;
+use crate::towasm::collect::Type;
+use crate::towasm::Wasm;
 
 /// A (combination of) operations that has an output value
 pub trait Expression: Wasm {

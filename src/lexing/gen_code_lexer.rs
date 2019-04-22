@@ -1,30 +1,30 @@
 
 // TODO: dead code, no longer used
 
-use mango::io::typ::Reader;
-use mango::io::typ::ReaderResult::*;
-use mango::lexing::string_lexer::StringLexer;
-use mango::lexing::typ::Lexer;
-use mango::lexing::typ::MaybeToken;
-use mango::token::special::UnlexableToken;
-use mango::token::Tokens;
-use mango::token::tokens::AssociationToken;
-use mango::token::tokens::EndBlockToken;
-use mango::token::tokens::EndStatementToken;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::KeywordToken;
-use mango::token::tokens::LiteralToken;
-use mango::token::tokens::OperatorToken;
-use mango::token::tokens::ParenthesisCloseToken;
-use mango::token::tokens::ParenthesisOpenToken;
-use mango::token::tokens::StartBlockToken;
-use mango::util::collection::Queue;
+use crate::io::typ::Reader;
+use crate::io::typ::ReaderResult::*;
+use crate::lexing::string_lexer::StringLexer;
+use crate::lexing::typ::Lexer;
+use crate::lexing::typ::MaybeToken;
+use crate::token::special::UnlexableToken;
+use crate::token::Tokens;
+use crate::token::tokens::AssociationToken;
+use crate::token::tokens::EndBlockToken;
+use crate::token::tokens::EndStatementToken;
+use crate::token::tokens::IdentifierToken;
+use crate::token::tokens::KeywordToken;
+use crate::token::tokens::LiteralToken;
+use crate::token::tokens::OperatorToken;
+use crate::token::tokens::ParenthesisCloseToken;
+use crate::token::tokens::ParenthesisOpenToken;
+use crate::token::tokens::StartBlockToken;
+use crate::util::collection::Queue;
 use std::cell::RefCell;
 use std::ops::{Generator, GeneratorState};
 use std::rc::Rc;
 use std::borrow::BorrowMut;
-use mango::util::strslice::charsliceto;
-use mango::util::strslice::slice::glyphat;
+use crate::util::strslice::charsliceto;
+use crate::util::strslice::slice::glyphat;
 
 /// This generator does the real lexing work, but is wrapped in a normal
 /// class to satisfy an interface that doesn't expose nightly or unsafe features.

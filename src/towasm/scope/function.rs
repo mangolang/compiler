@@ -1,14 +1,14 @@
-use mango::towasm::collect::Statement;
-use mango::towasm::collect::Type;
-use mango::towasm::control::Group;
-use mango::towasm::control::Label;
-use mango::towasm::util::Name;
-use mango::towasm::values::DeclareLocal;
-use mango::towasm::values::Local;
-use mango::towasm::Wasm;
+use crate::towasm::collect::Statement;
+use crate::towasm::collect::Type;
+use crate::towasm::control::Group;
+use crate::towasm::control::Label;
+use crate::towasm::values::DeclareLocal;
+use crate::towasm::values::Local;
+use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+use crate::util::strtype::Name;
 
 pub struct Parameter {
     // Don't box here, it's just to reference those fields

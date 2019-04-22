@@ -1,20 +1,20 @@
-use mango::towasm::arithmetic::Add;
-use mango::towasm::collect::datatype::Value;
-use mango::towasm::collect::Type;
-use mango::towasm::control::BranchIf;
-use mango::towasm::control::Label;
-use mango::towasm::control::Loop;
-use mango::towasm::control::Return;
-use mango::towasm::numeric::Gt;
-use mango::towasm::numeric::Mul;
-use mango::towasm::scope::Function;
-use mango::towasm::scope::Module;
-use mango::towasm::scope::Output;
-use mango::towasm::scope::Parameter;
-use mango::towasm::util::Name;
-use mango::towasm::values::Assign;
-use mango::towasm::values::Const;
-use mango::towasm::values::DeclareLocal;
+use crate::towasm::arithmetic::Add;
+use crate::towasm::collect::datatype::Value;
+use crate::towasm::collect::Type;
+use crate::towasm::control::BranchIf;
+use crate::towasm::control::Label;
+use crate::towasm::control::Loop;
+use crate::towasm::control::Return;
+use crate::towasm::numeric::Gt;
+use crate::towasm::numeric::Mul;
+use crate::towasm::scope::Function;
+use crate::towasm::scope::Module;
+use crate::towasm::scope::Output;
+use crate::towasm::scope::Parameter;
+use crate::towasm::values::Assign;
+use crate::towasm::values::Const;
+use crate::towasm::values::DeclareLocal;
+use crate::util::strtype::Name;
 
 #[test]
 #[allow(unused_variables)]

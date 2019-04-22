@@ -3,10 +3,10 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
-use mango::towasm::collect::typ::Wasm;
-use mango::towasm::collect::Statement;
-use mango::towasm::control::Label;
-use mango::towasm::scope::module::Scope;
+use crate::towasm::collect::typ::Wasm;
+use crate::towasm::collect::Statement;
+use crate::towasm::control::Label;
+use crate::towasm::scope::module::Scope;
 
 pub struct Group {
     statements: Vec<Box<Statement>>,

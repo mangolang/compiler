@@ -1,9 +1,9 @@
-use mango::io::fortest::stringreader::StringReader;
-use mango::lexing::combi_lexer::CombiLexer;
-use mango::lexing::util::lex_all::lex_all;
-use mango::lexing::util::lex_all::LexList;
-use mango::token::Tokens;
-use mango::util::encdec::to_text::ToText;
+use crate::io::fortest::stringreader::StringReader;
+use crate::lexing::combi_lexer::CombiLexer;
+use crate::lexing::util::lex_all::lex_all;
+use crate::lexing::util::lex_all::LexList;
+use crate::token::Tokens;
+use crate::util::encdec::to_text::ToText;
 
 #[allow(dead_code)]
 pub fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {

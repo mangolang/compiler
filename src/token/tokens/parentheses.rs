@@ -1,5 +1,5 @@
-use mango::token::Token;
-use mango::util::encdec::ToText;
+use crate::token::Token;
+use crate::util::encdec::ToText;
 
 /// Open and close parentheses: (, )
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]

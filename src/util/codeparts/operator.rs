@@ -1,5 +1,5 @@
-use mango::util::strtype::Msg;
-use mango::util::strtype::StrType;
+use crate::util::strtype::Msg;
+use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;

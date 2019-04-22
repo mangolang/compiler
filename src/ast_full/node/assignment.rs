@@ -1,5 +1,4 @@
-use crate::ast_full::BaseAST;
-use mango::ast_full::FullAST;
+use crate::ast_full::{FullAST, VariableAST};
 use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 

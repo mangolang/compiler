@@ -1,9 +1,9 @@
-use mango::io::typ::Reader;
-use mango::io::typ::ReaderResult::*;
-use mango::lexing::typ::SubLexer;
-use mango::lexing::typ::SubLexerResult;
-use mango::token::tokens::LiteralToken;
-use mango::token::Tokens;
+use crate::io::typ::Reader;
+use crate::io::typ::ReaderResult::*;
+use crate::lexing::typ::SubLexer;
+use crate::lexing::typ::SubLexerResult;
+use crate::token::tokens::LiteralToken;
+use crate::token::Tokens;
 
 #[allow(dead_code)] // TODO: TMP
 pub enum StringType {

@@ -1,15 +1,15 @@
-use mango::token::special::UnlexableToken;
-use mango::token::tokens::AssociationToken;
-use mango::token::tokens::EndBlockToken;
-use mango::token::tokens::EndStatementToken;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::KeywordToken;
-use mango::token::tokens::LiteralToken;
-use mango::token::tokens::OperatorToken;
-use mango::token::tokens::ParenthesisCloseToken;
-use mango::token::tokens::ParenthesisOpenToken;
-use mango::token::tokens::StartBlockToken;
-use mango::util::encdec::ToText;
+use crate::token::special::UnlexableToken;
+use crate::token::tokens::AssociationToken;
+use crate::token::tokens::EndBlockToken;
+use crate::token::tokens::EndStatementToken;
+use crate::token::tokens::IdentifierToken;
+use crate::token::tokens::KeywordToken;
+use crate::token::tokens::LiteralToken;
+use crate::token::tokens::OperatorToken;
+use crate::token::tokens::ParenthesisCloseToken;
+use crate::token::tokens::ParenthesisOpenToken;
+use crate::token::tokens::StartBlockToken;
+use crate::util::encdec::ToText;
 
 /// Collection of all possible tokens.
 #[derive(PartialEq, Eq, Hash, Debug, Clone)]
@@ -48,7 +48,7 @@ impl ToText for Tokens {
 
 #[cfg(test)]
 mod tests {
-    use mango::token::Tokens;
+    use crate::token::Tokens;
     use std::mem::size_of;
 
     #[test]

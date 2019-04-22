@@ -5,6 +5,7 @@ use std::collections::hash_map::RandomState;
 use std::fmt;
 use std::sync::Mutex;
 use string_interner::StringInterner;
+use lazy_static::lazy_static;
 
 const VALID_IDENTIFIER_SUBPATTERN: &'static str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {

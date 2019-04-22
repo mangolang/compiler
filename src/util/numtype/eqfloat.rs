@@ -3,6 +3,8 @@ use std::fmt;
 use std::hash::Hash;
 use std::hash::Hasher;
 
+use derive_new::new;
+
 /// This is a wrapper for f64 that implements Eq and Hash,
 /// by defining that NAN == NAN. It intentionally can't
 /// be used for arithmetic, as rounding errors would be bad
@@ -128,11 +130,14 @@ impl From<f64> for f64eq {
 
 #[cfg(test)]
 mod tests {
-    use super::f64eq;
     use std::collections::hash_map::RandomState;
-    use std::f64::consts::PI;
     use std::f64::{INFINITY, NAN, NEG_INFINITY};
+    use std::f64::consts::PI;
     use std::hash::{BuildHasher, Hash, Hasher};
+
+    use lazy_static::lazy_static;
+
+    use super::f64eq;
 
     #[test]
     fn test_eq() {

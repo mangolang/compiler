@@ -1,21 +1,21 @@
-use mango::ast_full::node::AssignmentAST;
-use mango::ast_full::node::BinaryOperationAST;
-use mango::ast_full::node::UnaryOperationAST;
-use mango::ast_full::special::UnparseableAST;
-use mango::ast_full::terminal::FloatLiteralAST;
-use mango::ast_full::terminal::IntLiteralAST;
-use mango::ast_full::terminal::LiteralAST;
-use mango::ast_full::terminal::OperatorAST;
-use mango::ast_full::terminal::StringLiteralAST;
-use mango::ast_full::terminal::VariableAST;
-use mango::ast_full::FullAST;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::LiteralToken;
-use mango::token::tokens::OperatorToken;
-use mango::token::Tokens;
-use mango::util::codeparts::Symbol;
-use mango::util::strtype::Name;
-use mango::util::strtype::StrType;
+use crate::ast_full::node::AssignmentAST;
+use crate::ast_full::node::BinaryOperationAST;
+use crate::ast_full::node::UnaryOperationAST;
+use crate::ast_full::special::UnparseableAST;
+use crate::ast_full::terminal::FloatLiteralAST;
+use crate::ast_full::terminal::IntLiteralAST;
+use crate::ast_full::terminal::LiteralAST;
+use crate::ast_full::terminal::OperatorAST;
+use crate::ast_full::terminal::StringLiteralAST;
+use crate::ast_full::terminal::VariableAST;
+use crate::ast_full::FullAST;
+use crate::token::tokens::IdentifierToken;
+use crate::token::tokens::LiteralToken;
+use crate::token::tokens::OperatorToken;
+use crate::token::Tokens;
+use crate::util::codeparts::Symbol;
+use crate::util::strtype::Name;
+use crate::util::strtype::StrType;
 
 #[test]
 fn test_nested_ast_eq() {

@@ -2,12 +2,10 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 
-use mango::ast_full::AST;
-use mango::ast_full::BaseAST;
-use mango::util::codeparts::Symbol;
-use mango::util::encdec::ToText;
-use mango::util::strtype::Msg;
-use mango::util::strtype::StrType;
+use crate::ast_full::AST;
+use crate::util::encdec::ToText;
+use crate::util::strtype::Msg;
+use crate::util::strtype::StrType;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]

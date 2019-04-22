@@ -1,22 +1,22 @@
-use mango::io::typ::Reader;
-use mango::io::typ::ReaderResult::*;
-use mango::lexing::string_lexer::StringLexer;
-use mango::lexing::typ::SubLexer;
-use mango::lexing::typ::SubLexerResult;
-use mango::token::special::UnlexableToken;
-use mango::token::tokens::literal::LiteralToken;
-use mango::token::tokens::AssociationToken;
-use mango::token::tokens::EndBlockToken;
-use mango::token::tokens::EndStatementToken;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::KeywordToken;
-use mango::token::tokens::OperatorToken;
-use mango::token::tokens::ParenthesisCloseToken;
-use mango::token::tokens::ParenthesisOpenToken;
-use mango::token::tokens::StartBlockToken;
-use mango::token::Tokens;
-use mango::util::strslice::char_ops::CharOps;
-use mango::util::strslice::charsliceto;
+use crate::io::typ::Reader;
+use crate::io::typ::ReaderResult::*;
+use crate::lexing::string_lexer::StringLexer;
+use crate::lexing::typ::SubLexer;
+use crate::lexing::typ::SubLexerResult;
+use crate::token::special::UnlexableToken;
+use crate::token::tokens::literal::LiteralToken;
+use crate::token::tokens::AssociationToken;
+use crate::token::tokens::EndBlockToken;
+use crate::token::tokens::EndStatementToken;
+use crate::token::tokens::IdentifierToken;
+use crate::token::tokens::KeywordToken;
+use crate::token::tokens::OperatorToken;
+use crate::token::tokens::ParenthesisCloseToken;
+use crate::token::tokens::ParenthesisOpenToken;
+use crate::token::tokens::StartBlockToken;
+use crate::token::Tokens;
+use crate::util::strslice::char_ops::CharOps;
+use crate::util::strslice::charsliceto;
 
 pub struct CodeLexer {
     indent: i32, // -1: finished
@@ -171,10 +171,10 @@ impl SubLexer for CodeLexer {
 
 #[cfg(test)]
 mod tests {
-    use mango::lexing::util::test_util::assert_text_to_tokens;
-    use mango::token::tokens::EndStatementToken;
-    use mango::token::tokens::KeywordToken;
-    use mango::token::Tokens;
+    use crate::lexing::util::test_util::assert_text_to_tokens;
+    use crate::token::tokens::EndStatementToken;
+    use crate::token::tokens::KeywordToken;
+    use crate::token::Tokens;
 
     #[test]
     fn test_lexing_individual() {

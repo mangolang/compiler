@@ -1,8 +1,8 @@
-use mango::token::Token;
-use mango::util::encdec::ToText;
-use mango::util::strtype::strtype::StrType;
-use mango::util::strtype::Msg;
-use mango::util::strtype::Name;
+use crate::token::Token;
+use crate::util::encdec::ToText;
+use crate::util::strtype::strtype::StrType;
+use crate::util::strtype::Msg;
+use crate::util::strtype::Name;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]

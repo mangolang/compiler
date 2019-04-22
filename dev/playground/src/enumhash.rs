@@ -7,9 +7,6 @@ use std::hash::Hasher;
 use std::hash::BuildHasher;
 use std::hash::Hash;
 
-#[macro_use]
-extern crate lazy_static;
-
 trait MyTrait {
     fn to_text(&self) -> String;
 }

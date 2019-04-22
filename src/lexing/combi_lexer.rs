@@ -1,12 +1,12 @@
-use mango::io::typ::Reader;
-use mango::lexing::code_lexer::CodeLexer;
-use mango::lexing::typ::Lexer;
-use mango::lexing::typ::MaybeToken;
-use mango::lexing::typ::SubLexer;
-use mango::lexing::typ::SubLexerResult;
-use mango::token::Tokens;
-use mango::util::collection::Queue;
-use mango::util::collection::Stack;
+use crate::io::typ::Reader;
+use crate::lexing::code_lexer::CodeLexer;
+use crate::lexing::typ::Lexer;
+use crate::lexing::typ::MaybeToken;
+use crate::lexing::typ::SubLexer;
+use crate::lexing::typ::SubLexerResult;
+use crate::token::Tokens;
+use crate::util::collection::Queue;
+use crate::util::collection::Stack;
 
 pub struct CombiLexer {
     reader: Box<Reader>,
@@ -68,18 +68,18 @@ impl Lexer for CombiLexer {
 #[cfg(test)]
 mod tests {
     use super::CombiLexer;
-    use mango::io::fortest::StringReader;
-    use mango::lexing::util::lex_all::{lex_all, LexList};
-    use mango::token::tokens::AssociationToken;
-    use mango::token::tokens::EndBlockToken;
-    use mango::token::tokens::EndStatementToken;
-    use mango::token::tokens::IdentifierToken;
-    use mango::token::tokens::KeywordToken;
-    use mango::token::tokens::LiteralToken;
-    use mango::token::tokens::OperatorToken;
-    use mango::token::tokens::StartBlockToken;
-    use mango::token::Tokens;
-    use mango::util::encdec::to_text::ToText;
+    use crate::io::fortest::StringReader;
+    use crate::lexing::util::lex_all::{lex_all, LexList};
+    use crate::token::tokens::AssociationToken;
+    use crate::token::tokens::EndBlockToken;
+    use crate::token::tokens::EndStatementToken;
+    use crate::token::tokens::IdentifierToken;
+    use crate::token::tokens::KeywordToken;
+    use crate::token::tokens::LiteralToken;
+    use crate::token::tokens::OperatorToken;
+    use crate::token::tokens::StartBlockToken;
+    use crate::token::Tokens;
+    use crate::util::encdec::to_text::ToText;
 
     fn assert_text_to_tokens(text: &str, tokens: Vec<Tokens>) {
         let expected = LexList::from_tokens(tokens);

@@ -1,8 +1,8 @@
-use mango::token::Token;
-use mango::util::encdec::ToText;
-use mango::util::numtype::f64eq;
-use mango::util::parsetxt::int::parse_int;
-use mango::util::parsetxt::real::parse_real;
+use crate::token::Token;
+use crate::util::encdec::ToText;
+use crate::util::numtype::f64eq;
+use crate::util::parsetxt::int::parse_int;
+use crate::util::parsetxt::real::parse_real;
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 

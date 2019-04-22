@@ -1,6 +1,7 @@
 use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
+use derive_new::new;
 
 /// A literal integer value.
 #[derive(new, Debug, PartialEq, Eq, Hash)]

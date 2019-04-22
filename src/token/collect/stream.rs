@@ -1,6 +1,6 @@
-use mango::token::Tokens;
-use mango::util::encdec::to_text::ToText;
-use mango::util::signaltype::stream::StreamElem;
+use crate::token::Tokens;
+use crate::util::encdec::to_text::ToText;
+use crate::util::signaltype::stream::StreamElem;
 
 /// A stream of lexed [Tokens].
 pub trait TokenStream {

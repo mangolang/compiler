@@ -1,11 +1,11 @@
-use mango::towasm::collect::Statement;
-use mango::towasm::control::Group;
-use mango::towasm::control::Label;
-use mango::towasm::scope::module::Scope;
-use mango::towasm::util::Name;
-use mango::towasm::Wasm;
+use crate::towasm::collect::Statement;
+use crate::towasm::control::Group;
+use crate::towasm::control::Label;
+use crate::towasm::scope::module::Scope;
+use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
+use crate::util::strtype::Name;
 
 pub struct Loop {
     name: Name,

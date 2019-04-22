@@ -1,11 +1,11 @@
-use mango::token::collect::MemoryTokenStream;
-use mango::token::tokens::AssociationToken;
-use mango::token::tokens::EndStatementToken;
-use mango::token::tokens::IdentifierToken;
-use mango::token::tokens::KeywordToken;
-use mango::token::tokens::LiteralToken;
-use mango::util::strtype::Name;
-use mango::util::strtype::StrType;
+use crate::token::collect::MemoryTokenStream;
+use crate::token::tokens::AssociationToken;
+use crate::token::tokens::EndStatementToken;
+use crate::token::tokens::IdentifierToken;
+use crate::token::tokens::KeywordToken;
+use crate::token::tokens::LiteralToken;
+use crate::util::strtype::Name;
+use crate::util::strtype::StrType;
 
 #[test]
 fn test_tokens_eq() {

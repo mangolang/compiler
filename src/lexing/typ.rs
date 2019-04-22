@@ -1,5 +1,5 @@
-use mango::io::typ::Reader;
-use mango::token::Tokens;
+use crate::io::typ::Reader;
+use crate::token::Tokens;
 
 // TODO: I don't want this to be public outside the crate
 pub enum SubLexerResult {

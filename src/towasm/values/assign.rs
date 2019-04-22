@@ -1,7 +1,7 @@
-use mango::towasm::collect::Statement;
-use mango::towasm::values::Expression;
-use mango::towasm::values::Local;
-use mango::towasm::Wasm;
+use crate::towasm::collect::Statement;
+use crate::towasm::values::Expression;
+use crate::towasm::values::Local;
+use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 

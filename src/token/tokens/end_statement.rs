@@ -1,5 +1,5 @@
-use mango::token::Token;
-use mango::util::encdec::ToText;
+use crate::token::Token;
+use crate::util::encdec::ToText;
 
 /// End of statement.
 /// Strictly, this doesn't always end a statement, e.g. if it follows a continuation.

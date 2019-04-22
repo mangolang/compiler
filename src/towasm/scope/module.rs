@@ -1,5 +1,5 @@
-use mango::towasm::scope::Function;
-use mango::towasm::Wasm;
+use crate::towasm::scope::Function;
+use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
@@ -29,12 +29,14 @@ impl Wasm for Module {
 }
 
 pub struct Scope {
-    pub names: NamePool,
+    //TODO @mark:
+//    pub names: NamePool,
 }
 
 impl Scope {
     pub fn new(parent: &mut Scope) -> Self {
-        let names = new_name_pool(&mut parent.names);
-        Scope { names }
+//        let names = new_name_pool(&mut parent.names);
+//        Scope { names }
+        Scope {}
     }
 }

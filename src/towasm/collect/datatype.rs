@@ -3,7 +3,7 @@
 // The reason they're not included though, is that I don't expect to use them.
 // If I do use them, I should probably add them here and break wasm 1-1.
 
-use mango::towasm::Wasm;
+use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 
