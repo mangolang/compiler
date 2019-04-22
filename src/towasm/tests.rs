@@ -15,6 +15,7 @@ use crate::towasm::values::Assign;
 use crate::towasm::values::Const;
 use crate::towasm::values::DeclareLocal;
 use crate::util::strtype::Name;
+use crate::util::strtype::strtype::StrType;
 
 #[test]
 #[allow(unused_variables)]
@@ -22,7 +23,7 @@ fn test_example_1() {
     let param_n = Parameter::new(Name::new("n".to_owned()).unwrap(), Type::Int32);
     let var_n = param_n.local();
     let module = Module::new(vec![Function::new(
-        Name::new("fac".to_owned()),
+        Name::from_valid("fac"),
         vec![param_n],
         vec![Output::new(Type::Int32)],
         |func_label: Label| {

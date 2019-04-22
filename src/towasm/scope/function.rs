@@ -37,7 +37,7 @@ impl Parameter {
 
 impl Wasm for Parameter {
     fn as_wat(&self) -> String {
-        format!("(param {} {})", self.name().borrow().as_wat(), self.typ().as_wat())
+        format!("(param {} {})", self.name().as_wat(), self.typ().as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
@@ -82,8 +82,8 @@ impl Wasm for FunctionSignature {
     fn as_wat(&self) -> String {
         format!(
             "func {} (export \"{}\") {} {}",
-            self.name.borrow().as_wat(),
-            self.name.borrow().pure_name(),
+            self.name.as_wat(),
+            self.name.pure_name(),
             self.parameters.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n"),
             self.results.iter().map(|func| func.as_wat()).collect::<Vec<_>>().join("\n")
         )

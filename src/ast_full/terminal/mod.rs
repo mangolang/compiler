@@ -1,4 +1,4 @@
-mod operator;
+pub mod operator;
 pub use self::operator::OperatorAST;
 
 mod literal;

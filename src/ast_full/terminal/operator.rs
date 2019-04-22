@@ -9,20 +9,20 @@ use crate::util::strtype::StrType;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub enum Symbol {
+pub enum BinOpSymbol {
     Plus,
     Dash,
     Asterisk,
     Slash,
 }
 
-impl Symbol {
+impl BinOpSymbol {
     pub fn new(symbol_txt: &str) -> Result<Self, Msg> {
         match symbol_txt {
-            "+" => Ok(Symbol::Plus),
-            "-" => Ok(Symbol::Dash),
-            "*" => Ok(Symbol::Asterisk),
-            "/" => Ok(Symbol::Slash),
+            "+" => Ok(BinOpSymbol::Plus),
+            "-" => Ok(BinOpSymbol::Dash),
+            "*" => Ok(BinOpSymbol::Asterisk),
+            "/" => Ok(BinOpSymbol::Slash),
             _ => Err(Msg::from_valid(&format!(
                 "Unknown symbol: '{}'",
                 symbol_txt
@@ -31,16 +31,16 @@ impl Symbol {
     }
 }
 
-impl Display for Symbol {
+impl Display for BinOpSymbol {
     fn fmt(&self, f: &mut Formatter) -> fResult {
         write!(
             f,
             "{}",
             match *self {
-                Symbol::Plus => "+",
-                Symbol::Dash => "-",
-                Symbol::Asterisk => "*",
-                Symbol::Slash => "/",
+                BinOpSymbol::Plus => "+",
+                BinOpSymbol::Dash => "-",
+                BinOpSymbol::Asterisk => "*",
+                BinOpSymbol::Slash => "/",
             }
         )
     }
@@ -49,24 +49,24 @@ impl Display for Symbol {
 /// An operator (unary, binary, ...).
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct OperatorAST {
-    symbol: Symbol,
+    symbol: BinOpSymbol,
 }
 
 impl OperatorAST {
     pub fn from_str(symbol_txt: &str) -> Result<OperatorAST, Msg> {
-        Ok(OperatorAST::from_symbol(Symbol::new(symbol_txt)?))
+        Ok(OperatorAST::from_symbol(BinOpSymbol::new(symbol_txt)?))
     }
 
-    pub fn from_symbol(symbol: Symbol) -> OperatorAST {
+    pub fn from_symbol(symbol: BinOpSymbol) -> OperatorAST {
         OperatorAST { symbol: symbol }
     }
 
     pub fn is_add_sub(&self) -> bool {
-        self.symbol == Symbol::Plus || self.symbol == Symbol::Dash
+        self.symbol == BinOpSymbol::Plus || self.symbol == BinOpSymbol::Dash
     }
 
     pub fn is_mul_div(&self) -> bool {
-        self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
+        self.symbol == BinOpSymbol::Asterisk || self.symbol == BinOpSymbol::Slash
     }
 }
 

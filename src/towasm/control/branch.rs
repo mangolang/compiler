@@ -21,7 +21,7 @@ impl Label {
 
 impl Wasm for Label {
     fn as_wat(&self) -> String {
-        self.name.borrow().as_wat()
+        self.name.as_wat()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

@@ -13,25 +13,25 @@ use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::Tokens;
-use crate::util::codeparts::Symbol;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
+use crate::ast_full::operator::BinOpSymbol;
 
 #[test]
 fn test_nested_ast_eq() {
     let twin_one = BinaryOperationAST::new(
         FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
-        OperatorAST::from_symbol(Symbol::Plus),
+        OperatorAST::from_symbol(BinOpSymbol::Plus),
         FullAST::UnaryOperation(UnaryOperationAST::new(
-            OperatorAST::from_symbol(Symbol::Plus),
+            OperatorAST::from_symbol(BinOpSymbol::Plus),
             FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
     let twin_two = BinaryOperationAST::new(
         FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
-        OperatorAST::from_symbol(Symbol::Plus),
+        OperatorAST::from_symbol(BinOpSymbol::Plus),
         FullAST::UnaryOperation(UnaryOperationAST::new(
-            OperatorAST::from_symbol(Symbol::Plus),
+            OperatorAST::from_symbol(BinOpSymbol::Plus),
             FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(7))),
         )),
     );
@@ -43,17 +43,17 @@ fn test_nested_ast_eq() {
 #[test]
 fn test_simple_ast_eq_ne() {
     let nodes = vec![
-        FullAST::Operator(OperatorAST::from_symbol(Symbol::Plus)),
+        FullAST::Operator(OperatorAST::from_symbol(BinOpSymbol::Plus)),
         FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
         FullAST::Literal(LiteralAST::Float(FloatLiteralAST::new(1.))),
         FullAST::Literal(LiteralAST::String(StringLiteralAST::new("1".to_string()))),
         FullAST::UnaryOperation(UnaryOperationAST::new(
-            OperatorAST::from_symbol(Symbol::Dash),
+            OperatorAST::from_symbol(BinOpSymbol::Dash),
             FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
         )),
         FullAST::BinaryOperation(BinaryOperationAST::new(
             FullAST::Literal(LiteralAST::Float(FloatLiteralAST::new(1.))),
-            OperatorAST::from_symbol(Symbol::Plus),
+            OperatorAST::from_symbol(BinOpSymbol::Plus),
             FullAST::Literal(LiteralAST::Int(IntLiteralAST::new(1))),
         )),
         FullAST::Variable(VariableAST::new(Name::from_valid("my_var"))),

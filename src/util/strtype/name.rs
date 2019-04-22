@@ -37,6 +37,7 @@ impl Name {
     }
 
     /// Generate an eager subpattern to match names, that can be composed in a regular expression.
+    //TODO @mark: does this need to be cloned here? Can't the constant just be public?
     pub fn subpattern() -> &'static str {
         &VALID_IDENTIFIER_SUBPATTERN.clone()
     }

@@ -7,6 +7,8 @@ use crate::towasm::collect::typ::Wasm;
 use crate::towasm::collect::Statement;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
+use crate::util::strtype::Name;
+use crate::util::strtype::strtype::StrType;
 
 pub struct Group {
     statements: Vec<Box<Statement>>,
@@ -39,7 +41,7 @@ impl Wasm for Group {
 }
 
 pub struct Block {
-    name: u8, // TODO: Name,
+    name: Name,
     group: Group,
     scope: Scope,
 }
@@ -49,7 +51,7 @@ impl Block {
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
-        Block::new_named(0, statements_gen, parent)
+        Block::new_named(Name::from_valid("0"), statements_gen, parent)
         // todo: determine name automatically
         //        match parent.names.borrow_mut().register("block_".to_owned()) {
         //            Some() => Block::new_named(
@@ -61,7 +63,7 @@ impl Block {
         //        }
     }
 
-    pub fn new_named<F>(name: u8 /* todo: Name */, statements_gen: F, parent: &mut Scope) -> Box<Self>
+    pub fn new_named<F>(name: Name, statements_gen: F, parent: &mut Scope) -> Box<Self>
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
