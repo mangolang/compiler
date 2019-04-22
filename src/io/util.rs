@@ -1,4 +1,3 @@
-#[macro_use]
 use regex::Regex;
 use std::cell::RefCell;
 use std::collections::HashMap;

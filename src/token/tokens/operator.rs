@@ -2,6 +2,7 @@ use crate::token::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Msg;
+use std::str::FromStr;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -10,11 +11,15 @@ pub struct OperatorToken {
     symbol: Symbol,
 }
 
-impl OperatorToken {
-    pub fn from_str(symbol_txt: &str) -> Result<OperatorToken, Msg> {
+impl FromStr for OperatorToken {
+    type Err = Msg;
+
+    fn from_str(symbol_txt: &str) -> Result<OperatorToken, Msg> {
         Ok(OperatorToken::from_symbol(Symbol::new(symbol_txt)?))
     }
+}
 
+impl OperatorToken {
     pub fn from_symbol(symbol: Symbol) -> OperatorToken {
         OperatorToken { symbol }
     }

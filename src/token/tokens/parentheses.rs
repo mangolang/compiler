@@ -2,10 +2,10 @@ use crate::token::Token;
 use crate::util::encdec::ToText;
 
 /// Open and close parentheses: (, )
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisOpenToken {}
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisCloseToken {}
 
 impl ParenthesisOpenToken {

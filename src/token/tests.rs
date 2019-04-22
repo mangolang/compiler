@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::token::collect::MemoryTokenStream;
 use crate::token::tokens::AssociationToken;
 use crate::token::tokens::EndStatementToken;

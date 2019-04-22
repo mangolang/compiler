@@ -27,14 +27,7 @@ impl MemoryTokenStream {
 
     #[allow(dead_code)] // TODO: for now
     pub fn to_text(&self) -> String {
-        format!(
-            " {}",
-            self.tokens
-                .iter()
-                .map(|token: &Tokens| token.to_text())
-                .collect::<Vec<_>>()
-                .join(" ")
-        )
+        format!(" {}", self.tokens.iter().map(Tokens::to_text).collect::<Vec<_>>().join(" "))
     }
 }
 

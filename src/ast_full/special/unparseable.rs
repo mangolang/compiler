@@ -6,11 +6,11 @@ use crate::util::encdec::ToText;
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableAST {
     // should I box the tokens to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
-    tokens: Vec<Box<Tokens>>,
+    tokens: Vec<Tokens>,
 }
 
 impl UnparseableAST {
-    pub fn from_tokens(tokens: Vec<Box<Tokens>>) -> UnparseableAST {
+    pub fn from_tokens(tokens: Vec<Tokens>) -> UnparseableAST {
         UnparseableAST { tokens }
     }
 }
@@ -19,11 +19,7 @@ impl ToText for UnparseableAST {
     fn to_text(&self) -> String {
         format!(
             " [cannot parse: {}] ",
-            self.tokens
-                .iter()
-                .map(|token: &Box<Tokens>| token.to_text())
-                .collect::<Vec<String>>()
-                .join(" / ")
+            self.tokens.iter().map(Tokens::to_text).collect::<Vec<String>>().join(" / ")
         )
     }
 }

@@ -6,17 +6,17 @@ use crate::lexing::string_lexer::StringLexer;
 use crate::lexing::typ::SubLexer;
 use crate::lexing::typ::SubLexerResult;
 use crate::token::special::UnlexableToken;
-use crate::token::Tokens;
+use crate::token::tokens::literal::LiteralToken;
 use crate::token::tokens::AssociationToken;
 use crate::token::tokens::EndBlockToken;
 use crate::token::tokens::EndStatementToken;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::KeywordToken;
-use crate::token::tokens::literal::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::token::tokens::StartBlockToken;
+use crate::token::Tokens;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
 
@@ -131,7 +131,7 @@ impl SubLexer for CodeLexer {
         if let Match(token) = reader.matches(&AssociationToken::subpattern()) {
             debug_assert!(token.chars().last().unwrap() == '=');
             if token.char_len() > 1 {
-                match AssociationToken::from_str(charsliceto(token, -1)) {
+                match AssociationToken::from_str(&charsliceto(token, -1)) {
                     Ok(association) => return SubLexerResult::single(Tokens::Association(association)),
                     Err(msg) => panic!(format!("Invalid association prefix: {}", msg)),
                 }
@@ -174,9 +174,9 @@ impl SubLexer for CodeLexer {
 #[cfg(test)]
 mod tests {
     use crate::lexing::util::test_util::assert_text_to_tokens;
-    use crate::token::Tokens;
     use crate::token::tokens::EndStatementToken;
     use crate::token::tokens::KeywordToken;
+    use crate::token::Tokens;
     use std::str::FromStr;
 
     #[test]

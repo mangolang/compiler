@@ -10,8 +10,10 @@ pub struct KeywordToken {
     word: Keyword,
 }
 
-impl KeywordToken {
-    pub fn from_str(word: &str) -> Result<KeywordToken, Msg> {
+impl FromStr for KeywordToken {
+    type Err = Msg;
+
+    fn from_str(word: &str) -> Result<KeywordToken, Msg> {
         Result::Ok(KeywordToken {
             word: Keyword::from_str(word)?,
         })

@@ -21,7 +21,6 @@ impl FromStr for IdentifierToken {
 }
 
 impl IdentifierToken {
-
     pub fn from_name(name: Name) -> Self {
         IdentifierToken { name }
     }

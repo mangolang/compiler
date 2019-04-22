@@ -6,6 +6,7 @@ use crate::ast_full::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
+use std::str::FromStr;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -49,11 +50,15 @@ pub struct OperatorAST {
     symbol: BinOpSymbol,
 }
 
-impl OperatorAST {
-    pub fn from_str(symbol_txt: &str) -> Result<OperatorAST, Msg> {
+impl FromStr for OperatorAST {
+    type Err = Msg;
+
+    fn from_str(symbol_txt: &str) -> Result<OperatorAST, Msg> {
         Ok(OperatorAST::from_symbol(BinOpSymbol::new(symbol_txt)?))
     }
+}
 
+impl OperatorAST {
     pub fn from_symbol(symbol: BinOpSymbol) -> OperatorAST {
         OperatorAST { symbol }
     }

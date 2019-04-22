@@ -2,10 +2,10 @@ use crate::token::Token;
 use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct StartBlockToken {}
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct EndBlockToken {
     is_dedent: bool,
     is_end_keyword: bool,
