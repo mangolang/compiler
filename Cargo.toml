@@ -5,6 +5,7 @@ version = "0.2.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangolang.org/"
 license = "Apache-2.0"
+edition = "2018"
 publish = true
 include = [
     "src/**/*",
