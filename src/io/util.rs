@@ -24,7 +24,7 @@ impl RegexCache {
                 }
             }
         }
-        self.cache.get(subpattern).unwrap()
+        &self.cache[subpattern]
     }
 }
 
