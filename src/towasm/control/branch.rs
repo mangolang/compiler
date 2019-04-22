@@ -2,10 +2,10 @@ use crate::towasm::collect::Statement;
 use crate::towasm::collect::Type;
 use crate::towasm::values::Expression;
 use crate::towasm::Wasm;
+use crate::util::strtype::Name;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use crate::util::strtype::Name;
 
 /// Label for a block, if or loop
 pub struct Label {

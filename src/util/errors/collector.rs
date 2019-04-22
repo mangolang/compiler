@@ -1,8 +1,8 @@
 use crate::util::errors::CodeProblem;
 use crate::util::errors::Context;
 use crate::util::strtype::Msg;
-use std::slice;
 use derive_new::new;
+use std::slice;
 
 #[derive(new, Debug)]
 pub struct ProblemCollector {

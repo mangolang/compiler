@@ -5,10 +5,10 @@ use crate::towasm::control::Label;
 use crate::towasm::values::DeclareLocal;
 use crate::towasm::values::Local;
 use crate::towasm::Wasm;
+use crate::util::strtype::Name;
 use std::fs::File;
 use std::io;
 use std::io::Write;
-use crate::util::strtype::Name;
 
 pub struct Parameter {
     // Don't box here, it's just to reference those fields

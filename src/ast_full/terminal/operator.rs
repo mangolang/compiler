@@ -23,10 +23,7 @@ impl BinOpSymbol {
             "-" => Ok(BinOpSymbol::Dash),
             "*" => Ok(BinOpSymbol::Asterisk),
             "/" => Ok(BinOpSymbol::Slash),
-            _ => Err(Msg::from_valid(&format!(
-                "Unknown symbol: '{}'",
-                symbol_txt
-            ))),
+            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", symbol_txt))),
         }
     }
 }

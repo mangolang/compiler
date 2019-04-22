@@ -1,8 +1,8 @@
 use crate::util::strtype::Msg;
+use derive_new::new;
 use std::cmp::Ordering;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use derive_new::new;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Severity {

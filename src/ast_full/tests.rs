@@ -1,6 +1,7 @@
 use crate::ast_full::node::AssignmentAST;
 use crate::ast_full::node::BinaryOperationAST;
 use crate::ast_full::node::UnaryOperationAST;
+use crate::ast_full::operator::BinOpSymbol;
 use crate::ast_full::special::UnparseableAST;
 use crate::ast_full::terminal::FloatLiteralAST;
 use crate::ast_full::terminal::IntLiteralAST;
@@ -15,7 +16,6 @@ use crate::token::tokens::OperatorToken;
 use crate::token::Tokens;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
-use crate::ast_full::operator::BinOpSymbol;
 
 #[test]
 fn test_nested_ast_eq() {

@@ -1,7 +1,7 @@
 use crate::util::strtype::StrType;
+use lazy_static::lazy_static;
 use regex::Regex;
 use std::fmt;
-use lazy_static::lazy_static;
 
 lazy_static! {
     static ref VALID_MESSAGE: Regex = Regex::new(r"^[\p{L}\d +\-_:/\\'.,]*$").unwrap();

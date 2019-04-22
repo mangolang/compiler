@@ -1,8 +1,7 @@
-
 // Utilities
 pub mod io;
-pub mod ui;
 pub mod jit;
+pub mod ui;
 pub mod util;
 
 // Types

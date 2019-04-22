@@ -1,11 +1,11 @@
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
+use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::hash_map::RandomState;
 use std::fmt;
 use std::sync::Mutex;
 use string_interner::StringInterner;
-use lazy_static::lazy_static;
 
 const VALID_IDENTIFIER_SUBPATTERN: &'static str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
@@ -161,13 +161,7 @@ mod tests {
 
     #[test]
     fn test_name_interning() {
-        assert_eq!(
-            Name::copy_new("Hello").unwrap(),
-            Name::copy_new("Hello").unwrap()
-        );
-        assert_ne!(
-            Name::copy_new("Hello").unwrap(),
-            Name::copy_new("Goodbye").unwrap()
-        );
+        assert_eq!(Name::copy_new("Hello").unwrap(), Name::copy_new("Hello").unwrap());
+        assert_ne!(Name::copy_new("Hello").unwrap(), Name::copy_new("Goodbye").unwrap());
     }
 }

@@ -6,8 +6,8 @@ use crate::towasm::control::Group;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::towasm::Wasm;
-use crate::util::strtype::Name;
 use crate::util::strtype::strtype::StrType;
+use crate::util::strtype::Name;
 
 pub struct Loop {
     name: Name,
@@ -21,7 +21,7 @@ impl Loop {
     {
         //TODO @mark: name
         Loop::new_named(Name::from_valid("loop"), statements_gen)
-//        Loop::new_named(scope.names.borrow_mut().anonymous_prefix("loop_".to_owned()), statements_gen)
+        //        Loop::new_named(scope.names.borrow_mut().anonymous_prefix("loop_".to_owned()), statements_gen)
     }
 
     pub fn new_named<F>(name: Name, statements_gen: F) -> Box<Self>
@@ -37,11 +37,7 @@ impl Loop {
 
 impl Wasm for Loop {
     fn as_wat(&self) -> String {
-        format!(
-            "loop {0:}\n{1:}\nend ;; loop {0:}",
-            self.name.as_wat(),
-            self.group.as_wat()
-        )
+        format!("loop {0:}\n{1:}\nend ;; loop {0:}", self.name.as_wat(), self.group.as_wat())
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {
