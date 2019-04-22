@@ -1,11 +1,13 @@
+use std::fs::File;
+use std::io;
+
 use crate::towasm::collect::Statement;
 use crate::towasm::control::Group;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::towasm::Wasm;
-use std::fs::File;
-use std::io;
 use crate::util::strtype::Name;
+use crate::util::strtype::strtype::StrType;
 
 pub struct Loop {
     name: Name,
@@ -17,7 +19,9 @@ impl Loop {
     where
         F: FnOnce(Label) -> Vec<Box<Statement>>,
     {
-        Loop::new_named(scope.names.borrow_mut().anonymous_prefix("loop_".to_owned()), statements_gen)
+        //TODO @mark: name
+        Loop::new_named(Name::from_valid("loop"), statements_gen)
+//        Loop::new_named(scope.names.borrow_mut().anonymous_prefix("loop_".to_owned()), statements_gen)
     }
 
     pub fn new_named<F>(name: Name, statements_gen: F) -> Box<Self>
