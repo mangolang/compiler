@@ -104,7 +104,7 @@ mod tests {
         assert!(Severity::Error > Severity::Debug);
         assert!(Severity::Warning > Severity::Debug);
         assert!(Severity::Error != Severity::Warning);
-        assert!(Severity::Warning == Severity::Debug);
+        assert!(Severity::Warning != Severity::Debug);
     }
 
     #[test]
