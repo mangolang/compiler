@@ -37,6 +37,11 @@ The compiler is written in Rust. You can run it using:
 
 This compiles to native code, with WebAssembly to be added later (#34).
 
-`Code of conduct and contributing`_
+Links
+-------------------------------
 
+* `Documentation`_
+* `Code of conduct and contributing`_
+
+.. _`Documentation`: https://docs.mangolang.org/
 .. _`Code of conduct and contributing`: https://github.com/mangolang/mango
