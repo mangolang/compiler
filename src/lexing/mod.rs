@@ -6,4 +6,6 @@ mod code_lexer;
 
 mod string_lexer;
 
-mod util;
+pub mod util;
+
+//TODO @mark: more lexing tests?

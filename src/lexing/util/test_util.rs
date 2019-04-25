@@ -1,7 +1,6 @@
 use crate::io::fortest::stringreader::StringReader;
 use crate::lexing::combi_lexer::CombiLexer;
 use crate::lexing::util::lex_all::lex_all;
-use crate::lexing::util::lex_all::LexList;
 use crate::token::Tokens;
 use crate::util::encdec::to_text::ToText;
 

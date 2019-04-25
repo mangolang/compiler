@@ -1,4 +1,5 @@
-use std::io::{Stderr, Stdin, Stdout, Read, Write};
+use std::io::{Read, Stderr, Stdin, Stdout, Write};
+use crate::parsing::parse_expression;
 
 // Utilities
 pub mod io;
@@ -23,7 +24,9 @@ pub mod typing;
 
 pub mod towasm;
 
-
 pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
-    //TODO @mark:
+
+    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
+
+    let ast = parse_expression(lex);
 }
