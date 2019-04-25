@@ -2,10 +2,11 @@ use std::io::Cursor;
 use mango::run;
 
 fn assert_source_output(source: &str, expected_output: &str) {
-    let mut out = Cursor::new(Vec::<u8>::new());
-    let mut err = Cursor::new(Vec::<u8>::new());
-    run(source, b"", out, err);
-    assert!(expected_output.as_bytes(), out);
+    let mut inp: Cursor<Vec<u8>> = Cursor::new(vec![]);
+    let mut out: Cursor<Vec<u8>> = Cursor::new(vec![]);
+    let mut err: Cursor<Vec<u8>> = Cursor::new(vec![]);
+    run(source, &inp, &out, &err);
+    assert!(out.into_inner().as_slice() == expected_output.as_bytes());
 }
 
 fn assert_source_runtime_err(source: &str, expected_error: &str) {
