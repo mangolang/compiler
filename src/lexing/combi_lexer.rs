@@ -69,7 +69,8 @@ impl Lexer for CombiLexer {
 mod tests {
     use super::CombiLexer;
     use crate::io::fortest::StringReader;
-    use crate::lexing::util::lex_all::{lex_all, LexList};
+    use crate::ast_full::util::lex_list::LexList;
+    use crate::lexing::util::lex_all::lex_all;
     use crate::token::tokens::AssociationToken;
     use crate::token::tokens::EndBlockToken;
     use crate::token::tokens::EndStatementToken;

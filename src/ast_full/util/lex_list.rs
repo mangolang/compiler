@@ -1,4 +1,5 @@
 use crate::util::encdec::to_text::ToText;
+use crate::token::collect::all::Tokens;
 
 /// Represents all the lex tokens in a source.
 #[derive(PartialEq, Eq, Debug)]
@@ -9,11 +10,6 @@ pub struct LexList {
 impl LexList {
     pub fn from_tokens(tokens: Vec<Tokens>) -> Self {
         LexList { tokens }
-    }
-
-    #[allow(unused)]
-    pub fn from_reader(lexer: &mut Lexer) -> Self {
-        lex_all(lexer)
     }
 }
 
