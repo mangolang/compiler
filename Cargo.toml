@@ -29,7 +29,8 @@ lto = true
 opt-level = 'z'
 
 [lib]
-crate-type = ["cdylib"]
+# 'rlib' is included for integration tests
+crate-type = ["cdylib", "rlib"]
 name = "mango"
 path = "src/lib.rs"
 

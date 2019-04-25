@@ -1,7 +1,5 @@
-extern crate mango;
-
-use mango;
 use std::io::Cursor;
+use mango::run;
 
 fn assert_source_output(source: &str, expected_output: &str) {
     let mut out = Cursor::new(Vec::<u8>::new());
