@@ -1,5 +1,5 @@
-use crate::util::encdec::to_text::ToText;
 use crate::token::collect::all::Tokens;
+use crate::util::encdec::to_text::ToText;
 
 /// Represents all the lex tokens in a source.
 #[derive(PartialEq, Eq, Debug)]

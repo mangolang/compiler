@@ -1,8 +1,11 @@
-use std::io::{Read, Stderr, Stdin, Stdout, Write};
-use crate::parsing::parse_expression;
-use crate::lexing::util::lex_all::lex_all;
-use crate::lexing::combi_lexer::CombiLexer;
+//TODO @mark: disable unused stuff later, but currently too much in-progress
+#![allow(unused_variables, dead_code)]
+
 use crate::io::fortest::stringreader::StringReader;
+use crate::lexing::combi_lexer::CombiLexer;
+use crate::lexing::util::lex_all::lex_all;
+use crate::parsing::parse_expression;
+use std::io::{Read, Write};
 
 // Utilities
 pub mod io;
@@ -28,8 +31,8 @@ pub mod typing;
 pub mod towasm;
 
 pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
-
     let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
 
-    let ast = parse_expression(lex);
+    //TODO @mark: use result
+    parse_expression(lex);
 }

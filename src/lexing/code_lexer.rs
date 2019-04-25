@@ -20,6 +20,7 @@ use crate::token::Tokens;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
 
+#[derive(Default)]
 pub struct CodeLexer {
     indent: i32, // -1: finished
 }
