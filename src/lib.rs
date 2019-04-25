@@ -1,3 +1,5 @@
+use std::io::{Stderr, Stdin, Stdout, Read, Write};
+
 // Utilities
 pub mod io;
 pub mod jit;
@@ -20,3 +22,8 @@ pub mod semanticating;
 pub mod typing;
 
 pub mod towasm;
+
+
+pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: R, out: O, err: E) {
+    //TODO @mark:
+}
