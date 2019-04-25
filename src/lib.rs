@@ -2,6 +2,7 @@ use std::io::{Read, Stderr, Stdin, Stdout, Write};
 use crate::parsing::parse_expression;
 use crate::lexing::util::lex_all::lex_all;
 use crate::lexing::combi_lexer::CombiLexer;
+use crate::io::fortest::stringreader::StringReader;
 
 // Utilities
 pub mod io;
