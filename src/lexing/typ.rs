@@ -1,20 +1,20 @@
 use crate::io::typ::Reader;
 use crate::token::Tokens;
+use smallvec::SmallVec;
+use smallvec::smallvec;
 
-// TODO: I don't want this to be public outside the crate
 pub enum SubLexerResult {
-    Result(Vec<Tokens>),
+    Result(SmallVec<[Tokens; 4]>),
     Delegate(Box<SubLexer>),
     End,
 }
 
 impl SubLexerResult {
     pub fn single(token: Tokens) -> Self {
-        SubLexerResult::Result(vec![token])
+        SubLexerResult::Result(smallvec![token])
     }
 }
 
-// TODO: I don't want this to be public outside the crate
 pub trait SubLexer {
     /// Does one iteration of a sublexer, which should either delegate or return tokens.
     /// If an empty vector of tokens is returned, the reader should have advanced (to prevent infinite loops).

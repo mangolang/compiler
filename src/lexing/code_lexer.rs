@@ -19,6 +19,7 @@ use crate::token::tokens::StartBlockToken;
 use crate::token::Tokens;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
+use smallvec::SmallVec;
 
 #[derive(Default)]
 pub struct CodeLexer {
@@ -61,7 +62,7 @@ impl CodeLexer {
     }
 
     fn token_and_indents(&mut self, reader: &mut Reader, token: Tokens) -> SubLexerResult {
-        let mut tokens: Vec<Tokens> = vec![token];
+        let mut tokens: SmallVec<[Tokens; 4]> = smallvec![token];
         // This is a new line, so there may be indents.
         tokens.append(&mut self.lex_indents(reader));
         SubLexerResult::Result(tokens)

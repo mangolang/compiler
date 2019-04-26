@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use smallvec::SmallVec;
 
 /// A one-ended queue. See also [Stack].
 /// This is just a wrapper around vec so nobody pushes or pops the wrong end.
@@ -23,7 +24,7 @@ impl<T> Queue<T> {
     }
 
     /// Moves all the elements from a vector into the queue.
-    pub fn append(&mut self, other: Vec<T>) {
+    pub fn append(&mut self, other: SmallVec<[T; 4]>) {
         for item in other.into_iter() {
             self.items.push_back(item);
         }
