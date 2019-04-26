@@ -10,6 +10,7 @@ use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::token::tokens::StartBlockToken;
 use crate::util::encdec::ToText;
+use smallvec::SmallVec;
 
 /// Collection of all possible tokens.
 #[derive(PartialEq, Eq, Hash, Debug, Clone)]
@@ -22,10 +23,13 @@ pub enum Tokens {
     ParenthesisOpen(ParenthesisOpenToken),
     ParenthesisClose(ParenthesisCloseToken),
     EndStatement(EndStatementToken),
-    Unlexable(UnlexableToken),
     StartBlock(StartBlockToken),
     EndBlock(EndBlockToken),
+    Unlexable(UnlexableToken),
 }
+
+//TODO @mark: optimize the bugger of TokenVec by benchmarking
+pub type TokenVec = SmallVec<[Tokens; 2]>;
 
 impl ToText for Tokens {
     fn to_text(&self) -> String {
@@ -53,6 +57,6 @@ mod tests {
 
     #[test]
     fn test_tokens_size() {
-        assert!(size_of::<Tokens>() <= 40, size_of::<Tokens>());
+        assert!(size_of::<Tokens>() <= 16, size_of::<Tokens>());
     }
 }

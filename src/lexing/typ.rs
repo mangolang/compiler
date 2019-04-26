@@ -1,10 +1,11 @@
-use crate::io::typ::Reader;
-use crate::token::Tokens;
-use smallvec::SmallVec;
 use smallvec::smallvec;
 
+use crate::io::typ::Reader;
+use crate::token::collect::all::TokenVec;
+use crate::token::Tokens;
+
 pub enum SubLexerResult {
-    Result(SmallVec<[Tokens; 4]>),
+    Result(TokenVec),
     Delegate(Box<SubLexer>),
     End,
 }

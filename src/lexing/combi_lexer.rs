@@ -41,7 +41,7 @@ impl Lexer for CombiLexer {
                     SubLexerResult::Result(tokens) => {
                         if !tokens.is_empty() {
                             // The sublexer produced tokens, queue them.
-                            self.buffer.append(tokens);
+                            self.buffer.append(tokens.into_iter());
                             self.lex() // TODO: if every branch does this, move it down
                         } else {
                             // No tokens were produced; make sure the reader has advanced to prevent infinite loops.

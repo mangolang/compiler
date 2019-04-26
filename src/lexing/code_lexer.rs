@@ -1,25 +1,27 @@
 use std::str::FromStr;
 
+use smallvec::smallvec;
+
 use crate::io::typ::Reader;
 use crate::io::typ::ReaderResult::*;
 use crate::lexing::string_lexer::StringLexer;
 use crate::lexing::typ::SubLexer;
 use crate::lexing::typ::SubLexerResult;
+use crate::token::collect::all::TokenVec;
 use crate::token::special::UnlexableToken;
-use crate::token::tokens::literal::LiteralToken;
+use crate::token::Tokens;
 use crate::token::tokens::AssociationToken;
 use crate::token::tokens::EndBlockToken;
 use crate::token::tokens::EndStatementToken;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::KeywordToken;
+use crate::token::tokens::literal::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::token::tokens::StartBlockToken;
-use crate::token::Tokens;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
-use smallvec::SmallVec;
 
 #[derive(Default)]
 pub struct CodeLexer {
@@ -62,9 +64,9 @@ impl CodeLexer {
     }
 
     fn token_and_indents(&mut self, reader: &mut Reader, token: Tokens) -> SubLexerResult {
-        let mut tokens: SmallVec<[Tokens; 4]> = smallvec![token];
+        let mut tokens: TokenVec = smallvec![token];
         // This is a new line, so there may be indents.
-        tokens.append(&mut self.lex_indents(reader));
+        tokens.extend(self.lex_indents(reader));
         SubLexerResult::Result(tokens)
     }
 }
@@ -161,7 +163,7 @@ impl SubLexer for CodeLexer {
                 if self.indent < 0 {
                     return SubLexerResult::End;
                 }
-                let mut tokens = vec![Tokens::EndStatement(EndStatementToken::new_end_line())];
+                let mut tokens = smallvec![Tokens::EndStatement(EndStatementToken::new_end_line())];
                 for _ in 0..self.indent {
                     // This line is dedented, make end tokens.
                     tokens.push(Tokens::EndBlock(EndBlockToken::new(true, false)));
@@ -175,11 +177,12 @@ impl SubLexer for CodeLexer {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use crate::lexing::util::test_util::assert_text_to_tokens;
+    use crate::token::Tokens;
     use crate::token::tokens::EndStatementToken;
     use crate::token::tokens::KeywordToken;
-    use crate::token::Tokens;
-    use std::str::FromStr;
 
     #[test]
     fn test_lexing_individual() {
