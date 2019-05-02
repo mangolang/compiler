@@ -6,7 +6,7 @@
     :target: https://deps.rs/repo/github/mangolang/compiler
 
 .. image:: https://readthedocs.org/projects/mangolang/badge/?version=latest
-    :target: https://mangolang.readthedocs.io/en/latest/?badge=latest
+    :target: https://docs.mangolang.org/en/latest/
 
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
