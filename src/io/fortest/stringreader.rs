@@ -27,7 +27,7 @@ impl Reader for StringReader {
             if let Some(mtch) = regex.find(&self.code[self.index..]) {
                 if self.index + mtch.as_str().len() == self.code.len() {
                     self.index += mtch.as_str().len();
-                    return ReaderResult::EOF();
+                    return ReaderResult::EOF;
                 }
             }
             // Check for subpattern
@@ -45,7 +45,7 @@ impl Reader for StringReader {
                     }
                     ReaderResult::Match((&mtch.as_str()[k..]).to_owned())
                 }
-                None => ReaderResult::NoMatch(),
+                None => ReaderResult::NoMatch,
             }
         })
     }

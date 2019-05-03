@@ -158,8 +158,8 @@ impl SubLexer for CodeLexer {
         // If the code gets here, it did not recognize the text as any token
         match reader.matches(r"[^\s]+") {
             Match(word) => SubLexerResult::single(Tokens::Unlexable(UnlexableToken::new(word))),
-            NoMatch() => panic!("Do not know how to proceed with parsing"),
-            EOF() => {
+            NoMatch => panic!("Do not know how to proceed with parsing"),
+            EOF => {
                 if self.indent < 0 {
                     return SubLexerResult::End;
                 }
