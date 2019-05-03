@@ -1,7 +1,11 @@
 use crate::ast_full::util::lex_list::LexList;
+use crate::token::Tokens;
 
-pub fn parse_addition(lex: LexList) {
+pub fn parse_addition(lex: LexList) -> Tokens {
     //TODO @mark:
+    let lhs = parse_multiplication(lex);
+
+
 //    lex
 //    val lhsMultiplication = parseMultiplication(listener, tokens)
 //    val maybeOperator = tokens.peek()

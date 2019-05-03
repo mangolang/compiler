@@ -14,8 +14,7 @@ pub mod ui;
 pub mod util;
 
 // Types
-pub mod ast_core;
-pub mod ast_full;
+pub mod ast;
 pub mod ir;
 pub mod sem;
 pub mod token;

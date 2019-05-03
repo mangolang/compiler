@@ -60,61 +60,61 @@ mod tests {
 
     #[test]
     fn test_tokens_size() {
-        assert!(size_of::<Tokens>() <= 4 * LONG_SIZE, size_of::<Tokens>());
+        assert!(size_of::<Tokens>() <= 5 * LONG_SIZE, size_of::<Tokens>());
     }
 
     #[test]
     fn test_association_token_size() {
-        assert!(size_of::<AssociationToken>() <= 3 * LONG_SIZE, format!("AssociationToken size: {}", size_of::<AssociationToken>()));
+        assert!(size_of::<AssociationToken>() <= 4 * LONG_SIZE, format!("AssociationToken size: {}", size_of::<AssociationToken>()));
     }
 
     #[test]
     fn test_identifier_token_size() {
-        assert!(size_of::<IdentifierToken>() <= 3 * LONG_SIZE, format!("IdentifierToken size: {}", size_of::<IdentifierToken>()));
+        assert!(size_of::<IdentifierToken>() <= 4 * LONG_SIZE, format!("IdentifierToken size: {}", size_of::<IdentifierToken>()));
     }
 
     #[test]
     fn test_keyword_token_size() {
-        assert!(size_of::<KeywordToken>() <= 3 * LONG_SIZE, format!("KeywordToken size: {}", size_of::<KeywordToken>()));
+        assert!(size_of::<KeywordToken>() <= 4 * LONG_SIZE, format!("KeywordToken size: {}", size_of::<KeywordToken>()));
     }
 
     #[test]
     fn test_literal_token_size() {
-        assert!(size_of::<LiteralToken>() <= 3 * LONG_SIZE, format!("LiteralToken size: {}", size_of::<LiteralToken>()));
+        assert!(size_of::<LiteralToken>() <= 4 * LONG_SIZE, format!("LiteralToken size: {}", size_of::<LiteralToken>()));
     }
 
     #[test]
     fn test_operator_token_size() {
-        assert!(size_of::<OperatorToken>() <= 3 * LONG_SIZE, format!("OperatorToken size: {}", size_of::<OperatorToken>()));
+        assert!(size_of::<OperatorToken>() <= 4 * LONG_SIZE, format!("OperatorToken size: {}", size_of::<OperatorToken>()));
     }
 
     #[test]
     fn test_parenthesis_open_token_size() {
-        assert!(size_of::<ParenthesisOpenToken>() <= 3 * LONG_SIZE, format!("ParenthesisOpenToken size: {}", size_of::<ParenthesisOpenToken>()));
+        assert!(size_of::<ParenthesisOpenToken>() <= 4 * LONG_SIZE, format!("ParenthesisOpenToken size: {}", size_of::<ParenthesisOpenToken>()));
     }
 
     #[test]
     fn test_parenthesis_close_token_size() {
-        assert!(size_of::<ParenthesisCloseToken>() <= 3 * LONG_SIZE, format!("ParenthesisCloseToken size: {}", size_of::<ParenthesisCloseToken>()));
+        assert!(size_of::<ParenthesisCloseToken>() <= 4 * LONG_SIZE, format!("ParenthesisCloseToken size: {}", size_of::<ParenthesisCloseToken>()));
     }
 
     #[test]
     fn test_end_statement_token_size() {
-        assert!(size_of::<EndStatementToken>() <= 3 * LONG_SIZE, format!("EndStatementToken size: {}", size_of::<EndStatementToken>()));
+        assert!(size_of::<EndStatementToken>() <= 4 * LONG_SIZE, format!("EndStatementToken size: {}", size_of::<EndStatementToken>()));
     }
 
     #[test]
     fn test_start_block_token_size() {
-        assert!(size_of::<StartBlockToken>() <= 3 * LONG_SIZE, format!("StartBlockToken size: {}", size_of::<StartBlockToken>()));
+        assert!(size_of::<StartBlockToken>() <= 4 * LONG_SIZE, format!("StartBlockToken size: {}", size_of::<StartBlockToken>()));
     }
 
     #[test]
     fn test_end_block_token_size() {
-        assert!(size_of::<EndBlockToken>() <= 3 * LONG_SIZE, format!("EndBlockToken size: {}", size_of::<EndBlockToken>()));
+        assert!(size_of::<EndBlockToken>() <= 4 * LONG_SIZE, format!("EndBlockToken size: {}", size_of::<EndBlockToken>()));
     }
 
     #[test]
     fn test_unlexable_token_size() {
-        assert!(size_of::<UnlexableToken>() <= 3 * LONG_SIZE, format!("UnlexableToken size: {}", size_of::<UnlexableToken>()));
+        assert!(size_of::<UnlexableToken>() <= 4 * LONG_SIZE, format!("UnlexableToken size: {}", size_of::<UnlexableToken>()));
     }
 }
