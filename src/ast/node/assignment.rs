@@ -1,5 +1,5 @@
-use crate::ast_full::AST;
-use crate::ast_full::{FullAST, VariableAST};
+use crate::ast::AST;
+use crate::ast::{FullAST, VariableAST};
 use crate::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.

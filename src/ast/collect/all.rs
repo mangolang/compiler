@@ -1,11 +1,11 @@
-use crate::ast_full::node::AssignmentAST;
-use crate::ast_full::node::BinaryOperationAST;
-use crate::ast_full::node::UnaryOperationAST;
-use crate::ast_full::special::UnparseableAST;
-use crate::ast_full::terminal::LiteralAST;
-use crate::ast_full::terminal::OperatorAST;
-use crate::ast_full::terminal::VariableAST;
-use crate::ast_full::AST;
+use crate::ast::node::AssignmentAST;
+use crate::ast::node::BinaryOperationAST;
+use crate::ast::node::UnaryOperationAST;
+use crate::ast::special::UnparseableAST;
+use crate::ast::terminal::LiteralAST;
+use crate::ast::terminal::OperatorAST;
+use crate::ast::terminal::VariableAST;
+use crate::ast::AST;
 use crate::util::encdec::ToText;
 
 /// Collection of all possible nodes in the full abstract syntax tree.

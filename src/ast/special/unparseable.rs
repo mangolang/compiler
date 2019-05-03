@@ -1,4 +1,4 @@
-use crate::ast_full::AST;
+use crate::ast::AST;
 use crate::token::Tokens;
 use crate::util::encdec::ToText;
 

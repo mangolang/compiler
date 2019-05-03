@@ -1,3 +1,3 @@
-use crate::ast_full::util::lex_list::LexList;
+use crate::ast::util::lex_list::LexList;
 
 pub fn parse_parenthese(lex: LexList) {}

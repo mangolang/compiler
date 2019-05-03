@@ -1,6 +1,6 @@
-use crate::ast_full::terminal::OperatorAST;
-use crate::ast_full::FullAST;
-use crate::ast_full::AST;
+use crate::ast::terminal::OperatorAST;
+use crate::ast::FullAST;
+use crate::ast::AST;
 use crate::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
