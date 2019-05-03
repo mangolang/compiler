@@ -33,9 +33,9 @@ impl SubLexer for StringLexer {
         // TODO: perhaps there's a library that does parsing a string with escape characters
         // TODO: doesn't handle escaping etc at all now
         // TODO: this is going to have a problem if `matches` automatically eats whitespace
-        match reader.matches("[^\"\\n]*") {
+        match reader.matches_exact("[^\"\\n]*") {
             Match(value) => {
-                match reader.matches("\"") {
+                match reader.matches_exact("\"") {
                     Match(_) => {/* Just discard the closing quote */},
                     NoMatch | EOF => panic!("Error: sudden end of line inside string"),
                 }
