@@ -20,12 +20,14 @@ fn assert_source_compile_err(source: &str, expected_error: &str) {
     panic!();
 }
 
-#[test]
+//TODO @mark: enable
+//#[test]
 fn test_hello_world() {
     assert_source_output(r"print('hello world')", r"hello world\n")
 }
 
-#[test]
+//TODO @mark: enable
+//#[test]
 fn test_basic_if_math() {
     assert_source_output(
         r"if 2 + 3 > 4:\

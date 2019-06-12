@@ -7,11 +7,11 @@ use std::io;
 
 pub struct Assign {
     assignee: Local,
-    value: Box<Expression>,
+    value: Box<dyn Expression>,
 }
 
 impl Assign {
-    pub fn new(assignee: Local, value: Box<Expression>) -> Box<Self> {
+    pub fn new(assignee: Local, value: Box<dyn Expression>) -> Box<Self> {
         Box::new(Assign { assignee, value })
     }
 }

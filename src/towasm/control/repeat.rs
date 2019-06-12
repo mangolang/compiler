@@ -17,7 +17,7 @@ pub struct Loop {
 impl Loop {
     pub fn new<F>(statements_gen: F, _scope: &Scope) -> Box<Self>
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         //TODO @mark: name
         Loop::new_named(Name::from_valid("loop"), statements_gen)
@@ -26,7 +26,7 @@ impl Loop {
 
     pub fn new_named<F>(name: Name, statements_gen: F) -> Box<Self>
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         Box::new(Loop {
             name,

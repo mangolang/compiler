@@ -23,7 +23,7 @@ impl<T> Queue<T> {
     }
 
     /// Moves all the elements from a vector into the queue.
-    pub fn append<I: Iterator<Item=T>>(&mut self, other: I) {
+    pub fn append<I: Iterator<Item = T>>(&mut self, other: I) {
         for item in other {
             self.items.push_back(item);
         }

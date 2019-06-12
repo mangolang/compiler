@@ -17,7 +17,6 @@ impl StringReader {
 }
 
 impl Reader for StringReader {
-
     //TODO @mark: I'd like regexes to be validated at compile-time... perhaps go back to macro and just wait for that to get faster
     fn do_match(&mut self, subpattern: &str, strip_whitespace: bool) -> ReaderResult {
         // Check for subpattern
