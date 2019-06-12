@@ -1,4 +1,4 @@
-use crate::ast::util::lex_list::LexList;
+use crate::lexing::util::lex_list::LexList;
 use crate::io::fortest::stringreader::StringReader;
 use crate::lexing::combi_lexer::CombiLexer;
 use crate::lexing::util::lex_all::lex_all;

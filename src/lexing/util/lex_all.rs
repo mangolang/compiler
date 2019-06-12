@@ -1,4 +1,4 @@
-use crate::ast::util::lex_list::LexList;
+use crate::lexing::util::lex_list::LexList;
 use crate::lexing::typ::Lexer;
 use crate::lexing::typ::MaybeToken;
 

@@ -1,4 +1,4 @@
-use crate::ast::util::lex_list::LexList;
+use crate::lexing::util::lex_list::LexList;
 use crate::token::Tokens;
 
 pub fn parse_addition(lex: LexList) -> Tokens {
