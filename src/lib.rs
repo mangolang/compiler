@@ -17,12 +17,16 @@ pub mod util;
 pub mod ast;
 pub mod ir;
 pub mod sem;
-pub mod token;
+
+// pest does lexing and parsing, but there is a possibility that
+// there will be a switch back to hand-coded after stabilization.
+pub mod pest;
+//pub mod token;
+//pub mod lexing;
+//pub mod parsing;
 
 // Operations
-pub mod lexing;
 pub mod optimizing;
-pub mod parsing;
 pub mod reducing;
 pub mod semanticating;
 pub mod typing;
