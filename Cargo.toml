@@ -20,7 +20,7 @@ derive-new = "^0.5.6"
 #cargo-wasm = "0.4.*"
 wasm-bindgen = "^0.2.42"
 itertools = "^0.8.0"  # TODO @mark: unused?
-smallvec = { verison = "^0.6.9", features = ["union"] }
+smallvec = { version = "^0.6.9", features = ["union"] }
 pest = "^2.1.1"
 pest_derive = "^2.1.0"
 
