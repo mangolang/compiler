@@ -1,2 +1,2 @@
 
-field = { (ASCII_DIGIT | "." | "-")+ }
+number = { (ASCII_DIGIT | "." | "-")+ }
