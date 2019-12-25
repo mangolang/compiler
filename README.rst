@@ -31,12 +31,15 @@ How to use
 
 The compiler is written in Rust. You can run it using:
 
-.. code:: bash
-
-    cargo test
+    cargo run
 
 This compiles to native code, with WebAssembly to be added later (#34).
 
 Links
+-------------------------------
 
+* `Documentation`_
+* `Code of conduct and contributing`_
+
+.. _`Documentation`: https://docs.mangocode.org/
 .. _`Code of conduct and contributing`: https://github.com/mangolang/mango
