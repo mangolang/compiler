@@ -6,7 +6,7 @@
     :target: https://deps.rs/repo/github/mangolang/compiler
 
 .. image:: https://readthedocs.org/projects/mangolang/badge/?version=latest
-    :target: https://mangolang.readthedocs.io/en/latest/?badge=latest
+    :target: https://docs.mangocode.org/en/latest/
 
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
@@ -37,6 +37,6 @@ The compiler is written in Rust. You can run it using:
 
 This compiles to native code, with WebAssembly to be added later (#34).
 
-`Code of conduct and contributing`_
+Links
 
 .. _`Code of conduct and contributing`: https://github.com/mangolang/mango
