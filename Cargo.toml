@@ -1,7 +1,7 @@
 [package]
 name = "mango"
 description = "The Mango programming language (UNDER CONSTRUCTION)"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangocode.org/"
 license = "Apache-2.0"
