@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Make sure to fail if any check fails
+set -e
+set -o pipefail
+
+# Get the hook utils directory
+util_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/utils"
+
+# Check that the formatting is correct
+PYTHONPATH="$util_dir":$PYTHONPATH python3 "$util_dir/run_on_staged.py" 'cargo +nightly fmt --all -- --check' 'cargo test --all'
