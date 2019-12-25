@@ -17,7 +17,7 @@ Mango
 
 A programming language to help you make large software projects reliable, for browsers and servers.
 
-https://mangolang.org/
+https://mangocode.org/
 
 Status
 -------------------------------
