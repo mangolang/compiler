@@ -1,10 +1,23 @@
 
+.. image:: https://travis-ci.org/mangolang/compiler.svg?branch=master
+    :target: https://travis-ci.org/mangolang/compiler
+
+.. image:: https://deps.rs/repo/github/mangolang/compiler/status.svg
+    :target: https://deps.rs/repo/github/mangolang/compiler
+
+.. image:: https://readthedocs.org/projects/mangolang/badge/?version=latest
+    :target: https://docs.mangocode.org/en/latest/
+
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+    :target: https://opensource.org/licenses/Apache-2.0
+
+
 Mango
 ===============================
 
 Mango is a programming language that is currently in development. It focuses on maintainability and bug prevention.
 
-https://mangolang.org/
+https://mangocode.org/
 
 Status
 -------------------------------
@@ -22,3 +35,11 @@ The compiler is written in Rust. You can run it using:
 
 This compiles to native code, with WebAssembly to be added later (#34).
 
+Links
+-------------------------------
+
+* `Documentation`_
+* `Code of conduct and contributing`_
+
+.. _`Documentation`: https://docs.mangocode.org/
+.. _`Code of conduct and contributing`: https://github.com/mangolang/mango
