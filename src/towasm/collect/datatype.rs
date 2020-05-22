@@ -62,7 +62,6 @@ impl Wasm for Value {
             Value::Int(val) => format!("{}", val),
             Value::Float(val) => format!("{}", val),
         }
-        .to_owned()
     }
 
     fn write_wasm(&self, _file: &mut File) -> io::Result<()> {

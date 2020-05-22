@@ -1,7 +1,6 @@
 use ::pest::Parser;
 //use crate::pestparser::Error;
 use ::pest::error::Error;
-use ::pest::iterators::Pairs;
 use ::pest::iterators::Tokens;
 
 #[derive(Parser)]
@@ -14,5 +13,6 @@ pub fn parse_string(source: &str) -> Result<Tokens<Rule>, Error<Rule>> {
 
 #[test]
 fn test_parse_string() {
-    assert_eq!(Rule::number, parse_string("-3.1415").unwrap());
+    // assert_eq!(Rule::number, parse_string("-3.1415").unwrap());
+    unimplemented!()
 }
