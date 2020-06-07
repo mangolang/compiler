@@ -12,7 +12,6 @@ use std::io::{Read, Write};
 
 // Utilities
 pub mod io;
-pub mod jit;
 pub mod ui;
 pub mod util;
 
