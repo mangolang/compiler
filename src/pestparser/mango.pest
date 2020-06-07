@@ -2,8 +2,13 @@
 //TODO @mark: https://pest.rs/book/examples/ini.html
 
 // The starting point
-file = { (number ~ NEWLINE+)* }
+file = { number ~ (NEWLINE+ ~ number)* }
 
-// A number
-number = { "-"? ~ (ASCII_DIGIT+ | ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) }
+
+string = { "'" ~ [^'] ~ "'" }
+
+boolean = { "true" | "false" }
+
+// A number, either integer or decimal
+number = { ("-" | "+")? ~ (ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+ | ASCII_DIGIT+) }
 
