@@ -1,2 +1,9 @@
 
-number = { (ASCII_DIGIT | "." | "-")+ }
+//TODO @mark: https://pest.rs/book/examples/ini.html
+
+// The starting point
+file = { (number ~ NEWLINE+)* }
+
+// A number
+number = { "-"? ~ (ASCII_DIGIT+ | ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) }
+
