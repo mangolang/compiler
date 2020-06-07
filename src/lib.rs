@@ -34,11 +34,6 @@ pub mod typing;
 
 pub mod towasm;
 
-//TODO @mark: import directly
-extern crate pest;
-#[macro_use]
-extern crate pest_derive;
-
 pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
     //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
     //

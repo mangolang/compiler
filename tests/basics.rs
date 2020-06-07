@@ -27,7 +27,7 @@ fn test_hello_world() {
 }
 
 //TODO @mark: enable
-//#[test]
+#[test]
 fn test_basic_if_math() {
     assert_source_output(
         r"if 2 + 3 > 4:\
