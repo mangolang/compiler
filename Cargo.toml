@@ -12,6 +12,14 @@ include = [
     "Cargo.toml"
 ]
 
+[lib]
+name = "mango"
+path = "src/lib.rs"
+
+[[bin]]
+name = "mangoc"
+path = "cli/main.rs"
+
 [dependencies]
 regex = "^1.1.6"
 string-interner = "^0.7.0"
