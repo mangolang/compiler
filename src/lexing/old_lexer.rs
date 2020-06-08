@@ -28,10 +28,6 @@ pub struct CodeLexer {
     indent: i32, // -1: finished
 }
 
-thread_local! {
-
-}
-
 // TODO: keep the regexes in thread local global scope storage
 
 impl CodeLexer {
