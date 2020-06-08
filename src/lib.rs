@@ -19,12 +19,9 @@ pub mod ast;
 pub mod ir;
 pub mod sem;
 
-// pestparser does lexing and parsing, but there is a possibility that
-// there will be a switch back to hand-coded after stabilization.
-pub mod pestparser;
 pub mod token;
-//pub mod lexing;
-//pub mod parsing;
+pub mod lexing;
+pub mod parsing;
 
 // Operations
 pub mod optimizing;

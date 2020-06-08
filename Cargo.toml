@@ -30,8 +30,6 @@ derive-new = "^0.5.8"
 #wasm-bindgen = "^0.2.63"
 itertools = "^0.8.2"  # TODO @mark: unused?
 smallvec = { version = "^0.6.13", features = ["union"] }
-pest = "^2.1.3"
-pest_derive = "^2.1.0"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
 proc-macro2 = ">=0.4.24"
