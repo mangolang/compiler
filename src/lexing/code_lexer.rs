@@ -25,7 +25,7 @@ use crate::util::strslice::charsliceto;
 
 #[derive(Default)]
 pub struct CodeLexer {
-    indent: i32, // -1: finished
+    indent: i32,  // -1: finished
 }
 
 // TODO: keep the regexes in thread local global scope storage
@@ -35,7 +35,7 @@ impl CodeLexer {
         CodeLexer { indent: 0 }
     }
 
-    fn lex_indents(&mut self, reader: &mut Reader) -> Vec<Tokens> {
+    fn lex_indents(&mut self, reader: &mut impl Reader) -> Vec<Tokens> {
         let mut line_indent = 0;
         while let Match(_) = reader.matches("\\t") {
             line_indent += 1;
@@ -63,7 +63,7 @@ impl CodeLexer {
         tokens
     }
 
-    fn token_and_indents(&mut self, reader: &mut Reader, token: Tokens) -> SubLexerResult {
+    fn token_and_indents(&mut self, reader: &mut impl Reader, token: Tokens) -> SubLexerResult {
         let mut tokens: TokenVec = smallvec![token];
         // This is a new line, so there may be indents.
         tokens.extend(self.lex_indents(reader));
@@ -72,7 +72,7 @@ impl CodeLexer {
 }
 
 impl SubLexer for CodeLexer {
-    fn lex_pass(&mut self, reader: &mut Reader) -> SubLexerResult {
+    fn lex_pass(&mut self, reader: &mut impl Reader) -> SubLexerResult {
         use self::SubLexerResult::*;
 
         // End of line continuation

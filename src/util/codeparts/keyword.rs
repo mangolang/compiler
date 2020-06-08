@@ -42,6 +42,7 @@ impl FromStr for Keyword {
             "as" => Ok(Reserved("as".to_owned())),
             "assert" => Ok(Reserved("assert".to_owned())),
             "async" => Ok(Reserved("async".to_owned())),
+            "auto" => Ok(Reserved("auto".to_owned())),
             "await" => Ok(Reserved("await".to_owned())),
             "become" => Ok(Reserved("become".to_owned())),
             "bool" => Ok(Reserved("bool".to_owned())),
