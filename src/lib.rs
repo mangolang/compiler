@@ -11,25 +11,25 @@ use std::io::{Read, Write};
 //use crate::parsing::parse_expression;
 
 // Utilities
-pub mod io;
-pub mod util;
+pub(crate) mod io;
+pub(crate) mod util;
 
 // Types
-pub mod ast;
-pub mod ir;
-pub mod sem;
+pub(crate) mod ast;
+pub(crate) mod ir;
+pub(crate) mod sem;
 
-pub mod token;
-pub mod lexing;
-pub mod parsing;
+pub(crate) mod token;
+pub(crate) mod lexing;
+pub(crate) mod parsing;
 
 // Operations
-pub mod optimizing;
-pub mod reducing;
-pub mod semanticating;
-pub mod typing;
+pub(crate) mod optimizing;
+pub(crate) mod reducing;
+pub(crate) mod semanticating;
+pub(crate) mod typing;
 
-pub mod towasm;
+pub(crate) mod towasm;
 
 pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
     //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));

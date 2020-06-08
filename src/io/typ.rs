@@ -8,11 +8,8 @@ pub enum ReaderResult {
     EOF,
 }
 
-/// A reader represents a source 'file', which may be a file, webpage, string, ...
+/// A reader represents a source 'file', which may be a file, web page, string, ...
 pub trait Reader: Debug {
-    /// Checks whether the `text` is found starting from the current position.
-    //    fn equals(&mut self, texts: Vec<&str>) -> ReaderResult;
-
     //TODO @mark: maybe just do only exact matches
     /// Checks whether the code from the current position matches a regex pattern.
     ///
@@ -28,13 +25,4 @@ pub trait Reader: Debug {
     fn matches_exact(&mut self, subpattern: &str) -> ReaderResult {
         self.do_match(subpattern, false)
     }
-
-    /// Return a number that can be used to check whether the state has changed.
-    /// This need not correspond to a specific position, but should be unique for the progress.
-    //TODO @mark: not used?
-    fn get_progress(&self) -> usize;
-}
-
-pub trait Writer {
-    // TODO
 }
