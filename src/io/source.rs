@@ -13,8 +13,16 @@ impl SourceFile {
         SourceFile { text }
     }
 
+    pub fn len(&self) -> usize {
+        self.text.len()
+    }
+
     pub fn slice(&self, start: usize, end: usize) -> SourceSlice {
         SourceSlice::new(self, start, end)
+    }
+
+    pub fn slice_from(&self, start: usize) -> SourceSlice {
+        SourceSlice::new(self, start, len())
     }
 }
 
