@@ -11,6 +11,7 @@ use std::io::{Read, Write};
 //use crate::parsing::parse_expression;
 
 // Utilities
+pub(crate) mod common;
 pub(crate) mod io;
 pub(crate) mod util;
 
