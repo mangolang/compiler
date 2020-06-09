@@ -95,49 +95,49 @@ mod tests {
     #[test]
     fn test_slice_str() {
         let f = SourceFile::test("hello world!");
-        assert_eq!("lo w", f.slice(3, 7).as_str());
+        assert_eq!(f.slice(3, 7).as_str(), "lo w");
     }
 
     #[test]
     fn test_slice_from_str() {
         let f = SourceFile::test("hello world!");
-        assert_eq!("world!", f.slice_from(6).as_str());
+        assert_eq!(f.slice_from(6).as_str(), "world!");
     }
 
     #[test]
     fn test_slice_empty() {
         let f = SourceFile::test("hello world!");
-        assert_eq!("", f.slice(3, 3).as_str());
+        assert_eq!(f.slice(3, 3).as_str(), "");
     }
 
     #[test]
     fn test_slice_all() {
         let f = SourceFile::test("hello world!");
-        assert_eq!("hello world!", f.slice(0, 12).as_str());
+        assert_eq!(f.slice(0, 12).as_str(), "hello world!");
     }
 
     #[test]
     fn test_slice_eq() {
         let f = SourceFile::test("hello world!");
-        assert_eq!(f.slice(3, 7), SourceSlice::new(&f, 3, 7));
+        assert_eq!(SourceSlice::new(&f, 3, 7), f.slice(3, 7));
     }
 
     #[test]
     fn test_slice_neq_file() {
         let f1 = SourceFile::new("a.txt", "hello world!");
         let f2 = SourceFile::new("b.txt", "hello world!");
-        assert_ne!(f1.slice(3, 7), f2.slice(3, 7));
+        assert_ne!(f2.slice(3, 7), f1.slice(3, 7));
     }
 
     #[test]
     fn test_slice_neq_start() {
         let f = SourceFile::new("a.txt", "hello world!");
-        assert_ne!(f.slice(2, 7), f.slice(3, 7));
+        assert_ne!(f.slice(3, 7), f.slice(2, 7));
     }
 
     #[test]
     fn test_slice_neq_end() {
         let f = SourceFile::new("a.txt", "hello world!");
-        assert_ne!(f.slice(3, 7), f.slice(3, 6));
+        assert_ne!(f.slice(3, 6), f.slice(3, 7));
     }
 }

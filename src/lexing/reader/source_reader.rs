@@ -111,7 +111,7 @@ mod tests {
         fn test_match_without_space() {
             check("aab", |mut r| {
                 let m = r.strip_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -119,7 +119,7 @@ mod tests {
         fn test_match_after_space() {
             check(" \t aab", |mut r| {
                 let m = r.strip_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -127,9 +127,9 @@ mod tests {
         fn test_match_updates_position() {
             check(" \t aab", |mut r| {
                 let m = r.strip_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.strip_match(&*TEST_RE);
-                assert_eq!(NoMatch, n);
+                assert_eq!(n, NoMatch);
             });
         }
     }
@@ -144,7 +144,7 @@ mod tests {
         fn test_match_without_space() {
             check("aab", |mut r| {
                 let m = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -152,7 +152,7 @@ mod tests {
         fn test_match_after_space() {
             check(" \t aab", |mut r| {
                 let m = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -160,9 +160,9 @@ mod tests {
         fn test_peek_does_not_update_position() {
             check(" \t aab", |mut r| {
                 let m = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", n.as_str());
+                assert_eq!(n.as_str(), "aa");
             });
         }
     }
@@ -178,7 +178,7 @@ mod tests {
         fn test_match_without_space() {
             check("aab", |mut r| {
                 let m = r.direct_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -186,7 +186,7 @@ mod tests {
         fn test_match_after_space() {
             check(" \t aab", |mut r| {
                 let m = r.direct_match(&*TEST_RE);
-                assert_eq!(NoMatch, m);
+                assert_eq!(m, NoMatch);
             });
         }
 
@@ -194,9 +194,9 @@ mod tests {
         fn test_match_updates_position() {
             check("aab", |mut r| {
                 let m = r.direct_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.direct_match(&*TEST_RE);
-                assert_eq!(NoMatch, n);
+                assert_eq!(n, NoMatch);
             });
         }
     }
@@ -212,7 +212,7 @@ mod tests {
         fn test_match_without_space() {
             check("aab", |mut r| {
                 let m = r.direct_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str())
+                assert_eq!(m.as_str(), "aa")
             });
         }
 
@@ -220,7 +220,7 @@ mod tests {
         fn test_match_after_space() {
             check(" \t aab", |mut r| {
                 let m = r.direct_peek(&*TEST_RE);
-                assert_eq!(NoMatch, m);
+                assert_eq!(m, NoMatch);
             });
         }
 
@@ -228,9 +228,9 @@ mod tests {
         fn test_peek_does_not_update_position() {
             check("aab", |mut r| {
                 let m = r.direct_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.direct_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", n.as_str());
+                assert_eq!(n.as_str(), "aa");
             });
         }
     }
@@ -246,11 +246,11 @@ mod tests {
         fn test_match_peek_without_space() {
             check("aab", |mut r| {
                 let m = r.direct_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.direct_peek(&*TEST_RE);
-                assert_eq!(NoMatch, n);
+                assert_eq!(n, NoMatch);
                 let p = r.strip_peek(&*TEST_RE);
-                assert_eq!(NoMatch, p);
+                assert_eq!(p, NoMatch);
             });
         }
 
@@ -258,11 +258,11 @@ mod tests {
         fn test_match_peek_after_space() {
             check(" \t aab", |mut r| {
                 let m = r.strip_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let n = r.direct_peek(&*TEST_RE);
-                assert_eq!(NoMatch, n);
+                assert_eq!(n, NoMatch);
                 let p = r.strip_peek(&*TEST_RE);
-                assert_eq!(NoMatch, p);
+                assert_eq!(p, NoMatch);
             });
         }
 
@@ -270,11 +270,11 @@ mod tests {
         fn test_peek_match_without_space() {
             check("aab", |mut r| {
                 let n = r.direct_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", n.as_str());
+                assert_eq!(n.as_str(), "aa");
                 let m = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let p = r.direct_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", p.as_str());
+                assert_eq!(p.as_str(), "aa");
             });
         }
 
@@ -282,13 +282,13 @@ mod tests {
         fn test_peek_match_after_space() {
             check(" \t aab", |mut r| {
                 let n = r.direct_peek(&*TEST_RE);
-                assert_eq!(NoMatch, n);
+                assert_eq!(n, NoMatch);
                 let m = r.strip_peek(&*TEST_RE).unwrap();
-                assert_eq!("aa", m.as_str());
+                assert_eq!(m.as_str(), "aa");
                 let p = r.direct_match(&*TEST_RE);
-                assert_eq!(NoMatch, p);
+                assert_eq!(p, NoMatch);
                 let q = r.strip_match(&*TEST_RE).unwrap();
-                assert_eq!("aa", q.as_str());
+                assert_eq!(q.as_str(), "aa");
             });
         }
     }
