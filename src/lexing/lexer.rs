@@ -24,3 +24,12 @@ impl Lexer for CodeLexer {
         self.tokens.push(token);
     }
 }
+
+#[cfg(test)]
+mod test_util {
+    use super::*;
+
+    struct MockCodeLexer {
+        indent: u32,
+    }
+}

@@ -38,33 +38,40 @@ impl <'a> SourceReader<'a> {
             None => {}
         }
     }
-}
 
-impl Reader for SourceReader {
     /// Remove leading whitespace, which will not be part of the matched result.
-    fn strip_match(&mut self, pattern: &Regex) -> ReaderResult {
-        skip_whitespace();
-        match pattern.find(self.source.slice_from(self.pos_after_space).as_str()) {
+    #[inline]
+    fn flexible_match(&mut self, pattern: &Regex, start_at: usize, update_pos: bool) -> ReaderResult {
+        match pattern.find(self.source.slice_from(start_at).as_str()) {
             Some(found) => {
-                let end_pos = self.pos_after_space + found.end();
-                let m = ReaderResult::Match(self.source.slice(self.pos_after_space, end_pos));
-                self.pos = end_pos;
+                let end_pos = start_at + found.end();
+                let m = ReaderResult::Match(self.source.slice(start_at, end_pos));
+                if update_pos {
+                    self.pos = end_pos;
+                }
                 m
             },
             None => ReaderResult::NoMatch
         }
     }
+}
 
-    /// Start matching directly, not skipping whitespace. If whitespace is matched by the regex, it will be included.
+impl Reader for SourceReader {
+    fn strip_match(&mut self, pattern: &Regex) -> ReaderResult {
+        skip_whitespace();
+        flexible_match(pattern, self.pos_after_space, true)
+    }
+
+    fn strip_peek(&mut self, pattern: &Regex) -> ReaderResult {
+        skip_whitespace();
+        flexible_match(pattern, self.pos_after_space, false)
+    }
+
     fn direct_match(&mut self, pattern: &Regex) -> ReaderResult {
-        match pattern.find(self.source.slice_from(self.pos).as_str()) {
-            Some(found) => {
-                let end_pos = self.pos + found.end();
-                let m = ReaderResult::Match(self.source.slice(self.pos, end_pos));
-                self.pos = end_pos;
-                m
-            },
-            None => ReaderResult::NoMatch
-        }
+        flexible_match(pattern, self.pos, true)
+    }
+
+    fn direct_peek(&mut self, pattern: &Regex) -> ReaderResult {
+        flexible_match(pattern, self.pos, false)
     }
 }
