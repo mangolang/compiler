@@ -3,6 +3,9 @@ use crate::token::Tokens;
 
 pub trait Lexer {
     fn add(&mut self, token: Tokens);
+    fn tokens(&self) -> &[Tokens];
+    fn get_indent(&self) -> u32;
+    fn set_indent(&mut self, new_indent: u32);
 }
 
 #[derive(Debug)]
@@ -24,13 +27,16 @@ impl Lexer for CodeLexer {
     fn add(&mut self, token: Tokens) {
         self.tokens.push(token);
     }
-}
 
-#[cfg(test)]
-mod test_util {
-    use super::*;
+    fn tokens(&self) -> &[Tokens] {
+        &self.tokens
+    }
 
-    struct MockCodeLexer {
-        indent: u32,
+    fn get_indent(&self) -> u32 {
+        self.indent
+    }
+
+    fn set_indent(&mut self, new_indent: u32) {
+        self.indent = indent;
     }
 }

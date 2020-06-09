@@ -42,7 +42,8 @@ impl <'a> SourceReader<'a> {
     /// Remove leading whitespace, which will not be part of the matched result.
     #[inline]
     fn flexible_match(&mut self, pattern: &Regex, start_at: usize, update_pos: bool) -> ReaderResult {
-        match pattern.find(self.source.slice_from(start_at).as_str()) {
+        //TODO @mark: why as_by
+        match pattern.find(self.source.slice_from(start_at).as_str().as_bytes()) {
             Some(found) => {
                 let end_pos = start_at + found.end();
                 let m = ReaderResult::Match(self.source.slice(start_at, end_pos));
@@ -84,21 +85,44 @@ mod tests {
     use super::*;
 
     lazy_static! {
-        static ref TEST_RE = Regex::new("^a*");
+        static ref TEST_RE = Regex::new("^a+");
+    }
+
+    fn check(txt: &str, t: fn(r: SourceReader)) {
+        let source = SourceFile::new(txt);
+        let mut reader = SourceReader::new(&source);
+        t(reader);
     }
 
     mod strip_match {
+        use super::check;
+        use crate::lexing::reader::reader::ReaderResult;
 
         #[test]
-        fn test_match_after_space() {
-            let source = SourceFile::new(" \t aab");
-            let mut reader = SourceReader::new(&source);
-            let m = reader.strip_match(TEST_RE).unwrap();
-            assert_eq!("aa", m.as_str())
+        fn test_match_without_space() {
+            check("aab", |r| {
+                let m = reader.strip_match(TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
         }
 
         #[test]
-        fn test_match_without_space() {}
+        fn test_match_after_space() {
+            check(" \t aab", |r| {
+                let m = reader.strip_match(TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
+        }
+
+        #[test]
+        fn test_match_updates_position() {
+            check(" \t aab", |r| {
+                let m = reader.strip_match(TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = reader.strip_match(TEST_RE);
+                assert_eq!(ReaderResult::NoMatch, n);
+            });
+        }
     }
 }
 

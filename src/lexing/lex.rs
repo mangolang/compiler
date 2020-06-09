@@ -1,6 +1,5 @@
-use crate::token::{Tokens, Token};
+use crate::token::Tokens;
 use crate::io::source::SourceFile;
-use regex::internal::Input;
 use crate::lexing::lexer::CodeLexer;
 
 //TODO @mark: check regexes in a unit test (make sure they compile and start with ^)
@@ -13,4 +12,6 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
     //TODO performance: does this initial capacity make sense?
     let mut lexer = CodeLexer::new(source.len());
 
+
+    todo!()
 }

@@ -1,5 +1,3 @@
-use ::smallvec::SmallVec;
-
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{EndBlockToken, StartBlockToken, Tokens};
@@ -27,20 +25,19 @@ fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     }
 
     // Determine the tokens to create.
-    for i in line_indent .. lexer.indent {
+    let prev_indent = lexer.get_indent();
+    for i in line_indent .. prev_indent {
         lexer.add(Tokens::EndBlock(EndBlockToken::new(true, false)));
     }
-    for i in lexer.indent .. line_indent {
+    for i in prev_indent .. line_indent {
         lexer.add(Tokens::StartBlock(StartBlockToken::new()));
     }
 
-    lexer.indent = line_indent;
+    lexer.set_indent(line_indent);
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_equal() {
         unimplemented!()

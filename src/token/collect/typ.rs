@@ -5,5 +5,5 @@ use crate::io::source::SourceSlice;
 
 /// Token trait to be implemented by all lexed tokens.
 pub trait Token: PartialEq + Eq + Hash + Debug + ToText + Clone {
-    fn source_slice(&self) -> SourceSlice;
+    //fn source_slice(&self) -> SourceSlice;
 }
