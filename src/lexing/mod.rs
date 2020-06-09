@@ -1,7 +1,10 @@
 
-pub mod reader;
-pub mod lex;
-pub mod old_lexer;
-pub mod util;
-pub mod literals;
-pub mod indent;
+mod reader;
+mod lex;
+mod old_lexer;
+mod util;
+mod literals;
+mod indent;
+mod lexer;
+
+pub use self::lex::lex;

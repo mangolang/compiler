@@ -7,7 +7,7 @@ pub enum ReaderResult<'a> {
     Match(SourceSlice<'a>),
     NoMatch,
     //TODO @mark: do EOF check in lexer, so it doesn't have to happen on every read
-    EOF,
+    //EOF,
 }
 
 /// A reader represents a source 'file', which may be a file, web page, string, ...

@@ -23,10 +23,7 @@ use crate::token::tokens::StartBlockToken;
 use crate::util::strslice::char_ops::CharOps;
 use crate::util::strslice::charsliceto;
 
-#[derive(Default)]
-pub struct CodeLexer {
-    indent: i32, // -1: finished
-}
+
 
 // TODO: keep the regexes in thread local global scope storage
 

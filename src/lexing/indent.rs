@@ -1,9 +1,21 @@
+use ::smallvec::SmallVec;
 
-fn lex_indents(&mut self, reader: &mut impl Reader) -> Vec<Tokens> {
+use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::token::Tokens;
+
+lazy_static! {
+    static ref INDENT_RE = Regex::new("(\\t| {4})");
+}
+
+/// Process the indents at the start of a line.
+fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) -> SmallVec<Tokens> {
+
+    // Determine the indent of the line.
     let mut line_indent = 0;
-    while let Match(_) = reader.matches("\\t") {
+    while let ReaderResult::Match(_) = reader.direct_match(INDENT_RE) {
         line_indent += 1;
     }
+
     let mut tokens: Vec<Tokens> = Vec::with_capacity(8);
     if line_indent < self.indent {
         if let Match(_) = reader.matches(r"end") {
