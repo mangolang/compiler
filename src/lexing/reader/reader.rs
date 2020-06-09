@@ -3,6 +3,7 @@ use ::std::fmt::Debug;
 use crate::io::source::{SourceFile, SourceSlice};
 use ::regex::bytes::Regex;
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum ReaderResult<'a> {
     Match(SourceSlice<'a>),
     NoMatch,

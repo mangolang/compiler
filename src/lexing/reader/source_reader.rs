@@ -89,7 +89,7 @@ mod tests {
     }
 
     fn check(txt: &str, t: fn(r: SourceReader)) {
-        let source = SourceFile::new(txt);
+        let source = SourceFile::test(txt);
         let mut reader = SourceReader::new(&source);
         t(reader);
     }
