@@ -37,6 +37,6 @@ impl Lexer for CodeLexer {
     }
 
     fn set_indent(&mut self, new_indent: u32) {
-        self.indent = indent;
+        self.indent = new_indent;
     }
 }

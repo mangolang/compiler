@@ -1,5 +1,4 @@
 use ::std::fmt;
-use ::std::ops::Deref;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because
@@ -37,7 +36,7 @@ impl SourceFile {
     }
 
     pub fn slice_from(&self, start: usize) -> SourceSlice {
-        SourceSlice::new(self, start, len())
+        SourceSlice::new(self, start, self.len())
     }
 }
 

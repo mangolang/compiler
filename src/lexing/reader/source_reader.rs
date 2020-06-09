@@ -1,12 +1,13 @@
 use ::std::fmt::Debug;
 
-use ::regex::bytes::Regex;
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
 
 use crate::io::source::SourceFile;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 
 lazy_static! {
-    static ref WHITESPACE_RE = Regex::new("^[ \t]+").unwrap();
+    static ref WHITESPACE_RE: Regex = Regex::new(r"^[ \t]+").unwrap();
 }
 
 #[derive(Debug)]
@@ -43,7 +44,7 @@ impl <'a> SourceReader<'a> {
     #[inline]
     fn flexible_match(&mut self, pattern: &Regex, start_at: usize, update_pos: bool) -> ReaderResult {
         //TODO @mark: why as_by
-        match pattern.find(self.source.slice_from(start_at).as_str().as_bytes()) {
+        match pattern.find(self.source.slice_from(start_at).as_str()) {
             Some(found) => {
                 let end_pos = start_at + found.end();
                 let m = ReaderResult::Match(self.source.slice(start_at, end_pos));
@@ -59,33 +60,34 @@ impl <'a> SourceReader<'a> {
 
 impl <'a> Reader for SourceReader<'a> {
     fn strip_match(&mut self, pattern: &Regex) -> ReaderResult {
-        skip_whitespace();
-        flexible_match(pattern, self.pos_after_space, true)
+        self.skip_whitespace();
+        self.flexible_match(pattern, self.pos_after_space, true)
     }
 
     fn strip_peek(&mut self, pattern: &Regex) -> ReaderResult {
-        skip_whitespace();
-        flexible_match(pattern, self.pos_after_space, false)
+        self.skip_whitespace();
+        self.flexible_match(pattern, self.pos_after_space, false)
     }
 
     fn direct_match(&mut self, pattern: &Regex) -> ReaderResult {
-        flexible_match(pattern, self.pos, true)
+        self.flexible_match(pattern, self.pos, true)
     }
 
     fn direct_peek(&mut self, pattern: &Regex) -> ReaderResult {
-        flexible_match(pattern, self.pos, false)
+        self.flexible_match(pattern, self.pos, false)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use ::lazy_static::lazy_static;
+    use ::regex::Regex;
+
     use crate::io::source::SourceFile;
     use crate::lexing::reader::source_reader::SourceReader;
 
-    use super::*;
-
     lazy_static! {
-        static ref TEST_RE = Regex::new("^a+");
+        pub static ref TEST_RE: Regex = Regex::new(r"^a+").unwrap();
     }
 
     fn check(txt: &str, t: fn(r: SourceReader)) {
@@ -95,31 +97,34 @@ mod tests {
     }
 
     mod strip_match {
-        use super::check;
+        use crate::lexing::reader::reader::Reader;
         use crate::lexing::reader::reader::ReaderResult;
+
+        use super::check;
+        use super::TEST_RE;
 
         #[test]
         fn test_match_without_space() {
-            check("aab", |r| {
-                let m = reader.strip_match(TEST_RE).unwrap();
+            check("aab", |mut r| {
+                let m = r.strip_match(&*TEST_RE).unwrap();
                 assert_eq!("aa", m.as_str())
             });
         }
 
         #[test]
         fn test_match_after_space() {
-            check(" \t aab", |r| {
-                let m = reader.strip_match(TEST_RE).unwrap();
+            check(" \t aab", |mut r| {
+                let m = r.strip_match(&*TEST_RE).unwrap();
                 assert_eq!("aa", m.as_str())
             });
         }
 
         #[test]
         fn test_match_updates_position() {
-            check(" \t aab", |r| {
-                let m = reader.strip_match(TEST_RE).unwrap();
+            check(" \t aab", |mut r| {
+                let m = r.strip_match(&*TEST_RE).unwrap();
                 assert_eq!("aa", m.as_str());
-                let n = reader.strip_match(TEST_RE);
+                let n = r.strip_match(&*TEST_RE);
                 assert_eq!(ReaderResult::NoMatch, n);
             });
         }

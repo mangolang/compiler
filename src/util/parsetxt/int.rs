@@ -18,7 +18,7 @@ pub fn int_pattern() -> &'static str {
 /// Convert a String that matches [int_pattern] to an i64 integer. Overflow is possible.
 pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
     let text = text.into();
-    match Regex::new(&format!("^{}$", int_pattern())).unwrap().captures(&text) {
+    match Regex::new(&format!(r"^{}$", int_pattern())).unwrap().captures(&text) {
         None => Err(IntParseFailReason::Invalid),
         Some(captures) => {
             //            // Sign

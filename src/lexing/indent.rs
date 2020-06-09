@@ -1,10 +1,13 @@
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
 lazy_static! {
-    static ref NO_CODE_LINE_RE = Regex::new("^(#|\\n)");
-    static ref INDENT_RE = Regex::new("^(\\t| {4})");
+    static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\\n)").unwrap();
+    static ref INDENT_RE: Regex = Regex::new(r"^(\\t| {4})").unwrap();
 }
 
 //TODO @mark: should not be called, or should be undone, after continuation (...)
@@ -14,13 +17,13 @@ lazy_static! {
 fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     // Skip if this is an empty or comment-only line.
-    if let ReaderResult::Match(_) = reader.strip_peek(NO_CODE_LINE_RE) {
+    if let ReaderResult::Match(_) = reader.strip_peek(&*NO_CODE_LINE_RE) {
         return
     }
 
     // Determine the indent of the line.
     let mut line_indent = 0;
-    while let ReaderResult::Match(_) = reader.direct_match(INDENT_RE) {
+    while let ReaderResult::Match(_) = reader.direct_match(&*INDENT_RE) {
         line_indent += 1;
     }
 

@@ -23,7 +23,7 @@ pub fn real_pattern() -> &'static str {
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
 pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
     let text = text.into();
-    match Regex::new(&format!("^{}$", real_pattern())).unwrap().captures(&text) {
+    match Regex::new(&format!(r"^{}$", real_pattern())).unwrap().captures(&text) {
         None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
             let multiplier = captures

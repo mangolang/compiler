@@ -9,7 +9,7 @@ use string_interner::StringInterner;
 
 const VALID_IDENTIFIER_SUBPATTERN: &str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
-    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!("{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
+    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!(r"{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610

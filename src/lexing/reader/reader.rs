@@ -1,7 +1,8 @@
-
 use ::std::fmt::Debug;
-use crate::io::source::{SourceFile, SourceSlice};
-use ::regex::bytes::Regex;
+
+use ::regex::Regex;
+
+use crate::io::source::SourceSlice;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ReaderResult<'a> {
