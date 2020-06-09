@@ -69,7 +69,7 @@ pub struct SourceSlice<'a> {
 impl <'a> SourceSlice<'a> {
     pub fn new(file: &'a SourceFile, start: usize, end: usize) -> Self {
         debug_assert!(end >= start);
-        debug_assert!(end < file.text.len());
+        debug_assert!(end <= file.text.len());
         SourceSlice { file, start, end }
     }
 
@@ -102,6 +102,12 @@ mod tests {
     fn test_slice_empty() {
         let f = SourceFile::test("hello world!");
         assert_eq!("", f.slice(3, 3).as_str());
+    }
+
+    #[test]
+    fn test_slice_all() {
+        let f = SourceFile::test("hello world!");
+        assert_eq!("hello world!", f.slice(0, 12).as_str());
     }
 
     #[test]

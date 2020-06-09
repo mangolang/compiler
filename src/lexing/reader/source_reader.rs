@@ -98,7 +98,7 @@ mod tests {
 
     mod strip_match {
         use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult;
+        use crate::lexing::reader::reader::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -125,7 +125,109 @@ mod tests {
                 let m = r.strip_match(&*TEST_RE).unwrap();
                 assert_eq!("aa", m.as_str());
                 let n = r.strip_match(&*TEST_RE);
-                assert_eq!(ReaderResult::NoMatch, n);
+                assert_eq!(NoMatch, n);
+            });
+        }
+    }
+
+    mod strip_peek {
+        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::reader::ReaderResult::*;
+
+        use super::check;
+        use super::TEST_RE;
+
+        #[test]
+        fn test_match_without_space() {
+            check("aab", |mut r| {
+                let m = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
+        }
+
+        #[test]
+        fn test_match_after_space() {
+            check(" \t aab", |mut r| {
+                let m = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
+        }
+
+        #[test]
+        fn test_peek_does_not_update_position() {
+            check(" \t aab", |mut r| {
+                let m = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", n.as_str());
+            });
+        }
+    }
+
+    mod direct_match {
+        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::reader::ReaderResult::*;
+
+        use super::check;
+        use super::TEST_RE;
+
+        #[test]
+        fn test_match_without_space() {
+            check("aab", |mut r| {
+                let m = r.direct_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
+        }
+
+        #[test]
+        fn test_match_after_space() {
+            check(" \t aab", |mut r| {
+                let m = r.direct_match(&*TEST_RE);
+                assert_eq!(NoMatch, m);
+            });
+        }
+
+        #[test]
+        fn test_match_updates_position() {
+            check("aab", |mut r| {
+                let m = r.direct_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = r.direct_match(&*TEST_RE);
+                assert_eq!(NoMatch, n);
+            });
+        }
+    }
+
+    mod direct_peek {
+        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::reader::ReaderResult::*;
+
+        use super::check;
+        use super::TEST_RE;
+
+        #[test]
+        fn test_match_without_space() {
+            check("aab", |mut r| {
+                let m = r.direct_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str())
+            });
+        }
+
+        #[test]
+        fn test_match_after_space() {
+            check(" \t aab", |mut r| {
+                let m = r.direct_peek(&*TEST_RE);
+                assert_eq!(NoMatch, m);
+            });
+        }
+
+        #[test]
+        fn test_peek_does_not_update_position() {
+            check("aab", |mut r| {
+                let m = r.direct_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = r.direct_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", n.as_str());
             });
         }
     }
