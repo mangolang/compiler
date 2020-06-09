@@ -10,6 +10,15 @@ pub enum ReaderResult<'a> {
     //EOF,
 }
 
+impl <'a> ReaderResult<'a> {
+    pub fn unwrap(self) -> SourceSlice<'a> {
+        match self {
+            ReaderResult::Match(ss) => ss,
+            ReaderResult::NoMatch => panic!("Unwrap on ReaderResult that does not contain a match"),
+        }
+    }
+}
+
 /// A reader represents a source 'file', which may be a file, web page, string, ...
 ///
 /// Checks whether the code from the current position matches a regex pattern.

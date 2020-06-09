@@ -1,6 +1,9 @@
+use smallvec::SmallVec;
+
+use crate::token::special::EndBlockToken;
+use crate::token::special::StartBlockToken;
 use crate::token::special::UnlexableToken;
 use crate::token::tokens::AssociationToken;
-use crate::token::tokens::EndBlockToken;
 use crate::token::tokens::EndStatementToken;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::KeywordToken;
@@ -8,9 +11,7 @@ use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
-use crate::token::tokens::StartBlockToken;
 use crate::util::encdec::ToText;
-use smallvec::SmallVec;
 
 /// Collection of all possible tokens.
 #[derive(PartialEq, Eq, Hash, Debug, Clone)]
@@ -52,9 +53,11 @@ impl ToText for Tokens {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::token::Tokens;
     use std::mem::size_of;
+
+    use crate::token::Tokens;
+
+    use super::*;
 
     const LONG_SIZE: usize = size_of::<f64>();
 

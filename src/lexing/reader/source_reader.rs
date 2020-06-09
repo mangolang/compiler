@@ -56,7 +56,7 @@ impl <'a> SourceReader<'a> {
     }
 }
 
-impl Reader for SourceReader {
+impl <'a> Reader for SourceReader<'a> {
     fn strip_match(&mut self, pattern: &Regex) -> ReaderResult {
         skip_whitespace();
         flexible_match(pattern, self.pos_after_space, true)
@@ -75,3 +75,31 @@ impl Reader for SourceReader {
         flexible_match(pattern, self.pos, false)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::io::source::SourceFile;
+    use crate::lexing::reader::source_reader::SourceReader;
+
+    use super::*;
+
+    lazy_static! {
+        static ref TEST_RE = Regex::new("^a*");
+    }
+
+    mod strip_match {
+
+        #[test]
+        fn test_match_after_space() {
+            let source = SourceFile::new(" \t aab");
+            let mut reader = SourceReader::new(&source);
+            let m = reader.strip_match(TEST_RE).unwrap();
+            assert_eq!("aa", m.as_str())
+        }
+
+        #[test]
+        fn test_match_without_space() {}
+    }
+}
+
+//TODO @mark: many more tests

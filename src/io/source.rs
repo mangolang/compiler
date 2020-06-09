@@ -9,8 +9,8 @@ pub struct SourceFile {
 }
 
 impl SourceFile {
-    pub fn new(text: String) -> Self {
-        SourceFile { text }
+    pub fn new(text: impl Into<String>) -> Self {
+        SourceFile { text: text.into() }
     }
 
     pub fn len(&self) -> usize {

@@ -43,7 +43,6 @@ mod tests {
 
     #[test]
     fn test_equal() {
-        lex_indents
-        assert_eq!(add(1, 2), 3);
+        unimplemented!()
     }
 }
