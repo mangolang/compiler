@@ -42,7 +42,7 @@ impl SourceFile {
 
 impl fmt::Debug for SourceFile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "(source at '{}' length {})", self.source_identifier, self.len())
+        write!(f, "SourceFile{{ at '{}' length {}}}", self.source_identifier, self.len())
     }
 }
 
@@ -59,7 +59,7 @@ impl PartialEq for SourceFile {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(PartialEq, Eq)]
 pub struct SourceSlice<'a> {
     file: &'a SourceFile,
     start: usize,
@@ -79,6 +79,12 @@ impl <'a> SourceSlice<'a> {
 
     pub fn as_str(&self) -> &'a str {
         &self.file.text[self.start .. self.end]
+    }
+}
+
+impl <'a> fmt::Debug for SourceSlice<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "SourceSlice{{ of '{:?}' [{}..{}]: {}}}", self.file.source_identifier, self.start, self.end, self.as_str())
     }
 }
 

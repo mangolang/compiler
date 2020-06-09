@@ -31,19 +31,23 @@ impl <'a> SourceReader<'a> {
     /// Remembers the last-computed position and returns that when possible.
     fn skip_whitespace(&mut self) {
         //TODO @mark: test >= vs >
-        if self.pos_after_space >= self.pos {
+        // A little unfortunate to have to use >0 here, but otherwise it fails at start of string.
+        if self.pos_after_space > 0 && self.pos_after_space >= self.pos {
             return;
         }
         match WHITESPACE_RE.find(self.source.slice_from(self.pos).as_str()) {
-            Some(found) => self.pos_after_space = self.pos + found.end(),
-            None => {}
+            Some(found) => {
+                self.pos_after_space = self.pos + found.end();
+            },
+            None => {
+                self.pos_after_space = self.pos;
+            }
         }
     }
 
     /// Remove leading whitespace, which will not be part of the matched result.
     #[inline]
     fn flexible_match(&mut self, pattern: &Regex, start_at: usize, update_pos: bool) -> ReaderResult {
-        //TODO @mark: why as_by
         match pattern.find(self.source.slice_from(start_at).as_str()) {
             Some(found) => {
                 let end_pos = start_at + found.end();
@@ -92,7 +96,7 @@ mod tests {
 
     fn check(txt: &str, t: fn(r: SourceReader)) {
         let source = SourceFile::test(txt);
-        let mut reader = SourceReader::new(&source);
+        let reader = SourceReader::new(&source);
         t(reader);
     }
 
@@ -132,7 +136,6 @@ mod tests {
 
     mod strip_peek {
         use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -231,6 +234,62 @@ mod tests {
             });
         }
     }
-}
 
-//TODO @mark: many more tests
+    mod mixed {
+        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::reader::ReaderResult::*;
+
+        use super::check;
+        use super::TEST_RE;
+
+        #[test]
+        fn test_match_peek_without_space() {
+            check("aab", |mut r| {
+                let m = r.direct_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = r.direct_peek(&*TEST_RE);
+                assert_eq!(NoMatch, n);
+                let p = r.strip_peek(&*TEST_RE);
+                assert_eq!(NoMatch, p);
+            });
+        }
+
+        #[test]
+        fn test_match_peek_after_space() {
+            check(" \t aab", |mut r| {
+                let m = r.strip_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let n = r.direct_peek(&*TEST_RE);
+                assert_eq!(NoMatch, n);
+                let p = r.strip_peek(&*TEST_RE);
+                assert_eq!(NoMatch, p);
+            });
+        }
+
+        #[test]
+        fn test_peek_match_without_space() {
+            check("aab", |mut r| {
+                let n = r.direct_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", n.as_str());
+                let m = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let p = r.direct_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", p.as_str());
+            });
+        }
+
+        #[test]
+        fn test_peek_match_after_space() {
+            check(" \t aab", |mut r| {
+                let n = r.direct_peek(&*TEST_RE);
+                assert_eq!(NoMatch, n);
+                let m = r.strip_peek(&*TEST_RE).unwrap();
+                assert_eq!("aa", m.as_str());
+                let p = r.direct_match(&*TEST_RE);
+                assert_eq!(NoMatch, p);
+                let q = r.strip_match(&*TEST_RE).unwrap();
+                assert_eq!("aa", q.as_str());
+            });
+        }
+    }
+}
