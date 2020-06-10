@@ -1,11 +1,40 @@
 
 use crate::token::Tokens;
 
+macro_rules! lex (
+    // Invoke a lexing function, and 'continue' if successful.
+    // f: The lexing function
+    // r: The Reader implementation
+    // l: The Lexer implementation
+    ( $f: ident, $r: ident, $l: ident ) => {
+        {
+            let initial_progress = $l.progress();
+            $f(&mut $r, &mut $l);
+            if ($l.progress() != initial_progress) {
+                continue;
+            }
+        }
+    };
+);
+
 pub trait Lexer {
+    /// Add a lexed token.
     fn add(&mut self, token: Tokens);
+
+    /// An identifier that indicates the progress. The only guarantee is that this
+    /// will increase by some amount whenever a token is added.
+    fn progress(&self) -> usize;
+
+    /// Return a slice of tokens `add`ed so far.
     fn tokens(&self) -> &[Tokens];
+
+    /// Return the tokens `add`ed, consuming the lexer.
     fn into_tokens(self) -> Vec<Tokens>;
+
+    /// Get the current indentation level.
     fn get_indent(&self) -> u32;
+
+    /// Update the current indentation level.
     fn set_indent(&mut self, new_indent: u32);
 }
 
@@ -27,6 +56,10 @@ impl CodeLexer {
 impl Lexer for CodeLexer {
     fn add(&mut self, token: Tokens) {
         self.tokens.push(token);
+    }
+
+    fn progress(&self) -> usize {
+        self.tokens.len()
     }
 
     fn tokens(&self) -> &[Tokens] {
