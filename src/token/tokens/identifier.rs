@@ -1,10 +1,11 @@
+use ::std::str::FromStr;
+
+use crate::common::error::{MangoErr, MangoResult};
 use crate::token::Token;
 use crate::util::encdec::ToText;
-use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Msg;
 use crate::util::strtype::Name;
-use std::str::FromStr;
-use crate::common::error::MangoResult;
+use crate::util::strtype::typ::StrType;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -13,7 +14,7 @@ pub struct IdentifierToken {
 }
 
 impl FromStr for IdentifierToken {
-    type Err = Msg;
+    type Err = MangoErr;
 
     fn from_str(text: &str) -> MangoResult<Self> {
         let name = Name::new(text)?;

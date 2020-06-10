@@ -1,9 +1,11 @@
+use ::std::fmt::Display;
+use ::std::fmt::Formatter;
+use ::std::fmt::Result as fResult;
+
+use crate::common::error::MangoResult;
+use crate::common::error::MangoErr;
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as fResult;
-use crate::common::error::MangoResult;
 
 /// The different operator codeparts that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -22,7 +24,7 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new<S: Into<String>>(symbol_txt: S) -> MangoResult<Self> {
+    pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, String> {
         use self::Symbol::*;
         let ssymbol_txt = symbol_txt.into();
         match &*ssymbol_txt {
@@ -38,7 +40,7 @@ impl Symbol {
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
-            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", ssymbol_txt))),
+            _ => Err(format!("Unknown symbol: '{}'", ssymbol_txt)),
         }
     }
 

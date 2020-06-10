@@ -4,7 +4,7 @@ use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 use std::str::FromStr;
-use crate::common::error::MangoResult;
+use crate::common::error::{MangoResult, MangoErr};
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)
@@ -21,7 +21,7 @@ pub enum Keyword {
 }
 
 impl FromStr for Keyword {
-    type Err = Msg;
+    type Err = MangoErr;
 
     fn from_str(symbol_txt: &str) -> MangoResult<Self> {
         use self::Keyword::*;

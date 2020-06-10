@@ -1,5 +1,5 @@
 //TODO @mark: disable unused stuff later, but currently too much in-progress
-#![allow(unused_variables, dead_code)]
+#![allow(unused_variables, dead_code, unused_imports)]
 
 //use crate::io::fortest::stringreader::StringReader;
 //use crate::lexing::combi_lexer::CombiLexer;
