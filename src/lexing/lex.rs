@@ -1,6 +1,6 @@
 use crate::io::source::SourceFile;
 use crate::lexing::indent::lex_indents;
-use crate::lexing::lexer::CodeLexer;
+use crate::lexing::lexer::{CodeLexer, Lexer};
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::token::Tokens;
 
@@ -15,6 +15,7 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
     let mut reader = SourceReader::new(source);
     let mut lexer = CodeLexer::new(source.len());
     lex_indents(&mut reader, &mut lexer);
+    lex_grouping(&mut reader, &mut lexer);
 
-    todo!()
+    lexer.into_tokens()
 }

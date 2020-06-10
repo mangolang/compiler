@@ -4,6 +4,7 @@ use crate::token::Tokens;
 pub trait Lexer {
     fn add(&mut self, token: Tokens);
     fn tokens(&self) -> &[Tokens];
+    fn into_tokens(self) -> Vec<Tokens>;
     fn get_indent(&self) -> u32;
     fn set_indent(&mut self, new_indent: u32);
 }
@@ -30,6 +31,10 @@ impl Lexer for CodeLexer {
 
     fn tokens(&self) -> &[Tokens] {
         &self.tokens
+    }
+
+    fn into_tokens(self) -> Vec<Tokens> {
+        self.tokens
     }
 
     fn get_indent(&self) -> u32 {

@@ -5,6 +5,10 @@ mod lex;
 // mod util;
 mod literals;
 mod indent;
+mod grouping;
 mod lexer;
+
+#[cfg(test)]
+mod tests;
 
 pub use self::lex::lex;

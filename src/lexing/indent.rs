@@ -18,7 +18,6 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     // Skip if this is an empty or comment-only line.
     if let ReaderResult::Match(_) = reader.strip_peek(&*NO_CODE_LINE_RE) {
-        dbg!("EE");  //TODO @mark: TEMPORARY! REMOVE THIS!
         return
     }
 
@@ -31,11 +30,9 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Determine the tokens to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent .. prev_indent {
-        dbg!("end", i, line_indent, prev_indent);  //TODO @mverleg: remove
         lexer.add(Tokens::EndBlock(EndBlockToken::new(true, false)));
     }
     for i in prev_indent .. line_indent {
-        dbg!("start", i, line_indent, prev_indent);  //TODO @mverleg: remove
         lexer.add(Tokens::StartBlock(StartBlockToken::new()));
     }
 
