@@ -3,20 +3,19 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{EndBlockToken, StartBlockToken, Tokens, ParenthesisOpenToken, ParenthesisCloseToken};
-use crate::token::collect::all::Tokens::ParenthesisClose;
+use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]{}").unwrap();
 }
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
-pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
+pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
         match sym.as_str() {
-            "(" => ParenthesisOpenToken::new(),
-            ")" => ParenthesisCloseToken::new(),
+            "(" => Tokens::ParenthesisOpen(ParenthesisOpenToken::new()),
+            ")" => Tokens::ParenthesisClose(ParenthesisCloseToken::new()),
             "[" => todo!(),
             "]" => todo!(),
             "{" => todo!(),
@@ -27,20 +26,19 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 }
 
 #[cfg(test)]
-mod lex_grouping {
+mod grouping {
     use crate::io::source::SourceFile;
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::token::{StartBlockToken, Tokens, EndBlockToken};
 
-    use super::lex_indents;
+    use super::lex_grouping;
+    use crate::lexing::tests::create_lexer;
 
     fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
-        let source = SourceFile::test(input);
-        let mut reader = SourceReader::new(&source);
-        let mut lexer = CodeLexer::new(source.len());
+        let (source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
-        lex_indents(&mut reader, &mut lexer);
+        lex_grouping(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), expected);
     }
 

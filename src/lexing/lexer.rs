@@ -1,22 +1,6 @@
 
 use crate::token::Tokens;
 
-macro_rules! lex (
-    // Invoke a lexing function, and 'continue' if successful.
-    // f: The lexing function
-    // r: The Reader implementation
-    // l: The Lexer implementation
-    ( $f: ident, $r: ident, $l: ident ) => {
-        {
-            let initial_progress = $l.progress();
-            $f(&mut $r, &mut $l);
-            if ($l.progress() != initial_progress) {
-                continue;
-            }
-        }
-    };
-);
-
 pub trait Lexer {
     /// Add a lexed token.
     fn add(&mut self, token: Tokens);
@@ -48,6 +32,14 @@ impl CodeLexer {
     pub fn new(source_len: usize) -> Self {
         CodeLexer {
             tokens: Vec::with_capacity(source_len / 3),
+            indent: 0,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn test() -> Self {
+        CodeLexer {
+            tokens: Vec::with_capacity(8),
             indent: 0,
         }
     }

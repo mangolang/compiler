@@ -40,18 +40,17 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 }
 
 #[cfg(test)]
-mod lex_indents {
+mod indents {
     use crate::io::source::SourceFile;
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::token::{StartBlockToken, Tokens, EndBlockToken};
 
     use super::lex_indents;
+    use crate::lexing::tests::create_lexer;
 
     fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
-        let source = SourceFile::test(input);
-        let mut reader = SourceReader::new(&source);
-        let mut lexer = CodeLexer::new(source.len());
+        let (source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
         lex_indents(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), expected);

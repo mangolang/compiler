@@ -1,6 +1,17 @@
 
 use super::lex;
 use crate::io::source::SourceFile;
+use crate::lexing::reader::source_reader::SourceReader;
+use crate::lexing::lexer::CodeLexer;
+
+
+/// Create a set of source, reader and lexer for testing purposes.
+pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
+    let source = SourceFile::test(txt);
+    let reader = SourceReader::new(&source);
+    let lexer = CodeLexer::new(source.len());
+    (source, reader, lexer)
+}
 
 #[test]
 fn lex_01() {
