@@ -22,6 +22,11 @@ impl EndBlockToken {
         assert!(is_dedent || is_end_keyword);
         EndBlockToken { is_dedent, is_end_keyword }
     }
+
+    //TODO @mark: customization options temporarily optional
+    pub fn new2() -> Self {
+        Self::new(true, false)
+    }
 }
 
 impl ToText for StartBlockToken {

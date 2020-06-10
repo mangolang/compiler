@@ -3,6 +3,7 @@ use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
+use crate::common::error::MangoResult;
 
 /// The different operator codeparts that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -21,7 +22,7 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
+    pub fn new<S: Into<String>>(symbol_txt: S) -> MangoResult<Self> {
         use self::Symbol::*;
         let ssymbol_txt = symbol_txt.into();
         match &*ssymbol_txt {

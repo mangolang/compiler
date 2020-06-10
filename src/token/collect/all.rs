@@ -66,6 +66,8 @@ mod tests {
         assert!(size_of::<Tokens>() <= 5 * LONG_SIZE, size_of::<Tokens>());
     }
 
+    //TODO @mark: these tests seem useless, they're already covered by `test_tokens_size` :
+
     #[test]
     fn test_association_token_size() {
         assert!(

@@ -5,6 +5,7 @@ use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
 use crate::lexing::indent::lex_indents;
 use crate::lexing::lexer::{CodeLexer, Lexer};
+use crate::lexing::special::lex_unlexable;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::token::{Tokens, UnlexableToken};

@@ -4,6 +4,7 @@ use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Msg;
 use crate::util::strtype::Name;
 use std::str::FromStr;
+use crate::common::error::MangoResult;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -14,7 +15,7 @@ pub struct IdentifierToken {
 impl FromStr for IdentifierToken {
     type Err = Msg;
 
-    fn from_str(text: &str) -> Result<Self, Msg> {
+    fn from_str(text: &str) -> MangoResult<Self> {
         let name = Name::new(text)?;
         Ok(Self::from_name(name))
     }

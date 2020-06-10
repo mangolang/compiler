@@ -11,7 +11,7 @@ lazy_static! {
 
 /// Lex a single symbol as unlexable. Should only be used if the lexer is stuck, to unstuck it.
 pub fn lex_unlexable(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-    let chr = reader.strip_match(&*EOF_RE).unwrap().as_str().to_owned();
+    let chr = reader.strip_match(&*SINGLE_RE).unwrap().as_str().to_owned();
     lexer.add(Tokens::Unlexable(UnlexableToken::new(chr)));
 }
 

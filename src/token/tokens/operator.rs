@@ -3,6 +3,7 @@ use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Msg;
 use std::str::FromStr;
+use crate::common::error::MangoResult;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -14,7 +15,7 @@ pub struct OperatorToken {
 impl FromStr for OperatorToken {
     type Err = Msg;
 
-    fn from_str(symbol_txt: &str) -> Result<OperatorToken, Msg> {
+    fn from_str(symbol_txt: &str) -> MangoResult<OperatorToken> {
         Ok(OperatorToken::from_symbol(Symbol::new(symbol_txt)?))
     }
 }

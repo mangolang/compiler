@@ -4,6 +4,7 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken};
+use crate::token::collect::{parenthesis_open, parenthesis_close};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]{}").unwrap();
@@ -14,8 +15,8 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
         match sym.as_str() {
-            "(" => Tokens::ParenthesisOpen(ParenthesisOpenToken::new()),
-            ")" => Tokens::ParenthesisClose(ParenthesisCloseToken::new()),
+            "(" => parenthesis_open(),
+            ")" => parenthesis_close(),
             "[" => todo!(),
             "]" => todo!(),
             "{" => todo!(),
