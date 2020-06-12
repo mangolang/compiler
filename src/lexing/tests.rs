@@ -4,6 +4,7 @@ use crate::io::source::SourceFile;
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::lexer::CodeLexer;
 use crate::token::collect::*;
+use crate::common::error::ErrMsg;
 
 
 /// Create a set of source, reader and lexer for testing purposes.
@@ -15,14 +16,22 @@ pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
 }
 
 #[test]
-fn lex_01() {
+fn lex_01() -> Result<(), ErrMsg>{
     let input = "(x * x + y * y)";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![
         parenthesis_open(),
+        identifier("x")?,
+        operator("*")?,
+        identifier("x")?,
+        operator("+")?,
+        identifier("y")?,
+        operator("*")?,
+        identifier("y")?,
         parenthesis_close(),
     ]);
+    Ok(())
 }
 
 #[test]

@@ -11,7 +11,9 @@ use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 
 lazy_static! {
-    pub static ref SYMBOL_RE: Regex = Regex::new(r"^(?:\+|-|\*|/|==|<=|>=|<|>|!|\?)").unwrap();
+    static ref OPERATOR_STR: String = r"^(?:\+|-|\*|/|<|>|!|\?)".to_owned();
+    pub static ref SYMBOL_RE: Regex = Regex::new(&format!("(?:==|<=|>=|{})", &*OPERATOR_STR)).unwrap();
+    pub static ref ASSOCIATION_RE: Regex = Regex::new(&format!("(?:{})?=", &*OPERATOR_STR)).unwrap();
 }
 
 /// The different operator codeparts that are recognized.
