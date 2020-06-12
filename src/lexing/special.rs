@@ -7,7 +7,7 @@ use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken, Unlexabl
 
 lazy_static! {
     static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.").unwrap();
-    static ref EMPTY_RE: Regex = Regex::new(r"^[ \t\n\r]+").unwrap();
+    static ref EMPTY_RE: Regex = Regex::new(r"^[ \t\n\r]*").unwrap();
 }
 
 /// Lex a single symbol as unlexable. Should only be used if the lexer is stuck, to unstuck it.
@@ -26,7 +26,6 @@ pub fn lex_eof(reader: &mut impl Reader) -> bool {
         }
     }
     false
-    //TODO @mark: test
 }
 
 #[cfg(test)]
@@ -49,5 +48,38 @@ mod unlexable {
         let (source, mut reader, mut lexer) = create_lexer("\nabc");
         lex_unlexable(&mut reader, &mut lexer);
         assert_eq!(lexer.into_tokens(), vec![Tokens::Unlexable(UnlexableToken::new("\n".to_owned()))]);
+    }
+}
+
+#[cfg(test)]
+mod eof {
+    use super::lex_unlexable;
+    use crate::lexing::tests::create_lexer;
+    use crate::lexing::lexer::Lexer;
+    use crate::token::{UnlexableToken, Tokens};
+    use crate::lexing::special::lex_eof;
+
+    #[test]
+    fn empty() {
+        let (_, mut reader, _) = create_lexer("");
+        assert!(lex_eof(&mut reader));
+    }
+
+    #[test]
+    fn whitespace() {
+        let (_, mut reader, _) = create_lexer(" \n\t ");
+        assert!(lex_eof(&mut reader));
+    }
+
+    #[test]
+    fn just_letter() {
+        let (_, mut reader, _) = create_lexer("*");
+        assert!(!lex_eof(&mut reader));
+    }
+
+    #[test]
+    fn whitespace_text() {
+        let (_, mut reader, _) = create_lexer(" \n\t abc");
+        assert!(!lex_eof(&mut reader));
     }
 }
