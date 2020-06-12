@@ -80,6 +80,10 @@ impl Reader for SourceReader {
     fn direct_peek(&mut self, pattern: &Regex) -> ReaderResult {
         self.flexible_match(pattern, self.pos, false)
     }
+
+    fn remaining_len(&self) -> usize {
+        self.source.len() - self.pos
+    }
 }
 
 #[cfg(test)]
@@ -289,6 +293,38 @@ mod tests {
                 assert_eq!(p, NoMatch);
                 let q = r.strip_match(&*TEST_RE).unwrap();
                 assert_eq!(q.as_str(), "aa");
+            });
+        }
+    }
+
+    mod remaining_len {
+        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::reader::ReaderResult::*;
+        use crate::lexing::reader::source_reader::SourceReader;
+        use crate::lexing::reader::source_reader::tests::check;
+
+        use crate::lexing::reader::source_reader::tests::TEST_RE;
+
+        #[test]
+        fn at_start() {
+            check("  aabb", |mut r| {
+                assert_eq!(r.remaining_len(), 6);
+            });
+        }
+
+        #[test]
+        fn at_middle() {
+            check("  aabb", |mut r| {
+                r.strip_match(&*TEST_RE).unwrap();
+                assert_eq!(r.remaining_len(), 2);
+            });
+        }
+
+        #[test]
+        fn at_end() {
+            check("  aaa", |mut r| {
+                r.strip_match(&*TEST_RE).unwrap();
+                assert_eq!(r.remaining_len(), 0);
             });
         }
     }

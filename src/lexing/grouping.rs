@@ -7,7 +7,7 @@ use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
-    static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]{}").unwrap();
+    static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]\{\}").unwrap();
 }
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.

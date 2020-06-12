@@ -43,5 +43,8 @@ pub trait Reader {
     /// Start matching directly, not removing whitespace.
     /// Position of the reader is not updated.
     fn direct_peek(&mut self, pattern: &Regex) -> ReaderResult;
+
+    /// Number of bytes left.
+    fn remaining_len(&self) -> usize;
 }
 
