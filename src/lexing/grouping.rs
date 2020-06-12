@@ -14,15 +14,15 @@ lazy_static! {
 pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
-        match sym.as_str() {
+        lexer.add(match sym.as_str() {
             "(" => parenthesis_open(),
             ")" => parenthesis_close(),
-            "[" => unlexable("[ not yet implemented"),
-            "]" => unlexable("] not yet implemented"),
-            "{" => unlexable("{ not yet implemented"),
-            "}" => unlexable("} not yet implemented"),
-            _ => unreachable!("Erroneous situation while lexing grouping symbols"),
-        }
+            "[" => unlexable("[ not yet implemented"),  //TODO @mark
+            "]" => unlexable("] not yet implemented"),  //TODO @mark
+            "{" => unlexable("{ not yet implemented"),  //TODO @mark
+            "}" => unlexable("} not yet implemented"),  //TODO @mark
+            _ => unreachable!(),
+        });
     }
 }
 

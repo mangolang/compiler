@@ -35,10 +35,10 @@ impl StrType for Msg {
         }
     }
 
-    fn validate(msg: &str) -> Result<(), Msg> {
+    fn validate(msg: &str) -> MsgResult<()> {
         if !VALID_MESSAGE.is_match(&msg.to_string()) {
             // Make sure this is a valid string, otherwise it causes an infinite loop making error messages for it!
-            return Err(Msg::from_valid("Messages should consist of printable text."));
+            return Err("Messages should consist of printable text.".into());
         }
         Ok(())
     }
