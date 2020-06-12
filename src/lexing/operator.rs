@@ -155,56 +155,22 @@ mod associations {
     }
 
     #[test]
-    fn plus() {
-        check("+=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Plus))]);
-    }
-
-    #[test]
-    fn dash() {
-        check("-=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Dash))]);
-    }
-
-    #[test]
-    fn asterisk() {
-        check("*=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk))]);
-    }
-
-    #[test]
-    fn slash() {
-        check("/=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Slash))]);
-    }
-
-    #[test]
-    fn lt() {
-        check("<=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::LT))]);
-    }
-
-    #[test]
-    fn gt() {
-        check(">=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::GT))]);
-    }
-
-    #[test]
-    fn exclamation() {
-        check("!=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Exclamation))]);
-    }
-
-    #[test]
-    fn question() {
-        check("?=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Question))]);
+    fn prefix() {
+        check("+=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap())]);
+        check("-=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap())]);
+        check("*=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap())]);
+        check("/=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap())]);
+        //check("!=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Exclamation).unwrap())]);
+        //check("?=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Question).unwrap())]);
     }
 
     #[test]
     fn all() {
-        check(r"+=-=*=/=<=>=!=?=", &vec![
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Slash)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::LT)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::GT)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Exclamation)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Question)),
+        check(r"+=-=*=/=", &vec![
+            Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap()),
+            Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap()),
+            Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap()),
+            Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap()),
         ]);
     }
 }

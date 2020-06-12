@@ -20,8 +20,22 @@ pub enum MangoErr {
 /// should eventually be turned into `MangoErr`.
 #[derive(Debug, Clone)]
 pub struct ErrMsg {
-    friendly: String,
-    debug: Option<String>,
+    pub friendly: String,
+    pub debug: Option<String>,
+}
+
+impl ErrMsg {
+    pub fn new(friendly: impl Into<String>) -> Self {
+        ErrMsg { friendly: friendly.into(), debug: None }
+    }
+
+    pub fn debug(friendly: impl Into<String>, debug: impl Into<String>) -> Self {
+        ErrMsg { friendly: friendly.into(), debug: Some(debug.into()) }
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.friendly
+    }
 }
 
 impl From<String> for ErrMsg {

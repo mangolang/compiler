@@ -10,14 +10,17 @@ use crate::util::strtype::Msg;
 /// Also in-place operations like *=, += etc.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct AssociationToken {
+    //TODO @mark: note that some symbols aren't allowed
     symbol: Option<Symbol>,
 }
 
 impl FromStr for AssociationToken {
     type Err = ErrMsg;
 
-    fn from_str(symbol_txt: &str) -> MsgResult<AssociationToken> {
-        Ok(AssociationToken::from_symbol(Symbol::new(symbol_txt)?))
+    fn from_str(association_txt: &str) -> MsgResult<AssociationToken> {
+        assert!(association_txt.ends_with("="));
+        let symbol = Symbol::new(&association_txt[0..association_txt.len() - 1])?;
+        AssociationToken::from_symbol(symbol)
     }
 }
 
@@ -26,10 +29,27 @@ impl AssociationToken {
         AssociationToken { symbol: Option::None }
     }
 
-    pub fn from_symbol(symbol: Symbol) -> Self {
-        AssociationToken {
-            symbol: Option::Some(symbol),
+    pub fn from_symbol(symbol: Symbol) -> MsgResult<Self> {
+        let is_valid = match symbol {
+            Symbol::Plus => true,
+            Symbol::Dash => true,
+            Symbol::Asterisk => true,
+            Symbol::Slash => true,
+            Symbol::Exclamation => unimplemented!(),
+            Symbol::Question => unimplemented!(),
+            // Binary boolean operators are not allowed before '='
+            Symbol::LT => false,
+            Symbol::GT => false,
+            Symbol::EQ => false,
+            Symbol::LE => false,
+            Symbol::GE => false,
+        };
+        if !is_valid {
+            return Err(ErrMsg::new(format!("Symbol cannot be used as association (before an '='): '{}'", symbol)));
         }
+        Ok(AssociationToken {
+            symbol: Option::Some(symbol),
+        })
     }
 }
 
@@ -44,3 +64,41 @@ impl ToText for AssociationToken {
 }
 
 impl Token for AssociationToken {}
+
+#[cfg(test)]
+mod from_str {
+    use super::*;
+    use crate::token::Tokens;
+
+    #[test]
+    #[should_panic]
+    fn empty() {
+        AssociationToken::from_str("").unwrap_err();
+    }
+
+    #[test]
+    fn mismatch() {
+        let err = AssociationToken::from_str("abc=").unwrap_err();
+        assert!(err.as_str().to_lowercase().contains("unknown symbol"));
+        assert!(err.as_str().to_lowercase().contains("abc"));
+    }
+
+    #[test]
+    fn valid() {
+        assert_eq!(AssociationToken::from_str("+=").unwrap(), AssociationToken::from_symbol(Symbol::Plus).unwrap());
+        assert_eq!(AssociationToken::from_str("-=").unwrap(), AssociationToken::from_symbol(Symbol::Dash).unwrap());
+        assert_eq!(AssociationToken::from_str("*=").unwrap(), AssociationToken::from_symbol(Symbol::Asterisk).unwrap());
+        assert_eq!(AssociationToken::from_str("/=").unwrap(), AssociationToken::from_symbol(Symbol::Slash).unwrap());
+        //assert_eq!(AssociationToken::from_str("?=").unwrap(), AssociationToken::from_symbol(Symbol::Exclamation));
+        //assert_eq!(AssociationToken::from_str("!=").unwrap(), AssociationToken::from_symbol(Symbol::Question));
+    }
+
+    #[test]
+    fn invalid() {
+        assert!(AssociationToken::from_str("===").is_err());
+        assert!(AssociationToken::from_str("<=").is_err());
+        assert!(AssociationToken::from_str(">=").is_err());
+        assert!(AssociationToken::from_str("<==").is_err());
+        assert!(AssociationToken::from_str(">==").is_err());
+    }
+}
