@@ -170,7 +170,7 @@ impl FromStr for Keyword {
             "xor" => Ok(Reserved("xor".to_owned())),
             "yield" => Ok(Reserved("yield".to_owned())),
 
-            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", symbol_txt))),
+            _ => Err(format!("Unknown keywords: '{}'", symbol_txt).into()),
         }
     }
 }

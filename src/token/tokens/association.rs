@@ -1,6 +1,6 @@
 use ::std::str::FromStr;
 
-use crate::common::error::MsgResult;
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
@@ -14,7 +14,7 @@ pub struct AssociationToken {
 }
 
 impl FromStr for AssociationToken {
-    type Err = Msg;
+    type Err = ErrMsg;
 
     fn from_str(symbol_txt: &str) -> MsgResult<AssociationToken> {
         Ok(AssociationToken::from_symbol(Symbol::new(symbol_txt)?))

@@ -3,17 +3,18 @@ use ::std::fmt::Debug;
 use ::regex::Regex;
 
 use crate::io::source::SourceSlice;
+use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum ReaderResult<'a> {
-    Match(SourceSlice<'a>),
+pub enum ReaderResult {
+    Match(SourceSlice),
     NoMatch,
     //TODO @mark: do EOF check in lexer, so it doesn't have to happen on every read
     //EOF,
 }
 
-impl <'a> ReaderResult<'a> {
-    pub fn unwrap(self) -> SourceSlice<'a> {
+impl ReaderResult {
+    pub fn unwrap(self) -> SourceSlice {
         match self {
             ReaderResult::Match(ss) => ss,
             ReaderResult::NoMatch => panic!("Unwrap on ReaderResult that does not contain a match"),

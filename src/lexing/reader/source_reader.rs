@@ -11,16 +11,16 @@ lazy_static! {
 }
 
 #[derive(Debug)]
-pub struct SourceReader<'a> {
-    source: &'a SourceFile,
+pub struct SourceReader {
+    source: SourceFile,
     pos: usize,
     pos_after_space: usize,
 }
 
-impl <'a> SourceReader<'a> {
-    pub fn new(source_file: &'a SourceFile) -> Self {
+impl  SourceReader {
+    pub fn new(source_file: &SourceFile) -> Self {
         SourceReader {
-            source: source_file,
+            source: source_file.clone(),
             pos: 0,
             pos_after_space: 0,
         }
@@ -62,7 +62,7 @@ impl <'a> SourceReader<'a> {
     }
 }
 
-impl <'a> Reader for SourceReader<'a> {
+impl Reader for SourceReader {
     fn strip_match(&mut self, pattern: &Regex) -> ReaderResult {
         self.skip_whitespace();
         self.flexible_match(pattern, self.pos_after_space, true)
