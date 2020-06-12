@@ -13,9 +13,9 @@ pub struct KeywordToken {
 }
 
 impl FromStr for KeywordToken {
-    type Err = MangoErr;
+    type Err = String;
 
-    fn from_str(word: &str) -> MangoResult<KeywordToken> {
+    fn from_str(word: &str) -> Result<KeywordToken, String> {
         Result::Ok(KeywordToken {
             word: Keyword::from_str(word)?,
         })

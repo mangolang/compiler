@@ -21,9 +21,9 @@ pub enum Keyword {
 }
 
 impl FromStr for Keyword {
-    type Err = MangoErr;
+    type Err = String;
 
-    fn from_str(symbol_txt: &str) -> MangoResult<Self> {
+    fn from_str(symbol_txt: &str) -> Result<Self, String> {
         use self::Keyword::*;
         match symbol_txt {
             "let" => Ok(Let),

@@ -6,7 +6,7 @@ use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken, UnlexableToken};
 
 lazy_static! {
-    static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.");
+    static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.").unwrap();
 }
 
 /// Lex a single symbol as unlexable. Should only be used if the lexer is stuck, to unstuck it.

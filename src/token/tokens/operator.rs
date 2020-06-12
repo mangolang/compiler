@@ -13,9 +13,9 @@ pub struct OperatorToken {
 }
 
 impl FromStr for OperatorToken {
-    type Err = MangoErr;
+    type Err = String;
 
-    fn from_str(symbol_txt: &str) -> MangoResult<OperatorToken> {
+    fn from_str(symbol_txt: &str) -> Result<OperatorToken, String> {
         Ok(OperatorToken::from_symbol(Symbol::new(symbol_txt)?))
     }
 }

@@ -14,9 +14,9 @@ pub struct IdentifierToken {
 }
 
 impl FromStr for IdentifierToken {
-    type Err = MangoErr;
+    type Err = String;
 
-    fn from_str(text: &str) -> MangoResult<Self> {
+    fn from_str(text: &str) -> Result<Self, String> {
         let name = Name::new(text)?;
         Ok(Self::from_name(name))
     }

@@ -32,7 +32,7 @@ macro_rules! try_lex (
 );
 
 lazy_static! {
-    static ref EOF_RE: Regex = Regex::new(r"^\Z");
+    static ref EOF_RE: Regex = Regex::new(r"^\Z").unwrap();
 }
 
 /// Lexes a whole source file and returns the tokens.

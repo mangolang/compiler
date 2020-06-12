@@ -17,10 +17,10 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         match sym.as_str() {
             "(" => parenthesis_open(),
             ")" => parenthesis_close(),
-            "[" => todo!(),
-            "]" => todo!(),
-            "{" => todo!(),
-            "}" => todo!(),
+            "[" => { unparseable("[ not yet implemented") },
+            "]" => { unparseable("] not yet implemented") },
+            "{" => { unparseable("{ not yet implemented") },
+            "}" => { unparseable("} not yet implemented") },
             _ => unreachable!("Erroneous situation while lexing grouping symbols"),
         }
     }
