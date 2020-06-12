@@ -2,10 +2,17 @@ use ::std::fmt::Display;
 use ::std::fmt::Formatter;
 use ::std::fmt::Result as fResult;
 
-use crate::common::error::MangoResult;
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
 use crate::common::error::MangoErr;
+use crate::common::error::MangoResult;
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
+
+lazy_static! {
+    pub static ref SYMBOL_RE: Regex = Regex::new(r"^(?:\+|-|\*|/|==|<=|>=|<|>|!|\?)").unwrap();
+}
 
 /// The different operator codeparts that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -16,7 +23,7 @@ pub enum Symbol {
     Slash,
     LT,
     GT,
-    Eq,
+    EQ,
     LE,
     GE,
     Exclamation,
@@ -24,10 +31,9 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, String> {
+    pub fn new(symbol_txt: &str) -> Result<Self, String> {
         use self::Symbol::*;
-        let ssymbol_txt = symbol_txt.into();
-        match &*ssymbol_txt {
+        match symbol_txt {
             "+" => Ok(Plus),
             "-" => Ok(Dash),
             "*" => Ok(Asterisk),
@@ -35,18 +41,13 @@ impl Symbol {
             // TODO: how do I know < is an operator, rather than e.g. a generic?
             "<" => Ok(LT),
             ">" => Ok(GT),
-            "==" => Ok(Eq),
+            "==" => Ok(EQ),
             "<=" => Ok(LE),
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
-            _ => Err(format!("Unknown symbol: '{}'", ssymbol_txt)),
+            _ => Err(format!("Unknown symbol: '{}'", symbol_txt.to_owned())),
         }
-    }
-
-    /// Generate an eager subpattern to match tokens, that can be composed in a regular expression.
-    pub fn subpattern() -> &'static str {
-        r"(?:\+|-|\*|/|<=|>=|==|>|<)"
     }
 }
 
@@ -63,7 +64,7 @@ impl Display for Symbol {
                 Slash => "/",
                 LT => "<",
                 GT => ">",
-                Eq => "==",
+                EQ => "==",
                 LE => "<=",
                 GE => ">=",
                 Exclamation => "!",

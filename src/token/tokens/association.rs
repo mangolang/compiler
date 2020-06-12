@@ -31,10 +31,6 @@ impl AssociationToken {
             symbol: Option::Some(symbol),
         }
     }
-
-    pub fn subpattern() -> String {
-        format!(r"(?:{})?=", Symbol::subpattern())
-    }
 }
 
 impl ToText for AssociationToken {

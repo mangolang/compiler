@@ -4,6 +4,8 @@ use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, Identifie
 use crate::util::numtype::f64eq;
 use crate::common::error::MsgResult;
 
+//TODO @mark: replace more token usages by short versions
+
 pub fn association(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Association(AssociationToken::from_str(txt)?))
 }
