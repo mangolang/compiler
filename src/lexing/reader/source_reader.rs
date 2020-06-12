@@ -307,7 +307,7 @@ mod tests {
 
         #[test]
         fn at_start() {
-            check("  aabb", |mut r| {
+            check("  aabb", |r| {
                 assert_eq!(r.remaining_len(), 6);
             });
         }

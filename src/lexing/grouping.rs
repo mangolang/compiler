@@ -7,7 +7,7 @@ use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
-    static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]\{\}").unwrap();
+    static ref GROUPING_RE: Regex = Regex::new(r"^[\(\)\[\]\{\}]").unwrap();
 }
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
@@ -35,90 +35,47 @@ mod grouping {
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::lex_grouping;
+    use crate::token::collect::{parenthesis_open, parenthesis_close};
 
-    fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
+    fn check(input: &str, expected: &[Tokens]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
-        lexer.set_indent(initial_indent);
         lex_grouping(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), expected);
     }
 
     #[test]
-    fn increase() {
-        check(0,
-              "\t    hello",
-              &vec![
-                  Tokens::StartBlock(StartBlockToken::new()),
-                  Tokens::StartBlock(StartBlockToken::new()),
-              ]);
+    fn empty() {
+        check("", &vec![]);
     }
 
     #[test]
-    fn decrease_to_two() {
-        check(3,
-              "    \thello",
-              &vec![
-                  Tokens::EndBlock(EndBlockToken::new(true, false)),
-              ]);
+    fn parenthese_open() {
+        check(" ( ", &vec![
+            parenthesis_open(),
+        ]);
     }
 
     #[test]
-    fn decrease_to_zero() {
-        check(2,
-              "hello",
-              &vec![
-                  Tokens::EndBlock(EndBlockToken::new(true, false)),
-                  Tokens::EndBlock(EndBlockToken::new(true, false)),
-              ]);
+    fn parenthese_close() {
+        check(" ) ", &vec![
+            parenthesis_close(),
+        ]);
     }
 
     #[test]
-    fn constant_two() {
-        check(2,
-              "\t    hello",
-              &vec![]
-        );
+    fn paired_parenthese() {
+        check("(( ))", &vec![
+            parenthesis_open(),
+            parenthesis_open(),
+            parenthesis_close(),
+            parenthesis_close(),
+        ]);
     }
 
     #[test]
-    fn constant_zero() {
-        check(0,
-              "hello",
-              &vec![]
-        );
+    fn parenthese_and_words() {
+        check("(hello)", &vec![
+            parenthesis_open(),
+        ]);
     }
-
-    #[test]
-    fn direct_comment() {
-        check(0,
-              "#hello",
-              &vec![]
-        );
-    }
-
-    #[test]
-    fn indented_comment() {
-        check(0,
-              "    \t#hello",
-              &vec![]
-        );
-    }
-
-    #[test]
-    fn empty_line() {
-        check(0,
-              "\n",
-              &vec![]
-        );
-    }
-
-    #[test]
-    fn whitespace_line() {
-        check(0,
-              "\t    \n",
-              &vec![]
-        );
-    }
-
-    //TODO @mark: check that the correct characters are stripped, especially for comments
 }
