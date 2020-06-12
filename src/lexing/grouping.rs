@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken};
-use crate::token::collect::{parenthesis_open, parenthesis_close};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::token::collect::{parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^\(\)\[\]{}").unwrap();
@@ -17,10 +17,10 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         match sym.as_str() {
             "(" => parenthesis_open(),
             ")" => parenthesis_close(),
-            "[" => { unparseable("[ not yet implemented") },
-            "]" => { unparseable("] not yet implemented") },
-            "{" => { unparseable("{ not yet implemented") },
-            "}" => { unparseable("} not yet implemented") },
+            "[" => unlexable("[ not yet implemented"),
+            "]" => unlexable("] not yet implemented"),
+            "{" => unlexable("{ not yet implemented"),
+            "}" => unlexable("} not yet implemented"),
             _ => unreachable!("Erroneous situation while lexing grouping symbols"),
         }
     }
@@ -29,12 +29,12 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod grouping {
     use crate::io::source::SourceFile;
-    use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::lexer::{CodeLexer, Lexer};
-    use crate::token::{StartBlockToken, Tokens, EndBlockToken};
+    use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::lex_grouping;
-    use crate::lexing::tests::create_lexer;
 
     fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
         let (source, mut reader, mut lexer) = create_lexer(input);

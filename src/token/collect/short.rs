@@ -1,18 +1,18 @@
 use ::std::str::FromStr;
 
-use crate::common::error::MangoResult;
 use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
 use crate::util::numtype::f64eq;
+use crate::common::error::MsgResult;
 
-pub fn association(txt: &str) -> MangoResult<Tokens> {
+pub fn association(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Association(AssociationToken::from_str(txt)?))
 }
 
-pub fn identifier(txt: &str) -> MangoResult<Tokens> {
+pub fn identifier(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Identifier(IdentifierToken::from_str(txt)?))
 }
 
-pub fn keyword(txt: &str) -> MangoResult<Tokens> {
+pub fn keyword(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Keyword(KeywordToken::from_str(txt)?))
 }
 
@@ -28,7 +28,7 @@ pub fn literal_real(nr: f64eq) -> Tokens {
     Tokens::Literal(LiteralToken::Real(nr))
 }
 
-pub fn operator(txt: &str) -> MangoResult<Tokens> {
+pub fn operator(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Operator(OperatorToken::from_str(&txt)?))
 }
 

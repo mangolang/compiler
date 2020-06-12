@@ -1,12 +1,14 @@
+use ::std::collections::hash_map::RandomState;
+use ::std::fmt;
+use ::std::sync::Mutex;
+
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+use ::string_interner::StringInterner;
+
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
-use lazy_static::lazy_static;
-use regex::Regex;
-use std::collections::hash_map::RandomState;
-use std::fmt;
-use std::sync::Mutex;
-use string_interner::StringInterner;
-use crate::common::error::ErrMsg;
 
 const VALID_IDENTIFIER_SUBPATTERN: &str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
@@ -52,7 +54,7 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new<S: Into<String>>(name: S) -> Result<Self, ErrMsg> {
+    fn new<S: Into<String>>(name: S) -> MsgResult<Self> {
         let sname = name.into();
         match Name::validate(&sname) {
             Ok(_) => {
@@ -63,19 +65,17 @@ impl StrType for Name {
         }
     }
 
-    fn validate(name: &str) -> Result<(), Msg> {
+    fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
                 if chr.is_digit(10) {
-                    return Err(Msg::from_valid("Identifier names may not start with a digit."));
+                    return Err("Identifier names may not start with a digit.".into());
                 }
             }
             None => return Ok(()), // empty string
         }
         if !VALID_IDENTIFIER.is_match(&name.to_string()) {
-            return Err(Msg::from_valid(
-                "Identifier names should consist of letters, numbers and underscores.",
-            ));
+            return Err("Identifier names should consist of letters, numbers and underscores.".into());
         }
         Ok(())
     }
@@ -83,8 +83,9 @@ impl StrType for Name {
 
 #[cfg(test)]
 mod tests {
-    use super::Name;
     use crate::util::strtype::typ::StrType;
+
+    use super::Name;
 
     #[test]
     fn test_valid_names() {

@@ -3,6 +3,7 @@ use ::std::fmt;
 use crate::io::source::SourceSlice;
 
 pub type MangoResult<'a, T> = Result<T, MangoErr<'a>>;
+pub type MsgResult<T> = Result<T, ErrMsg>;
 
 /// This is for errors that are related to specific problems with the source.
 /// This is the type that should eventually be returned and reported.
@@ -25,7 +26,7 @@ pub struct ErrMsg {
 
 impl From<String> for ErrMsg {
     fn from(text: String) -> Self {
-        friendly { text, debug: None }
+        ErrMsg { friendly: text, debug: None }
     }
 }
 
@@ -37,6 +38,6 @@ impl From<&str> for ErrMsg {
 
 impl fmt::Display for ErrMsg {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, self.text)
+        write!(f, "{}", &self.friendly)
     }
 }

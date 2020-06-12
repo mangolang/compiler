@@ -1,7 +1,10 @@
+use ::std::fmt;
+
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
+use crate::common::error::MsgResult;
 use crate::util::strtype::StrType;
-use lazy_static::lazy_static;
-use regex::Regex;
-use std::fmt;
 
 lazy_static! {
     static ref VALID_MESSAGE: Regex = Regex::new(r"^[\p{L}\d +\-_:/\\'.,]*$").unwrap();
@@ -24,7 +27,7 @@ impl fmt::Display for Msg {
 }
 
 impl StrType for Msg {
-    fn new<S: Into<String>>(msg: S) -> Result<Self, Msg> {
+    fn new<S: Into<String>>(msg: S) -> MsgResult<Self> {
         let smsg = msg.into();
         match Msg::validate(&smsg) {
             Ok(_) => Ok(Msg { msg: smsg }),

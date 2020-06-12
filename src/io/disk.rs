@@ -9,7 +9,7 @@ pub fn read(pth: &Path) -> MangoResult<SourceFile> {
         Ok(content) => Ok(SourceFile::new(pth.to_string_lossy(), content)),
         Err(err) => Err(MangoErr::Read {
             friendly: format!("Could not read source in '{}'", pth.to_string_lossy()),
-            debug: format!("{:?}", err),
+            debug: Some(format!("{:?}", err)),
         }),
     }
 }

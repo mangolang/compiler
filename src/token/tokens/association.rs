@@ -1,8 +1,10 @@
+use ::std::str::FromStr;
+
+use crate::common::error::MsgResult;
 use crate::token::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Msg;
-use std::str::FromStr;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -14,7 +16,7 @@ pub struct AssociationToken {
 impl FromStr for AssociationToken {
     type Err = Msg;
 
-    fn from_str(symbol_txt: &str) -> Result<AssociationToken, Msg> {
+    fn from_str(symbol_txt: &str) -> MsgResult<AssociationToken> {
         Ok(AssociationToken::from_symbol(Symbol::new(symbol_txt)?))
     }
 }
