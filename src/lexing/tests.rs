@@ -6,7 +6,7 @@ use crate::lexing::lexer::CodeLexer;
 use crate::token::collect::*;
 use crate::common::error::ErrMsg;
 
-use ::indoc::indoc;
+// use ::indoc::indoc;
 
 /// Create a set of source, reader and lexer for testing purposes.
 pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
@@ -37,10 +37,14 @@ fn lex_01() -> Result<(), ErrMsg> {
 
 #[test]
 fn lex_02() -> Result<(), ErrMsg> {
-    let input = indoc!("(
-        x * x + ...
-        y * y
-    )");
+    // let input = indoc!("(
+    //     x * x + ...
+    //     y * y
+    // )");
+    let input = "(
+    x * x + ...
+    y * y
+)";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![

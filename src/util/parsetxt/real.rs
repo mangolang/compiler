@@ -17,7 +17,7 @@ lazy_static! {
     /// Here int is a series of 0-9 digits separated by at most one underscore.
     /// Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
     //TODO: is starting with a period allowed?
-    pub static ref REAL_RE: Regex = Regex::new(r"^(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?\b").unwrap();
+    pub static ref REAL_RE: Regex = Regex::new(r"^(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?").unwrap();
 }
 
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
