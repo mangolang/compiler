@@ -21,10 +21,9 @@ lazy_static! {
 }
 
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
-pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
+pub fn parse_real(text: &str) -> Result<f64, RealParseFailReason> {
     //TODO @mark: make sure no leftover chars (no $ at the end)
-    let text = text.into();
-    match REAL_RE.captures(&text) {
+    match REAL_RE.captures(text) {
         None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
             let multiplier = captures

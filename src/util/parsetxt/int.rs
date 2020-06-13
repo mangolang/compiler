@@ -18,10 +18,9 @@ lazy_static! {
 }
 
 /// Convert a String that matches [int_pattern] to an i64 integer. Overflow is possible.
-pub fn parse_int<S: Into<String>>(text: S) -> Result<i64, IntParseFailReason> {
+pub fn parse_int(text: &str) -> Result<i64, IntParseFailReason> {
     //TODO @mark: make sure no leftover chars (no $ at the end)
-    let text = text.into();
-    match INT_RE.captures(&text) {
+    match INT_RE.captures(text) {
         None => Err(IntParseFailReason::Invalid),
         Some(captures) => {
             //            // Sign

@@ -12,14 +12,12 @@ use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::int::INT_RE;
 use crate::util::parsetxt::real::parse_real;
 use crate::util::parsetxt::real::REAL_RE;
+use crate::util::parsetxt::text::parse_single_quote;
+use crate::util::parsetxt::text::SINGLE_QUOTE_RE;
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day
     static ref CONSTANTS_RE: Regex = Regex::new(r"^(?:true|false|NaN|infinity)\b").unwrap();
-
-    // From a single quote until the first non-escaped single-quote on the same line.
-    // TODO: Only single-quoted, single-line strings for now; double-quoted strings may become templates?
-    static ref TEXT_RE: Regex = Regex::new(r"^(?:'[^\n\r]*?[^\\]'|'')").unwrap();
 }
 
 /// Lex a single literal (text, int, real, boolean).
@@ -50,9 +48,8 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     }
 
     // Text (string literals).
-    while let ReaderResult::Match(sym) = reader.strip_match(&*TEXT_RE) {
-        let unquoted = &sym.as_str()[1 .. sym.as_str().len() - 1];
-        lexer.add(literal_text(unquoted));
+    while let ReaderResult::Match(sym) = reader.strip_match(&*SINGLE_QUOTE_RE) {
+        lexer.add(literal_text(parse_single_quote(sym.as_str())));
     }
 }
 
@@ -135,6 +132,12 @@ mod int {
     #[test]
     fn empty() {
         check("", &vec![]);
+    }
+
+    #[test]
+    fn mismatch() {
+        check("!", &vec![]);
+        check("a", &vec![]);
     }
 
     #[test]
@@ -221,6 +224,12 @@ mod real {
     }
 
     #[test]
+    fn mismatch() {
+        check("!", &vec![]);
+        check("a", &vec![]);
+    }
+
+    #[test]
     fn after_mismatch() {
         check("a 1.0", &vec![]);
         check("a1.0", &vec![]);
@@ -255,6 +264,86 @@ mod real {
             literal_real(2.2),
             literal_real(3.3),
             literal_real(0.1234567890),
+        ]);
+    }
+}
+
+#[cfg(test)]
+mod text {
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_int, literal_bool, literal_real, literal_text};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::lex_literal;
+
+    fn check(input: &str, expected: &[Tokens]) {
+        let (source, mut reader, mut lexer) = create_lexer(input);
+        lex_literal(&mut reader, &mut lexer);
+        assert_eq!(lexer.tokens(), &expected.into());
+    }
+
+    #[test]
+    fn empty() {
+        check("", &vec![]);
+    }
+
+    #[test]
+    fn mismatch() {
+        check("!", &vec![]);
+        check("a", &vec![]);
+    }
+
+    #[test]
+    fn after_mismatch() {
+        check("a 'a'", &vec![]);
+        check("a'a'", &vec![]);
+    }
+
+    #[test]
+    fn no_content() {
+        check("''", &vec![literal_text("")]);
+    }
+
+    #[test]
+    fn simple() {
+        check("'x'", &vec![literal_text("x")]);
+        check("'hello world!'", &vec![literal_text("hello world!")]);
+    }
+
+    #[test]
+    fn double_quotes() {
+        check("'\"\"'", &vec![literal_text("\"\"")]);
+    }
+
+    #[test]
+    fn unbalanced() {
+        // This should match one empty string, leaving a single quote.
+        // That single quote should be picked up by unlexable.
+        check("'''", &vec![literal_text("")]);
+    }
+
+    #[test]
+    fn escaped() {
+        check("'\\''", &vec![literal_text("\\'")]);
+    }
+
+    #[test]
+    fn escape_escaped() {
+        check("'\\\\'", &vec![literal_text("\\\\")]);
+    }
+
+    #[test]
+    fn repeated() {
+        check("'' 'hello' 'world'", &vec![
+            literal_text(""),
+            literal_text("hello"),
+            literal_text("world"),
         ]);
     }
 }
