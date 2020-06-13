@@ -52,6 +52,10 @@ pub fn parse_int(text: &str) -> Result<i64, IntParseFailReason> {
                 Some(value) => {
                     // This is a 'normal' (base10) value.
                     // TODO: check for over/underflow
+                    if value.as_str().len() < text.len() {
+                        // Part of `text` did not match the regex, so this input is invalid.
+                        return Err(IntParseFailReason::Invalid)
+                    }
                     Ok(value.as_str().without_char('_').parse::<i64>().unwrap())
                 }
             }
@@ -66,7 +70,7 @@ mod tests {
     use super::parse_int;
 
     #[test]
-    fn test_parse_b10_int() {
+    fn parse_b10_int() {
         assert_eq!(42, parse_int("42").unwrap());
         assert_eq!(42, parse_int("4_2").unwrap());
         assert_eq!(123_456_789, parse_int("+1_2_3_4_5_6_7_8_9").unwrap());
@@ -78,7 +82,7 @@ mod tests {
     }
 
     #[test]
-    fn test_invalid_b10_ints() {
+    fn invalid_b10_ints() {
         assert!(parse_int("0x9").is_err());
         assert!(parse_int("A").is_err());
         assert!(parse_int("_0").is_err());
@@ -87,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_based_ints() {
+    fn parse_based_ints() {
         // TODO: not implemented yet
     }
 }

@@ -26,6 +26,10 @@ pub fn parse_real(text: &str) -> Result<f64, RealParseFailReason> {
     match REAL_RE.captures(text) {
         None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
+            if captures[0].len() < text.len() {
+                // Part of `text` did not match the regex, so this input is invalid.
+                return Err(RealParseFailReason::Invalid)
+            }
             let multiplier = captures
                 .name("multiplier")
                 .unwrap()
@@ -60,7 +64,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_nonexp_real() {
+    fn parse_nonexp_real() {
         assert!(close(42., parse_real("42.0").unwrap()));
         assert!(close(-0.1, parse_real("-.1").unwrap()));
         assert!(close(-1., parse_real("-1.").unwrap()));
@@ -68,7 +72,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_exp_real() {
+    fn parse_exp_real() {
         assert!(close(42., parse_real("42.0e0").unwrap()));
         assert!(close(-0.1, parse_real("-.1e0").unwrap()));
         assert!(close(-1., parse_real("-1.e0").unwrap()));
@@ -82,7 +86,7 @@ mod tests {
     }
 
     #[test]
-    fn test_invalid_real() {
+    fn invalid_real() {
         assert!(parse_real("+_42.0").is_err());
         assert!(parse_real("-_42.0").is_err());
         assert!(parse_real("_42.0").is_err());
