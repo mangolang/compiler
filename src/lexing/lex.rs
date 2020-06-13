@@ -45,8 +45,8 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         try_lex!(lex_operator, reader, lexer);
         try_lex!(lex_association, reader, lexer);
         try_lex!(lex_separators, reader, lexer);
-        try_lex!(lex_literal, reader, lexer);
         try_lex!(lex_identifier, reader, lexer);
+        try_lex!(lex_literal, reader, lexer);
         if lex_eof(&mut reader) { break }
         try_lex!(lex_unlexable, reader, lexer);
     }

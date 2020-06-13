@@ -1,5 +1,7 @@
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
 use crate::util::strslice::char_ops::CharOps;
-use regex::Regex;
 
 #[derive(Debug)]
 pub enum RealParseFailReason {
@@ -9,21 +11,20 @@ pub enum RealParseFailReason {
     PrecisionLoss(f64),
 }
 
-/// This matches real literals (base 10), which look like this:
-///   sign / int1 / period / int2 / e / sign / int
-/// Here int is a series of 0-9 digits separated by at most one underscore.
-/// Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
-pub fn real_pattern() -> &'static str {
-    // TODO: do I really want to allow numbers to start with a period?
-    // TODO: for now, only base10 for reals (would 8b11e2 be 9*8^2 or 9*10^2?)
-    // TODO: does not deal with NaN of infinity
-    r"(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?"
+lazy_static! {
+    /// This matches real literals (base 10), which look like this:
+    ///   sign / int1 / period / int2 / e / sign / int
+    /// Here int is a series of 0-9 digits separated by at most one underscore.
+    /// Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
+    //TODO: is starting with a period allowed?
+    pub static ref REAL_RE: Regex = Regex::new(r"(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?\b").unwrap();
 }
 
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
 pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
+    //TODO @mark: make sure no leftover chars (no $ at the end)
     let text = text.into();
-    match Regex::new(&format!(r"^{}$", real_pattern())).unwrap().captures(&text) {
+    match REAL_RE.captures(&text) {
         None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
             let multiplier = captures

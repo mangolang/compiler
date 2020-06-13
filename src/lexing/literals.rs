@@ -8,22 +8,14 @@ use crate::token::collect::{association, identifier, literal_bool, literal_int, 
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
+use crate::util::parsetxt::int::parse_int;
+use crate::util::parsetxt::int::INT_RE;
+use crate::util::parsetxt::real::parse_real;
+use crate::util::parsetxt::real::REAL_RE;
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day
     static ref CONSTANTS_RE: Regex = Regex::new(r"^(?:true|false|NaN|infinity)\b").unwrap();
-
-    // This matches integer literals, either just numbers in base 10, or base 2-36 with prefix.
-    // The syntax for -37 in base 16 is -16b25 and 2748 is 16bABC.
-    // Incorrect values like 4b7 or 0b0 are not handled at the lexing stage.
-    static ref INT_RE: Regex = Regex::new(r"^(?:\+|-*)(?:[1-9][0-9]*b(?:_?[0-9a-zA-Z])+|[0-9](?:_?[0-9])*)\b").unwrap();
-
-    // This matches real literals (base 10), which look like this:
-    //   sign / int1 / period / int2 / e / sign / int
-    // Here int is a series of 0-9 digits separated by at most one underscore.
-    // Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
-    //TODO: is starting with a period allowed?
-    static ref REAL_RE: Regex = Regex::new(r"^(?:\+|-*)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*)(?:e(?:\+|-?)\d(?:_?\d)*)?\b").unwrap();
 
     // From a single quote until the first non-escaped single-quote on the same line.
     // TODO: Only single-quoted, single-line strings for now; double-quoted strings may become templates?
@@ -47,15 +39,14 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     // Real numbers.
     while let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
-        lexer.add(literal_real(sym.as_str()
-            .parse::<f64>().unwrap().into()));
+        //TODO: get rid of this 'unwrap'
+        lexer.add(literal_real(parse_real(sym.as_str()).unwrap().into()));
     }
 
     // Integers.
     while let ReaderResult::Match(sym) = reader.strip_match(&*INT_RE) {
-        lexer.add(literal_int(sym.as_str()
-            .replace("_", "")
-            .parse().unwrap()));
+        //TODO: get rid of this 'unwrap'
+        lexer.add(literal_int(parse_int(sym.as_str()).unwrap()));
     }
 
     // Text (string literals).
@@ -119,11 +110,13 @@ mod int {
 
     #[test]
     fn valid_underscores() {
+        // No need for fancy cases, most parsing-testing should happen at `parse_int`
         check("1_2_3", &vec![literal_int(123)]);
     }
 
     #[test]
     fn invalid_underscores() {
+        // No need for fancy cases, most parsing-testing should happen at `parse_int`
         check("1__2_3", &vec![]);
         check("_1_2_3", &vec![]);
         check("123_", &vec![]);
