@@ -21,15 +21,15 @@ impl BinaryOperationAST {
     }
 }
 
-impl ToText for BinaryOperationAST {
-    fn to_text(&self) -> String {
-        return format!(
-            "({0:} {1:} {2:})",
-            self.left.to_text(),
-            self.operator.to_text(),
-            self.right.to_text()
-        );
-    }
-}
+// impl ToText for BinaryOperationAST {
+//     fn to_text(&self) -> String {
+//         return format!(
+//             "({0:} {1:} {2:})",
+//             self.left.to_text(),
+//             self.operator.to_text(),
+//             self.right.to_text()
+//         );
+//     }
+// }
 
 impl AST for BinaryOperationAST {}

@@ -15,13 +15,13 @@ impl UnparseableAST {
     }
 }
 
-impl ToText for UnparseableAST {
-    fn to_text(&self) -> String {
-        format!(
-            " [cannot parse: {}] ",
-            self.tokens.iter().map(Tokens::to_text).collect::<Vec<String>>().join(" / ")
-        )
-    }
-}
+// impl ToText for UnparseableAST {
+//     fn to_text(&self) -> String {
+//         format!(
+//             " [cannot parse: {}] ",
+//             self.tokens.iter().map(Tokens::to_text).collect::<Vec<String>>().join(" / ")
+//         )
+//     }
+// }
 
 impl AST for UnparseableAST {}

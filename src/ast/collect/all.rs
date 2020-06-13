@@ -21,18 +21,18 @@ pub enum FullAST {
     Unparseable(UnparseableAST),
 }
 
-impl ToText for FullAST {
-    fn to_text(&self) -> String {
-        match self {
-            FullAST::Operator(val) => val.to_text(),
-            FullAST::Literal(val) => val.to_text(),
-            FullAST::UnaryOperation(val) => val.to_text(),
-            FullAST::BinaryOperation(val) => val.to_text(),
-            FullAST::Variable(val) => val.to_text(),
-            FullAST::Assignment(val) => val.to_text(),
-            FullAST::Unparseable(val) => val.to_text(),
-        }
-    }
-}
+// impl ToText for FullAST {
+//     fn to_text(&self) -> String {
+//         match self {
+//             FullAST::Operator(val) => val.to_text(),
+//             FullAST::Literal(val) => val.to_text(),
+//             FullAST::UnaryOperation(val) => val.to_text(),
+//             FullAST::BinaryOperation(val) => val.to_text(),
+//             FullAST::Variable(val) => val.to_text(),
+//             FullAST::Assignment(val) => val.to_text(),
+//             FullAST::Unparseable(val) => val.to_text(),
+//         }
+//     }
+// }
 
 impl AST for FullAST {}

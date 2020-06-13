@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use std::hash::Hash;
 
 /// AST trait to be implemented by all AST nodes.
-pub trait AST: PartialEq + Eq + Hash + Debug + ToText {}
+pub trait AST: PartialEq + Eq + Hash + Debug {}
 
 //TODO @mark: remove?
 ///// Trait to be implemented by everything in the full abstract syntax tree.

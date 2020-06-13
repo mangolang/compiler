@@ -12,6 +12,7 @@ use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::util::encdec::ToText;
+use crate::token::tokens::separators::{CommaToken, EllipsisToken, PeriodToken, NewlineToken};
 
 /// Collection of all possible tokens.
 #[derive(PartialEq, Eq, Hash, Debug, Clone)]
@@ -26,30 +27,38 @@ pub enum Tokens {
     EndStatement(EndStatementToken),
     StartBlock(StartBlockToken),
     EndBlock(EndBlockToken),
+    Comma(CommaToken),
+    Ellipsis(EllipsisToken),
+    Period(PeriodToken),
+    Newline(NewlineToken),
     Unlexable(UnlexableToken),
 }
 
 //TODO @mark: optimize the bugger of TokenVec by benchmarking
 pub type TokenVec = SmallVec<[Tokens; 2]>;
 
-impl ToText for Tokens {
-    fn to_text(&self) -> String {
-        use self::Tokens::*;
-        match self {
-            Association(token) => token.to_text(),
-            Identifier(token) => token.to_text(),
-            Keyword(token) => token.to_text(),
-            Literal(token) => token.to_text(),
-            Operator(token) => token.to_text(),
-            ParenthesisOpen(token) => token.to_text(),
-            ParenthesisClose(token) => token.to_text(),
-            EndStatement(token) => token.to_text(),
-            Unlexable(token) => token.to_text(),
-            StartBlock(token) => token.to_text(),
-            EndBlock(token) => token.to_text(),
-        }
-    }
-}
+// impl ToText for Tokens {
+//     fn to_text(&self) -> String {
+//         use self::Tokens::*;
+//         match self {
+//             Association(token) => token.to_text(),
+//             Identifier(token) => token.to_text(),
+//             Keyword(token) => token.to_text(),
+//             Literal(token) => token.to_text(),
+//             Operator(token) => token.to_text(),
+//             ParenthesisOpen(token) => token.to_text(),
+//             ParenthesisClose(token) => token.to_text(),
+//             EndStatement(token) => token.to_text(),
+//             Unlexable(token) => token.to_text(),
+//             StartBlock(token) => token.to_text(),
+//             CommaToken(token) => token.to_text(),
+//             EllipsisToken(token) => token.to_text(),
+//             PeriodToken(token) => token.to_text(),
+//             NewlineToken(token) => token.to_text(),
+//             EndBlock(token) => token.to_text(),
+//         }
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
