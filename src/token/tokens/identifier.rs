@@ -9,7 +9,7 @@ use crate::util::strtype::typ::StrType;
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct IdentifierToken {
-    name: Name,
+    pub name: Name,
 }
 
 impl FromStr for IdentifierToken {

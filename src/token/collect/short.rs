@@ -43,10 +43,10 @@ pub fn parenthesis_close() -> Tokens {
     Tokens::ParenthesisClose(ParenthesisCloseToken::new())
 }
 
-pub fn end_statement() -> Tokens {
-    //TODO @mark: for now only create newlines
-    Tokens::EndStatement(EndStatementToken::new_end_line())
-}
+// pub fn end_statement() -> Tokens {
+//     //TODO @mark: for now only create newlines
+//     Tokens::EndStatement(EndStatementToken::new_end_line())
+// }
 
 pub fn start_block() -> Tokens {
     Tokens::StartBlock(StartBlockToken::new())

@@ -4,6 +4,7 @@ use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 use std::str::FromStr;
 use crate::common::error::{MangoResult, MangoErr};
+use std::borrow::Cow;
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)
@@ -17,6 +18,21 @@ pub enum Keyword {
     Function,
     Return,
     Reserved(String),
+}
+
+impl Keyword {
+    pub fn to_str(&self) -> Cow<str> {
+        match self {
+            Keyword::Let => Cow::from("let"),
+            Keyword::Mut => Cow::from("mut"),
+            Keyword::If => Cow::from("if"),
+            Keyword::For => Cow::from("for"),
+            Keyword::While => Cow::from("while"),
+            Keyword::Function => Cow::from("function"),
+            Keyword::Return => Cow::from("return"),
+            Keyword::Reserved(name) => Cow::from(name),
+        }
+    }
 }
 
 impl FromStr for Keyword {

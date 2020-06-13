@@ -8,7 +8,7 @@ use crate::util::encdec::ToText;
 /// A built-in language keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct KeywordToken {
-    word: Keyword,
+    pub word: Keyword,
 }
 
 impl FromStr for KeywordToken {

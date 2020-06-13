@@ -13,9 +13,11 @@ use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
 use crate::util::encdec::ToText;
 use crate::token::tokens::separators::{CommaToken, EllipsisToken, PeriodToken, NewlineToken};
+use std::fmt;
+use std::fmt::Formatter;
 
 /// Collection of all possible tokens.
-#[derive(PartialEq, Eq, Hash, Debug, Clone)]
+#[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Tokens {
     Association(AssociationToken),
     Identifier(IdentifierToken),
@@ -24,7 +26,7 @@ pub enum Tokens {
     Operator(OperatorToken),
     ParenthesisOpen(ParenthesisOpenToken),
     ParenthesisClose(ParenthesisCloseToken),
-    EndStatement(EndStatementToken),
+    // EndStatement(EndStatementToken),
     StartBlock(StartBlockToken),
     EndBlock(EndBlockToken),
     Comma(CommaToken),
@@ -34,31 +36,27 @@ pub enum Tokens {
     Unlexable(UnlexableToken),
 }
 
-//TODO @mark: optimize the bugger of TokenVec by benchmarking
-pub type TokenVec = SmallVec<[Tokens; 2]>;
-
-// impl ToText for Tokens {
-//     fn to_text(&self) -> String {
-//         use self::Tokens::*;
-//         match self {
-//             Association(token) => token.to_text(),
-//             Identifier(token) => token.to_text(),
-//             Keyword(token) => token.to_text(),
-//             Literal(token) => token.to_text(),
-//             Operator(token) => token.to_text(),
-//             ParenthesisOpen(token) => token.to_text(),
-//             ParenthesisClose(token) => token.to_text(),
-//             EndStatement(token) => token.to_text(),
-//             Unlexable(token) => token.to_text(),
-//             StartBlock(token) => token.to_text(),
-//             CommaToken(token) => token.to_text(),
-//             EllipsisToken(token) => token.to_text(),
-//             PeriodToken(token) => token.to_text(),
-//             NewlineToken(token) => token.to_text(),
-//             EndBlock(token) => token.to_text(),
-//         }
-//     }
-// }
+impl fmt::Debug for Tokens {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Tokens::Association(association) => write!(f, "as:{}", association.to_text()),
+            Tokens::Identifier(identifier) => write!(f, "${}", identifier.name),
+            Tokens::Keyword(keyword) => write!(f, "k:{}", keyword.word.to_str().as_ref().to_uppercase()),
+            Tokens::Literal(literal) => write!(f, "l:{}", literal.to_text()),
+            Tokens::Operator(operator) => write!(f, "op:{}", operator.to_text()),
+            Tokens::ParenthesisOpen(parenthesis_open) => write!(f, "("),
+            Tokens::ParenthesisClose(parenthesis_close) => write!(f, ")"),
+            //Tokens::EndStatement(end_statement) => write!(f, "end_statement"),
+            Tokens::StartBlock(start_block) => write!(f, "start_block"),
+            Tokens::EndBlock(end_block) => write!(f, "end_block"),
+            Tokens::Comma(comma) => write!(f, "comma"),
+            Tokens::Ellipsis(ellipsis) => write!(f, "..."),
+            Tokens::Period(period) => write!(f, "."),
+            Tokens::Newline(newline) => write!(f, "\\n"),
+            Tokens::Unlexable(unlexable) => write!(f, "??{}??", unlexable.to_text()),
+        }
+    }
+}
 
 #[cfg(test)]
 mod tests {
