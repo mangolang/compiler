@@ -11,7 +11,7 @@ pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
     fn validate(value: &str) -> MsgResult<()>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid.
-    fn new(txt: Cow<String>) -> MsgResult<Self>;
+    fn new<'a>(txt: impl Into<Cow<'a, str>>) -> MsgResult<Self>;
 
     /// Alternative constructor that panics on invalid input.
     fn from_valid(txt: &str) -> Self {

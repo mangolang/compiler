@@ -54,12 +54,11 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new(name: impl Into<Cow<String>>) -> MsgResult<Self> {
-        dbg!(name);  //TODO @mark: TEMPORARY! REMOVE THIS!
-        let name = name.as_str();
-        match Name::validate(&name) {
+    fn new<'a>(name: impl Into<Cow<'a, str>>) -> MsgResult<Self> {
+        let name = name.into();
+        match Name::validate(name.as_ref()) {
             Ok(_) => {
-                let id = INTERNER.lock().unwrap().get_or_intern(name.into_owned());
+                let id = INTERNER.lock().unwrap().get_or_intern(name.to_owned());
                 Ok(Name { name_id: id })
             }
             Err(msg) => Err(msg),
@@ -89,15 +88,15 @@ mod cow {
     #[test]
     fn new_str() {
         // Twice because of interning.
-        assert!(Name::from("test_name").map(|s| s == "test_name"));
-        assert!(Name::from("test_name").map(|s| s == "test_name"));
+        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
+        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
     }
 
     #[test]
     fn new_string() {
         // Twice because of interning.
-        assert!(Name::from("test_name".to_owned()).map(|s| s == "test_name"));
-        assert!(Name::from("test_name".to_owned()).map(|s| s == "test_name"));
+        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
+        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
     }
 }
 
@@ -124,7 +123,7 @@ mod validation {
         ];
         for inp in valid.iter() {
             /* Check that all of these names validate. */
-            assert_eq!(inp.to_string(), Name::new(inp).unwrap().value());
+            assert_eq!(inp.to_string(), Name::new(*inp).unwrap().value());
         }
     }
 
@@ -178,7 +177,7 @@ mod validation {
         ];
         for inp in invalid.into_iter() {
             /* Check that none of these names validate. */
-            assert!(Name::new(Cow::from(inp)).is_err());
+            assert!(Name::new(*inp).is_err());
         }
     }
 
