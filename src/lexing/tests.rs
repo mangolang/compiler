@@ -56,8 +56,8 @@ fn lex_02() -> Result<(), ErrMsg> {
         identifier("y")?,
         operator("*")?,
         identifier("y")?,
-        end_block(),
         newline(),
+        end_block(),
         parenthesis_close(),
     ]);
     Ok(())

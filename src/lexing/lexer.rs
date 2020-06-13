@@ -16,6 +16,13 @@ pub trait Lexer {
     /// Return the tokens `add`ed, consuming the lexer.
     fn into_tokens(self) -> Vec<Tokens>;
 
+    /// Whether the lexer is currently somewhere that indentation can be encountered.
+    /// This is the case at the start of many lines, but not e.g. in the middle.
+    fn is_at_indentable(&self) -> bool;
+
+    /// Mark the current place as indentable or not, see `is_at_indentable`.
+    fn set_at_indentable(&mut self, indentable: bool);
+
     /// Get the current indentation level.
     fn get_indent(&self) -> u32;
 
@@ -27,6 +34,7 @@ pub trait Lexer {
 pub struct CodeLexer {
     tokens: TokenList,
     indent: u32,
+    indentable: bool,
 }
 
 impl CodeLexer {
@@ -34,6 +42,7 @@ impl CodeLexer {
         CodeLexer {
             tokens: TokenList::with_capacity(source_len / 3),
             indent: 0,
+            indentable: true,
         }
     }
 
@@ -42,6 +51,7 @@ impl CodeLexer {
         CodeLexer {
             tokens: TokenList::with_capacity(8),
             indent: 0,
+            indentable: true,
         }
     }
 }
@@ -61,6 +71,14 @@ impl Lexer for CodeLexer {
 
     fn into_tokens(self) -> Vec<Tokens> {
         self.tokens.into_vec()
+    }
+
+    fn is_at_indentable(&self) -> bool {
+        self.indentable
+    }
+
+    fn set_at_indentable(&mut self, indentable: bool) {
+        self.indentable = indentable;
     }
 
     fn get_indent(&self) -> u32 {

@@ -1,3 +1,5 @@
+use ::std::fmt;
+
 use smallvec::SmallVec;
 
 use crate::token::special::EndBlockToken;
@@ -11,10 +13,8 @@ use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
+use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::util::encdec::ToText;
-use crate::token::tokens::separators::{CommaToken, EllipsisToken, PeriodToken, NewlineToken};
-use std::fmt;
-use std::fmt::Formatter;
 
 /// Collection of all possible tokens.
 #[derive(PartialEq, Eq, Hash, Clone)]
@@ -41,11 +41,11 @@ impl fmt::Debug for Tokens {
         match self {
             Tokens::Association(association) => write!(f, "as:{}", association.to_text()),
             Tokens::Identifier(identifier) => write!(f, "${}", identifier.name),
-            Tokens::Keyword(keyword) => write!(f, "k:{}", keyword.word.to_str().as_ref().to_uppercase()),
-            Tokens::Literal(literal) => write!(f, "l:{}", literal.to_text()),
+            Tokens::Keyword(keyword) => write!(f, "{}", keyword.word.to_str().as_ref().to_uppercase()),
+            Tokens::Literal(literal) => write!(f, "'{}'", literal.to_text()),
             Tokens::Operator(operator) => write!(f, "op:{}", operator.to_text()),
-            Tokens::ParenthesisOpen(parenthesis_open) => write!(f, "("),
-            Tokens::ParenthesisClose(parenthesis_close) => write!(f, ")"),
+            Tokens::ParenthesisOpen(parenthesis_open) => write!(f, "'('"),
+            Tokens::ParenthesisClose(parenthesis_close) => write!(f, "')'"),
             //Tokens::EndStatement(end_statement) => write!(f, "end_statement"),
             Tokens::StartBlock(start_block) => write!(f, "start_block"),
             Tokens::EndBlock(end_block) => write!(f, "end_block"),

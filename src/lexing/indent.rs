@@ -16,6 +16,11 @@ lazy_static! {
 /// Process the indents at the start of a line, and add the tokens to the Lexer.
 pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
+    // Only try to lex indents if at the start of a line.
+    if !lexer.is_at_indentable() {
+        return;
+    }
+
     // Skip if this is an empty or comment-only line.
     if let ReaderResult::Match(_) = reader.strip_peek(&*NO_CODE_LINE_RE) {
         return
@@ -38,6 +43,7 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         lexer.add(Tokens::StartBlock(StartBlockToken::new()));
     }
 
+    lexer.set_at_indentable(false);
     lexer.set_indent(line_indent);
 }
 

@@ -15,17 +15,19 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     let mut found_newline = false;
     while let ReaderResult::Match(sym) = reader.strip_match(&*SEPARATOR_RE) {
-        lexer.add(match sym.as_str() {
+        let token = match sym.as_str() {
             r"..." | r"…" => ellipsis(),
             r"." => period(),
             r"," => comma(),
             "\r\n" | "\n" | "\r" => {
                 // Indentation should be parsed after a newline, so stop.
                 found_newline = true;
+                lexer.set_at_indentable(true);
                 newline()
             },
             _ => unreachable!(),
-        });
+        };
+        lexer.add(token);
         if found_newline { break }
     }
 }
