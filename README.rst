@@ -17,7 +17,7 @@ Mango
 
 A programming language to help you make large software projects reliable, for browsers and servers.
 
-https://mangocode.org/
+This is the compiler 'frontend', which does the parsing and type checking. It produces IR_, to be compiled_, to WebAssembly or interpreted_.
 
 Status
 -------------------------------
@@ -38,8 +38,13 @@ This compiles to native code, with WebAssembly to be added later (#34).
 Links
 -------------------------------
 
+* `Official website`_
 * `Documentation`_
 * `Code of conduct and contributing`_
 
+.. _Official website: https://mangocode.org/
 .. _`Documentation`: https://docs.mangocode.org/
 .. _`Code of conduct and contributing`: https://github.com/mangolang/mango
+.. _IR: https://github.com/mangolang/mango_ir
+.. _compiled: https://github.com/mangolang/wasm
+.. _interpreted: https://github.com/mangolang/interpreter
