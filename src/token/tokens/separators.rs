@@ -14,22 +14,25 @@ pub struct PeriodToken {}
 pub struct NewlineToken {}
 
 impl CommaToken {
-    fn new() -> Self {
+    pub fn new() -> Self {
         CommaToken {}
     }
 }
+
 impl EllipsisToken {
-    fn new() -> Self {
+    pub fn new() -> Self {
         EllipsisToken {}
     }
 }
+
 impl PeriodToken {
-    fn new() -> Self {
+    pub fn new() -> Self {
         PeriodToken {}
     }
 }
+
 impl NewlineToken {
-    fn new() -> Self {
+    pub fn new() -> Self {
         NewlineToken {}
     }
 }

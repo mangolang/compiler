@@ -3,6 +3,7 @@ use ::std::str::FromStr;
 use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
 use crate::util::numtype::f64eq;
 use crate::common::error::MsgResult;
+use crate::token::tokens::separators::{CommaToken, EllipsisToken, PeriodToken, NewlineToken};
 
 //TODO @mark: replace more token usages by short versions
 
@@ -53,6 +54,19 @@ pub fn start_block() -> Tokens {
 
 pub fn end_block() -> Tokens {
     Tokens::EndBlock(EndBlockToken::new2())
+}
+
+pub fn comma() -> Tokens {
+    Tokens::Comma(CommaToken::new())
+}
+pub fn ellipsis() -> Tokens {
+    Tokens::Ellipsis(EllipsisToken::new())
+}
+pub fn period() -> Tokens {
+    Tokens::Period(PeriodToken::new())
+}
+pub fn newline() -> Tokens {
+    Tokens::Newline(NewlineToken::new())
 }
 
 pub fn unlexable(txt: impl Into<String>) -> Tokens {

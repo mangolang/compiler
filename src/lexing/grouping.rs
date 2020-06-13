@@ -46,6 +46,15 @@ mod grouping {
     #[test]
     fn empty() {
         check("", &vec![]);
+        check("    \t", &vec![]);
+    }
+
+    #[test]
+    fn mismatch() {
+        check("*", &vec![]);
+        check(".", &vec![]);
+        check("0", &vec![]);
+        check("a", &vec![]);
     }
 
     #[test]

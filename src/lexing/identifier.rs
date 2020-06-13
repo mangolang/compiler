@@ -80,5 +80,17 @@ mod identifiers {
     fn number_underscore() {
         check("_9", &vec![]);
     }
-    //TODO @mark: multiple
+
+    #[test]
+    fn with_postfix() {
+        check("hi?", &vec!["hi"]);
+        check("hi!", &vec!["hi"]);
+        check("x.y", &vec!["x"]);
+        check("a,b", &vec!["a"]);
+    }
+
+    #[test]
+    fn multiple() {
+        check("mangoes are tasty fruits", &vec!["mangoes", "are", "tasty", "fruits"]);
+    }
 }

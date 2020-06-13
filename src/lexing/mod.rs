@@ -10,6 +10,7 @@ mod operator;
 mod indent;
 mod grouping;
 mod special;
+mod separators;
 
 #[cfg(test)]
 mod tests;
