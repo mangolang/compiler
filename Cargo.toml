@@ -1,7 +1,7 @@
 [package]
 name = "mango"
 description = "The Mango programming language (UNDER CONSTRUCTION)"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangocode.org/"
 license = "Apache-2.0"
@@ -9,6 +9,7 @@ edition = "2018"
 publish = true
 include = [
     "src/**/*",
+    "cli/**/*",
     "Cargo.toml"
 ]
 
@@ -32,6 +33,7 @@ derive-new = "^0.5.8"
 itertools = "^0.8.2"  # TODO @mark: unused?
 smallvec = { version = "^0.6.13", features = ["union"] }
 #indoc = "^0.3.5"
+parity-wasm = "^0.41.0"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
 proc-macro2 = ">=0.4.24"
