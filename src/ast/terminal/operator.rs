@@ -6,7 +6,7 @@ use crate::ast::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::StrType;
 use std::str::FromStr;
-use crate::common::error::ErrMsg;
+use crate::common::error::{ErrMsg, MsgResult};
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -18,13 +18,13 @@ pub enum BinOpSymbol {
 }
 
 impl BinOpSymbol {
-    pub fn new(symbol_txt: &str) -> Result<Self, ErrMsg> {
+    pub fn new(symbol_txt: &str) -> MsgResult<Self> {
         match symbol_txt {
             "+" => Ok(BinOpSymbol::Plus),
             "-" => Ok(BinOpSymbol::Dash),
             "*" => Ok(BinOpSymbol::Asterisk),
             "/" => Ok(BinOpSymbol::Slash),
-            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", symbol_txt))),
+            _ => Err(ErrMsg::new(format!("Unknown symbol: '{}'", symbol_txt))),
         }
     }
 }

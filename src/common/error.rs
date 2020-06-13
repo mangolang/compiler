@@ -1,49 +1,71 @@
 use ::std::fmt;
 
 use crate::io::source::SourceSlice;
-use crate::util::errors::Severity;
+use crate::common::error::MangoErrType::Read;
 
 pub type MangoResult<T> = Result<T, MangoErr>;
 pub type MsgResult<T> = Result<T, ErrMsg>;
 
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum Severity {
+    Error,
+    Warning,
+    Debug,
+}
+
 /// This is for errors that are related to specific problems with the source.
 /// This is the type that should eventually be returned and reported.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct MangoErr {
     typ: MangoErrType,
     message: ErrMsg,
     severity: Severity,
 }
 
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub enum MangoErrType {
     Read,
     Syntax { src: SourceSlice },
 }
 
 impl MangoErr {
-    fn msg(&self) -> &ErrMsg {
-        match self {
-            MangoErr::Read(msg) => &msg,
-            MangoErr::Syntax(msg, _) => &msg,
+    pub fn new(msg: impl Into<String>, severity: Severity, typ: MangoErrType) -> Self {
+        MangoErr {
+            typ: MangoErrType::Read,
+            message: ErrMsg::new(msg),
+            severity: Severity::Error,
         }
+    }
+
+    pub fn new_debug(msg: impl Into<String>, debug: impl Into<String>, severity: Severity, typ: MangoErrType) -> Self {
+        MangoErr {
+            typ: MangoErrType::Read,
+            message: ErrMsg::new_debug(msg, debug),
+            severity: Severity::Error,
+        }
+    }
+
+    pub fn read(msg: impl Into<String>) -> Self {
+        MangoErr::new(msg, Severity::Error, MangoErrType::Read)
+    }
+
+    pub fn syntax(msg: impl Into<String>, slice: SourceSlice) -> Self {
+        MangoErr::new(msg, Severity::Error, MangoErrType::Syntax { src: slice })
+    }
+
+    fn msg(&self) -> &ErrMsg {
+        &self.message
     }
 
     pub fn as_str(&self) -> &str {
         &self.msg().friendly
-    }
-
-    pub fn friendly(&self) -> &self {
-        &self.msg().friendly
-    }
-    pub fn debug(&self) -> &self {
-        &self.msg().debug
     }
 }
 
 /// This is for a plain text error, possibly with debug version.
 /// This can be returned initially, in code that is removed from the source handling. It
 /// should eventually be turned into `MangoErr`.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ErrMsg {
     pub friendly: String,
     pub debug: Option<String>,
@@ -60,14 +82,6 @@ impl ErrMsg {
 
     pub fn as_str(&self) -> &str {
         &self.friendly
-    }
-
-    pub fn friendly(&self) -> &self {
-        &self.friendly
-    }
-
-    pub fn debug(&self) -> &self {
-        &self.debug
     }
 }
 
