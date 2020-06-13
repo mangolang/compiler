@@ -31,8 +31,8 @@ pub fn literal_int(nr: i64) -> Tokens {
     Tokens::Literal(LiteralToken::Int(nr))
 }
 
-pub fn literal_real(nr: f64eq) -> Tokens {
-    Tokens::Literal(LiteralToken::Real(nr))
+pub fn literal_real(nr: impl Into<f64eq>) -> Tokens {
+    Tokens::Literal(LiteralToken::Real(nr.into()))
 }
 
 pub fn operator(txt: &str) -> MsgResult<Tokens> {

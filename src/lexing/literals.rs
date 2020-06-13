@@ -40,7 +40,7 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Real numbers.
     while let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
         //TODO: get rid of this 'unwrap'
-        lexer.add(literal_real(parse_real(sym.as_str()).unwrap().into()));
+        lexer.add(literal_real(parse_real(sym.as_str()).unwrap()));
     }
 
     // Integers.
@@ -56,7 +56,61 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     }
 }
 
-//TODO @mark: after mismatch test
+#[cfg(test)]
+mod constants {
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_int, literal_bool};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::lex_literal;
+
+    fn check(input: &str, expected: &[Tokens]) {
+        let (source, mut reader, mut lexer) = create_lexer(input);
+        lex_literal(&mut reader, &mut lexer);
+        assert_eq!(lexer.tokens(), &expected.into());
+    }
+
+    #[test]
+    fn empty() {
+        check("", &vec![]);
+    }
+
+    #[test]
+    fn after_mismatch() {
+        check("a true", &vec![]);
+        check("a NaN", &vec![]);
+    }
+
+    #[test]
+    fn too_long() {
+        check("trueq", &vec![]);
+        check("falseq", &vec![]);
+        check("NaNq", &vec![]);
+        check("infinityq", &vec![]);
+    }
+
+    #[test]
+    fn bool() {
+        check("true", &vec![literal_bool(true)]);
+        check("false", &vec![literal_bool(false)]);
+    }
+
+    #[test]
+    fn multiple() {
+        check("true false\ttrue false", &vec![
+            literal_bool(true),
+            literal_bool(false),
+            literal_bool(true),
+            literal_bool(false),
+        ]);
+    }
+}
 
 #[cfg(test)]
 mod int {
@@ -137,6 +191,70 @@ mod int {
             literal_int(2),
             literal_int(3),
             literal_int(1234567890),
+        ]);
+    }
+}
+
+#[cfg(test)]
+mod real {
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_int, literal_bool, literal_real};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::lex_literal;
+
+    fn check(input: &str, expected: &[Tokens]) {
+        let (source, mut reader, mut lexer) = create_lexer(input);
+        lex_literal(&mut reader, &mut lexer);
+        assert_eq!(lexer.tokens(), &expected.into());
+    }
+
+    #[test]
+    fn empty() {
+        check("", &vec![]);
+    }
+
+    #[test]
+    fn after_mismatch() {
+        check("a 1.0", &vec![]);
+        check("a1.0", &vec![]);
+    }
+
+    #[test]
+    fn zero() {
+        check("0.0", &vec![literal_real(0.0)]);
+        check("0.000000000000000000000000000000000", &vec![literal_real(0.0)]);
+        check("000000000000000000000000000000000.0", &vec![literal_real(0.0)]);
+    }
+
+    #[test]
+    fn prefix() {
+        check("+1.0", &vec![literal_real(1.0)]);
+        check("-1.0", &vec![literal_real(-1.0)]);
+    }
+
+    #[test]
+    fn exponential() {
+        check("1.0e1", &vec![literal_real(10.0)]);
+        check("1.0e-1", &vec![literal_real(0.10)]);
+        check("-1.0e1", &vec![literal_real(-10.0)]);
+        check("-1.0e-1", &vec![literal_real(-0.10)]);
+        check("+1.0e+1", &vec![literal_real(10.0)]);
+    }
+
+    #[test]
+    fn multiple() {
+        check("1.1 2.2 3.3 0.1234567890", &vec![
+            literal_real(1.1),
+            literal_real(2.2),
+            literal_real(3.3),
+            literal_real(0.1234567890),
         ]);
     }
 }
