@@ -76,10 +76,9 @@ mod identifiers {
         check("_a_", &vec!["_a_"]);
     }
 
-
     #[test]
     fn number_underscore() {
-        check("_9", &vec!["_9"]);
+        check("_9", &vec![]);
     }
     //TODO @mark: multiple
 }

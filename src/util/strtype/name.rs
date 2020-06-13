@@ -12,7 +12,7 @@ use std::borrow::Cow;
 use std::fmt::Formatter;
 
 lazy_static! {
-    pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_)").unwrap();
+    pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
@@ -83,10 +83,10 @@ impl StrType for Name {
             if found.as_str().len() < name.len() {
                 // There was a match, but some trailing characters were not matched. So while
                 // the string contains an identifier, the string as a whole is not a valid identifier.
-                return Err("Identifier names should contain only letters, numbers and underscores.".into());
+                return Err(format!("Identifier '{}' is invalid; names should contain only letters, numbers and underscores.", name).into());
             }
         } else {
-            return Err("Identifier names should consist of letters, numbers and underscores, and not start with a number.".into());
+            return Err(format!("Identifier '{}' is invalid; names should consist of letters, numbers and underscores, and not start with a number.", name).into());
         }
         Ok(())
     }

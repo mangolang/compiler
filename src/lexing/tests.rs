@@ -16,7 +16,7 @@ pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
 }
 
 #[test]
-fn lex_01() -> Result<(), ErrMsg>{
+fn lex_01() -> Result<(), ErrMsg> {
     let input = "(x * x + y * y)";
     let src = SourceFile::test(input);
     let res = lex(&src);
@@ -35,7 +35,7 @@ fn lex_01() -> Result<(), ErrMsg>{
 }
 
 #[test]
-fn lex_02() {
+fn lex_02() -> Result<(), ErrMsg> {
     let input = "
     (
         x * x + ...
@@ -44,13 +44,35 @@ fn lex_02() {
     ";
     let src = SourceFile::test(input);
     let res = lex(&src);
-    //TODO @mark
+    assert_eq!(res, vec![
+        parenthesis_open(),
+        identifier("x")?,
+        operator("*")?,
+        identifier("x")?,
+        operator("+")?,
+        identifier("y")?,
+        operator("*")?,
+        identifier("y")?,
+        parenthesis_close(),
+    ]);
+    Ok(())
 }
 
 #[test]
-fn lex_03() {
+fn lex_03() -> Result<(), ErrMsg> {
     let input = "(3*3 + 5 * 5)";
     let src = SourceFile::test(input);
     let res = lex(&src);
-    //TODO @mark
+    assert_eq!(res, vec![
+        parenthesis_open(),
+        identifier("x")?,
+        operator("*")?,
+        identifier("x")?,
+        operator("+")?,
+        identifier("y")?,
+        operator("*")?,
+        identifier("y")?,
+        parenthesis_close(),
+    ]);
+    Ok(())
 }
