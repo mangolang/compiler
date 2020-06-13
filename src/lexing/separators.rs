@@ -40,11 +40,13 @@ mod grouping {
     use crate::token::collect::{comma, ellipsis, period, newline, unlexable};
 
     use super::lex_separators;
+    use crate::token::collect::token_list::TokenList;
 
     fn check(input: &str, expected: &[Tokens]) {
+        let expected: TokenList = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), expected);
+        assert_eq!(lexer.tokens(), &expected);
     }
 
     #[test]

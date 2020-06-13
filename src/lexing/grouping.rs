@@ -36,11 +36,13 @@ mod grouping {
 
     use super::lex_grouping;
     use crate::token::collect::{parenthesis_open, parenthesis_close};
+    use crate::token::collect::token_list::TokenList;
 
     fn check(input: &str, expected: &[Tokens]) {
+        let expected: TokenList = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_grouping(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), expected);
+        assert_eq!(lexer.tokens(), &expected);
     }
 
     #[test]

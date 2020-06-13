@@ -31,6 +31,7 @@ derive-new = "^0.5.8"
 #wasm-bindgen = "^0.2.63"
 itertools = "^0.8.2"  # TODO @mark: unused?
 smallvec = { version = "^0.6.13", features = ["union"] }
+indoc = "^0.3.5"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
 proc-macro2 = ">=0.4.24"

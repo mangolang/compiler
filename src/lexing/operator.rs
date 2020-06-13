@@ -4,9 +4,9 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
-use crate::token::collect::{operator, parenthesis_close, parenthesis_open, unlexable, association};
-use crate::util::codeparts::operator::SYMBOL_RE;
+use crate::token::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
+use crate::util::codeparts::operator::SYMBOL_RE;
 
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -26,6 +26,7 @@ pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 mod operators {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
+    use crate::token::collect::token_list::TokenList;
     use crate::token::Tokens;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
@@ -33,9 +34,10 @@ mod operators {
     use super::lex_operator;
 
     fn check(input: &str, expected: &[Tokens]) {
+        let expected: TokenList = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_operator(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), expected);
+        assert_eq!(lexer.tokens(), &expected);
     }
 
     #[test]
@@ -126,16 +128,18 @@ mod operators {
 mod associations {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{Tokens, AssociationToken};
+    use crate::token::{AssociationToken, Tokens};
+    use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
 
     fn check(input: &str, expected: &[Tokens]) {
+        let expected: TokenList = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_association(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), expected);
+        assert_eq!(lexer.tokens(), &expected);
     }
 
     #[test]

@@ -1,5 +1,6 @@
 
 use crate::token::Tokens;
+use crate::token::collect::token_list::TokenList;
 
 pub trait Lexer {
     /// Add a lexed token.
@@ -10,7 +11,7 @@ pub trait Lexer {
     fn progress(&self) -> usize;
 
     /// Return a slice of tokens `add`ed so far.
-    fn tokens(&self) -> &[Tokens];
+    fn tokens(&self) -> &TokenList;
 
     /// Return the tokens `add`ed, consuming the lexer.
     fn into_tokens(self) -> Vec<Tokens>;
@@ -24,14 +25,14 @@ pub trait Lexer {
 
 #[derive(Debug)]
 pub struct CodeLexer {
-    tokens: Vec<Tokens>,
+    tokens: TokenList,
     indent: u32,
 }
 
 impl CodeLexer {
     pub fn new(source_len: usize) -> Self {
         CodeLexer {
-            tokens: Vec::with_capacity(source_len / 3),
+            tokens: TokenList::with_capacity(source_len / 3),
             indent: 0,
         }
     }
@@ -39,7 +40,7 @@ impl CodeLexer {
     #[cfg(test)]
     pub fn test() -> Self {
         CodeLexer {
-            tokens: Vec::with_capacity(8),
+            tokens: TokenList::with_capacity(8),
             indent: 0,
         }
     }
@@ -47,19 +48,19 @@ impl CodeLexer {
 
 impl Lexer for CodeLexer {
     fn add(&mut self, token: Tokens) {
-        self.tokens.push(token);
+        self.tokens.add(token);
     }
 
     fn progress(&self) -> usize {
         self.tokens.len()
     }
 
-    fn tokens(&self) -> &[Tokens] {
+    fn tokens(&self) -> &TokenList {
         &self.tokens
     }
 
     fn into_tokens(self) -> Vec<Tokens> {
-        self.tokens
+        self.tokens.into_vec()
     }
 
     fn get_indent(&self) -> u32 {

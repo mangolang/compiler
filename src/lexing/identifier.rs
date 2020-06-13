@@ -29,14 +29,15 @@ mod identifiers {
 
     use super::lex_identifier;
     use std::borrow::Cow;
+    use crate::token::collect::token_list::TokenList;
 
     fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_identifier(&mut reader, &mut lexer);
-        let expected: Vec<Tokens> = expected_names.iter()
+        let expected: TokenList = expected_names.iter()
             .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
             .collect();
-        assert_eq!(lexer.tokens(), expected.as_slice());
+        assert_eq!(lexer.tokens(), &expected);
     }
 
     #[test]

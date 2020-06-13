@@ -3,14 +3,15 @@ use ::regex::Regex;
 
 use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
-use crate::lexing::indent::lex_indents;
-use crate::lexing::operator::lex_operator;
-use crate::lexing::operator::lex_association;
 use crate::lexing::identifier::lex_identifier;
+use crate::lexing::indent::lex_indents;
 use crate::lexing::lexer::{CodeLexer, Lexer};
-use crate::lexing::special::{lex_unlexable, lex_eof};
+use crate::lexing::operator::lex_association;
+use crate::lexing::operator::lex_operator;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
+use crate::lexing::separators::lex_separators;
+use crate::lexing::special::{lex_eof, lex_unlexable};
 use crate::token::{Tokens, UnlexableToken};
 
 //TODO performance: one day maybe use arena allocation
@@ -36,12 +37,14 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
     //TODO performance: does this initial capacity make sense?
     let mut reader = SourceReader::new(source);
     let mut lexer = CodeLexer::new(source.len());
+    //TODO: some of these need to be in specific order, like eof/unlexable last, and indent first - but for other the order could be optimized
     loop {
+        dbg!(lexer.tokens());  //TODO @mark: TEMPORARY! REMOVE THIS!
         try_lex!(lex_indents, reader, lexer);
         try_lex!(lex_grouping, reader, lexer);
         try_lex!(lex_operator, reader, lexer);
         try_lex!(lex_association, reader, lexer);
-
+        try_lex!(lex_separators, reader, lexer);
         try_lex!(lex_identifier, reader, lexer);
         if lex_eof(&mut reader) { break }
         try_lex!(lex_unlexable, reader, lexer);
@@ -54,10 +57,10 @@ mod try_lex {
     use crate::io::source::SourceFile;
     use crate::lexing::reader::reader::Reader;
     use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexing::tests::create_lexer;
     use crate::token::UnlexableToken;
 
     use super::*;
-    use crate::lexing::tests::create_lexer;
 
     fn lex_fn_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         lexer.add(Tokens::Unlexable(UnlexableToken::new("hi".to_owned())))
