@@ -10,9 +10,9 @@ use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 
-const VALID_IDENTIFIER_SUBPATTERN: &str = r"[a-zA-Z_][a-zA-Z0-9_]*";
 lazy_static! {
-    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!(r"{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
+    pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^[_a-zA-Z][_a-zA-Z0-9]*").unwrap();
+    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!(r"^[a-zA-Z_][a-zA-Z0-9_]*$")).unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
@@ -38,12 +38,6 @@ impl Name {
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
         INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string()
     }
-
-    /// Generate an eager subpattern to match names, that can be composed in a regular expression.
-    //TODO @mark: does this need to be cloned here? Can't the constant just be public?
-    pub fn subpattern() -> &'static str {
-        VALID_IDENTIFIER_SUBPATTERN
-    }
 }
 
 impl fmt::Display for Name {
@@ -54,7 +48,7 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new<S: Into<String>>(name: S) -> MsgResult<Self> {
+    fn new(name: impl Into<String>) -> MsgResult<Self> {
         let sname = name.into();
         match Name::validate(&sname) {
             Ok(_) => {
@@ -103,7 +97,7 @@ mod tests {
         ];
         for inp in valid.iter() {
             /* Check that all of these names validate. */
-            assert_eq!(inp.to_string(), Name::copy_new(inp).unwrap().value());
+            assert_eq!(inp.to_string(), Name::new(inp).unwrap().value());
         }
     }
 

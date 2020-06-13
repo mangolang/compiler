@@ -59,8 +59,8 @@ mod tests {
     #[test]
     fn test_new_problem() {
         let mut collector = ProblemCollector::new();
-        collector.error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
-        collector.warning(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
-        collector.debug(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        collector.error(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
+        collector.warning(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
+        collector.debug(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
     }
 }

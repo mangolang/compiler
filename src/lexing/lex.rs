@@ -5,6 +5,8 @@ use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
 use crate::lexing::indent::lex_indents;
 use crate::lexing::operator::lex_operator;
+use crate::lexing::operator::lex_association;
+use crate::lexing::identifier::lex_identifier;
 use crate::lexing::lexer::{CodeLexer, Lexer};
 use crate::lexing::special::{lex_unlexable, lex_eof};
 use crate::lexing::reader::reader::{Reader, ReaderResult};
@@ -38,7 +40,9 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         try_lex!(lex_indents, reader, lexer);
         try_lex!(lex_grouping, reader, lexer);
         try_lex!(lex_operator, reader, lexer);
-        //try_lex!(lex_identifier, reader, lexer);
+        try_lex!(lex_association, reader, lexer);
+
+        try_lex!(lex_identifier, reader, lexer);
         if lex_eof(&mut reader) { break }
         try_lex!(lex_unlexable, reader, lexer);
     }

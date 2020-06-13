@@ -18,6 +18,9 @@ impl FromStr for AssociationToken {
     type Err = ErrMsg;
 
     fn from_str(association_txt: &str) -> MsgResult<AssociationToken> {
+        if association_txt == "=" {
+            return Ok(AssociationToken::from_unprefixed());
+        }
         assert!(association_txt.ends_with("="));
         let symbol = Symbol::new(&association_txt[0..association_txt.len() - 1])?;
         AssociationToken::from_symbol(symbol)
@@ -69,11 +72,11 @@ impl Token for AssociationToken {}
 mod from_str {
     use super::*;
     use crate::token::Tokens;
+    use crate::common::tests::assert_panic_silent;
 
     #[test]
-    #[should_panic]
     fn empty() {
-        AssociationToken::from_str("").unwrap_err();
+        assert_panic_silent(|| AssociationToken::from_str(""));
     }
 
     #[test]
