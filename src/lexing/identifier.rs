@@ -30,10 +30,13 @@ mod identifiers {
     use super::lex_identifier;
     use std::borrow::Cow;
 
-    fn check(input: &str, expected: &[Tokens]) {
+    fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_identifier(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), expected);
+        let expected: Vec<Tokens> = expected_names.iter()
+            .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
+            .collect();
+        assert_eq!(lexer.tokens(), expected.as_slice());
     }
 
     #[test]
@@ -56,27 +59,27 @@ mod identifiers {
 
     #[test]
     fn single() {
-        check("x", &vec![Tokens::Identifier(IdentifierToken::from_name(Name::new("x").unwrap()))]);
-        check("abc", &vec![]);
+        check("x", &vec!["x"]);
+        check("abc", &vec!["abc"]);
     }
 
     #[test]
     fn with_numbers() {
-        check("x0", &vec![]);
-        check("a1b2c3", &vec![]);
+        check("x0", &vec!["x0"]);
+        check("a1b2c3", &vec!["a1b2c3"]);
     }
 
     #[test]
     fn underscores() {
-        check("_", &vec![]);
-        check("_abc", &vec![]);
-        check("_a_", &vec![]);
+        check("_", &vec!["_"]);
+        check("_abc", &vec!["_abc"]);
+        check("_a_", &vec!["_a_"]);
     }
 
 
     #[test]
     fn number_underscore() {
-        check("_9", &vec![]);
+        check("_9", &vec!["_9"]);
     }
     //TODO @mark: multiple
 }
