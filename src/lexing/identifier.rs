@@ -52,6 +52,12 @@ mod identifiers {
     }
 
     #[test]
+    fn after_mismatch() {
+        check("* abc", &vec![]);
+        check(". x", &vec![]);
+    }
+
+    #[test]
     fn symbol() {
         check("*", &vec![]);
         check("+", &vec![]);

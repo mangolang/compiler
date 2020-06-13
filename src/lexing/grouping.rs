@@ -52,6 +52,12 @@ mod grouping {
     }
 
     #[test]
+    fn after_mismatch() {
+        check("abc *", &vec![]);
+        check("0 *", &vec![]);
+    }
+
+    #[test]
     fn mismatch() {
         check("*", &vec![]);
         check(".", &vec![]);

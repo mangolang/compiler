@@ -116,6 +116,14 @@ mod grouping {
     }
 
     #[test]
+    fn after_mismatch() {
+        check(r"1 …", &vec![]);
+        check(r"1 .", &vec![]);
+        check(r"1 ,", &vec![]);
+        check("1 \r", &vec![]);
+    }
+
+    #[test]
     fn combined_1() {
         check(",....\r\n", &vec![
             comma(),

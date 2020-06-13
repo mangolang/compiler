@@ -141,5 +141,13 @@ mod indents {
         );
     }
 
+    #[test]
+    fn after_mismatch() {
+        check(0,
+            "word\t    \n",
+              &vec![]
+        );
+    }
+
     //TODO @mark: check that the correct characters are stripped, especially for comments
 }

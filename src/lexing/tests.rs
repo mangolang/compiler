@@ -81,3 +81,28 @@ fn lex_03() -> Result<(), ErrMsg> {
     ]);
     Ok(())
 }
+
+#[test]
+fn lex_04() -> Result<(), ErrMsg> {
+    let input = "((3*3 + 5.0 * 5.0) == 25.0) == true";
+    let src = SourceFile::test(input);
+    let res = lex(&src);
+    assert_eq!(res, vec![
+        parenthesis_open(),
+        parenthesis_open(),
+        literal_int(3),
+        operator("*")?,
+        literal_int(3),
+        operator("+")?,
+        literal_real(5.0.into()),
+        operator("*")?,
+        literal_real(5.0.into()),
+        parenthesis_close(),
+        operator("==")?,
+        literal_real(25.0.into()),
+        parenthesis_close(),
+        operator("==")?,
+        literal_bool(true),
+    ]);
+    Ok(())
+}
