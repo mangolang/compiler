@@ -65,18 +65,18 @@ fn lex_02() -> Result<(), ErrMsg> {
 
 #[test]
 fn lex_03() -> Result<(), ErrMsg> {
-    let input = "(3*3 + 5 * 5)";
+    let input = "(3*3 + 5.0 * 5.0)";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![
         parenthesis_open(),
-        identifier("x")?,
+        literal_int(3),
         operator("*")?,
-        identifier("x")?,
+        literal_int(3),
         operator("+")?,
-        identifier("y")?,
+        literal_real(5.0.into()),
         operator("*")?,
-        identifier("y")?,
+        literal_real(5.0.into()),
         parenthesis_close(),
     ]);
     Ok(())

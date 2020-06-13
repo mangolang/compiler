@@ -53,7 +53,7 @@ impl fmt::Debug for Tokens {
             Tokens::Ellipsis(ellipsis) => write!(f, "..."),
             Tokens::Period(period) => write!(f, "."),
             Tokens::Newline(newline) => write!(f, "\\n"),
-            Tokens::Unlexable(unlexable) => write!(f, "??{}??", unlexable.to_text()),
+            Tokens::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text),
         }
     }
 }

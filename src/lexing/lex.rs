@@ -8,6 +8,7 @@ use crate::lexing::indent::lex_indents;
 use crate::lexing::lexer::{CodeLexer, Lexer};
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
+use crate::lexing::literals::lex_literal;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::separators::lex_separators;
@@ -39,12 +40,12 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
     let mut lexer = CodeLexer::new(source.len());
     //TODO: some of these need to be in specific order, like eof/unlexable last, and indent first - but for other the order could be optimized
     loop {
-        dbg!(lexer.tokens());  //TODO @mark: TEMPORARY! REMOVE THIS!
         try_lex!(lex_indents, reader, lexer);
         try_lex!(lex_grouping, reader, lexer);
         try_lex!(lex_operator, reader, lexer);
         try_lex!(lex_association, reader, lexer);
         try_lex!(lex_separators, reader, lexer);
+        try_lex!(lex_literal, reader, lexer);
         try_lex!(lex_identifier, reader, lexer);
         if lex_eof(&mut reader) { break }
         try_lex!(lex_unlexable, reader, lexer);

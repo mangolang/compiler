@@ -4,7 +4,7 @@ use crate::util::encdec::ToText;
 /// Represents an unlexable string.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct UnlexableToken {
-    text: String,
+    pub text: String,
 }
 
 impl UnlexableToken {

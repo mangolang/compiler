@@ -35,11 +35,9 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Determine the tokens to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent .. prev_indent {
-        println!("END block {} -> {} ({})", prev_indent, line_indent, i);  //TODO @mark: TEMPORARY! REMOVE THIS!
         lexer.add(Tokens::EndBlock(EndBlockToken::new(true, false)));
     }
     for i in prev_indent .. line_indent {
-        println!("START block {} -> {} ({})", prev_indent, line_indent, i);  //TODO @mark: TEMPORARY! REMOVE THIS!
         lexer.add(Tokens::StartBlock(StartBlockToken::new()));
     }
 

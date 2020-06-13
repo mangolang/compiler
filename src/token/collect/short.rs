@@ -23,6 +23,10 @@ pub fn literal_text(txt: impl Into<String>) -> Tokens {
     Tokens::Literal(LiteralToken::Text(txt.into()))
 }
 
+pub fn literal_bool(b: bool) -> Tokens {
+    Tokens::Literal(LiteralToken::Boolean(b))
+}
+
 pub fn literal_int(nr: i64) -> Tokens {
     Tokens::Literal(LiteralToken::Int(nr))
 }
