@@ -7,7 +7,6 @@ use ::regex::Regex;
 
 use crate::common::error::MangoErr;
 use crate::common::error::MangoResult;
-use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 
 lazy_static! {

@@ -4,7 +4,6 @@ use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
-use crate::util::strtype::Msg;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.

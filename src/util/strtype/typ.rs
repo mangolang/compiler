@@ -2,8 +2,7 @@ use ::std::fmt;
 use ::std::hash::Hash;
 
 use crate::common::error::MsgResult;
-use crate::util::strtype::Msg;
-use std::borrow::Cow;
+use ::std::borrow::Cow;
 
 /// A trait for types that wrap a string matching a certain structure.
 pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {

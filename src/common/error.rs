@@ -1,6 +1,7 @@
 use ::std::fmt;
 
 use crate::io::source::SourceSlice;
+use crate::util::errors::Severity;
 
 pub type MangoResult<T> = Result<T, MangoErr>;
 pub type MsgResult<T> = Result<T, ErrMsg>;
@@ -8,11 +9,35 @@ pub type MsgResult<T> = Result<T, ErrMsg>;
 /// This is for errors that are related to specific problems with the source.
 /// This is the type that should eventually be returned and reported.
 #[derive(Debug, Clone)]
-pub enum MangoErr {
-    Read { friendly: String, debug: Option<String> },
-    //TODO @mark: SourceSlice will have to refer to Rc SourceFile, because current borrow way, errors cannot get to a higher level than SourceFile
-    //TODO @mark: I thought about making a borrowed and an Rc version, but apparently it's not worth it https://stackoverflow.com/q/31264670
-    Syntax { friendly: String, debug: Option<String>, src: SourceSlice },
+pub struct MangoErr {
+    typ: MangoErrType,
+    message: ErrMsg,
+    severity: Severity,
+}
+
+pub enum MangoErrType {
+    Read,
+    Syntax { src: SourceSlice },
+}
+
+impl MangoErr {
+    fn msg(&self) -> &ErrMsg {
+        match self {
+            MangoErr::Read(msg) => &msg,
+            MangoErr::Syntax(msg, _) => &msg,
+        }
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.msg().friendly
+    }
+
+    pub fn friendly(&self) -> &self {
+        &self.msg().friendly
+    }
+    pub fn debug(&self) -> &self {
+        &self.msg().debug
+    }
 }
 
 /// This is for a plain text error, possibly with debug version.
@@ -29,12 +54,20 @@ impl ErrMsg {
         ErrMsg { friendly: friendly.into(), debug: None }
     }
 
-    pub fn debug(friendly: impl Into<String>, debug: impl Into<String>) -> Self {
+    pub fn new_debug(friendly: impl Into<String>, debug: impl Into<String>) -> Self {
         ErrMsg { friendly: friendly.into(), debug: Some(debug.into()) }
     }
 
     pub fn as_str(&self) -> &str {
         &self.friendly
+    }
+
+    pub fn friendly(&self) -> &self {
+        &self.friendly
+    }
+
+    pub fn debug(&self) -> &self {
+        &self.debug
     }
 }
 

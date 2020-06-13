@@ -7,7 +7,6 @@ use ::regex::Regex;
 use ::string_interner::StringInterner;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 use std::borrow::Cow;
 

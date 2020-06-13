@@ -1,8 +1,8 @@
 use crate::util::errors::CodeProblem;
 use crate::util::errors::Context;
-use crate::util::strtype::Msg;
 use derive_new::new;
 use std::slice;
+use crate::common::error::ErrMsg;
 
 #[derive(new, Debug)]
 pub struct ProblemCollector {
@@ -12,19 +12,19 @@ pub struct ProblemCollector {
 }
 
 impl ProblemCollector {
-    pub fn error(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
+    pub fn error(&mut self, description: ErrMsg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::error(description, context);
         self.problems.push(problem);
         self.problems.last_mut().unwrap()
     }
 
-    pub fn warning(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
+    pub fn warning(&mut self, description: ErrMsg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::warning(description, context);
         self.problems.push(problem);
         self.problems.last_mut().unwrap()
     }
 
-    pub fn debug(&mut self, description: Msg, context: Context) -> &mut CodeProblem {
+    pub fn debug(&mut self, description: ErrMsg, context: Context) -> &mut CodeProblem {
         let problem = CodeProblem::debug(description, context);
         self.problems.push(problem);
         self.problems.last_mut().unwrap()
@@ -44,7 +44,6 @@ impl<'a> IntoIterator for &'a ProblemCollector {
 mod tests {
     use super::ProblemCollector;
     use crate::util::errors::Context;
-    use crate::util::strtype::Msg;
     use crate::util::strtype::StrType;
 
     #[test]

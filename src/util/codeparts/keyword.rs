@@ -1,4 +1,3 @@
-use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;

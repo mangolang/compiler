@@ -3,7 +3,6 @@ use ::std::str::FromStr;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::Token;
 use crate::util::encdec::ToText;
-use crate::util::strtype::Msg;
 use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
 
