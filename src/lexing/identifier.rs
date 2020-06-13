@@ -8,7 +8,6 @@ use crate::token::collect::{association, identifier, operator, parenthesis_close
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
-use crate::util::strtype::typ::StrType;
 
 /// Lex an identifier.
 pub fn lex_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -26,8 +25,10 @@ mod identifiers {
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::lex_identifier;
+    use std::borrow::Cow;
 
     fn check(input: &str, expected: &[Tokens]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
@@ -55,13 +56,13 @@ mod identifiers {
 
     #[test]
     fn single() {
-        check("x", &vec![Tokens::Identifier(IdentifierToken::from_name(Name::new("")?))]);
+        check("x", &vec![Tokens::Identifier(IdentifierToken::from_name(Name::new("x").unwrap()))]);
         check("abc", &vec![]);
     }
 
     #[test]
     fn with_numbers() {
-        check("x0", &vec![Tokens::Identifier(IdentifierToken::from_name(Name::new("")?))]);
+        check("x0", &vec![]);
         check("a1b2c3", &vec![]);
     }
 
@@ -77,4 +78,5 @@ mod identifiers {
     fn number_underscore() {
         check("_9", &vec![]);
     }
+    //TODO @mark: multiple
 }

@@ -5,6 +5,7 @@ use ::regex::Regex;
 
 use crate::common::error::MsgResult;
 use crate::util::strtype::StrType;
+use std::borrow::Cow;
 
 lazy_static! {
     static ref VALID_MESSAGE: Regex = Regex::new(r"^[\p{L}\d +\-_:/\\'.,]*$").unwrap();
@@ -27,11 +28,10 @@ impl fmt::Display for Msg {
 }
 
 impl StrType for Msg {
-    fn new<S: Into<String>>(msg: S) -> MsgResult<Self> {
-        let smsg = msg.into();
-        match Msg::validate(&smsg) {
+    fn new(msg: Cow<String>) -> MsgResult<Self> {
+        match Msg::validate(msg.as_str()) {
             Ok(_) => Ok(Msg { msg: smsg }),
-            Err(msg) => Err(msg),
+            Err(msg) => Err(msg.into_owned()),
         }
     }
 

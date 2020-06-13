@@ -3,6 +3,7 @@ use ::std::hash::Hash;
 
 use crate::common::error::MsgResult;
 use crate::util::strtype::Msg;
+use std::borrow::Cow;
 
 /// A trait for types that wrap a string matching a certain structure.
 pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
@@ -10,10 +11,10 @@ pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
     fn validate(value: &str) -> MsgResult<()>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid.
-    fn new<S: Into<String>>(txt: S) -> MsgResult<Self>;
+    fn new(txt: Cow<String>) -> MsgResult<Self>;
 
     /// Alternative constructor that panics on invalid input.
     fn from_valid(txt: &str) -> Self {
-        Self::new(txt).unwrap()
+        Self::new(Cow::from(txt)).unwrap()
     }
 }

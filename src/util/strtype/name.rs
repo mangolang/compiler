@@ -9,6 +9,7 @@ use ::string_interner::StringInterner;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
+use std::borrow::Cow;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^[_a-zA-Z][_a-zA-Z0-9]*").unwrap();
@@ -36,7 +37,12 @@ impl Name {
     pub fn value(self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string()
+        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_owned()
+    }
+
+    /// Map function for doing something with the string without doing a copy.
+    pub fn map<T>(self, f: impl FnOnce(&str) -> T) -> T {
+        f(INTERNER.lock().unwrap().resolve(self.name_id).unwrap())
     }
 }
 
@@ -48,11 +54,12 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new(name: impl Into<String>) -> MsgResult<Self> {
-        let sname = name.into();
-        match Name::validate(&sname) {
+    fn new(name: impl Into<Cow<String>>) -> MsgResult<Self> {
+        dbg!(name);  //TODO @mark: TEMPORARY! REMOVE THIS!
+        let name = name.as_str();
+        match Name::validate(&name) {
             Ok(_) => {
-                let id = INTERNER.lock().unwrap().get_or_intern(sname);
+                let id = INTERNER.lock().unwrap().get_or_intern(name.into_owned());
                 Ok(Name { name_id: id })
             }
             Err(msg) => Err(msg),
@@ -76,10 +83,30 @@ impl StrType for Name {
 }
 
 #[cfg(test)]
-mod tests {
+mod cow {
+    use super::*;
+
+    #[test]
+    fn new_str() {
+        // Twice because of interning.
+        assert!(Name::from("test_name").map(|s| s == "test_name"));
+        assert!(Name::from("test_name").map(|s| s == "test_name"));
+    }
+
+    #[test]
+    fn new_string() {
+        // Twice because of interning.
+        assert!(Name::from("test_name".to_owned()).map(|s| s == "test_name"));
+        assert!(Name::from("test_name".to_owned()).map(|s| s == "test_name"));
+    }
+}
+
+#[cfg(test)]
+mod validation {
     use crate::util::strtype::typ::StrType;
 
     use super::Name;
+    use std::borrow::Cow;
 
     #[test]
     fn test_valid_names() {
@@ -149,15 +176,15 @@ mod tests {
             "?",
             "你好", /* Might be allowed in the future, but not yet. */
         ];
-        for inp in invalid.iter() {
+        for inp in invalid.into_iter() {
             /* Check that none of these names validate. */
-            assert!(Name::copy_new(inp).is_err());
+            assert!(Name::new(Cow::from(inp)).is_err());
         }
     }
 
     #[test]
     fn test_name_interning() {
-        assert_eq!(Name::copy_new("Hello").unwrap(), Name::copy_new("Hello").unwrap());
-        assert_ne!(Name::copy_new("Hello").unwrap(), Name::copy_new("Goodbye").unwrap());
+        assert_eq!(Name::new("Hello").unwrap(), Name::new("Hello").unwrap());
+        assert_ne!(Name::new("Hello").unwrap(), Name::new("Goodbye").unwrap());
     }
 }
