@@ -50,12 +50,12 @@ impl Wasm for Branch {
 }
 
 pub struct BranchIf {
-    condition: Box<Expression>,
+    condition: Box<dyn Expression>,
     label: Label,
 }
 
 impl BranchIf {
-    pub fn new(condition: Box<Expression>, label: Label) -> Box<Self> {
+    pub fn new(condition: Box<dyn Expression>, label: Label) -> Box<Self> {
         assert!(condition.typ() == &Type::Bool);
         Box::new(BranchIf { condition, label })
     }

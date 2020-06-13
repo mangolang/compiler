@@ -103,7 +103,7 @@ impl Function {
     // This uses group, so it has a label, but this isn't final... It might be useless.
     pub fn new<F>(name: Name, parameters: Vec<Parameter>, results: Vec<Output>, statements_gen: F) -> Self
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         Function {
             signature: FunctionSignature { name, parameters, results },

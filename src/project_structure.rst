@@ -7,6 +7,8 @@ Compilation broadly proceeds in these steps, with representations in **bold** an
 TODO: Change 'AST' to 'Parselet'
 TODO: Merge full and core ast, they're the same structs in different enum
 
+Note: step 2, 3 and 4 are currently 'replaced' by a PEST parser.
+
 1. **Text** in source files or memory
 2. *Lexing*: recognize words from the language
 3. **Tokens**

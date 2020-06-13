@@ -1,15 +1,18 @@
-use crate::util::strtype::Msg;
-use crate::util::strtype::StrType;
-use lazy_static::lazy_static;
-use regex::Regex;
-use std::collections::hash_map::RandomState;
-use std::fmt;
-use std::sync::Mutex;
-use string_interner::StringInterner;
+use ::std::collections::hash_map::RandomState;
+use ::std::fmt;
+use ::std::sync::Mutex;
 
-const VALID_IDENTIFIER_SUBPATTERN: &str = r"[a-zA-Z_][a-zA-Z0-9_]*";
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+use ::string_interner::StringInterner;
+
+use crate::common::error::{ErrMsg, MsgResult};
+use crate::util::strtype::StrType;
+use std::borrow::Cow;
+use std::fmt::Formatter;
+
 lazy_static! {
-    static ref VALID_IDENTIFIER: Regex = Regex::new(&format!("{}{}{}", r"^", VALID_IDENTIFIER_SUBPATTERN, r"$")).unwrap();
+    pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
 }
 
 // TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
@@ -24,7 +27,7 @@ lazy_static! {
 ///
 /// * Name strings are interned for fast equality checking.
 /// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
-#[derive(Debug, Hash, PartialEq, Eq, Clone, Copy)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
     name_id: usize,
 }
@@ -33,13 +36,18 @@ impl Name {
     pub fn value(self) -> String {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_string()
+        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_owned()
     }
 
-    /// Generate an eager subpattern to match names, that can be composed in a regular expression.
-    //TODO @mark: does this need to be cloned here? Can't the constant just be public?
-    pub fn subpattern() -> &'static str {
-        VALID_IDENTIFIER_SUBPATTERN
+    /// Map function for doing something with the string without doing a copy.
+    pub fn map<T>(self, f: impl FnOnce(&str) -> T) -> T {
+        f(INTERNER.lock().unwrap().resolve(self.name_id).unwrap())
+    }
+}
+
+impl fmt::Debug for Name {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        self.map(|n| write!(f, "Name {{ id: {}, as_str: '{}' }}", self.name_id, n))
     }
 }
 
@@ -51,43 +59,86 @@ impl fmt::Display for Name {
 }
 
 impl StrType for Name {
-    fn new<S: Into<String>>(name: S) -> Result<Self, Msg> {
-        let sname = name.into();
-        match Name::validate(&sname) {
+    fn new<'a>(name: impl Into<Cow<'a, str>>) -> MsgResult<Self> {
+        let name = name.into();
+        match Name::validate(name.as_ref()) {
             Ok(_) => {
-                let id = INTERNER.lock().unwrap().get_or_intern(sname);
+                let id = INTERNER.lock().unwrap().get_or_intern(name.to_owned());
                 Ok(Name { name_id: id })
             }
             Err(msg) => Err(msg),
         }
     }
 
-    fn validate(name: &str) -> Result<(), Msg> {
+    fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
                 if chr.is_digit(10) {
-                    return Err(Msg::from_valid("Identifier names may not start with a digit."));
+                    return Err("Identifier names may not start with a digit.".into());
                 }
             }
             None => return Ok(()), // empty string
         }
-        if !VALID_IDENTIFIER.is_match(&name.to_string()) {
-            return Err(Msg::from_valid(
-                "Identifier names should consist of letters, numbers and underscores.",
-            ));
+        if let Some(found) = IDENTIFIER_RE.find(name) {
+            if found.as_str().len() < name.len() {
+                // There was a match, but some trailing characters were not matched. So while
+                // the string contains an identifier, the string as a whole is not a valid identifier.
+                return Err(format!("Identifier '{}' is invalid; names should contain only letters, numbers and underscores.", name).into());
+            }
+        } else {
+            return Err(format!("Identifier '{}' is invalid; names should consist of letters, numbers and underscores, and not start with a number.", name).into());
         }
         Ok(())
     }
 }
 
 #[cfg(test)]
-mod tests {
-    use super::Name;
-    use crate::util::strtype::typ::StrType;
+mod technical {
+    use super::*;
 
     #[test]
-    fn test_valid_names() {
-        let valid = [
+    fn new_str() {
+        // Twice because of interning.
+        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
+        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
+    }
+
+    #[test]
+    fn new_string() {
+        // Twice because of interning.
+        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
+        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
+    }
+
+    #[test]
+    fn equality() {
+        assert_eq!(Name::new("Hello").unwrap(), Name::new("Hello").unwrap());
+        assert_ne!(Name::new("Hello").unwrap(), Name::new("Goodbye").unwrap());
+    }
+}
+
+#[cfg(test)]
+mod validation {
+    use crate::util::strtype::typ::StrType;
+
+    use super::Name;
+    use std::borrow::Cow;
+
+    fn assert_validity(is_valid: bool, input: &[&str]) {
+        for inp in input.iter() {
+            let name = Name::new(*inp);
+            if is_valid {
+                assert!(name.is_ok(), format!("'{}' should be a valid name", inp));
+                name.unwrap().map(|n| assert_eq!(n, *inp));
+            } else {
+                assert!(name.is_err(), format!("'{}' should not be a valid name", inp));
+            }
+        }
+    }
+
+    #[test]
+    fn valid_names() {
+        assert_validity(true, &[
             "a",
             "z",
             "A",
@@ -97,25 +148,38 @@ mod tests {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             "_",
             "hello_world",
-            "_0", /* '_0' is a string, '0_' is an int. */
-        ];
-        for inp in valid.iter() {
-            /* Check that all of these names validate. */
-            assert_eq!(inp.to_string(), Name::copy_new(inp).unwrap().value());
-        }
+            "_text",
+            "___text",
+        ]);
     }
 
     #[test]
-    fn test_invalid_names() {
-        let invalid = [
+    fn leading_numbers() {
+        assert_validity(false, &[
             "0",
             "9",
             "01234567890123456789",
-            "0_", /* '_0' is a string, '0_' is an int. */
+            "0_", /* int */
+            "_0",
+            "_0a",
+            "__0a",
             "0a",
             "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        ]);
+    }
+
+    #[test]
+    fn contains_invalid() {
+        assert_validity(false, &[
             "hello world",
             "hello-world",
+            "hello@",
+        ]);
+    }
+
+    #[test]
+    fn forbidden_chars() {
+        assert_validity(false, &[
             " ",
             "\t",
             "\n",
@@ -151,17 +215,16 @@ mod tests {
             ".",
             "/",
             "?",
-            "你好", /* Might be allowed in the future, but not yet. */
-        ];
-        for inp in invalid.iter() {
-            /* Check that none of these names validate. */
-            assert!(Name::copy_new(inp).is_err());
-        }
+        ]);
     }
 
     #[test]
-    fn test_name_interning() {
-        assert_eq!(Name::copy_new("Hello").unwrap(), Name::copy_new("Hello").unwrap());
-        assert_ne!(Name::copy_new("Hello").unwrap(), Name::copy_new("Goodbye").unwrap());
+    fn non_ascii() {
+        assert_validity(false, &[
+            // Perhaps allowed in the future, but not supported yet
+            "你好",
+            "и",
+            "één",
+        ]);
     }
 }

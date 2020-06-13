@@ -36,7 +36,7 @@ fn test_example_1() {
                 fac_result_decl,
                 loop_condition_decl,
                 Assign::new(fac_result.clone(), Const::new(Type::Int32, Value::Int(1))),
-                Loop::new_named(Name::new("fac_loop".to_owned()).unwrap(), |loop_label: Label| {
+                Loop::new_named(Name::new("fac_loop").unwrap(), |loop_label: Label| {
                     vec![
                         Assign::new(fac_result.clone(), Mul::new(fac_result.get(), var_n.get())),
                         Assign::new(loop_condition.clone(), Gt::new(var_n.get(), Const::new(Type::Int32, Value::Int(2)))),

@@ -23,5 +23,4 @@ pub use self::keyword::KeywordToken;
 pub mod end_statement;
 pub use self::end_statement::EndStatementToken;
 
-pub mod block;
-pub use self::block::{EndBlockToken, StartBlockToken};
+pub mod separators;

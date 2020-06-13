@@ -1,8 +1,19 @@
-use crate::util::strtype::Msg;
+use ::std::fmt::Display;
+use ::std::fmt::Formatter;
+use ::std::fmt::Result as fResult;
+
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
+use crate::common::error::MangoErr;
+use crate::common::error::MangoResult;
 use crate::util::strtype::StrType;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as fResult;
+
+lazy_static! {
+    static ref OPERATOR_STR: String = r"^(?:\+|-|\*|/|!|\?)".to_owned();
+    pub static ref SYMBOL_RE: Regex = Regex::new(&format!("^(?:==|<=|>=|<|>|{})", &*OPERATOR_STR)).unwrap();
+    pub static ref ASSOCIATION_RE: Regex = Regex::new(&format!("^(?:{})?=", &*OPERATOR_STR)).unwrap();
+}
 
 /// The different operator codeparts that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -13,7 +24,7 @@ pub enum Symbol {
     Slash,
     LT,
     GT,
-    Eq,
+    EQ,
     LE,
     GE,
     Exclamation,
@@ -21,10 +32,9 @@ pub enum Symbol {
 }
 
 impl Symbol {
-    pub fn new<S: Into<String>>(symbol_txt: S) -> Result<Self, Msg> {
+    pub fn new(symbol_txt: &str) -> Result<Self, String> {
         use self::Symbol::*;
-        let ssymbol_txt = symbol_txt.into();
-        match &*ssymbol_txt {
+        match symbol_txt {
             "+" => Ok(Plus),
             "-" => Ok(Dash),
             "*" => Ok(Asterisk),
@@ -32,18 +42,13 @@ impl Symbol {
             // TODO: how do I know < is an operator, rather than e.g. a generic?
             "<" => Ok(LT),
             ">" => Ok(GT),
-            "==" => Ok(Eq),
+            "==" => Ok(EQ),
             "<=" => Ok(LE),
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
-            _ => Err(Msg::from_valid(&format!("Unknown symbol: '{}'", ssymbol_txt))),
+            _ => Err(format!("Unknown symbol: '{}'", symbol_txt.to_owned())),
         }
-    }
-
-    /// Generate an eager subpattern to match tokens, that can be composed in a regular expression.
-    pub fn subpattern() -> &'static str {
-        r"(?:\+|-|\*|/|<=|>=|==|>|<)"
     }
 }
 
@@ -60,7 +65,7 @@ impl Display for Symbol {
                 Slash => "/",
                 LT => "<",
                 GT => ">",
-                Eq => "==",
+                EQ => "==",
                 LE => "<=",
                 GE => ">=",
                 Exclamation => "!",

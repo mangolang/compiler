@@ -1,19 +1,20 @@
+use ::std::str::FromStr;
+
+use crate::common::error::{MangoErr, MangoResult, MsgResult, ErrMsg};
 use crate::token::Token;
 use crate::util::codeparts::Keyword;
 use crate::util::encdec::ToText;
-use crate::util::strtype::Msg;
-use std::str::FromStr;
 
 /// A built-in language keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct KeywordToken {
-    word: Keyword,
+    pub word: Keyword,
 }
 
 impl FromStr for KeywordToken {
-    type Err = Msg;
+    type Err = ErrMsg;
 
-    fn from_str(word: &str) -> Result<KeywordToken, Msg> {
+    fn from_str(word: &str) -> Result<Self, Self::Err> {
         Result::Ok(KeywordToken {
             word: Keyword::from_str(word)?,
         })

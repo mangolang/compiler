@@ -11,13 +11,13 @@ use crate::util::strtype::typ::StrType;
 use crate::util::strtype::Name;
 
 pub struct Group {
-    statements: Vec<Box<Statement>>,
+    statements: Vec<Box<dyn Statement>>,
 }
 
 impl Group {
     pub fn new<F>(label: Label, statements_gen: F) -> Self
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         Group {
             statements: statements_gen(label),
@@ -52,7 +52,7 @@ pub struct Block {
 impl Block {
     pub fn new<F>(statements_gen: F, parent: &mut Scope) -> Box<Self>
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         Block::new_named(Name::from_valid("0"), statements_gen, parent)
         // todo: determine name automatically
@@ -68,7 +68,7 @@ impl Block {
 
     pub fn new_named<F>(name: Name, statements_gen: F, parent: &mut Scope) -> Box<Self>
     where
-        F: FnOnce(Label) -> Vec<Box<Statement>>,
+        F: FnOnce(Label) -> Vec<Box<dyn Statement>>,
     {
         let scope = Scope::new(parent);
         Box::new(Block {

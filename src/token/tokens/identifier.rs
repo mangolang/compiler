@@ -1,20 +1,21 @@
+use ::std::str::FromStr;
+
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::Token;
 use crate::util::encdec::ToText;
-use crate::util::strtype::typ::StrType;
-use crate::util::strtype::Msg;
 use crate::util::strtype::Name;
-use std::str::FromStr;
+use crate::util::strtype::typ::StrType;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct IdentifierToken {
-    name: Name,
+    pub name: Name,
 }
 
 impl FromStr for IdentifierToken {
-    type Err = Msg;
+    type Err = ErrMsg;
 
-    fn from_str(text: &str) -> Result<Self, Msg> {
+    fn from_str(text: &str) -> MsgResult<Self> {
         let name = Name::new(text)?;
         Ok(Self::from_name(name))
     }
@@ -23,10 +24,6 @@ impl FromStr for IdentifierToken {
 impl IdentifierToken {
     pub fn from_name(name: Name) -> Self {
         IdentifierToken { name }
-    }
-
-    pub fn subpattern() -> &'static str {
-        Name::subpattern()
     }
 }
 

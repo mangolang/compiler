@@ -6,12 +6,12 @@ use std::io;
 use std::io::Write;
 
 pub struct Add {
-    left: Box<Expression>,
-    right: Box<Expression>,
+    left: Box<dyn Expression>,
+    right: Box<dyn Expression>,
 }
 
 impl Add {
-    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
+    pub fn new(left: Box<dyn Expression>, right: Box<dyn Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
         Box::new(Add { left, right })
     }
@@ -39,12 +39,12 @@ impl Expression for Add {
 }
 
 pub struct Mul {
-    left: Box<Expression>,
-    right: Box<Expression>,
+    left: Box<dyn Expression>,
+    right: Box<dyn Expression>,
 }
 
 impl Mul {
-    pub fn new(left: Box<Expression>, right: Box<Expression>) -> Box<Self> {
+    pub fn new(left: Box<dyn Expression>, right: Box<dyn Expression>) -> Box<Self> {
         assert!(left.typ() == right.typ());
         Box::new(Mul { left, right })
     }

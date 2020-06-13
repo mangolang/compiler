@@ -1,9 +1,10 @@
-use crate::util::strtype::Msg;
 use crate::util::strtype::StrType;
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 use std::str::FromStr;
+use crate::common::error::{MangoResult, MangoErr};
+use std::borrow::Cow;
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)
@@ -19,10 +20,25 @@ pub enum Keyword {
     Reserved(String),
 }
 
-impl FromStr for Keyword {
-    type Err = Msg;
+impl Keyword {
+    pub fn to_str(&self) -> Cow<str> {
+        match self {
+            Keyword::Let => Cow::from("let"),
+            Keyword::Mut => Cow::from("mut"),
+            Keyword::If => Cow::from("if"),
+            Keyword::For => Cow::from("for"),
+            Keyword::While => Cow::from("while"),
+            Keyword::Function => Cow::from("function"),
+            Keyword::Return => Cow::from("return"),
+            Keyword::Reserved(name) => Cow::from(name),
+        }
+    }
+}
 
-    fn from_str(symbol_txt: &str) -> Result<Self, Msg> {
+impl FromStr for Keyword {
+    type Err = String;
+
+    fn from_str(symbol_txt: &str) -> Result<Self, String> {
         use self::Keyword::*;
         match symbol_txt {
             "let" => Ok(Let),
@@ -42,6 +58,7 @@ impl FromStr for Keyword {
             "as" => Ok(Reserved("as".to_owned())),
             "assert" => Ok(Reserved("assert".to_owned())),
             "async" => Ok(Reserved("async".to_owned())),
+            "auto" => Ok(Reserved("auto".to_owned())),
             "await" => Ok(Reserved("await".to_owned())),
             "become" => Ok(Reserved("become".to_owned())),
             "bool" => Ok(Reserved("bool".to_owned())),
@@ -168,7 +185,7 @@ impl FromStr for Keyword {
             "xor" => Ok(Reserved("xor".to_owned())),
             "yield" => Ok(Reserved("yield".to_owned())),
 
-            _ => Err(Msg::from_valid(&format!("Unknown keywords: '{}'", symbol_txt))),
+            _ => Err(format!("Unknown keywords: '{}'", symbol_txt).into()),
         }
     }
 }

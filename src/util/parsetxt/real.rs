@@ -1,5 +1,7 @@
+use ::lazy_static::lazy_static;
+use ::regex::Regex;
+
 use crate::util::strslice::char_ops::CharOps;
-use regex::Regex;
 
 #[derive(Debug)]
 pub enum RealParseFailReason {
@@ -9,23 +11,25 @@ pub enum RealParseFailReason {
     PrecisionLoss(f64),
 }
 
-/// This matches real literals (base 10), which look like this:
-///   sign / int1 / period / int2 / e / sign / int
-/// Here int is a series of 0-9 digits separated by at most one underscore.
-/// Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
-pub fn real_pattern() -> &'static str {
-    // TODO: do I really want to allow numbers to start with a period?
-    // TODO: for now, only base10 for reals (would 8b11e2 be 9*8^2 or 9*10^2?)
-    // TODO: does not deal with NaN of infinity
-    r"(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?"
+lazy_static! {
+    /// This matches real literals (base 10), which look like this:
+    ///   sign / int1 / period / int2 / e / sign / int
+    /// Here int is a series of 0-9 digits separated by at most one underscore.
+    /// Signs are optional, everything from 'e' is optional, and int1 OR int2 is optional.
+    //TODO: is starting with a period allowed?
+    pub static ref REAL_RE: Regex = Regex::new(r"^(?P<multiplier>(?:\+|-?)(?:\d(?:_?\d)*\.\d(?:_?\d)*|\d(?:_?\d)*\.|\.\d(?:_?\d)*))(?:e(?P<exponent>(?:\+|-?)\d(?:_?\d)*))?").unwrap();
 }
 
 /// Convert a String that matches [real_pattern] to an f64 real. Overflow and loss of precision is possible.
-pub fn parse_real<S: Into<String>>(text: S) -> Result<f64, RealParseFailReason> {
-    let text = text.into();
-    match Regex::new(&format!("^{}$", real_pattern())).unwrap().captures(&text) {
+pub fn parse_real(text: &str) -> Result<f64, RealParseFailReason> {
+    //TODO @mark: make sure no leftover chars (no $ at the end)
+    match REAL_RE.captures(text) {
         None => Err(RealParseFailReason::Invalid),
         Some(captures) => {
+            if captures[0].len() < text.len() {
+                // Part of `text` did not match the regex, so this input is invalid.
+                return Err(RealParseFailReason::Invalid)
+            }
             let multiplier = captures
                 .name("multiplier")
                 .unwrap()
@@ -60,7 +64,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_nonexp_real() {
+    fn parse_nonexp_real() {
         assert!(close(42., parse_real("42.0").unwrap()));
         assert!(close(-0.1, parse_real("-.1").unwrap()));
         assert!(close(-1., parse_real("-1.").unwrap()));
@@ -68,7 +72,7 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_exp_real() {
+    fn parse_exp_real() {
         assert!(close(42., parse_real("42.0e0").unwrap()));
         assert!(close(-0.1, parse_real("-.1e0").unwrap()));
         assert!(close(-1., parse_real("-1.e0").unwrap()));
@@ -82,7 +86,7 @@ mod tests {
     }
 
     #[test]
-    fn test_invalid_real() {
+    fn invalid_real() {
         assert!(parse_real("+_42.0").is_err());
         assert!(parse_real("-_42.0").is_err());
         assert!(parse_real("_42.0").is_err());

@@ -1,9 +1,18 @@
-mod typ;
 
-mod combi_lexer;
+mod reader;
+mod lexer;
+mod lex;
+// mod old_lexer;
+// mod util;
+mod literals;
+mod identifier;
+mod operator;
+mod indent;
+mod grouping;
+mod special;
+mod separators;
 
-mod code_lexer;
+#[cfg(test)]
+mod tests;
 
-mod string_lexer;
-
-mod util;
+pub use self::lex::lex;

@@ -1,8 +1,10 @@
-use crate::util::strtype::Msg;
-use derive_new::new;
-use std::cmp::Ordering;
-use std::fmt;
-use std::fmt::{Display, Formatter};
+use ::std::cmp::Ordering;
+use ::std::fmt;
+use ::std::fmt::{Display, Formatter};
+
+use ::derive_new::new;
+
+use crate::common::error::ErrMsg;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Severity {
@@ -19,6 +21,7 @@ pub struct Context {
 #[derive(new, Debug, Eq, PartialEq)]
 pub struct CodeProblem {
     severity: Severity,
+    //TODO @mark: move this to ErrMsg
     description: Msg,
     context: Context,
     #[new(value = "vec![]")]
@@ -26,15 +29,15 @@ pub struct CodeProblem {
 }
 
 impl CodeProblem {
-    pub fn error(description: Msg, context: Context) -> CodeProblem {
+    pub fn error(description: ErrMsg, context: Context) -> CodeProblem {
         Self::new(Severity::Error, description, context)
     }
 
-    pub fn warning(description: Msg, context: Context) -> CodeProblem {
+    pub fn warning(description: ErrMsg, context: Context) -> CodeProblem {
         Self::new(Severity::Warning, description, context)
     }
 
-    pub fn debug(description: Msg, context: Context) -> CodeProblem {
+    pub fn debug(description: ErrMsg, context: Context) -> CodeProblem {
         Self::new(Severity::Debug, description, context)
     }
 
@@ -92,11 +95,11 @@ impl Display for CodeProblem {
 
 #[cfg(test)]
 mod tests {
+    use crate::util::strtype::StrType;
+
     use super::CodeProblem;
     use super::Context;
     use super::Severity;
-    use crate::util::strtype::Msg;
-    use crate::util::strtype::StrType;
 
     #[test]
     fn test_severity_ord() {
@@ -109,8 +112,8 @@ mod tests {
 
     #[test]
     fn test_new_problem() {
-        CodeProblem::error(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
-        CodeProblem::warning(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
-        CodeProblem::debug(Msg::copy_new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::error(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::warning(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
+        CodeProblem::debug(Msg::new("test problem").unwrap(), Context::new("test context".to_string()));
     }
 }
