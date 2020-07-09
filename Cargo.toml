@@ -17,9 +17,9 @@ include = [
 name = "mango"
 path = "src/lib.rs"
 
-[[bin]]
-name = "mangoc"
-path = "cli/main.rs"
+#[[bin]]
+#name = "mangoc"
+#path = "cli/main.rs"
 
 [dependencies]
 #nom = "^6.0.0-alpha1"
