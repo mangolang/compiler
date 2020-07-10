@@ -1,7 +1,5 @@
 use ::std::fmt;
 
-use smallvec::SmallVec;
-
 use crate::token::special::EndBlockToken;
 use crate::token::special::StartBlockToken;
 use crate::token::special::UnlexableToken;

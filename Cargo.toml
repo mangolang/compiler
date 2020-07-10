@@ -29,10 +29,10 @@ lazy_static = "^1.4.0"
 derive-new = "^0.5.8"
 #cargo-wasm = "0.4.*"
 #wasm-bindgen = "^0.2.63"
-itertools = "^0.8.2"  # TODO @mark: unused?
-smallvec = { version = "^0.6.13", features = ["union"] }
+#itertools = "^0.8.2"  # TODO @mark: unused?
+#smallvec = { version = "^0.6.13", features = ["union"] }
 #indoc = "^0.3.5"
-parity-wasm = "^0.41.0"
+#parity-wasm = "^0.41.0"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
 proc-macro2 = ">=0.4.24"
