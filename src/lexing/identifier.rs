@@ -6,7 +6,7 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
-use crate::token::collect::{association, identifier, operator, parenthesis_close, parenthesis_open, unlexable, keyword};
+use crate::token::collect::{association, identifier, keyword, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
@@ -107,5 +107,27 @@ mod identifiers {
     #[test]
     fn multiple() {
         check("mangoes are tasty fruits", &vec!["mangoes", "are", "tasty", "fruits"]);
+    }
+}
+
+#[cfg(test)]
+mod keywords {
+    use std::borrow::Cow;
+
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::identifier;
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::lex_keyword_identifier;
+
+    #[test]
+    fn test() {
+        unimplemented!()  //TODO @mark:
     }
 }
