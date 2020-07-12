@@ -14,7 +14,7 @@ lazy_static! {
 pub fn parse_single_quote(text: &str) -> String {
     debug_assert!(text.starts_with("'"));
     debug_assert!(text.ends_with("'"));
-    let unquoted = &text[1 .. text.len() - 1];
+    let unquoted = &text[1..text.len() - 1];
     unquoted.to_owned()
 }
 

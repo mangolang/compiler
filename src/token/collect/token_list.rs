@@ -13,7 +13,9 @@ impl TokenList {
     }
 
     pub fn with_capacity(cap: usize) -> Self {
-        TokenList { tokens: Vec::with_capacity(cap) }
+        TokenList {
+            tokens: Vec::with_capacity(cap),
+        }
     }
 
     pub fn len(&self) -> usize {
@@ -58,7 +60,7 @@ impl From<Vec<Tokens>> for TokenList {
 }
 
 impl FromIterator<Tokens> for TokenList {
-    fn from_iter<T: IntoIterator<Item=Tokens>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = Tokens>>(iter: T) -> Self {
         let mut token_list = TokenList::new();
         for token in iter {
             token_list.add(token)

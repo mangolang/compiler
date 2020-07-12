@@ -1,5 +1,5 @@
-use crate::util::encdec::ToText;
 use crate::token::Token;
+use crate::util::encdec::ToText;
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct ColonToken {}

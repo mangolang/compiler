@@ -47,7 +47,9 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         try_lex!(lex_separators, reader, lexer);
         try_lex!(lex_literal, reader, lexer);
         try_lex!(lex_keyword_identifier, reader, lexer);
-        if lex_eof(&mut reader) { break }
+        if lex_eof(&mut reader) {
+            break;
+        }
         try_lex!(lex_unlexable, reader, lexer);
     }
     lexer.into_tokens()
@@ -86,6 +88,9 @@ mod try_lex {
             try_lex!(lex_fn_no_match, reader, lexer);
             end_of_loop_count += 1;
         }
-        assert_eq!(end_of_loop_count, 3, "Execution should have reached end of loop, because there is not 'continue' on mismatch");
+        assert_eq!(
+            end_of_loop_count, 3,
+            "Execution should have reached end of loop, because there is not 'continue' on mismatch"
+        );
     }
 }

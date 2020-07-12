@@ -1,7 +1,7 @@
 use ::std::fmt;
 
-use crate::io::source::SourceSlice;
 use crate::common::error::MangoErrType::Read;
+use crate::io::source::SourceSlice;
 
 pub type MangoResult<T> = Result<T, MangoErr>;
 pub type MsgResult<T> = Result<T, ErrMsg>;
@@ -73,11 +73,17 @@ pub struct ErrMsg {
 
 impl ErrMsg {
     pub fn new(friendly: impl Into<String>) -> Self {
-        ErrMsg { friendly: friendly.into(), debug: None }
+        ErrMsg {
+            friendly: friendly.into(),
+            debug: None,
+        }
     }
 
     pub fn new_debug(friendly: impl Into<String>, debug: impl Into<String>) -> Self {
-        ErrMsg { friendly: friendly.into(), debug: Some(debug.into()) }
+        ErrMsg {
+            friendly: friendly.into(),
+            debug: Some(debug.into()),
+        }
     }
 
     pub fn as_str(&self) -> &str {
@@ -87,13 +93,19 @@ impl ErrMsg {
 
 impl From<String> for ErrMsg {
     fn from(text: String) -> Self {
-        ErrMsg { friendly: text, debug: None }
+        ErrMsg {
+            friendly: text,
+            debug: None,
+        }
     }
 }
 
 impl From<&str> for ErrMsg {
     fn from(text: &str) -> Self {
-        ErrMsg { friendly: text.to_owned(), debug: None }
+        ErrMsg {
+            friendly: text.to_owned(),
+            debug: None,
+        }
     }
 }
 

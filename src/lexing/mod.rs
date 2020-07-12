@@ -1,16 +1,15 @@
-
-mod reader;
-mod lexer;
 mod lex;
+mod lexer;
+mod reader;
 // mod old_lexer;
 // mod util;
-mod literals;
-mod identifier;
-mod operator;
-mod indent;
 mod grouping;
-mod special;
+mod identifier;
+mod indent;
+mod literals;
+mod operator;
 mod separators;
+mod special;
 
 #[cfg(test)]
 mod tests;

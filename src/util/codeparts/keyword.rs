@@ -178,7 +178,6 @@ lazy_static! {
 }
 
 impl Keyword {
-
     /// Convert to a keyword, if it is one. For error message, use FromStr.
     fn from_word(txt: &str) -> Option<Self> {
         KEYWORDS.get(txt).map(|kw| kw.clone())

@@ -17,7 +17,7 @@ pub struct SourceReader {
     pos_after_space: usize,
 }
 
-impl  SourceReader {
+impl SourceReader {
     pub fn new(source_file: &SourceFile) -> Self {
         SourceReader {
             source: source_file.clone(),
@@ -38,7 +38,7 @@ impl  SourceReader {
         match WHITESPACE_RE.find(self.source.slice_from(self.pos).as_str()) {
             Some(found) => {
                 self.pos_after_space = self.pos + found.end();
-            },
+            }
             None => {
                 self.pos_after_space = self.pos;
             }
@@ -56,8 +56,8 @@ impl  SourceReader {
                     self.pos = end_pos;
                 }
                 m
-            },
-            None => ReaderResult::NoMatch
+            }
+            None => ReaderResult::NoMatch,
         }
     }
 }
@@ -300,8 +300,8 @@ mod tests {
     mod remaining_len {
         use crate::lexing::reader::reader::Reader;
         use crate::lexing::reader::reader::ReaderResult::*;
-        use crate::lexing::reader::source_reader::SourceReader;
         use crate::lexing::reader::source_reader::tests::check;
+        use crate::lexing::reader::source_reader::SourceReader;
 
         use crate::lexing::reader::source_reader::tests::TEST_RE;
 

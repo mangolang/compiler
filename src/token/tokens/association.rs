@@ -47,7 +47,10 @@ impl AssociationToken {
             Symbol::GE => false,
         };
         if !is_valid {
-            return Err(ErrMsg::new(format!("Symbol cannot be used as association (before an '='): '{}'", symbol)));
+            return Err(ErrMsg::new(format!(
+                "Symbol cannot be used as association (before an '='): '{}'",
+                symbol
+            )));
         }
         Ok(AssociationToken {
             symbol: Option::Some(symbol),
@@ -70,8 +73,8 @@ impl Token for AssociationToken {}
 #[cfg(test)]
 mod from_str {
     use super::*;
-    use crate::token::Tokens;
     use crate::common::tests::assert_panic_silent;
+    use crate::token::Tokens;
 
     #[test]
     fn empty() {
@@ -87,10 +90,22 @@ mod from_str {
 
     #[test]
     fn valid() {
-        assert_eq!(AssociationToken::from_str("+=").unwrap(), AssociationToken::from_symbol(Symbol::Plus).unwrap());
-        assert_eq!(AssociationToken::from_str("-=").unwrap(), AssociationToken::from_symbol(Symbol::Dash).unwrap());
-        assert_eq!(AssociationToken::from_str("*=").unwrap(), AssociationToken::from_symbol(Symbol::Asterisk).unwrap());
-        assert_eq!(AssociationToken::from_str("/=").unwrap(), AssociationToken::from_symbol(Symbol::Slash).unwrap());
+        assert_eq!(
+            AssociationToken::from_str("+=").unwrap(),
+            AssociationToken::from_symbol(Symbol::Plus).unwrap()
+        );
+        assert_eq!(
+            AssociationToken::from_str("-=").unwrap(),
+            AssociationToken::from_symbol(Symbol::Dash).unwrap()
+        );
+        assert_eq!(
+            AssociationToken::from_str("*=").unwrap(),
+            AssociationToken::from_symbol(Symbol::Asterisk).unwrap()
+        );
+        assert_eq!(
+            AssociationToken::from_str("/=").unwrap(),
+            AssociationToken::from_symbol(Symbol::Slash).unwrap()
+        );
         //assert_eq!(AssociationToken::from_str("?=").unwrap(), AssociationToken::from_symbol(Symbol::Exclamation));
         //assert_eq!(AssociationToken::from_str("!=").unwrap(), AssociationToken::from_symbol(Symbol::Question));
     }

@@ -1,10 +1,13 @@
 use ::std::str::FromStr;
 
 use crate::common::error::MsgResult;
-use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
 use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
 use crate::token::separators::ColonToken;
 use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
+use crate::token::{
+    AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken,
+    ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken,
+};
 use crate::util::numtype::f64eq;
 
 //TODO @mark: replace more token usages by short versions

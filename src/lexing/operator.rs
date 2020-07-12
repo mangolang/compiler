@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 
@@ -27,8 +27,8 @@ mod operators {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::collect::token_list::TokenList;
-    use crate::token::Tokens;
     use crate::token::tokens::OperatorToken;
+    use crate::token::Tokens;
     use crate::util::codeparts::Symbol;
 
     use super::lex_operator;
@@ -113,19 +113,22 @@ mod operators {
 
     #[test]
     fn all() {
-        check(r"+-*/==<=>=<>!?", &vec![
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Slash)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::EQ)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::LE)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::GE)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::LT)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::GT)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Exclamation)),
-            Tokens::Operator(OperatorToken::from_symbol(Symbol::Question)),
-        ]);
+        check(
+            r"+-*/==<=>=<>!?",
+            &vec![
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Slash)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::EQ)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::LE)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::GE)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::LT)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::GT)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Exclamation)),
+                Tokens::Operator(OperatorToken::from_symbol(Symbol::Question)),
+            ],
+        );
     }
 }
 
@@ -133,9 +136,9 @@ mod operators {
 mod associations {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{AssociationToken, Tokens};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
+    use crate::token::{AssociationToken, Tokens};
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
@@ -170,21 +173,36 @@ mod associations {
 
     #[test]
     fn prefix() {
-        check("+=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap())]);
-        check("-=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap())]);
-        check("*=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap())]);
-        check("/=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap())]);
+        check(
+            "+=",
+            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap())],
+        );
+        check(
+            "-=",
+            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap())],
+        );
+        check(
+            "*=",
+            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap())],
+        );
+        check(
+            "/=",
+            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap())],
+        );
         //check("!=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Exclamation).unwrap())]);
         //check("?=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Question).unwrap())]);
     }
 
     #[test]
     fn all() {
-        check(r"+=-=*=/=", &vec![
-            Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap()),
-            Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap()),
-            Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap()),
-            Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap()),
-        ]);
+        check(
+            r"+=-=*=/=",
+            &vec![
+                Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap()),
+                Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap()),
+                Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap()),
+                Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap()),
+            ],
+        );
     }
 }

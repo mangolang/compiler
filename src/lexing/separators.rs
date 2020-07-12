@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 
 lazy_static! {
     static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
@@ -12,7 +12,6 @@ lazy_static! {
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
 pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-
     let mut found_newline = false;
     while let ReaderResult::Match(sym) = reader.strip_match(&*SEPARATOR_RE) {
         let token = match sym.as_str() {
@@ -25,11 +24,13 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
                 found_newline = true;
                 lexer.set_at_indentable(true);
                 newline()
-            },
+            }
             _ => unreachable!(),
         };
         lexer.add(token);
-        if found_newline { break }
+        if found_newline {
+            break;
+        }
     }
 }
 
@@ -39,9 +40,9 @@ mod grouping {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{colon, comma, ellipsis, newline, period, unlexable};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{colon, comma, ellipsis, newline, period, unlexable};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::lex_separators;
 
@@ -119,7 +120,6 @@ mod grouping {
         check("\r", &vec![newline()]);
     }
 
-
     #[test]
     fn stop_after_newline() {
         check("\r\n:", &vec![newline()]);
@@ -145,34 +145,26 @@ mod grouping {
 
     #[test]
     fn combined_1() {
-        check(",....\r\n", &vec![
-            comma(),
-            ellipsis(),
-            period(),
-            newline(),
-        ]);
+        check(",....\r\n", &vec![comma(), ellipsis(), period(), newline()]);
     }
 
     #[test]
     fn combined_2() {
-        check("...….,\n,", &vec![
-            ellipsis(),
-            ellipsis(),
-            period(),
-            comma(),
-            newline(),
-        ]);
+        check("...….,\n,", &vec![ellipsis(), ellipsis(), period(), comma(), newline()]);
     }
 
     #[test]
     fn combined_3() {
-        check("...:,\n:", &vec![
-            ellipsis(),
-            colon(),
-            comma(),
-            newline(),
-            // stop after newline
-        ]);
+        check(
+            "...:,\n:",
+            &vec![
+                ellipsis(),
+                colon(),
+                comma(),
+                newline(),
+                // stop after newline
+            ],
+        );
     }
 
     #[test]

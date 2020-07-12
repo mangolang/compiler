@@ -47,4 +47,3 @@ pub trait Reader {
     /// Number of bytes left.
     fn remaining_len(&self) -> usize;
 }
-

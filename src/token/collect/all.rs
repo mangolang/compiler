@@ -7,6 +7,7 @@ use crate::token::separators::ColonToken;
 use crate::token::special::EndBlockToken;
 use crate::token::special::StartBlockToken;
 use crate::token::special::UnlexableToken;
+use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::token::tokens::AssociationToken;
 use crate::token::tokens::EndStatementToken;
 use crate::token::tokens::IdentifierToken;
@@ -15,7 +16,6 @@ use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
 use crate::token::tokens::ParenthesisCloseToken;
 use crate::token::tokens::ParenthesisOpenToken;
-use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::util::encdec::ToText;
 
 /// Collection of all possible tokens.

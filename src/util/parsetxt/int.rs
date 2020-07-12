@@ -54,7 +54,7 @@ pub fn parse_int(text: &str) -> Result<i64, IntParseFailReason> {
                     // TODO: check for over/underflow
                     if value.as_str().len() < text.len() {
                         // Part of `text` did not match the regex, so this input is invalid.
-                        return Err(IntParseFailReason::Invalid)
+                        return Err(IntParseFailReason::Invalid);
                     }
                     Ok(value.as_str().without_char('_').parse::<i64>().unwrap())
                 }

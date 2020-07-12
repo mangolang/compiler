@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^[\(\)\[\]\{\}]").unwrap();
@@ -12,15 +12,14 @@ lazy_static! {
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
 pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
         lexer.add(match sym.as_str() {
             "(" => parenthesis_open(),
             ")" => parenthesis_close(),
             "[" => bracket_open(),
             "]" => bracket_close(),
-            "{" => unlexable("{ not yet implemented"),  //TODO @mark
-            "}" => unlexable("} not yet implemented"),  //TODO @mark
+            "{" => unlexable("{ not yet implemented"), //TODO @mark
+            "}" => unlexable("} not yet implemented"), //TODO @mark
             _ => unreachable!(),
         });
     }
@@ -33,9 +32,9 @@ mod test_util {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     pub fn check(input: &str, expected: &[Tokens]) {
         let expected: TokenList = expected.into();
@@ -51,9 +50,9 @@ mod mismatch {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::test_util::check;
 
@@ -84,50 +83,38 @@ mod parenthese {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::test_util::check;
 
     #[test]
     fn open() {
-        check(" ( ", &vec![
-            parenthesis_open(),
-        ]);
+        check(" ( ", &vec![parenthesis_open()]);
     }
 
     #[test]
     fn close() {
-        check(" ) ", &vec![
-            parenthesis_close(),
-        ]);
+        check(" ) ", &vec![parenthesis_close()]);
     }
 
     #[test]
     fn paired() {
-        check("(( ))", &vec![
-            parenthesis_open(),
-            parenthesis_open(),
-            parenthesis_close(),
-            parenthesis_close(),
-        ]);
+        check(
+            "(( ))",
+            &vec![parenthesis_open(), parenthesis_open(), parenthesis_close(), parenthesis_close()],
+        );
     }
 
     #[test]
     fn unbalanced() {
-        check("(( )", &vec![
-            parenthesis_open(),
-            parenthesis_open(),
-            parenthesis_close(),
-        ]);
+        check("(( )", &vec![parenthesis_open(), parenthesis_open(), parenthesis_close()]);
     }
 
     #[test]
     fn and_words() {
-        check("(hello)", &vec![
-            parenthesis_open(),
-        ]);
+        check("(hello)", &vec![parenthesis_open()]);
     }
 }
 
@@ -137,50 +124,35 @@ mod brackets {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{bracket_close, bracket_open};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{bracket_close, bracket_open};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::test_util::check;
 
     #[test]
     fn open() {
-        check(" [ ", &vec![
-            bracket_open(),
-        ]);
+        check(" [ ", &vec![bracket_open()]);
     }
 
     #[test]
     fn close() {
-        check(" ] ", &vec![
-            bracket_close(),
-        ]);
+        check(" ] ", &vec![bracket_close()]);
     }
 
     #[test]
     fn paired() {
-        check("[[ ]]", &vec![
-            bracket_open(),
-            bracket_open(),
-            bracket_close(),
-            bracket_close(),
-        ]);
+        check("[[ ]]", &vec![bracket_open(), bracket_open(), bracket_close(), bracket_close()]);
     }
 
     #[test]
     fn unbalanced() {
-        check("[[ ]", &vec![
-            bracket_open(),
-            bracket_open(),
-            bracket_close(),
-        ]);
+        check("[[ ]", &vec![bracket_open(), bracket_open(), bracket_close()]);
     }
 
     #[test]
     fn and_words() {
-        check("[hello]", &vec![
-            bracket_open(),
-        ]);
+        check("[hello]", &vec![bracket_open()]);
     }
 }
 
@@ -190,27 +162,22 @@ mod mixed {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
+    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::test_util::check;
 
     #[test]
     fn parenthese_inside_brackets() {
-        check("[ ( ) ]", &vec![
-            bracket_open(),
-            parenthesis_open(),
-            parenthesis_close(),
-            bracket_close(),
-        ]);
+        check(
+            "[ ( ) ]",
+            &vec![bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
+        );
     }
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)", &vec![
-            bracket_open(),
-            parenthesis_close(),
-        ]);
+        check("[)", &vec![bracket_open(), parenthesis_close()]);
     }
 }

@@ -5,11 +5,11 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{association, identifier, keyword, operator, parenthesis_close, parenthesis_open, unlexable};
-use crate::util::codeparts::Keyword;
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
+use crate::util::codeparts::Keyword;
 use crate::util::strtype::name::IDENTIFIER_RE;
 
 /// Lex an identifier or keyword.
@@ -29,20 +29,21 @@ mod identifiers {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::identifier;
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
+    use crate::token::{IdentifierToken, Tokens};
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
+    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
     fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
-        let expected: TokenList = expected_names.iter()
+        let expected: TokenList = expected_names
+            .iter()
             .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
             .collect();
         assert_eq!(lexer.tokens(), &expected);
@@ -116,14 +117,14 @@ mod keywords {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{IdentifierToken, KeywordToken, Tokens};
-    use crate::token::collect::{identifier, keyword};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{identifier, keyword};
     use crate::token::tokens::OperatorToken;
-    use crate::util::codeparts::{Keyword, Symbol};
+    use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::util::codeparts::keyword::KEYWORDS;
-    use crate::util::strtype::Name;
+    use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::strtype::typ::StrType;
+    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
     use super::mixed::check;
@@ -137,11 +138,14 @@ mod keywords {
 
     #[test]
     fn multiple() {
-        check("let mut mango", &[
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
-        ]);
+        check(
+            "let mut mango",
+            &[
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+            ],
+        );
     }
 }
 
@@ -151,14 +155,14 @@ mod mixed {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{IdentifierToken, KeywordToken, Tokens};
-    use crate::token::collect::{identifier, keyword};
     use crate::token::collect::token_list::TokenList;
+    use crate::token::collect::{identifier, keyword};
     use crate::token::tokens::OperatorToken;
-    use crate::util::codeparts::{Keyword, Symbol};
+    use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::util::codeparts::keyword::KEYWORDS;
-    use crate::util::strtype::Name;
+    use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::strtype::typ::StrType;
+    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
@@ -170,11 +174,14 @@ mod mixed {
 
     #[test]
     fn multiple() {
-        check("let mut python mango", &[
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
-            Tokens::Identifier(IdentifierToken::from_name(Name::new("python").unwrap())),
-            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
-        ]);
+        check(
+            "let mut python mango",
+            &[
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
+                Tokens::Identifier(IdentifierToken::from_name(Name::new("python").unwrap())),
+                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+            ],
+        );
     }
 }
