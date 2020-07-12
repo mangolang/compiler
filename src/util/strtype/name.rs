@@ -83,10 +83,18 @@ impl StrType for Name {
             if found.as_str().len() < name.len() {
                 // There was a match, but some trailing characters were not matched. So while
                 // the string contains an identifier, the string as a whole is not a valid identifier.
-                return Err(format!("Identifier '{}' is invalid; names should contain only letters, numbers and underscores.", name).into());
+                return Err(format!(
+                    "Identifier '{}' is invalid; names should contain only letters, numbers and underscores.",
+                    name
+                )
+                .into());
             }
         } else {
-            return Err(format!("Identifier '{}' is invalid; names should consist of letters, numbers and underscores, and not start with a number.", name).into());
+            return Err(format!(
+                "Identifier '{}' is invalid; names should consist of letters, numbers and underscores, and not start with a number.",
+                name
+            )
+            .into());
         }
         Ok(())
     }
@@ -138,93 +146,66 @@ mod validation {
 
     #[test]
     fn valid_names() {
-        assert_validity(true, &[
-            "a",
-            "z",
-            "A",
-            "Z",
-            "a0",
-            "a1234567890",
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            "_",
-            "hello_world",
-            "_text",
-            "___text",
-        ]);
+        assert_validity(
+            true,
+            &[
+                "a",
+                "z",
+                "A",
+                "Z",
+                "a0",
+                "a1234567890",
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                "_",
+                "hello_world",
+                "_text",
+                "___text",
+            ],
+        );
     }
 
     #[test]
     fn leading_numbers() {
-        assert_validity(false, &[
-            "0",
-            "9",
-            "01234567890123456789",
-            "0_", /* int */
-            "_0",
-            "_0a",
-            "__0a",
-            "0a",
-            "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        ]);
+        assert_validity(
+            false,
+            &[
+                "0",
+                "9",
+                "01234567890123456789",
+                "0_", /* int */
+                "_0",
+                "_0a",
+                "__0a",
+                "0a",
+                "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            ],
+        );
     }
 
     #[test]
     fn contains_invalid() {
-        assert_validity(false, &[
-            "hello world",
-            "hello-world",
-            "hello@",
-        ]);
+        assert_validity(false, &["hello world", "hello-world", "hello@"]);
     }
 
     #[test]
     fn forbidden_chars() {
-        assert_validity(false, &[
-            " ",
-            "\t",
-            "\n",
-            "~",
-            "!",
-            "@",
-            "#",
-            "$",
-            "€",
-            "%",
-            "^",
-            "&",
-            "*",
-            "(",
-            ")",
-            "-",
-            "+",
-            "=",
-            "}",
-            "}",
-            "[",
-            "]",
-            ":",
-            ";",
-            "\"",
-            "'",
-            "\\",
-            "|",
-            "/",
-            "<",
-            ">",
-            ",",
-            ".",
-            "/",
-            "?",
-        ]);
+        assert_validity(
+            false,
+            &[
+                " ", "\t", "\n", "~", "!", "@", "#", "$", "€", "%", "^", "&", "*", "(", ")", "-", "+", "=", "}", "}", "[", "]", ":", ";",
+                "\"", "'", "\\", "|", "/", "<", ">", ",", ".", "/", "?",
+            ],
+        );
     }
 
     #[test]
     fn non_ascii() {
-        assert_validity(false, &[
-            // Perhaps allowed in the future, but not supported yet
-            "你好",
-            "и",
-            "één",
-        ]);
+        assert_validity(
+            false,
+            &[
+                // Perhaps allowed in the future, but not supported yet
+                "你好", "и", "één",
+            ],
+        );
     }
 }

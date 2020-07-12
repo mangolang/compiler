@@ -1,10 +1,15 @@
+use ::std::borrow::Cow;
+use ::std::collections::HashMap;
+use ::std::fmt::Display;
+use ::std::fmt::Formatter;
+use ::std::fmt::Result as fResult;
+use ::std::str::FromStr;
+
+use ::lazy_static::lazy_static;
+
+use crate::common::error::{ErrMsg, MangoErr, MangoResult, MsgResult};
+use crate::token::Token;
 use crate::util::strtype::StrType;
-use std::fmt::Display;
-use std::fmt::Formatter;
-use std::fmt::Result as fResult;
-use std::str::FromStr;
-use crate::common::error::{MangoResult, MangoErr};
-use std::borrow::Cow;
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)
@@ -15,12 +20,172 @@ pub enum Keyword {
     If,
     For,
     While,
+    In,
     Function,
     Return,
+    Assert,
     Reserved(String),
 }
 
+lazy_static! {
+    // Note: keywords must follow the same rules as identifiers, or the lexer will
+    // not recognize them. For example, no multi-word keywords.
+    pub static ref KEYWORDS: HashMap<&'static str, Keyword> = {
+        let mut keywords = HashMap::with_capacity(150);
+        debug_assert!(keywords.insert("let", Keyword::Let).is_none());
+        debug_assert!(keywords.insert("mut", Keyword::Mut).is_none());
+        debug_assert!(keywords.insert("if", Keyword::If).is_none());
+        debug_assert!(keywords.insert("for", Keyword::For).is_none());
+        debug_assert!(keywords.insert("while", Keyword::While).is_none());
+        debug_assert!(keywords.insert("in", Keyword::In).is_none());
+        debug_assert!(keywords.insert("fun", Keyword::Function).is_none());
+        debug_assert!(keywords.insert("return", Keyword::Return).is_none());
+        debug_assert!(keywords.insert("assert", Keyword::Assert).is_none());
+
+        debug_assert!(keywords.insert("abstract", Keyword::Reserved("abstract".to_owned())).is_none());
+        debug_assert!(keywords.insert("alias", Keyword::Reserved("alias".to_owned())).is_none());
+        debug_assert!(keywords.insert("all", Keyword::Reserved("all".to_owned())).is_none());
+        debug_assert!(keywords.insert("and", Keyword::Reserved("and".to_owned())).is_none());
+        debug_assert!(keywords.insert("annotation", Keyword::Reserved("annotation".to_owned())).is_none());
+        debug_assert!(keywords.insert("any", Keyword::Reserved("any".to_owned())).is_none());
+        debug_assert!(keywords.insert("as", Keyword::Reserved("as".to_owned())).is_none());
+        debug_assert!(keywords.insert("async", Keyword::Reserved("async".to_owned())).is_none());
+        debug_assert!(keywords.insert("auto", Keyword::Reserved("auto".to_owned())).is_none());
+        debug_assert!(keywords.insert("await", Keyword::Reserved("await".to_owned())).is_none());
+        debug_assert!(keywords.insert("become", Keyword::Reserved("become".to_owned())).is_none());
+        debug_assert!(keywords.insert("bool", Keyword::Reserved("bool".to_owned())).is_none());
+        debug_assert!(keywords.insert("box", Keyword::Reserved("box".to_owned())).is_none());
+        debug_assert!(keywords.insert("break", Keyword::Reserved("break".to_owned())).is_none());
+        debug_assert!(keywords.insert("by", Keyword::Reserved("by".to_owned())).is_none());
+        debug_assert!(keywords.insert("byte", Keyword::Reserved("byte".to_owned())).is_none());
+        debug_assert!(keywords.insert("catch", Keyword::Reserved("catch".to_owned())).is_none());
+        debug_assert!(keywords.insert("class", Keyword::Reserved("class".to_owned())).is_none());
+        debug_assert!(keywords.insert("closed", Keyword::Reserved("closed".to_owned())).is_none());
+        debug_assert!(keywords.insert("companion", Keyword::Reserved("companion".to_owned())).is_none());
+        debug_assert!(keywords.insert("const", Keyword::Reserved("const".to_owned())).is_none());
+        debug_assert!(keywords.insert("constructor", Keyword::Reserved("constructor".to_owned())).is_none());
+        debug_assert!(keywords.insert("continue", Keyword::Reserved("continue".to_owned())).is_none());
+        debug_assert!(keywords.insert("data", Keyword::Reserved("data".to_owned())).is_none());
+        debug_assert!(keywords.insert("debug", Keyword::Reserved("debug".to_owned())).is_none());
+        debug_assert!(keywords.insert("def", Keyword::Reserved("def".to_owned())).is_none());
+        debug_assert!(keywords.insert("default", Keyword::Reserved("default".to_owned())).is_none());
+        debug_assert!(keywords.insert("defer", Keyword::Reserved("defer".to_owned())).is_none());
+        debug_assert!(keywords.insert("del", Keyword::Reserved("del".to_owned())).is_none());
+        debug_assert!(keywords.insert("delegate", Keyword::Reserved("delegate".to_owned())).is_none());
+        debug_assert!(keywords.insert("delegates", Keyword::Reserved("delegates".to_owned())).is_none());
+        debug_assert!(keywords.insert("delete", Keyword::Reserved("delete".to_owned())).is_none());
+        debug_assert!(keywords.insert("derive", Keyword::Reserved("derive".to_owned())).is_none());
+        debug_assert!(keywords.insert("deriving", Keyword::Reserved("deriving".to_owned())).is_none());
+        debug_assert!(keywords.insert("do", Keyword::Reserved("do".to_owned())).is_none());
+        debug_assert!(keywords.insert("double", Keyword::Reserved("double".to_owned())).is_none());
+        debug_assert!(keywords.insert("dynamic", Keyword::Reserved("dynamic".to_owned())).is_none());
+        debug_assert!(keywords.insert("elementwise", Keyword::Reserved("elementwise".to_owned())).is_none());
+        debug_assert!(keywords.insert("elif", Keyword::Reserved("elif".to_owned())).is_none());
+        debug_assert!(keywords.insert("end", Keyword::Reserved("end".to_owned())).is_none());
+        debug_assert!(keywords.insert("enum", Keyword::Reserved("enum".to_owned())).is_none());
+        debug_assert!(keywords.insert("eval", Keyword::Reserved("eval".to_owned())).is_none());
+        debug_assert!(keywords.insert("except", Keyword::Reserved("except".to_owned())).is_none());
+        debug_assert!(keywords.insert("extends", Keyword::Reserved("extends".to_owned())).is_none());
+        debug_assert!(keywords.insert("extern", Keyword::Reserved("extern".to_owned())).is_none());
+        debug_assert!(keywords.insert("false", Keyword::Reserved("false".to_owned())).is_none());
+        debug_assert!(keywords.insert("family", Keyword::Reserved("family".to_owned())).is_none());
+        debug_assert!(keywords.insert("field", Keyword::Reserved("field".to_owned())).is_none());
+        debug_assert!(keywords.insert("final", Keyword::Reserved("final".to_owned())).is_none());
+        debug_assert!(keywords.insert("finally", Keyword::Reserved("finally".to_owned())).is_none());
+        debug_assert!(keywords.insert("float", Keyword::Reserved("float".to_owned())).is_none());
+        debug_assert!(keywords.insert("fn", Keyword::Reserved("fn".to_owned())).is_none());
+        debug_assert!(keywords.insert("get", Keyword::Reserved("get".to_owned())).is_none());
+        debug_assert!(keywords.insert("global", Keyword::Reserved("global".to_owned())).is_none());
+        debug_assert!(keywords.insert("goto", Keyword::Reserved("goto".to_owned())).is_none());
+        debug_assert!(keywords.insert("impl", Keyword::Reserved("impl".to_owned())).is_none());
+        debug_assert!(keywords.insert("implements", Keyword::Reserved("implements".to_owned())).is_none());
+        debug_assert!(keywords.insert("import", Keyword::Reserved("import".to_owned())).is_none());
+        debug_assert!(keywords.insert("init", Keyword::Reserved("init".to_owned())).is_none());
+        debug_assert!(keywords.insert("int", Keyword::Reserved("int".to_owned())).is_none());
+        debug_assert!(keywords.insert("interface", Keyword::Reserved("interface".to_owned())).is_none());
+        debug_assert!(keywords.insert("internal", Keyword::Reserved("internal".to_owned())).is_none());
+        debug_assert!(keywords.insert("intersect", Keyword::Reserved("intersect".to_owned())).is_none());
+        debug_assert!(keywords.insert("intersection", Keyword::Reserved("intersection".to_owned())).is_none());
+        debug_assert!(keywords.insert("is", Keyword::Reserved("is".to_owned())).is_none());
+        debug_assert!(keywords.insert("it", Keyword::Reserved("it".to_owned())).is_none());
+        debug_assert!(keywords.insert("lambda", Keyword::Reserved("lambda".to_owned())).is_none());
+        debug_assert!(keywords.insert("lateinit", Keyword::Reserved("lateinit".to_owned())).is_none());
+        debug_assert!(keywords.insert("lazy", Keyword::Reserved("lazy".to_owned())).is_none());
+        debug_assert!(keywords.insert("local", Keyword::Reserved("local".to_owned())).is_none());
+        debug_assert!(keywords.insert("loop", Keyword::Reserved("loop".to_owned())).is_none());
+        debug_assert!(keywords.insert("macro", Keyword::Reserved("macro".to_owned())).is_none());
+        debug_assert!(keywords.insert("mango", Keyword::Reserved("mango".to_owned())).is_none());
+        debug_assert!(keywords.insert("match", Keyword::Reserved("match".to_owned())).is_none());
+        debug_assert!(keywords.insert("module", Keyword::Reserved("module".to_owned())).is_none());
+        debug_assert!(keywords.insert("move", Keyword::Reserved("move".to_owned())).is_none());
+        debug_assert!(keywords.insert("NaN", Keyword::Reserved("NaN".to_owned())).is_none());
+        debug_assert!(keywords.insert("native", Keyword::Reserved("native".to_owned())).is_none());
+        debug_assert!(keywords.insert("new", Keyword::Reserved("new".to_owned())).is_none());
+        debug_assert!(keywords.insert("nill", Keyword::Reserved("nill".to_owned())).is_none());
+        debug_assert!(keywords.insert("none", Keyword::Reserved("none".to_owned())).is_none());
+        debug_assert!(keywords.insert("null", Keyword::Reserved("null".to_owned())).is_none());
+        debug_assert!(keywords.insert("object", Keyword::Reserved("object".to_owned())).is_none());
+        debug_assert!(keywords.insert("open", Keyword::Reserved("open".to_owned())).is_none());
+        debug_assert!(keywords.insert("operator", Keyword::Reserved("operator".to_owned())).is_none());
+        debug_assert!(keywords.insert("or", Keyword::Reserved("or".to_owned())).is_none());
+        debug_assert!(keywords.insert("out", Keyword::Reserved("out".to_owned())).is_none());
+        debug_assert!(keywords.insert("override", Keyword::Reserved("override".to_owned())).is_none());
+        debug_assert!(keywords.insert("package", Keyword::Reserved("package".to_owned())).is_none());
+        debug_assert!(keywords.insert("param", Keyword::Reserved("param".to_owned())).is_none());
+        debug_assert!(keywords.insert("pass", Keyword::Reserved("pass".to_owned())).is_none());
+        debug_assert!(keywords.insert("private", Keyword::Reserved("private".to_owned())).is_none());
+        debug_assert!(keywords.insert("public", Keyword::Reserved("public".to_owned())).is_none());
+        debug_assert!(keywords.insert("pure", Keyword::Reserved("pure".to_owned())).is_none());
+        debug_assert!(keywords.insert("raise", Keyword::Reserved("raise".to_owned())).is_none());
+        debug_assert!(keywords.insert("real", Keyword::Reserved("real".to_owned())).is_none());
+        debug_assert!(keywords.insert("rec", Keyword::Reserved("rec".to_owned())).is_none());
+        debug_assert!(keywords.insert("reified", Keyword::Reserved("reified".to_owned())).is_none());
+        debug_assert!(keywords.insert("sealed", Keyword::Reserved("sealed".to_owned())).is_none());
+        debug_assert!(keywords.insert("select", Keyword::Reserved("select".to_owned())).is_none());
+        debug_assert!(keywords.insert("self", Keyword::Reserved("self".to_owned())).is_none());
+        debug_assert!(keywords.insert("set", Keyword::Reserved("set".to_owned())).is_none());
+        debug_assert!(keywords.insert("sizeof", Keyword::Reserved("sizeof".to_owned())).is_none());
+        debug_assert!(keywords.insert("static", Keyword::Reserved("static".to_owned())).is_none());
+        debug_assert!(keywords.insert("struct", Keyword::Reserved("struct".to_owned())).is_none());
+        debug_assert!(keywords.insert("super", Keyword::Reserved("super".to_owned())).is_none());
+        debug_assert!(keywords.insert("switch", Keyword::Reserved("switch".to_owned())).is_none());
+        debug_assert!(keywords.insert("sync", Keyword::Reserved("sync".to_owned())).is_none());
+        debug_assert!(keywords.insert("synchronized", Keyword::Reserved("synchronized".to_owned())).is_none());
+        debug_assert!(keywords.insert("tailrec", Keyword::Reserved("tailrec".to_owned())).is_none());
+        debug_assert!(keywords.insert("this", Keyword::Reserved("this".to_owned())).is_none());
+        debug_assert!(keywords.insert("throw", Keyword::Reserved("throw".to_owned())).is_none());
+        debug_assert!(keywords.insert("throws", Keyword::Reserved("throws".to_owned())).is_none());
+        debug_assert!(keywords.insert("to", Keyword::Reserved("to".to_owned())).is_none());
+        debug_assert!(keywords.insert("trait", Keyword::Reserved("trait".to_owned())).is_none());
+        debug_assert!(keywords.insert("transient", Keyword::Reserved("transient".to_owned())).is_none());
+        debug_assert!(keywords.insert("true", Keyword::Reserved("true".to_owned())).is_none());
+        debug_assert!(keywords.insert("try", Keyword::Reserved("try".to_owned())).is_none());
+        debug_assert!(keywords.insert("type", Keyword::Reserved("type".to_owned())).is_none());
+        debug_assert!(keywords.insert("unsafe", Keyword::Reserved("unsafe".to_owned())).is_none());
+        debug_assert!(keywords.insert("unite", Keyword::Reserved("unite".to_owned())).is_none());
+        debug_assert!(keywords.insert("union", Keyword::Reserved("union".to_owned())).is_none());
+        debug_assert!(keywords.insert("until", Keyword::Reserved("until".to_owned())).is_none());
+        debug_assert!(keywords.insert("use", Keyword::Reserved("use".to_owned())).is_none());
+        debug_assert!(keywords.insert("val", Keyword::Reserved("val".to_owned())).is_none());
+        debug_assert!(keywords.insert("var", Keyword::Reserved("var".to_owned())).is_none());
+        debug_assert!(keywords.insert("vararg", Keyword::Reserved("vararg".to_owned())).is_none());
+        debug_assert!(keywords.insert("virtual", Keyword::Reserved("virtual".to_owned())).is_none());
+        debug_assert!(keywords.insert("volatile", Keyword::Reserved("volatile".to_owned())).is_none());
+        debug_assert!(keywords.insert("when", Keyword::Reserved("when".to_owned())).is_none());
+        debug_assert!(keywords.insert("where", Keyword::Reserved("where".to_owned())).is_none());
+        debug_assert!(keywords.insert("with", Keyword::Reserved("with".to_owned())).is_none());
+        debug_assert!(keywords.insert("xor", Keyword::Reserved("xor".to_owned())).is_none());
+        debug_assert!(keywords.insert("yield", Keyword::Reserved("yield".to_owned())).is_none());
+        keywords
+    };
+}
+
 impl Keyword {
+    /// Convert to a keyword, if it is one. For error message, use FromStr.
+    pub fn from_word(txt: &str) -> Option<Self> {
+        KEYWORDS.get(txt).cloned()
+    }
+
     pub fn to_str(&self) -> Cow<str> {
         match self {
             Keyword::Let => Cow::from("let"),
@@ -28,164 +193,22 @@ impl Keyword {
             Keyword::If => Cow::from("if"),
             Keyword::For => Cow::from("for"),
             Keyword::While => Cow::from("while"),
+            Keyword::In => Cow::from("in"),
             Keyword::Function => Cow::from("function"),
             Keyword::Return => Cow::from("return"),
+            Keyword::Assert => Cow::from("assert"),
             Keyword::Reserved(name) => Cow::from(name),
         }
     }
 }
 
 impl FromStr for Keyword {
-    type Err = String;
+    type Err = ErrMsg;
 
-    fn from_str(symbol_txt: &str) -> Result<Self, String> {
-        use self::Keyword::*;
-        match symbol_txt {
-            "let" => Ok(Let),
-            "mut" => Ok(Mut),
-            "if" => Ok(If),
-            "for" => Ok(For),
-            "while" => Ok(While),
-            "fun" => Ok(Function),
-            "return" => Ok(Return),
-
-            "abstract" => Ok(Reserved("abstract".to_owned())),
-            "alias" => Ok(Reserved("alias".to_owned())),
-            "all" => Ok(Reserved("all".to_owned())),
-            "and" => Ok(Reserved("and".to_owned())),
-            "annotation" => Ok(Reserved("annotation".to_owned())),
-            "any" => Ok(Reserved("any".to_owned())),
-            "as" => Ok(Reserved("as".to_owned())),
-            "assert" => Ok(Reserved("assert".to_owned())),
-            "async" => Ok(Reserved("async".to_owned())),
-            "auto" => Ok(Reserved("auto".to_owned())),
-            "await" => Ok(Reserved("await".to_owned())),
-            "become" => Ok(Reserved("become".to_owned())),
-            "bool" => Ok(Reserved("bool".to_owned())),
-            "box" => Ok(Reserved("box".to_owned())),
-            "break" => Ok(Reserved("break".to_owned())),
-            "by" => Ok(Reserved("by".to_owned())),
-            "byte" => Ok(Reserved("byte".to_owned())),
-            "catch" => Ok(Reserved("catch".to_owned())),
-            "class" => Ok(Reserved("class".to_owned())),
-            "closed" => Ok(Reserved("closed".to_owned())),
-            "companion" => Ok(Reserved("companion".to_owned())),
-            "const" => Ok(Reserved("const".to_owned())),
-            "constructor" => Ok(Reserved("constructor".to_owned())),
-            "continue" => Ok(Reserved("continue".to_owned())),
-            "data" => Ok(Reserved("data".to_owned())),
-            "debug" => Ok(Reserved("debug".to_owned())),
-            "def" => Ok(Reserved("def".to_owned())),
-            "default" => Ok(Reserved("default".to_owned())),
-            "defer" => Ok(Reserved("defer".to_owned())),
-            "del" => Ok(Reserved("del".to_owned())),
-            "delegate" => Ok(Reserved("delegate".to_owned())),
-            "delegates" => Ok(Reserved("delegates".to_owned())),
-            "delete" => Ok(Reserved("delete".to_owned())),
-            "derive" => Ok(Reserved("derive".to_owned())),
-            "deriving" => Ok(Reserved("deriving".to_owned())),
-            "do" => Ok(Reserved("do".to_owned())),
-            "double" => Ok(Reserved("double".to_owned())),
-            "dynamic" => Ok(Reserved("dynamic".to_owned())),
-            "elementwise" => Ok(Reserved("elementwise".to_owned())),
-            "elif" => Ok(Reserved("elif".to_owned())),
-            "end" => Ok(Reserved("end".to_owned())),
-            "enum" => Ok(Reserved("enum".to_owned())),
-            "eval" => Ok(Reserved("eval".to_owned())),
-            "except" => Ok(Reserved("except".to_owned())),
-            "extends" => Ok(Reserved("extends".to_owned())),
-            "extern" => Ok(Reserved("extern".to_owned())),
-            "false" => Ok(Reserved("false".to_owned())),
-            "family" => Ok(Reserved("family".to_owned())),
-            "field" => Ok(Reserved("field".to_owned())),
-            "final" => Ok(Reserved("final".to_owned())),
-            "finally" => Ok(Reserved("finally".to_owned())),
-            "float" => Ok(Reserved("float".to_owned())),
-            "fn" => Ok(Reserved("fn".to_owned())),
-            "get" => Ok(Reserved("get".to_owned())),
-            "global" => Ok(Reserved("global".to_owned())),
-            "goto" => Ok(Reserved("goto".to_owned())),
-            "impl" => Ok(Reserved("impl".to_owned())),
-            "implements" => Ok(Reserved("implements".to_owned())),
-            "import" => Ok(Reserved("import".to_owned())),
-            "in" => Ok(Reserved("in".to_owned())),
-            "init" => Ok(Reserved("init".to_owned())),
-            "int" => Ok(Reserved("int".to_owned())),
-            "interface" => Ok(Reserved("interface".to_owned())),
-            "internal" => Ok(Reserved("internal".to_owned())),
-            "intersect" => Ok(Reserved("intersect".to_owned())),
-            "intersection" => Ok(Reserved("intersection".to_owned())),
-            "is" => Ok(Reserved("is".to_owned())),
-            "it" => Ok(Reserved("it".to_owned())),
-            "lambda" => Ok(Reserved("lambda".to_owned())),
-            "lateinit" => Ok(Reserved("lateinit".to_owned())),
-            "lazy" => Ok(Reserved("lazy".to_owned())),
-            "local" => Ok(Reserved("local".to_owned())),
-            "loop" => Ok(Reserved("loop".to_owned())),
-            "macro" => Ok(Reserved("macro".to_owned())),
-            "match" => Ok(Reserved("match".to_owned())),
-            "module" => Ok(Reserved("module".to_owned())),
-            "move" => Ok(Reserved("move".to_owned())),
-            "NaN" => Ok(Reserved("NaN".to_owned())),
-            "native" => Ok(Reserved("native".to_owned())),
-            "new" => Ok(Reserved("new".to_owned())),
-            "nill" => Ok(Reserved("nill".to_owned())),
-            "none" => Ok(Reserved("none".to_owned())),
-            "null" => Ok(Reserved("null".to_owned())),
-            "object" => Ok(Reserved("object".to_owned())),
-            "open" => Ok(Reserved("open".to_owned())),
-            "operator" => Ok(Reserved("operator".to_owned())),
-            "or" => Ok(Reserved("or".to_owned())),
-            "out" => Ok(Reserved("out".to_owned())),
-            "override" => Ok(Reserved("override".to_owned())),
-            "package" => Ok(Reserved("package".to_owned())),
-            "param" => Ok(Reserved("param".to_owned())),
-            "pass" => Ok(Reserved("pass".to_owned())),
-            "private" => Ok(Reserved("private".to_owned())),
-            "public" => Ok(Reserved("public".to_owned())),
-            "pure" => Ok(Reserved("pure".to_owned())),
-            "raise" => Ok(Reserved("raise".to_owned())),
-            "real" => Ok(Reserved("real".to_owned())),
-            "rec" => Ok(Reserved("rec".to_owned())),
-            "reified" => Ok(Reserved("reified".to_owned())),
-            "sealed" => Ok(Reserved("sealed".to_owned())),
-            "select" => Ok(Reserved("select".to_owned())),
-            "self" => Ok(Reserved("self".to_owned())),
-            "set" => Ok(Reserved("set".to_owned())),
-            "sizeof" => Ok(Reserved("sizeof".to_owned())),
-            "static" => Ok(Reserved("static".to_owned())),
-            "struct" => Ok(Reserved("struct".to_owned())),
-            "super" => Ok(Reserved("super".to_owned())),
-            "switch" => Ok(Reserved("switch".to_owned())),
-            "sync" => Ok(Reserved("sync".to_owned())),
-            "synchronized" => Ok(Reserved("synchronized".to_owned())),
-            "tailrec" => Ok(Reserved("tailrec".to_owned())),
-            "this" => Ok(Reserved("this".to_owned())),
-            "throw" => Ok(Reserved("throw".to_owned())),
-            "throws" => Ok(Reserved("throws".to_owned())),
-            "to" => Ok(Reserved("to".to_owned())),
-            "trait" => Ok(Reserved("trait".to_owned())),
-            "transient" => Ok(Reserved("transient".to_owned())),
-            "true" => Ok(Reserved("true".to_owned())),
-            "try" => Ok(Reserved("try".to_owned())),
-            "type" => Ok(Reserved("type".to_owned())),
-            "unsafe" => Ok(Reserved("unsafe".to_owned())),
-            "unite" => Ok(Reserved("unite".to_owned())),
-            "union" => Ok(Reserved("union".to_owned())),
-            "until" => Ok(Reserved("until".to_owned())),
-            "use" => Ok(Reserved("use".to_owned())),
-            "val" => Ok(Reserved("val".to_owned())),
-            "var" => Ok(Reserved("var".to_owned())),
-            "vararg" => Ok(Reserved("vararg".to_owned())),
-            "virtual" => Ok(Reserved("virtual".to_owned())),
-            "volatile" => Ok(Reserved("volatile".to_owned())),
-            "when" => Ok(Reserved("when".to_owned())),
-            "where" => Ok(Reserved("where".to_owned())),
-            "with" => Ok(Reserved("with".to_owned())),
-            "xor" => Ok(Reserved("xor".to_owned())),
-            "yield" => Ok(Reserved("yield".to_owned())),
-
-            _ => Err(format!("Unknown keywords: '{}'", symbol_txt).into()),
+    fn from_str(txt: &str) -> MsgResult<Self> {
+        match Keyword::from_word(txt) {
+            Some(word) => Ok(word),
+            None => Err(ErrMsg::new(format!("Unknown keywords: '{}'", txt))),
         }
     }
 }
@@ -194,18 +217,6 @@ impl Display for Keyword {
     fn fmt(&self, f: &mut Formatter) -> fResult {
         use self::Keyword::*;
         let temp_for_lifetime: String;
-        f.write_str(match self {
-            Let => "let",
-            Mut => "mut",
-            If => "if",
-            For => "for",
-            While => "while",
-            Function => "fun",
-            Return => "return",
-            Reserved(name) => {
-                temp_for_lifetime = format!("?{}?", name);
-                &temp_for_lifetime
-            }
-        })
+        f.write_str(self.to_str().as_ref())
     }
 }

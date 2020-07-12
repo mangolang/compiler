@@ -8,6 +8,8 @@ pub mod parentheses;
 pub use self::parentheses::ParenthesisCloseToken;
 pub use self::parentheses::ParenthesisOpenToken;
 
+pub mod brackets;
+
 pub mod operator;
 pub use self::operator::OperatorToken;
 

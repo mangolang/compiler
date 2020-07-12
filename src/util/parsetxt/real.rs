@@ -28,7 +28,7 @@ pub fn parse_real(text: &str) -> Result<f64, RealParseFailReason> {
         Some(captures) => {
             if captures[0].len() < text.len() {
                 // Part of `text` did not match the regex, so this input is invalid.
-                return Err(RealParseFailReason::Invalid)
+                return Err(RealParseFailReason::Invalid);
             }
             let multiplier = captures
                 .name("multiplier")

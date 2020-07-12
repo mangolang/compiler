@@ -2,8 +2,8 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
-use crate::token::{Tokens, ParenthesisOpenToken, ParenthesisCloseToken, UnlexableToken};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens, UnlexableToken};
 
 lazy_static! {
     static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.").unwrap();
@@ -31,9 +31,9 @@ pub fn lex_eof(reader: &mut impl Reader) -> bool {
 #[cfg(test)]
 mod unlexable {
     use super::lex_unlexable;
-    use crate::lexing::tests::create_lexer;
     use crate::lexing::lexer::Lexer;
-    use crate::token::{UnlexableToken, Tokens};
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{Tokens, UnlexableToken};
 
     #[test]
     fn letter() {
@@ -54,10 +54,10 @@ mod unlexable {
 #[cfg(test)]
 mod eof {
     use super::lex_unlexable;
-    use crate::lexing::tests::create_lexer;
     use crate::lexing::lexer::Lexer;
-    use crate::token::{UnlexableToken, Tokens};
     use crate::lexing::special::lex_eof;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{Tokens, UnlexableToken};
 
     #[test]
     fn empty() {

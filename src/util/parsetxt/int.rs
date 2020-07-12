@@ -14,7 +14,7 @@ lazy_static! {
     /// This matches integer literals, either just numbers in base 10, or base 2-36 with prefix.
     /// The syntax for -37 in base 16 is -16b25 and 2748 is 16bABC.
     /// Incorrect values like 4b7 or 0b0 are not handled at the lexing stage.
-    pub static ref INT_RE: Regex = Regex::new(r"^(?:(?P<base>(?:\+|-?)[1-9][0-9]*)b(?P<reb_val>(?:_?[0-9a-zA-Z])+)|(?P<b10_val>(?:\+|-?)[0-9](?:_?[0-9])*))").unwrap();
+    pub static ref INT_RE: Regex = Regex::new(r"^(?:(?P<base>(?:\+|-?)[1-9][0-9]*)b(?P<reb_val>(?:_?[0-9a-zA-Z])+)|(?P<b10_val>(?:\+|-?)[0-9](?:_?[0-9])*))\b").unwrap();
 }
 
 /// Convert a String that matches [int_pattern] to an i64 integer. Overflow is possible.
@@ -54,7 +54,7 @@ pub fn parse_int(text: &str) -> Result<i64, IntParseFailReason> {
                     // TODO: check for over/underflow
                     if value.as_str().len() < text.len() {
                         // Part of `text` did not match the regex, so this input is invalid.
-                        return Err(IntParseFailReason::Invalid)
+                        return Err(IntParseFailReason::Invalid);
                     }
                     Ok(value.as_str().without_char('_').parse::<i64>().unwrap())
                 }

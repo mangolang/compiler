@@ -3,14 +3,14 @@ use ::regex::Regex;
 
 use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
-use crate::lexing::identifier::lex_identifier;
+use crate::lexing::identifier::lex_keyword_identifier;
 use crate::lexing::indent::lex_indents;
 use crate::lexing::lexer::{CodeLexer, Lexer};
+use crate::lexing::literals::lex_literal;
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
-use crate::lexing::literals::lex_literal;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
 use crate::token::{Tokens, UnlexableToken};
@@ -45,9 +45,11 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         try_lex!(lex_operator, reader, lexer);
         try_lex!(lex_association, reader, lexer);
         try_lex!(lex_separators, reader, lexer);
-        try_lex!(lex_identifier, reader, lexer);
         try_lex!(lex_literal, reader, lexer);
-        if lex_eof(&mut reader) { break }
+        try_lex!(lex_keyword_identifier, reader, lexer);
+        if lex_eof(&mut reader) {
+            break;
+        }
         try_lex!(lex_unlexable, reader, lexer);
     }
     lexer.into_tokens()
@@ -56,8 +58,8 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
 #[cfg(test)]
 mod try_lex {
     use crate::io::source::SourceFile;
-    use crate::lexing::reader::reader::Reader;
     use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
     use crate::token::UnlexableToken;
 
@@ -86,6 +88,9 @@ mod try_lex {
             try_lex!(lex_fn_no_match, reader, lexer);
             end_of_loop_count += 1;
         }
-        assert_eq!(end_of_loop_count, 3, "Execution should have reached end of loop, because there is not 'continue' on mismatch");
+        assert_eq!(
+            end_of_loop_count, 3,
+            "Execution should have reached end of loop, because there is not 'continue' on mismatch"
+        );
     }
 }
