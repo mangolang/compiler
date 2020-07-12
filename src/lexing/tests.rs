@@ -113,28 +113,44 @@ fn lex_04() -> Result<(), ErrMsg> {
 
 #[test]
 fn lex_05() -> Result<(), ErrMsg> {
-    // let input = indoc!("(
-    //     x * x + ...
-    //     y * y
-    // )");
-    let input = "let x = [3, 5]\nprint(sqrt(x[0] * x[0] + x[1] * x[1]))";
+    let input = "let mut x = [3, 5]\nprint(sqrt(x[0] * x[0] + x[1] * x[1]))";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![
+        keyword("let")?,
+        keyword("mut")?,
+        identifier("x")?,
+        association("=")?,
+        bracket_open(),
+        literal_int(3),
+        comma(),
+        literal_int(5),
+        bracket_close(),
+        newline(),
+        identifier("print")?,
         parenthesis_open(),
-        newline(),
-        start_block(),
+        identifier("sqrt")?,
+        parenthesis_open(),
         identifier("x")?,
+        bracket_open(),
+        literal_int(0),
+        bracket_close(),
         operator("*")?,
         identifier("x")?,
+        bracket_open(),
+        literal_int(0),
+        bracket_close(),
         operator("+")?,
-        ellipsis(),
-        newline(),
-        identifier("y")?,
+        identifier("x")?,
+        bracket_open(),
+        literal_int(1),
+        bracket_close(),
         operator("*")?,
-        identifier("y")?,
-        newline(),
-        end_block(),
+        identifier("x")?,
+        bracket_open(),
+        literal_int(1),
+        bracket_close(),
+        parenthesis_close(),
         parenthesis_close(),
     ]);
     Ok(())
