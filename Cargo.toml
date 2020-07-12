@@ -39,6 +39,9 @@ parity-wasm = "^0.41.0"
 # TODO: Temporary, indirect dependency that needs version bound to work
 proc-macro2 = ">=0.4.24"
 
+[dev-dependencies]
+
+
 [profile.release]
 lto = true
 opt-level = 'z'

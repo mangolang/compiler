@@ -40,6 +40,8 @@ impl FromStr for Keyword {
 
     fn from_str(symbol_txt: &str) -> Result<Self, String> {
         use self::Keyword::*;
+        // Note: keywords must follow the same rules as identifiers, or the lexer will
+        // not recognize them. For example, no multi-word keywords.
         match symbol_txt {
             "let" => Ok(Let),
             "mut" => Ok(Mut),

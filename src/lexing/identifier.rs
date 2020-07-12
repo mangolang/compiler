@@ -1,39 +1,47 @@
+use ::std::str::FromStr;
+
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
-use crate::token::collect::{association, identifier, operator, parenthesis_close, parenthesis_open, unlexable};
+use crate::token::collect::{association, identifier, operator, parenthesis_close, parenthesis_open, unlexable, keyword};
+use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
 
-/// Lex an identifier.
-pub fn lex_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
+/// Lex an identifier or keyword.
+pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*IDENTIFIER_RE) {
-        lexer.add(identifier(sym.as_str()).unwrap());
+        let word = sym.as_str();
+        lexer.add(match keyword(word) {
+            Ok(kw) => kw,
+            Err(err) => identifier(word).unwrap(),
+        });
     }
 }
 
 #[cfg(test)]
 mod identifiers {
+    use std::borrow::Cow;
+
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::identifier;
+    use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
-    use super::lex_identifier;
-    use std::borrow::Cow;
-    use crate::token::collect::token_list::TokenList;
+    use super::lex_keyword_identifier;
 
     fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
-        lex_identifier(&mut reader, &mut lexer);
+        lex_keyword_identifier(&mut reader, &mut lexer);
         let expected: TokenList = expected_names.iter()
             .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
             .collect();

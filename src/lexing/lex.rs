@@ -3,12 +3,12 @@ use ::regex::Regex;
 
 use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
-use crate::lexing::identifier::lex_identifier;
+use crate::lexing::identifier::lex_keyword_identifier;
 use crate::lexing::indent::lex_indents;
 use crate::lexing::lexer::{CodeLexer, Lexer};
+use crate::lexing::literals::lex_literal;
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
-use crate::lexing::literals::lex_literal;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::separators::lex_separators;
@@ -46,7 +46,7 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         try_lex!(lex_association, reader, lexer);
         try_lex!(lex_separators, reader, lexer);
         try_lex!(lex_literal, reader, lexer);
-        try_lex!(lex_identifier, reader, lexer);
+        try_lex!(lex_keyword_identifier, reader, lexer);
         if lex_eof(&mut reader) { break }
         try_lex!(lex_unlexable, reader, lexer);
     }

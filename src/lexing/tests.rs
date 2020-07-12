@@ -110,3 +110,61 @@ fn lex_04() -> Result<(), ErrMsg> {
     ]);
     Ok(())
 }
+
+#[test]
+fn lex_05() -> Result<(), ErrMsg> {
+    // let input = indoc!("(
+    //     x * x + ...
+    //     y * y
+    // )");
+    let input = "let x = [3, 5]\nprint(sqrt(x[0] * x[0] + x[1] * x[1]))";
+    let src = SourceFile::test(input);
+    let res = lex(&src);
+    assert_eq!(res, vec![
+        parenthesis_open(),
+        newline(),
+        start_block(),
+        identifier("x")?,
+        operator("*")?,
+        identifier("x")?,
+        operator("+")?,
+        ellipsis(),
+        newline(),
+        identifier("y")?,
+        operator("*")?,
+        identifier("y")?,
+        newline(),
+        end_block(),
+        parenthesis_close(),
+    ]);
+    Ok(())
+}
+
+//TODO @mark:
+// #[test]
+fn lex_10() -> Result<(), ErrMsg> {
+    let input = "
+let mut seq = [1, 4, 5, 2, 3]
+let mut changed = true
+while changed:
+    changed = false
+    for i in range(len(seq) - 1):
+        if seq[i] > seq[i+1]:
+            seq[i], seq[i+1] = seq[i+1], seq[i]
+            changed = true
+assert seq == [1, 2, 3, 4, 5]";
+    let src = SourceFile::test(input);
+    let res = lex(&src);
+    assert_eq!(res, vec![
+        parenthesis_open(),
+        literal_int(3),
+        operator("*")?,
+        literal_int(3),
+        operator("+")?,
+        literal_real(5.0),
+        operator("*")?,
+        literal_real(5.0),
+        parenthesis_close(),
+    ]);
+    Ok(())
+}
