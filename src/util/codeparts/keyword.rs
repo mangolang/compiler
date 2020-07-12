@@ -28,7 +28,7 @@ pub enum Keyword {
 lazy_static! {
     // Note: keywords must follow the same rules as identifiers, or the lexer will
     // not recognize them. For example, no multi-word keywords.
-    static ref KEYWORDS: HashMap<&'static str, Keyword> = {
+    pub static ref KEYWORDS: HashMap<&'static str, Keyword> = {
         let mut keywords = HashMap::with_capacity(150);
         keywords.insert("let", Keyword::Let);
         keywords.insert("mut", Keyword::Mut);

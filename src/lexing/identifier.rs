@@ -112,22 +112,69 @@ mod identifiers {
 
 #[cfg(test)]
 mod keywords {
-    use std::borrow::Cow;
+    use ::std::str::FromStr;
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{IdentifierToken, Tokens};
-    use crate::token::collect::identifier;
+    use crate::token::{IdentifierToken, KeywordToken, Tokens};
+    use crate::token::collect::{identifier, keyword};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
-    use crate::util::codeparts::Symbol;
+    use crate::util::codeparts::{Keyword, Symbol};
+    use crate::util::codeparts::keyword::KEYWORDS;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::lex_keyword_identifier;
+    use super::mixed::check;
+
+    #[test]
+    fn all_keywords() {
+        for (name, token) in KEYWORDS.iter() {
+            check(name, &[Tokens::Keyword(KeywordToken::from_keyword(token.clone()))]);
+        }
+    }
+
+    #[test]
+    fn multiple() {
+        check("let mut mango", &[
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+        ]);
+    }
+}
+
+#[cfg(test)]
+mod mixed {
+    use ::std::str::FromStr;
+
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, KeywordToken, Tokens};
+    use crate::token::collect::{identifier, keyword};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::{Keyword, Symbol};
+    use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
 
+    pub fn check(input: &str, expected_keywords: &[Tokens]) {
+        let (source, mut reader, mut lexer) = create_lexer(input);
+        lex_keyword_identifier(&mut reader, &mut lexer);
+        assert_eq!(lexer.tokens(), &expected_keywords.into());
+    }
+
     #[test]
-    fn test() {
-        unimplemented!()  //TODO @mark:
+    fn multiple() {
+        check("let mut python mango", &[
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
+            Tokens::Identifier(IdentifierToken::from_name(Name::new("python").unwrap())),
+            Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+        ]);
     }
 }
