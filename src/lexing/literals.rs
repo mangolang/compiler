@@ -7,20 +7,20 @@ use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{association, identifier, literal_bool, literal_int, literal_real, literal_text, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
-use crate::util::strtype::name::IDENTIFIER_RE;
-use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::int::INT_RE;
+use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
 use crate::util::parsetxt::real::REAL_RE;
 use crate::util::parsetxt::text::parse_single_quote;
 use crate::util::parsetxt::text::SINGLE_QUOTE_RE;
+use crate::util::strtype::name::IDENTIFIER_RE;
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day
     static ref CONSTANTS_RE: Regex = Regex::new(r"^(?:true|false|NaN|infinity)\b").unwrap();
 }
 
-/// Lex a single literal (text, int, real, boolean).
+/// Lex literals (text, int, real, boolean), not necessarily to exhaustion.
 pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     // Constants.
@@ -54,11 +54,11 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 }
 
 #[cfg(test)]
-mod constants {
+mod test_util {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
-    use crate::token::collect::{identifier, literal_int, literal_bool};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
@@ -67,11 +67,26 @@ mod constants {
 
     use super::lex_literal;
 
-    fn check(input: &str, expected: &[Tokens]) {
+    pub fn check(input: &str, expected: &[Tokens]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_literal(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), &expected.into());
     }
+}
+
+#[cfg(test)]
+mod constants {
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::test_util::check;
 
     #[test]
     fn empty() {
@@ -115,20 +130,14 @@ mod int {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
-    use crate::token::collect::{identifier, literal_int, literal_bool};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
-    use super::lex_literal;
-
-    fn check(input: &str, expected: &[Tokens]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
-        lex_literal(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected.into());
-    }
+    use super::test_util::check;
 
     #[test]
     fn empty() {
@@ -204,20 +213,14 @@ mod real {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
-    use crate::token::collect::{identifier, literal_int, literal_bool, literal_real};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
-    use super::lex_literal;
-
-    fn check(input: &str, expected: &[Tokens]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
-        lex_literal(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected.into());
-    }
+    use super::test_util::check;
 
     #[test]
     fn empty() {
@@ -274,20 +277,14 @@ mod text {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
-    use crate::token::collect::{identifier, literal_int, literal_bool, literal_real, literal_text};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
-    use super::lex_literal;
-
-    fn check(input: &str, expected: &[Tokens]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
-        lex_literal(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected.into());
-    }
+    use super::test_util::check;
 
     #[test]
     fn empty() {
@@ -350,6 +347,110 @@ mod text {
             literal_text(""),
             literal_text(""),
             literal_text(""),
+        ]);
+    }
+}
+
+#[cfg(test)]
+mod exhaustion {
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
+    use crate::util::codeparts::Symbol;
+    use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
+
+    use super::test_util::check;
+
+//TODO @mark: TEMPORARY! REMOVE THIS!
+// // Constants.
+// while let ReaderResult::Match(sym) = reader.strip_match( & * CONSTANTS_RE) {
+// lexer.add( match sym.as_str() {
+// "true" => literal_bool(true),
+// "false" => literal_bool(false),
+// "NaN" => panic ! ("NaN is not currently supported"),
+// "infinity" => panic ! ("infinity is not currently supported"),
+// _ => unreachable ! (),
+// });
+// }
+//
+// // Real numbers.
+// while let ReaderResult::Match(sym) = reader.strip_match( & * REAL_RE) {
+// lexer.add(literal_real(parse_real(sym.as_str()).unwrap()));
+// }
+//
+// // Integers.
+// while let ReaderResult::Match(sym) = reader.strip_match( & * INT_RE) {
+// lexer.add(literal_int(parse_int(sym.as_str()).unwrap()));
+// }
+//
+// // Text (string literals).
+// while let ReaderResult::Match(sym) = reader.strip_match( & * SINGLE_QUOTE_RE) {
+// lexer.add(literal_text(parse_single_quote(sym.as_str())));
+// }
+
+    #[test]
+    fn repeated_booleans_type() {
+        check("true false true false", &vec![
+            literal_bool(true),
+            literal_bool(false),
+            literal_bool(true),
+            literal_bool(false),
+        ]);
+    }
+
+    #[test]
+    fn number_before_bool() {
+        // Note: it should not functionally be a problem to accept this input, but it would
+        // be a change in behaviour, so should be thoroughly tested.
+        check("1 false true 1", &vec![
+            literal_int(1),
+        ]);
+    }
+
+    #[test]
+    fn repeated_numbers() {
+        check("1.0e1 1.0e1 1 2 3", &vec![
+            literal_real(1.0e1),
+            literal_real(1.0e1),
+            literal_int(1),
+            literal_int(2),
+            literal_int(3),
+        ]);
+    }
+
+    #[test]
+    fn int_before_real() {
+        // Note: it should not functionally be a problem to accept this input, but it would
+        // be a change in behaviour, so should be thoroughly tested.
+        check("1 2 3 1.0e1 1.0e1", &vec![
+            literal_int(1),
+            literal_int(2),
+            literal_int(3),
+        ]);
+    }
+
+    #[test]
+    fn number_then_text() {
+        check("1.0e1 37 42 'hello' 'world'", &vec![
+            literal_real(1.0e1),
+            literal_int(37),
+            literal_int(42),
+            literal_text("hello"),
+            literal_text("world"),
+        ]);
+    }
+
+    #[test]
+    fn text_before_number() {
+        // Note: it should not functionally be a problem to accept this input, but it would
+        // be a change in behaviour, so should be thoroughly tested.
+        check("'hello' 'world' 1.0e1", &vec![
+            literal_text("hello"),
+            literal_text("world"),
         ]);
     }
 }
