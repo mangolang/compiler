@@ -17,6 +17,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Tests, clippy, rustfmt and build
-        run:
-          uses: 'docker'
-          image: 'Dockerfile'
+        uses: 'docker'
+        image: 'Dockerfile'
