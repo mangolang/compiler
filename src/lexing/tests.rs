@@ -156,11 +156,10 @@ fn lex_05() -> Result<(), ErrMsg> {
     Ok(())
 }
 
-//TODO @mark:
-// #[test]
-fn lex_10() -> Result<(), ErrMsg> {
+#[test]
+fn lex_06() -> Result<(), ErrMsg> {
     let input = "
-let mut seq = [1, 4, 5, 2, 3]
+let mut seq = [1, 4, 5, 2, 3,]
 let mut changed = true
 while changed:
     changed = false
@@ -172,15 +171,58 @@ assert seq == [1, 2, 3, 4, 5]";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![
-        parenthesis_open(),
+        newline(),
+        keyword("let")?,
+        keyword("mut")?,
+        identifier("seq")?,
+        association("=")?,
+        bracket_open(),
+        literal_int(1),
+        comma(),
+        literal_int(4),
+        comma(),
+        literal_int(5),
+        comma(),
+        literal_int(2),
+        comma(),
         literal_int(3),
-        operator("*")?,
-        literal_int(3),
-        operator("+")?,
-        literal_real(5.0),
-        operator("*")?,
-        literal_real(5.0),
-        parenthesis_close(),
+        comma(),
+        bracket_close(),
+        newline(),
+        keyword("let")?,
+        keyword("mut")?,
+        identifier("changed")?,
+        association("=")?,
+        literal_bool(true),
+        newline(),
+        
+
+        //
+        // identifier("print")?,
+        // parenthesis_open(),
+        // identifier("sqrt")?,
+        // parenthesis_open(),
+        // identifier("x")?,
+        // bracket_open(),
+        // literal_int(0),
+        // bracket_close(),
+        // operator("*")?,
+        // identifier("x")?,
+        // bracket_open(),
+        // literal_int(0),
+        // bracket_close(),
+        // operator("+")?,
+        // identifier("x")?,
+        // bracket_open(),
+        // literal_int(1),
+        // bracket_close(),
+        // operator("*")?,
+        // identifier("x")?,
+        // bracket_open(),
+        // literal_int(1),
+        // bracket_close(),
+        // parenthesis_close(),
+        // parenthesis_close(),
     ]);
     Ok(())
 }
