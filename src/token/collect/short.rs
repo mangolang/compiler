@@ -1,9 +1,10 @@
 use ::std::str::FromStr;
 
-use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
-use crate::util::numtype::f64eq;
 use crate::common::error::MsgResult;
-use crate::token::tokens::separators::{CommaToken, EllipsisToken, PeriodToken, NewlineToken};
+use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
+use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
+use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
+use crate::util::numtype::f64eq;
 
 //TODO @mark: replace more token usages by short versions
 
@@ -45,6 +46,14 @@ pub fn parenthesis_open() -> Tokens {
 
 pub fn parenthesis_close() -> Tokens {
     Tokens::ParenthesisClose(ParenthesisCloseToken::new())
+}
+
+pub fn bracket_open() -> Tokens {
+    Tokens::BracketOpen(BracketOpenToken::new())
+}
+
+pub fn bracket_close() -> Tokens {
+    Tokens::BracketClose(BracketCloseToken::new())
 }
 
 // pub fn end_statement() -> Tokens {

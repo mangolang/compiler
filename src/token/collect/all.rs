@@ -2,6 +2,7 @@ use ::std::fmt;
 
 use smallvec::SmallVec;
 
+use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
 use crate::token::special::EndBlockToken;
 use crate::token::special::StartBlockToken;
 use crate::token::special::UnlexableToken;
@@ -26,6 +27,8 @@ pub enum Tokens {
     Operator(OperatorToken),
     ParenthesisOpen(ParenthesisOpenToken),
     ParenthesisClose(ParenthesisCloseToken),
+    BracketOpen(BracketOpenToken),
+    BracketClose(BracketCloseToken),
     // EndStatement(EndStatementToken),
     StartBlock(StartBlockToken),
     EndBlock(EndBlockToken),
@@ -46,6 +49,8 @@ impl fmt::Debug for Tokens {
             Tokens::Operator(operator) => write!(f, "op:{}", operator.to_text()),
             Tokens::ParenthesisOpen(parenthesis_open) => write!(f, "'('"),
             Tokens::ParenthesisClose(parenthesis_close) => write!(f, "')'"),
+            Tokens::BracketOpen(parenthesis_open) => write!(f, "'['"),
+            Tokens::BracketClose(parenthesis_close) => write!(f, "']'"),
             //Tokens::EndStatement(end_statement) => write!(f, "end_statement"),
             Tokens::StartBlock(start_block) => write!(f, "start_block"),
             Tokens::EndBlock(end_block) => write!(f, "end_block"),
