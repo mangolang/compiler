@@ -3,6 +3,7 @@ use ::std::str::FromStr;
 use crate::common::error::MsgResult;
 use crate::token::{AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken, ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken};
 use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
+use crate::token::separators::ColonToken;
 use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::util::numtype::f64eq;
 
@@ -69,6 +70,9 @@ pub fn end_block() -> Tokens {
     Tokens::EndBlock(EndBlockToken::new2())
 }
 
+pub fn colon() -> Tokens {
+    Tokens::Colon(ColonToken::new())
+}
 pub fn comma() -> Tokens {
     Tokens::Comma(CommaToken::new())
 }

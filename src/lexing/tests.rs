@@ -163,7 +163,7 @@ let mut seq = [1, 4, 5, 2, 3,]
 let mut changed = true
 while changed:
     changed = false
-    for i in range(len(seq) - 1):
+    for i in seq.indices().skip_last():
         if seq[i] > seq[i+1]:
             seq[i], seq[i+1] = seq[i+1], seq[i]
             changed = true
@@ -195,8 +195,38 @@ assert seq == [1, 2, 3, 4, 5]";
         association("=")?,
         literal_bool(true),
         newline(),
-        
+        keyword("while")?,
+        identifier("changed")?,
+        colon(),
+        newline(),
+        start_block(),
+        identifier("changed")?,
+        association("=")?,
+        literal_bool(false),
+        newline(),
+        keyword("for")?,
+        identifier("i")?,
+        keyword("in")?,
+        identifier("seq")?,
+        period(),
+        identifier("indices")?,
+        parenthesis_open(),
+        parenthesis_close(),
+        period(),
+        identifier("skip_last")?,
+        parenthesis_open(),
+        parenthesis_close(),
+        colon(),
+        newline(),
+        start_block(),
 
+
+
+
+        end_block(),
+        end_block(),
+        parenthesis_close(),
+        parenthesis_close(),
         //
         // identifier("print")?,
         // parenthesis_open(),

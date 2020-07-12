@@ -2,6 +2,9 @@ use crate::util::encdec::ToText;
 use crate::token::Token;
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+pub struct ColonToken {}
+
+#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct CommaToken {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
@@ -12,6 +15,12 @@ pub struct PeriodToken {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct NewlineToken {}
+
+impl ColonToken {
+    pub fn new() -> Self {
+        ColonToken {}
+    }
+}
 
 impl CommaToken {
     pub fn new() -> Self {
@@ -36,6 +45,8 @@ impl NewlineToken {
         NewlineToken {}
     }
 }
+
+impl Token for ColonToken {}
 
 impl Token for CommaToken {}
 
