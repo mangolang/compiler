@@ -23,7 +23,7 @@ RUN cargo --offline clippy --release --all-targets --all-features -- -D warnings
 RUN cargo --offline test --release --all-targets --all-features --all
 
 # Build the code
-RUN cargo --offline build --release
+RUN cargo --offline build --lib --release
 
 # Second stage image to decrease size
 FROM rust:1.44-slim
@@ -32,6 +32,6 @@ FROM rust:1.44-slim
 
 COPY README.rst .
 COPY LICENSE.txt .
-COPY --from=0 /code/target/release/libmango.rlib libmango.rlib
+COPY --from=0 /mango/target/release/libmango.rlib libmango.rlib
 RUN ln libmango.rlib /usr/lib/libmango.rlib
 
