@@ -1,6 +1,6 @@
 use ::std::str::FromStr;
 
-use crate::common::error::MsgResult;
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
 use crate::token::separators::ColonToken;
 use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
@@ -8,6 +8,7 @@ use crate::token::{
     AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken,
     ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken,
 };
+use crate::util::codeparts::Keyword;
 use crate::util::numtype::f64eq;
 
 //TODO @mark: replace more token usages by short versions
@@ -20,8 +21,17 @@ pub fn identifier(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Identifier(IdentifierToken::from_str(txt)?))
 }
 
-pub fn keyword(txt: &str) -> MsgResult<Tokens> {
+/// Parse a keyword, including reserved keywords for future use.
+pub fn keyword_or_reserved(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Keyword(KeywordToken::from_str(txt)?))
+}
+
+/// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
+pub fn keyword_supported(txt: &str) -> MsgResult<Tokens> {
+    match Keyword::from_str(txt)? {
+        Keyword::Reserved(word) => Err(ErrMsg::new(format!("Keyword '{}' not implemented", word))),
+        kw => Ok(Tokens::Keyword(KeywordToken::from_keyword(kw))),
+    }
 }
 
 pub fn literal_text(txt: impl Into<String>) -> Tokens {

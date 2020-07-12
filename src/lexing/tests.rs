@@ -130,8 +130,8 @@ fn lex_05() -> Result<(), ErrMsg> {
     assert_eq!(
         res,
         vec![
-            keyword("let")?,
-            keyword("mut")?,
+            keyword_supported("let")?,
+            keyword_supported("mut")?,
             identifier("x")?,
             association("=")?,
             bracket_open(),
@@ -190,8 +190,8 @@ assert seq == [1, 2, 3, 4, 5]
         vec![
             newline(),
             // let mut seq = [1, 4, 5, 2, 3,]
-            keyword("let")?,
-            keyword("mut")?,
+            keyword_supported("let")?,
+            keyword_supported("mut")?,
             identifier("seq")?,
             association("=")?,
             bracket_open(),
@@ -208,14 +208,14 @@ assert seq == [1, 2, 3, 4, 5]
             bracket_close(),
             newline(),
             // let mut changed = true
-            keyword("let")?,
-            keyword("mut")?,
+            keyword_supported("let")?,
+            keyword_supported("mut")?,
             identifier("changed")?,
             association("=")?,
             literal_bool(true),
             newline(),
             // while changed:
-            keyword("while")?,
+            keyword_supported("while")?,
             identifier("changed")?,
             colon(),
             newline(),
@@ -226,9 +226,9 @@ assert seq == [1, 2, 3, 4, 5]
             literal_bool(false),
             newline(),
             // for i in seq.indices().skip_last():
-            keyword("for")?,
+            keyword_supported("for")?,
             identifier("i")?,
-            keyword("in")?,
+            keyword_supported("in")?,
             identifier("seq")?,
             period(),
             identifier("indices")?,
@@ -242,7 +242,7 @@ assert seq == [1, 2, 3, 4, 5]
             newline(),
             // if seq[i] > seq[i+1]:
             start_block(),
-            keyword("if")?,
+            keyword_supported("if")?,
             identifier("seq")?,
             bracket_open(),
             identifier("i")?,
@@ -291,7 +291,7 @@ assert seq == [1, 2, 3, 4, 5]
             end_block(),
             end_block(),
             end_block(),
-            keyword("assert")?,
+            keyword_supported("assert")?,
             identifier("seq")?,
             operator("==")?,
             bracket_open(),

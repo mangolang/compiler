@@ -5,7 +5,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::collect::{association, identifier, keyword, operator, parenthesis_close, parenthesis_open, unlexable};
+use crate::token::collect::{association, identifier, keyword_or_reserved, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
@@ -16,7 +16,7 @@ use crate::util::strtype::name::IDENTIFIER_RE;
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*IDENTIFIER_RE) {
         let word = sym.as_str();
-        lexer.add(match keyword(word) {
+        lexer.add(match keyword_or_reserved(word) {
             Ok(kw) => kw,
             Err(err) => identifier(word).unwrap(),
         });
@@ -118,7 +118,7 @@ mod keywords {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, keyword};
+    use crate::token::collect::{identifier, keyword_or_reserved};
     use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::util::codeparts::keyword::KEYWORDS;
@@ -156,7 +156,7 @@ mod mixed {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, keyword};
+    use crate::token::collect::{identifier, keyword_or_reserved};
     use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::util::codeparts::keyword::KEYWORDS;
