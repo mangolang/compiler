@@ -23,33 +23,42 @@ lazy_static! {
 /// Lex literals (text, int, real, boolean), not necessarily to exhaustion.
 pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
-    // Constants.
-    while let ReaderResult::Match(sym) = reader.strip_match(&*CONSTANTS_RE) {
-        lexer.add(match sym.as_str() {
-            "true" => literal_bool(true),
-            "false" => literal_bool(false),
-            //TODO: deal with NaN and infinity (how?)
-            "NaN" => panic!("NaN is not currently supported"),
-            "infinity" => panic!("infinity is not currently supported"),
-            _ => unreachable!(),
-        });
-    }
+    // Using overall loop instead of per match is needed, because otherwise '1 1.5' is matches as 1, 1
+    loop {
+        // Constants.
+        if let ReaderResult::Match(sym) = reader.strip_match(&*CONSTANTS_RE) {
+            lexer.add(match sym.as_str() {
+                "true" => literal_bool(true),
+                "false" => literal_bool(false),
+                //TODO: deal with NaN and infinity (how?)
+                "NaN" => panic!("NaN is not currently supported"),
+                "infinity" => panic!("infinity is not currently supported"),
+                _ => unreachable!(),
+            });
+            continue;
+        }
 
-    // Real numbers.
-    while let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
-        //TODO: get rid of this 'unwrap'
-        lexer.add(literal_real(parse_real(sym.as_str()).unwrap()));
-    }
+        // Real numbers.
+        if let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
+            //TODO: get rid of this 'unwrap'
+            lexer.add(literal_real(parse_real(sym.as_str()).unwrap()));
+            continue;
+        }
 
-    // Integers.
-    while let ReaderResult::Match(sym) = reader.strip_match(&*INT_RE) {
-        //TODO: get rid of this 'unwrap'
-        lexer.add(literal_int(parse_int(sym.as_str()).unwrap()));
-    }
+        // Integers.
+        if let ReaderResult::Match(sym) = reader.strip_match(&*INT_RE) {
+            //TODO: get rid of this 'unwrap'
+            lexer.add(literal_int(parse_int(sym.as_str()).unwrap()));
+            continue;
+        }
 
-    // Text (string literals).
-    while let ReaderResult::Match(sym) = reader.strip_match(&*SINGLE_QUOTE_RE) {
-        lexer.add(literal_text(parse_single_quote(sym.as_str())));
+        // Text (string literals).
+        if let ReaderResult::Match(sym) = reader.strip_match(&*SINGLE_QUOTE_RE) {
+            lexer.add(literal_text(parse_single_quote(sym.as_str())));
+            continue;
+        }
+
+        break;
     }
 }
 
@@ -404,9 +413,10 @@ mod exhaustion {
 
     #[test]
     fn number_before_bool() {
-        // Note: it should not functionally be a problem to accept this input, but it would
-        // be a change in behaviour, so should be thoroughly tested.
         check("1 false true 1", &vec![
+            literal_int(1),
+            literal_bool(false),
+            literal_bool(true),
             literal_int(1),
         ]);
     }
@@ -414,8 +424,8 @@ mod exhaustion {
     #[test]
     fn repeated_numbers() {
         check("1.0e1 1.0e1 1 2 3", &vec![
-            literal_real(1.0e1),
-            literal_real(1.0e1),
+            literal_real(10.),
+            literal_real(10.),
             literal_int(1),
             literal_int(2),
             literal_int(3),
@@ -424,12 +434,12 @@ mod exhaustion {
 
     #[test]
     fn int_before_real() {
-        // Note: it should not functionally be a problem to accept this input, but it would
-        // be a change in behaviour, so should be thoroughly tested.
         check("1 2 3 1.0e1 1.0e1", &vec![
             literal_int(1),
             literal_int(2),
             literal_int(3),
+            literal_real(10.),
+            literal_real(10.),
         ]);
     }
 
@@ -446,11 +456,10 @@ mod exhaustion {
 
     #[test]
     fn text_before_number() {
-        // Note: it should not functionally be a problem to accept this input, but it would
-        // be a change in behaviour, so should be thoroughly tested.
         check("'hello' 'world' 1.0e1", &vec![
             literal_text("hello"),
             literal_text("world"),
+            literal_real(10.),
         ]);
     }
 }
