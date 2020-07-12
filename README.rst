@@ -19,6 +19,8 @@ A programming language to help you make large software projects reliable, for br
 
 This is the compiler 'frontend', which does the parsing and type checking. It produces IR_, to be compiled_, to WebAssembly or interpreted_.
 
+https://mangocode.org/
+
 Status
 -------------------------------
 
