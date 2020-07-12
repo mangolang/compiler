@@ -3,6 +3,20 @@
 # (as a standard native library, without wasm)
 name: 'Check Mango compiler frontend'
 description: 'Tests, clippy, rustfmt and build'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
+
+on:
+  push:
+  pull_request:  #TODO @mark: is this already captured in 'push'?
+  release:
+    types:
+      - created
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tests, clippy, rustfmt and build
+        run:
+          using: 'docker'
+          image: 'Dockerfile'
