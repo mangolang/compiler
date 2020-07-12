@@ -4,10 +4,10 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
-use crate::token::collect::{parenthesis_close, parenthesis_open, comma, ellipsis, period, newline, unlexable};
+use crate::token::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
 
 lazy_static! {
-    static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|\r\n|\n|\r)").unwrap();
+    static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
 }
 
 /// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
@@ -19,6 +19,7 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
             r"..." | r"…" => ellipsis(),
             r"." => period(),
             r"," => comma(),
+            r":" => colon(),
             "\r\n" | "\n" | "\r" => {
                 // Indentation should be parsed after a newline, so stop.
                 found_newline = true;
@@ -39,10 +40,10 @@ mod grouping {
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::{comma, ellipsis, period, newline, unlexable};
+    use crate::token::collect::{colon, comma, ellipsis, newline, period, unlexable};
+    use crate::token::collect::token_list::TokenList;
 
     use super::lex_separators;
-    use crate::token::collect::token_list::TokenList;
 
     fn check(input: &str, expected: &[Tokens]) {
         let expected: TokenList = expected.into();
@@ -101,10 +102,29 @@ mod grouping {
     }
 
     #[test]
+    fn single_colon() {
+        check(r":", &vec![colon()]);
+    }
+
+    #[test]
+    fn multiple_colon() {
+        // Probably a syntax error later on, but that's the parser's problem.
+        check(r"::", &vec![colon(), colon()]);
+    }
+
+    #[test]
     fn single_newline() {
         check("\r\n", &vec![newline()]);
         check("\n", &vec![newline()]);
         check("\r", &vec![newline()]);
+    }
+
+
+    #[test]
+    fn stop_after_newline() {
+        check("\r\n:", &vec![newline()]);
+        check("\n...", &vec![newline()]);
+        check("\r,", &vec![newline()]);
     }
 
     #[test]
@@ -145,10 +165,22 @@ mod grouping {
     }
 
     #[test]
+    fn combined_3() {
+        check("...:,\n:", &vec![
+            ellipsis(),
+            colon(),
+            comma(),
+            newline(),
+            // stop after newline
+        ]);
+    }
+
+    #[test]
     fn and_words() {
         check(r"...abc", &vec![ellipsis()]);
         check(r".abc", &vec![period()]);
         check(r",abc", &vec![comma()]);
+        check(":abc", &vec![colon()]);
         check("\nabc", &vec![newline()]);
     }
 }
