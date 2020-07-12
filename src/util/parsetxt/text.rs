@@ -12,8 +12,8 @@ lazy_static! {
 
 /// Convert a single-quoted string to the text it contains.
 pub fn parse_single_quote(text: &str) -> String {
-    debug_assert!(text.starts_with("'"));
-    debug_assert!(text.ends_with("'"));
+    debug_assert!(text.starts_with('\''));
+    debug_assert!(text.ends_with('\''));
     let unquoted = &text[1..text.len() - 1];
     unquoted.to_owned()
 }

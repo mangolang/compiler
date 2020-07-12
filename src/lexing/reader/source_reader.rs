@@ -4,7 +4,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::io::source::SourceFile;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 
 lazy_static! {
     static ref WHITESPACE_RE: Regex = Regex::new(r"^[ \t]+").unwrap();
@@ -105,8 +105,8 @@ mod tests {
     }
 
     mod strip_match {
-        use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
+        use crate::lexing::reader::typ::Reader;
+        use crate::lexing::reader::typ::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -139,7 +139,7 @@ mod tests {
     }
 
     mod strip_peek {
-        use crate::lexing::reader::reader::Reader;
+        use crate::lexing::reader::typ::Reader;
 
         use super::check;
         use super::TEST_RE;
@@ -172,8 +172,8 @@ mod tests {
     }
 
     mod direct_match {
-        use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
+        use crate::lexing::reader::typ::Reader;
+        use crate::lexing::reader::typ::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -206,8 +206,8 @@ mod tests {
     }
 
     mod direct_peek {
-        use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
+        use crate::lexing::reader::typ::Reader;
+        use crate::lexing::reader::typ::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -240,8 +240,8 @@ mod tests {
     }
 
     mod mixed {
-        use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
+        use crate::lexing::reader::typ::Reader;
+        use crate::lexing::reader::typ::ReaderResult::*;
 
         use super::check;
         use super::TEST_RE;
@@ -298,10 +298,10 @@ mod tests {
     }
 
     mod remaining_len {
-        use crate::lexing::reader::reader::Reader;
-        use crate::lexing::reader::reader::ReaderResult::*;
         use crate::lexing::reader::source_reader::tests::check;
         use crate::lexing::reader::source_reader::SourceReader;
+        use crate::lexing::reader::typ::Reader;
+        use crate::lexing::reader::typ::ReaderResult::*;
 
         use crate::lexing::reader::source_reader::tests::TEST_RE;
 

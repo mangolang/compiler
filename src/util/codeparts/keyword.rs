@@ -180,7 +180,7 @@ lazy_static! {
 impl Keyword {
     /// Convert to a keyword, if it is one. For error message, use FromStr.
     fn from_word(txt: &str) -> Option<Self> {
-        KEYWORDS.get(txt).map(|kw| kw.clone())
+        KEYWORDS.get(txt).cloned()
     }
 
     pub fn to_str(&self) -> Cow<str> {
@@ -203,7 +203,7 @@ impl FromStr for Keyword {
     fn from_str(txt: &str) -> Result<Self, String> {
         match Keyword::from_word(txt) {
             Some(word) => Ok(word),
-            None => Err(format!("Unknown keywords: '{}'", txt).into()),
+            None => Err(format!("Unknown keywords: '{}'", txt)),
         }
     }
 }

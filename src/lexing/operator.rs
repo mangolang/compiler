@@ -2,7 +2,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::token::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
@@ -42,80 +42,80 @@ mod operators {
 
     #[test]
     fn empty() {
-        check("", &vec![]);
+        check("", &[]);
     }
 
     #[test]
     fn mismatch() {
-        check("abc", &vec![]);
-        check("abc+", &vec![]);
+        check("abc", &[]);
+        check("abc+", &[]);
     }
 
     #[test]
     fn after_mismatch() {
-        check("abc ==", &vec![]);
+        check("abc ==", &[]);
     }
 
     #[test]
     fn plus() {
-        check("+", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus))]);
+        check("+", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus))]);
     }
 
     #[test]
     fn dash() {
-        check("-", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash))]);
+        check("-", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash))]);
     }
 
     #[test]
     fn asterisk() {
-        check("*", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk))]);
+        check("*", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk))]);
     }
 
     #[test]
     fn slash() {
-        check("/", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Slash))]);
+        check("/", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Slash))]);
     }
 
     #[test]
     fn lt() {
-        check("<", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::LT))]);
+        check("<", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::LT))]);
     }
 
     #[test]
     fn gt() {
-        check(">", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::GT))]);
+        check(">", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::GT))]);
     }
 
     #[test]
     fn eq() {
-        check("==", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::EQ))]);
+        check("==", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::EQ))]);
     }
 
     #[test]
     fn le() {
-        check("<=", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::LE))]);
+        check("<=", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::LE))]);
     }
 
     #[test]
     fn ge() {
-        check(">=", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::GE))]);
+        check(">=", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::GE))]);
     }
 
     #[test]
     fn exclamation() {
-        check("!", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Exclamation))]);
+        check("!", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Exclamation))]);
     }
 
     #[test]
     fn question() {
-        check("?", &vec![Tokens::Operator(OperatorToken::from_symbol(Symbol::Question))]);
+        check("?", &[Tokens::Operator(OperatorToken::from_symbol(Symbol::Question))]);
     }
 
     #[test]
     fn all() {
         check(
             r"+-*/==<=>=<>!?",
-            &vec![
+            &[
                 Tokens::Operator(OperatorToken::from_symbol(Symbol::Plus)),
                 Tokens::Operator(OperatorToken::from_symbol(Symbol::Dash)),
                 Tokens::Operator(OperatorToken::from_symbol(Symbol::Asterisk)),
@@ -152,52 +152,43 @@ mod associations {
 
     #[test]
     fn empty() {
-        check("", &vec![]);
+        check("", &[]);
     }
 
     #[test]
     fn mismatch() {
-        check("abc", &vec![]);
-        check("abc+", &vec![]);
+        check("abc", &[]);
+        check("abc+", &[]);
     }
 
     #[test]
     fn after_mismatch() {
-        check("abc +=", &vec![]);
+        check("abc +=", &[]);
     }
 
     #[test]
     fn plain() {
-        check("=", &vec![Tokens::Association(AssociationToken::from_unprefixed())]);
+        check("=", &[Tokens::Association(AssociationToken::from_unprefixed())]);
     }
 
     #[test]
     fn prefix() {
-        check(
-            "+=",
-            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap())],
-        );
-        check(
-            "-=",
-            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap())],
-        );
+        check("+=", &[Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap())]);
+        check("-=", &[Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap())]);
         check(
             "*=",
-            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap())],
+            &[Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap())],
         );
-        check(
-            "/=",
-            &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap())],
-        );
-        //check("!=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Exclamation).unwrap())]);
-        //check("?=", &vec![Tokens::Association(AssociationToken::from_symbol(Symbol::Question).unwrap())]);
+        check("/=", &[Tokens::Association(AssociationToken::from_symbol(Symbol::Slash).unwrap())]);
+        //check("!=", &[Tokens::Association(AssociationToken::from_symbol(Symbol::Exclamation).unwrap())]);
+        //check("?=", &[Tokens::Association(AssociationToken::from_symbol(Symbol::Question).unwrap())]);
     }
 
     #[test]
     fn all() {
         check(
             r"+=-=*=/=",
-            &vec![
+            &[
                 Tokens::Association(AssociationToken::from_symbol(Symbol::Plus).unwrap()),
                 Tokens::Association(AssociationToken::from_symbol(Symbol::Dash).unwrap()),
                 Tokens::Association(AssociationToken::from_symbol(Symbol::Asterisk).unwrap()),

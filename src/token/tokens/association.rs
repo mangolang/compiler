@@ -20,7 +20,7 @@ impl FromStr for AssociationToken {
         if association_txt == "=" {
             return Ok(AssociationToken::from_unprefixed());
         }
-        assert!(association_txt.ends_with("="));
+        assert!(association_txt.ends_with('='));
         let symbol = Symbol::new(&association_txt[0..association_txt.len() - 1])?;
         AssociationToken::from_symbol(symbol)
     }

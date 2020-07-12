@@ -4,7 +4,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::token::collect::{association, identifier, keyword, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
@@ -51,63 +51,63 @@ mod identifiers {
 
     #[test]
     fn empty() {
-        check("", &vec![]);
+        check("", &[]);
     }
 
     #[test]
     fn number_prefix() {
-        check("1abc", &vec![]);
-        check("0o", &vec![]);
+        check("1abc", &[]);
+        check("0o", &[]);
     }
 
     #[test]
     fn after_mismatch() {
-        check("* abc", &vec![]);
-        check(". x", &vec![]);
+        check("* abc", &[]);
+        check(". x", &[]);
     }
 
     #[test]
     fn symbol() {
-        check("*", &vec![]);
-        check("+", &vec![]);
-        check(".", &vec![]);
+        check("*", &[]);
+        check("+", &[]);
+        check(".", &[]);
     }
 
     #[test]
     fn single() {
-        check("x", &vec!["x"]);
-        check("abc", &vec!["abc"]);
+        check("x", &["x"]);
+        check("abc", &["abc"]);
     }
 
     #[test]
     fn with_numbers() {
-        check("x0", &vec!["x0"]);
-        check("a1b2c3", &vec!["a1b2c3"]);
+        check("x0", &["x0"]);
+        check("a1b2c3", &["a1b2c3"]);
     }
 
     #[test]
     fn underscores() {
-        check("_", &vec!["_"]);
-        check("_abc", &vec!["_abc"]);
-        check("_a_", &vec!["_a_"]);
+        check("_", &["_"]);
+        check("_abc", &["_abc"]);
+        check("_a_", &["_a_"]);
     }
 
     #[test]
     fn number_underscore() {
-        check("_9", &vec![]);
+        check("_9", &[]);
     }
 
     #[test]
     fn with_postfix() {
-        check("hi?", &vec!["hi"]);
-        check("hi!", &vec!["hi"]);
-        check("x.y", &vec!["x"]);
-        check("a,b", &vec!["a"]);
+        check("hi?", &["hi"]);
+        check("hi!", &["hi"]);
+        check("x.y", &["x"]);
+        check("a,b", &["a"]);
     }
 
     #[test]
     fn multiple() {
-        check("mangoes are tasty fruits", &vec!["mangoes", "are", "tasty", "fruits"]);
+        check("mangoes are tasty fruits", &["mangoes", "are", "tasty", "fruits"]);
     }
 }
 

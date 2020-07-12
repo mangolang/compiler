@@ -9,8 +9,8 @@ use crate::lexing::lexer::{CodeLexer, Lexer};
 use crate::lexing::literals::lex_literal;
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
 use crate::lexing::reader::source_reader::SourceReader;
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
 use crate::token::{Tokens, UnlexableToken};
@@ -58,8 +58,8 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
 #[cfg(test)]
 mod try_lex {
     use crate::io::source::SourceFile;
-    use crate::lexing::reader::reader::Reader;
     use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
     use crate::token::UnlexableToken;
 

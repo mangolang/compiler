@@ -2,7 +2,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 
@@ -58,22 +58,22 @@ mod mismatch {
 
     #[test]
     fn empty() {
-        check("", &vec![]);
-        check("    \t", &vec![]);
+        check("", &[]);
+        check("    \t", &[]);
     }
 
     #[test]
     fn after_mismatch() {
-        check("abc *", &vec![]);
-        check("0 *", &vec![]);
+        check("abc *", &[]);
+        check("0 *", &[]);
     }
 
     #[test]
     fn mismatch() {
-        check("*", &vec![]);
-        check(".", &vec![]);
-        check("0", &vec![]);
-        check("a", &vec![]);
+        check("*", &[]);
+        check(".", &[]);
+        check("0", &[]);
+        check("a", &[]);
     }
 }
 
@@ -91,30 +91,30 @@ mod parenthese {
 
     #[test]
     fn open() {
-        check(" ( ", &vec![parenthesis_open()]);
+        check(" ( ", &[parenthesis_open()]);
     }
 
     #[test]
     fn close() {
-        check(" ) ", &vec![parenthesis_close()]);
+        check(" ) ", &[parenthesis_close()]);
     }
 
     #[test]
     fn paired() {
         check(
             "(( ))",
-            &vec![parenthesis_open(), parenthesis_open(), parenthesis_close(), parenthesis_close()],
+            &[parenthesis_open(), parenthesis_open(), parenthesis_close(), parenthesis_close()],
         );
     }
 
     #[test]
     fn unbalanced() {
-        check("(( )", &vec![parenthesis_open(), parenthesis_open(), parenthesis_close()]);
+        check("(( )", &[parenthesis_open(), parenthesis_open(), parenthesis_close()]);
     }
 
     #[test]
     fn and_words() {
-        check("(hello)", &vec![parenthesis_open()]);
+        check("(hello)", &[parenthesis_open()]);
     }
 }
 
@@ -132,27 +132,27 @@ mod brackets {
 
     #[test]
     fn open() {
-        check(" [ ", &vec![bracket_open()]);
+        check(" [ ", &[bracket_open()]);
     }
 
     #[test]
     fn close() {
-        check(" ] ", &vec![bracket_close()]);
+        check(" ] ", &[bracket_close()]);
     }
 
     #[test]
     fn paired() {
-        check("[[ ]]", &vec![bracket_open(), bracket_open(), bracket_close(), bracket_close()]);
+        check("[[ ]]", &[bracket_open(), bracket_open(), bracket_close(), bracket_close()]);
     }
 
     #[test]
     fn unbalanced() {
-        check("[[ ]", &vec![bracket_open(), bracket_open(), bracket_close()]);
+        check("[[ ]", &[bracket_open(), bracket_open(), bracket_close()]);
     }
 
     #[test]
     fn and_words() {
-        check("[hello]", &vec![bracket_open()]);
+        check("[hello]", &[bracket_open()]);
     }
 }
 
@@ -172,12 +172,12 @@ mod mixed {
     fn parenthese_inside_brackets() {
         check(
             "[ ( ) ]",
-            &vec![bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
+            &[bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
         );
     }
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)", &vec![bracket_open(), parenthesis_close()]);
+        check("[)", &[bracket_open(), parenthesis_close()]);
     }
 }

@@ -2,7 +2,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens, UnlexableToken};
 
 lazy_static! {

@@ -60,7 +60,7 @@ impl fmt::Debug for Tokens {
             Tokens::Comma(comma) => write!(f, "comma"),
             Tokens::Ellipsis(ellipsis) => write!(f, "..."),
             Tokens::Period(period) => write!(f, "."),
-            Tokens::Newline(newline) => write!(f, "NL\n"),
+            Tokens::Newline(newline) => writeln!(f, "NL"),
             Tokens::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text),
         }
     }

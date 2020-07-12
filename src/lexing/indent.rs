@@ -2,7 +2,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
-use crate::lexing::reader::reader::{Reader, ReaderResult};
+use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
 lazy_static! {
@@ -68,7 +68,7 @@ mod indents {
         check(
             0,
             "\t    hello",
-            &vec![
+            &[
                 Tokens::StartBlock(StartBlockToken::new()),
                 Tokens::StartBlock(StartBlockToken::new()),
             ],
@@ -77,7 +77,7 @@ mod indents {
 
     #[test]
     fn decrease_to_two() {
-        check(3, "    \thello", &vec![Tokens::EndBlock(EndBlockToken::new(true, false))]);
+        check(3, "    \thello", &[Tokens::EndBlock(EndBlockToken::new(true, false))]);
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod indents {
         check(
             2,
             "hello",
-            &vec![
+            &[
                 Tokens::EndBlock(EndBlockToken::new(true, false)),
                 Tokens::EndBlock(EndBlockToken::new(true, false)),
             ],
@@ -94,37 +94,37 @@ mod indents {
 
     #[test]
     fn constant_two() {
-        check(2, "\t    hello", &vec![]);
+        check(2, "\t    hello", &[]);
     }
 
     #[test]
     fn constant_zero() {
-        check(0, "hello", &vec![]);
+        check(0, "hello", &[]);
     }
 
     #[test]
     fn direct_comment() {
-        check(0, "#hello", &vec![]);
+        check(0, "#hello", &[]);
     }
 
     #[test]
     fn indented_comment() {
-        check(0, "    \t#hello", &vec![]);
+        check(0, "    \t#hello", &[]);
     }
 
     #[test]
     fn empty_line() {
-        check(0, "\n", &vec![]);
+        check(0, "\n", &[]);
     }
 
     #[test]
     fn whitespace_line() {
-        check(0, "\t    \n", &vec![]);
+        check(0, "\t    \n", &[]);
     }
 
     #[test]
     fn after_mismatch() {
-        check(0, "word\t    \n", &vec![]);
+        check(0, "word\t    \n", &[]);
     }
 
     //TODO @mark: check that the correct characters are stripped, especially for comments
