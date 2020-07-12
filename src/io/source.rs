@@ -29,16 +29,18 @@ impl SourceFile {
     pub fn new(source_identifier: impl Into<String>, text: impl Into<String>) -> Self {
         SourceFileContent {
             source_identifier: source_identifier.into(),
-            data: text.into()
-        }.into()
+            data: text.into(),
+        }
+        .into()
     }
 
     #[cfg(test)]
     pub fn test(text: impl Into<String>) -> Self {
         SourceFileContent {
             source_identifier: "for_test".to_owned(),
-            data: text.into()
-        }.into()
+            data: text.into(),
+        }
+        .into()
     }
 
     pub fn identifier(&self) -> &str {
@@ -75,7 +77,7 @@ impl PartialEq for SourceFileContent {
         // so this is only verified in debug mode.
         if self.source_identifier == other.source_identifier {
             debug_assert!(self.data == other.data);
-            return true
+            return true;
         }
         false
     }
@@ -96,14 +98,18 @@ impl PartialEq for SourceFileContent {
 pub struct SourceSlice {
     file: SourceFile,
     start: usize,
-    end: usize
+    end: usize,
 }
 
 impl SourceSlice {
     pub fn new(file: &SourceFile, start: usize, end: usize) -> Self {
         debug_assert!(end >= start);
         debug_assert!(end <= file.content.data.len());
-        SourceSlice { file: file.clone(), start, end }
+        SourceSlice {
+            file: file.clone(),
+            start,
+            end,
+        }
     }
 
     pub fn len(&self) -> usize {
@@ -111,13 +117,20 @@ impl SourceSlice {
     }
 
     pub fn as_str(&self) -> &str {
-        &self.file.text()[self.start .. self.end]
+        &self.file.text()[self.start..self.end]
     }
 }
 
 impl fmt::Debug for SourceSlice {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "SourceSlice{{ of '{:?}' [{}..{}]: {}}}", self.file.identifier(), self.start, self.end, self.as_str())
+        write!(
+            f,
+            "SourceSlice{{ of '{:?}' [{}..{}]: {}}}",
+            self.file.identifier(),
+            self.start,
+            self.end,
+            self.as_str()
+        )
     }
 }
 

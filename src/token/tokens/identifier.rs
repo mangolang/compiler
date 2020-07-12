@@ -3,8 +3,8 @@ use ::std::str::FromStr;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::token::Token;
 use crate::util::encdec::ToText;
-use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
+use crate::util::strtype::Name;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]

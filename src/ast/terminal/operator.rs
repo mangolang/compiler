@@ -3,10 +3,10 @@ use std::fmt::Formatter;
 use std::fmt::Result as fResult;
 
 use crate::ast::AST;
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::encdec::ToText;
 use crate::util::strtype::StrType;
 use std::str::FromStr;
-use crate::common::error::{ErrMsg, MsgResult};
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]

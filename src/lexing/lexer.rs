@@ -1,6 +1,5 @@
-
-use crate::token::Tokens;
 use crate::token::collect::token_list::TokenList;
+use crate::token::Tokens;
 
 pub trait Lexer {
     /// Add a lexed token.

@@ -1,7 +1,7 @@
 use ::std::fs;
 use ::std::path::Path;
 
-use crate::common::error::{MangoResult, MangoErr, ErrMsg, MangoErrType, Severity};
+use crate::common::error::{ErrMsg, MangoErr, MangoErrType, MangoResult, Severity};
 use crate::io::source::SourceFile;
 
 pub fn read(pth: &Path) -> MangoResult<SourceFile> {
