@@ -28,7 +28,10 @@ RUN cargo --offline build --release
 # Second stage image to decrease size
 FROM rust:1.44-slim
 
-WORKDIR /mango
+#TODO @mark: is this necessary and sufficient to use the library?
 
 COPY README.rst .
 COPY LICENSE.txt .
+COPY --from=0 /code/target/release/libmango.rlib libmango.rlib
+RUN ln libmango.rlib /usr/lib/libmango.rlib
+
