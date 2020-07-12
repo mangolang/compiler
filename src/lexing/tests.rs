@@ -167,11 +167,14 @@ while changed:
         if seq[i] > seq[i+1]:
             seq[i], seq[i+1] = seq[i+1], seq[i]
             changed = true
-assert seq == [1, 2, 3, 4, 5]";
+assert seq == [1, 2, 3, 4, 5]
+";
     let src = SourceFile::test(input);
     let res = lex(&src);
     assert_eq!(res, vec![
         newline(),
+
+        // let mut seq = [1, 4, 5, 2, 3,]
         keyword("let")?,
         keyword("mut")?,
         identifier("seq")?,
@@ -189,21 +192,29 @@ assert seq == [1, 2, 3, 4, 5]";
         comma(),
         bracket_close(),
         newline(),
+
+        // let mut changed = true
         keyword("let")?,
         keyword("mut")?,
         identifier("changed")?,
         association("=")?,
         literal_bool(true),
         newline(),
+
+        // while changed:
         keyword("while")?,
         identifier("changed")?,
         colon(),
         newline(),
+
+        // changed = false
         start_block(),
         identifier("changed")?,
         association("=")?,
         literal_bool(false),
         newline(),
+
+        // for i in seq.indices().skip_last():
         keyword("for")?,
         identifier("i")?,
         keyword("in")?,
@@ -218,41 +229,76 @@ assert seq == [1, 2, 3, 4, 5]";
         parenthesis_close(),
         colon(),
         newline(),
+
+        // if seq[i] > seq[i+1]:
         start_block(),
+        keyword("if")?,
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        bracket_close(),
+        operator(">")?,
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        operator("+")?,
+        literal_int(1),
+        bracket_close(),
+        colon(),
+        newline(),
 
+        // seq[i], seq[i+1] = seq[i+1], seq[i]
+        start_block(),
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        bracket_close(),
+        comma(),
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        operator("+")?,
+        literal_int(1),
+        bracket_close(),
+        association("=")?,
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        operator("+")?,
+        literal_int(1),
+        bracket_close(),
+        comma(),
+        identifier("seq")?,
+        bracket_open(),
+        identifier("i")?,
+        bracket_close(),
+        newline(),
 
+        // changed = true
+        identifier("changed")?,
+        association("=")?,
+        literal_bool(true),
+        newline(),
 
-
+        // assert seq == [1, 2, 3, 4, 5]
         end_block(),
         end_block(),
-        parenthesis_close(),
-        parenthesis_close(),
-        //
-        // identifier("print")?,
-        // parenthesis_open(),
-        // identifier("sqrt")?,
-        // parenthesis_open(),
-        // identifier("x")?,
-        // bracket_open(),
-        // literal_int(0),
-        // bracket_close(),
-        // operator("*")?,
-        // identifier("x")?,
-        // bracket_open(),
-        // literal_int(0),
-        // bracket_close(),
-        // operator("+")?,
-        // identifier("x")?,
-        // bracket_open(),
-        // literal_int(1),
-        // bracket_close(),
-        // operator("*")?,
-        // identifier("x")?,
-        // bracket_open(),
-        // literal_int(1),
-        // bracket_close(),
-        // parenthesis_close(),
-        // parenthesis_close(),
+        end_block(),
+        keyword("assert")?,
+        identifier("seq")?,
+        operator("==")?,
+        bracket_open(),
+        literal_int(1),
+        comma(),
+        literal_int(2),
+        comma(),
+        literal_int(3),
+        comma(),
+        literal_int(4),
+        comma(),
+        literal_int(5),
+        bracket_close(),
+        newline(),
     ]);
     Ok(())
 }
