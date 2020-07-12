@@ -1,0 +1,8 @@
+
+# Build a Docker image that builds and checks the Rust library
+# (as a standard native library, without wasm)
+name: 'Check Mango lib'
+description: 'Tests, clippy, rustfmt and build'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
