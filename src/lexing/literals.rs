@@ -80,6 +80,7 @@ mod constants {
 
     #[test]
     fn after_mismatch() {
+        check("== true", &vec![]);
         check("a true", &vec![]);
         check("a NaN", &vec![]);
     }
