@@ -1,6 +1,6 @@
 
-.. image:: https://travis-ci.org/mangolang/compiler.svg?branch=master
-    :target: https://travis-ci.org/mangolang/compiler
+.. image:: https://github.com/mangolang/compiler/workflows/Check%20Mango%20compiler%20frontend/badge.svg?branch=dev
+    :target: https://github.com/mangolang/compiler/actions
 
 .. image:: https://deps.rs/repo/github/mangolang/compiler/status.svg
     :target: https://deps.rs/repo/github/mangolang/compiler
