@@ -1,0 +1,23 @@
+
+# Build a Docker image that builds and checks the Rust library
+# (as a standard native library, without wasm)
+
+name: 'Check Mango compiler frontend'
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - created
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Tests, clippy, rustfmt and build
+        run: |
+          docker build .

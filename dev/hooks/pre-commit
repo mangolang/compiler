@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-exit 0; # TODO
-
 # Make sure to fail if any check fails
 set -e
 set -o pipefail
@@ -9,5 +7,5 @@ set -o pipefail
 # Get the hook utils directory
 util_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")/utils"
 
-# Check that a tag was created for this version
-PYTHONPATH="$util_dir":$PYTHONPATH python3 "$util_dir/check_version_tag.py"
+# Check that the formatting is correct
+PYTHONPATH="$util_dir":$PYTHONPATH python3 "$util_dir/run_on_staged.py" 'cargo +nightly fmt --all -- --check' 'cargo test --all'
