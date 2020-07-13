@@ -31,9 +31,11 @@ There are hundreds of pages of design notes, but the plan still lacks coherence,
 How to use
 -------------------------------
 
-The compiler is written in Rust. You can run it using:
+The compiler is written in Rust. You can test and compile the library with Docker:
 
-    cargo run
+    docker build .
+
+Or run the cargo commands from the Dockerfile yourself.
 
 This compiles to native code, with WebAssembly to be added later (#34).
 

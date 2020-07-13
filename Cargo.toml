@@ -23,7 +23,7 @@ path = "src/lib.rs"
 #path = "cli/main.rs"
 
 [dependencies]
-mango_ir = "0.1.0"
+mango_ir = { path = "../mango_ir" }
 #nom = "^6.0.0-alpha1"
 regex = "^1.3.9"
 string-interner = "^0.7.1"

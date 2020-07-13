@@ -16,7 +16,7 @@ pub(crate) mod io;
 pub(crate) mod util;
 
 // Types
-pub(crate) mod ast;
+pub(crate) mod parselet;
 pub(crate) mod ir;
 pub(crate) mod sem;
 

@@ -41,8 +41,6 @@ dependencies = [
 [[package]]
 name = "mango_ir"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bc2bf9def26a83dc2c21245343613efbe2ff64e5daf844c8bdd01f1fab73fee"
 
 [[package]]
 name = "memchr"

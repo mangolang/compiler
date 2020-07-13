@@ -1,6 +1,6 @@
-use crate::ast::terminal::OperatorAST;
-use crate::ast::FullAST;
-use crate::ast::AST;
+use crate::parselet::terminal::OperatorAST;
+use crate::parselet::FullAST;
+use crate::parselet::AST;
 use crate::util::encdec::ToText;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
