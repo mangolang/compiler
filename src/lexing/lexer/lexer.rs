@@ -1,4 +1,5 @@
 use crate::lexing::lexer::token_collector::TokenCollector;
+use crate::token::collect::FileTokens;
 use crate::token::Tokens;
 
 pub trait Lexer {
@@ -13,7 +14,7 @@ pub trait Lexer {
     fn tokens(&self) -> &TokenCollector;
 
     /// Return the tokens `add`ed, consuming the lexer.
-    fn into_tokens(self) -> Vec<Tokens>;
+    fn into_tokens(self) -> FileTokens;
 
     /// Whether the lexer is currently somewhere that indentation can be encountered.
     /// This is the case at the start of many lines, but not e.g. in the middle.
@@ -68,8 +69,8 @@ impl Lexer for CodeLexer {
         &self.tokens
     }
 
-    fn into_tokens(self) -> Vec<Tokens> {
-        self.tokens.into_vec()
+    fn into_tokens(self) -> FileTokens {
+        FileTokens::new(self.tokens.into_vec())
     }
 
     fn is_at_indentable(&self) -> bool {

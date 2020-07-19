@@ -33,7 +33,7 @@ fn lex_01() -> Result<(), ErrMsg> {
             operator("*")?,
             identifier("y")?,
             parenthesis_close(),
-        ]
+        ].into()
     );
     Ok(())
 }
@@ -68,7 +68,7 @@ fn lex_02() -> Result<(), ErrMsg> {
             newline(),
             end_block(),
             parenthesis_close(),
-        ]
+        ].into()
     );
     Ok(())
 }
@@ -90,7 +90,7 @@ fn lex_03() -> Result<(), ErrMsg> {
             operator("*")?,
             literal_real(5.0),
             parenthesis_close(),
-        ]
+        ].into()
     );
     Ok(())
 }
@@ -118,7 +118,7 @@ fn lex_04() -> Result<(), ErrMsg> {
             parenthesis_close(),
             operator("==")?,
             literal_bool(true),
-        ]
+        ].into()
     );
     Ok(())
 }
@@ -166,7 +166,7 @@ fn lex_05() -> Result<(), ErrMsg> {
             bracket_close(),
             parenthesis_close(),
             parenthesis_close(),
-        ]
+        ].into()
     );
     Ok(())
 }
@@ -307,7 +307,7 @@ assert seq == [1, 2, 3, 4, 5]
             literal_int(5),
             bracket_close(),
             newline(),
-        ]
+        ].into()
     );
     Ok(())
 }

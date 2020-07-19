@@ -14,6 +14,7 @@ use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
 use crate::token::{Tokens, UnlexableToken};
+use crate::token::collect::FileTokens;
 
 //TODO performance: one day maybe use arena allocation
 
@@ -34,7 +35,7 @@ macro_rules! try_lex (
 );
 
 /// Lexes a whole source file and returns the tokens.
-pub fn lex(source: &SourceFile) -> Vec<Tokens> {
+pub fn lex(source: &SourceFile) -> FileTokens {
     //TODO performance: does this initial capacity make sense?
     let mut reader = SourceReader::new(source);
     let mut lexer = CodeLexer::new(source.len());

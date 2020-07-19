@@ -28,6 +28,22 @@ impl FileTokens {
     }
 }
 
+impl From<Vec<Tokens>> for FileTokens {
+    fn from(tokens: Vec<Tokens>) -> Self {
+        FileTokens::new(tokens)
+    }
+}
+
+#[cfg(test)]
+impl PartialEq for FileTokens {
+    fn eq(&self, other: &Self) -> bool {
+        self.tokens == other.tokens
+    }
+}
+
+#[cfg(test)]
+impl Eq for FileTokens {}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct TokenIndex {
     value: usize,

@@ -40,7 +40,7 @@ mod unlexable {
     fn letter() {
         let (source, mut reader, mut lexer) = create_lexer("abc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_tokens(), vec![Tokens::Unlexable(UnlexableToken::new("a".to_owned()))]);
+        assert_eq!(lexer.into_tokens(), vec![Tokens::Unlexable(UnlexableToken::new("a".to_owned()))].into());
     }
 
     #[test]
@@ -48,7 +48,7 @@ mod unlexable {
         // Newline is a special case, because normally regex's '.' does not match it.
         let (source, mut reader, mut lexer) = create_lexer("\nabc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_tokens(), vec![Tokens::Unlexable(UnlexableToken::new("\n".to_owned()))]);
+        assert_eq!(lexer.into_tokens(), vec![Tokens::Unlexable(UnlexableToken::new("\n".to_owned()))].into());
     }
 }
 
