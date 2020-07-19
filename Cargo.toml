@@ -24,6 +24,7 @@ path = "src/lib.rs"
 
 [dependencies]
 mango_ir = { path = "../mango_ir" }
+scoped_name = { path = "../scoped_name" }
 #nom = "^6.0.0-alpha1"
 regex = "^1.3.9"
 string-interner = "^0.7.1"

@@ -1,5 +1,7 @@
+use ::std::borrow::Cow;
 use ::std::collections::hash_map::RandomState;
 use ::std::fmt;
+use ::std::fmt::Formatter;
 use ::std::sync::Mutex;
 
 use ::lazy_static::lazy_static;
@@ -8,8 +10,6 @@ use ::string_interner::StringInterner;
 
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::strtype::StrType;
-use std::borrow::Cow;
-use std::fmt::Formatter;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
@@ -127,10 +127,11 @@ mod technical {
 
 #[cfg(test)]
 mod validation {
+    use std::borrow::Cow;
+
     use crate::util::strtype::typ::StrType;
 
     use super::Name;
-    use std::borrow::Cow;
 
     fn assert_validity(is_valid: bool, input: &[&str]) {
         for inp in input.iter() {
