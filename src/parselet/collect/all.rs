@@ -1,3 +1,4 @@
+use crate::parselet::AST;
 use crate::parselet::node::AssignmentAST;
 use crate::parselet::node::BinaryOperationAST;
 use crate::parselet::node::UnaryOperationAST;
@@ -5,7 +6,6 @@ use crate::parselet::special::UnparseableAST;
 use crate::parselet::terminal::LiteralAST;
 use crate::parselet::terminal::OperatorAST;
 use crate::parselet::terminal::VariableAST;
-use crate::parselet::AST;
 use crate::util::encdec::ToText;
 
 /// Collection of all possible nodes in the full abstract syntax tree.

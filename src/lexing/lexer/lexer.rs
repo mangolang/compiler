@@ -1,4 +1,4 @@
-use crate::token::collect::token_list::TokenList;
+use crate::lexing::lexer::token_collector::TokenCollector;
 use crate::token::Tokens;
 
 pub trait Lexer {
@@ -10,7 +10,7 @@ pub trait Lexer {
     fn progress(&self) -> usize;
 
     /// Return a slice of tokens `add`ed so far.
-    fn tokens(&self) -> &TokenList;
+    fn tokens(&self) -> &TokenCollector;
 
     /// Return the tokens `add`ed, consuming the lexer.
     fn into_tokens(self) -> Vec<Tokens>;
@@ -31,7 +31,7 @@ pub trait Lexer {
 
 #[derive(Debug)]
 pub struct CodeLexer {
-    tokens: TokenList,
+    tokens: TokenCollector,
     indent: u32,
     indentable: bool,
 }
@@ -39,7 +39,7 @@ pub struct CodeLexer {
 impl CodeLexer {
     pub fn new(source_len: usize) -> Self {
         CodeLexer {
-            tokens: TokenList::with_capacity(source_len / 3),
+            tokens: TokenCollector::with_capacity(source_len / 3),
             indent: 0,
             indentable: true,
         }
@@ -48,7 +48,7 @@ impl CodeLexer {
     #[cfg(test)]
     pub fn test() -> Self {
         CodeLexer {
-            tokens: TokenList::with_capacity(8),
+            tokens: TokenCollector::with_capacity(8),
             indent: 0,
             indentable: true,
         }
@@ -64,7 +64,7 @@ impl Lexer for CodeLexer {
         self.tokens.len()
     }
 
-    fn tokens(&self) -> &TokenList {
+    fn tokens(&self) -> &TokenCollector {
         &self.tokens
     }
 

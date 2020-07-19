@@ -1,7 +1,8 @@
+use derive_new::new;
+
 use crate::parselet::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
-use derive_new::new;
 
 /// A literal integer value.
 #[derive(new, Debug, PartialEq, Eq, Hash)]

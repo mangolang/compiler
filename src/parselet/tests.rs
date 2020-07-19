@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use crate::parselet::FullAST;
 use crate::parselet::node::AssignmentAST;
 use crate::parselet::node::BinaryOperationAST;
 use crate::parselet::node::UnaryOperationAST;
@@ -11,11 +12,10 @@ use crate::parselet::terminal::LiteralAST;
 use crate::parselet::terminal::OperatorAST;
 use crate::parselet::terminal::StringLiteralAST;
 use crate::parselet::terminal::VariableAST;
-use crate::parselet::FullAST;
+use crate::token::Tokens;
 use crate::token::tokens::IdentifierToken;
 use crate::token::tokens::LiteralToken;
 use crate::token::tokens::OperatorToken;
-use crate::token::Tokens;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
 

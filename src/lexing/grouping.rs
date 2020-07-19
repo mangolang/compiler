@@ -34,10 +34,10 @@ mod test_util {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{parenthesis_close, parenthesis_open};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     pub fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
+        let expected: TokenCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_grouping(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), &expected);
@@ -52,7 +52,7 @@ mod mismatch {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{parenthesis_close, parenthesis_open};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::test_util::check;
 
@@ -85,7 +85,7 @@ mod parenthese {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{parenthesis_close, parenthesis_open};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::test_util::check;
 
@@ -126,7 +126,7 @@ mod brackets {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{bracket_close, bracket_open};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::test_util::check;
 
@@ -164,7 +164,7 @@ mod mixed {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::test_util::check;
 

@@ -31,7 +31,7 @@ mod identifiers {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::identifier;
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -42,7 +42,7 @@ mod identifiers {
     fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
-        let expected: TokenList = expected_names
+        let expected: TokenCollector = expected_names
             .iter()
             .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
             .collect();
@@ -119,7 +119,7 @@ mod keywords {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::token::collect::{identifier, keyword_or_reserved};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
@@ -157,7 +157,7 @@ mod mixed {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
     use crate::token::collect::{identifier, keyword_or_reserved};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;

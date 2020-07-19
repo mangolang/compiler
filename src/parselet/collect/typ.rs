@@ -1,6 +1,7 @@
-use crate::util::encdec::ToText;
 use std::fmt::Debug;
 use std::hash::Hash;
+
+use crate::util::encdec::ToText;
 
 /// AST trait to be implemented by all AST nodes.
 pub trait AST: PartialEq + Eq + Hash + Debug {}

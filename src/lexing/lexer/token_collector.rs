@@ -4,17 +4,17 @@ use ::std::iter::FromIterator;
 use crate::token::Tokens;
 
 #[derive(PartialEq, Eq)]
-pub struct TokenList {
+pub struct TokenCollector {
     tokens: Vec<Tokens>,
 }
 
-impl TokenList {
+impl TokenCollector {
     pub fn new() -> Self {
-        TokenList { tokens: vec![] }
+        TokenCollector { tokens: vec![] }
     }
 
     pub fn with_capacity(cap: usize) -> Self {
-        TokenList {
+        TokenCollector {
             tokens: Vec::with_capacity(cap),
         }
     }
@@ -32,7 +32,7 @@ impl TokenList {
     }
 }
 
-impl fmt::Debug for TokenList {
+impl fmt::Debug for TokenCollector {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "TokenList[")?;
         let mut is_first = true;
@@ -48,21 +48,21 @@ impl fmt::Debug for TokenList {
     }
 }
 
-impl From<&[Tokens]> for TokenList {
+impl From<&[Tokens]> for TokenCollector {
     fn from(tokens: &[Tokens]) -> Self {
-        TokenList { tokens: tokens.to_vec() }
+        TokenCollector { tokens: tokens.to_vec() }
     }
 }
 
-impl From<Vec<Tokens>> for TokenList {
+impl From<Vec<Tokens>> for TokenCollector {
     fn from(tokens: Vec<Tokens>) -> Self {
-        TokenList { tokens }
+        TokenCollector { tokens }
     }
 }
 
-impl FromIterator<Tokens> for TokenList {
+impl FromIterator<Tokens> for TokenCollector {
     fn from_iter<T: IntoIterator<Item = Tokens>>(iter: T) -> Self {
-        let mut token_list = TokenList::new();
+        let mut token_list = TokenCollector::new();
         for token in iter {
             token_list.add(token)
         }

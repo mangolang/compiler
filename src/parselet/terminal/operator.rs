@@ -1,12 +1,12 @@
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result as fResult;
+use std::str::FromStr;
 
-use crate::parselet::AST;
 use crate::common::error::{ErrMsg, MsgResult};
+use crate::parselet::AST;
 use crate::util::encdec::ToText;
 use crate::util::strtype::StrType;
-use std::str::FromStr;
 
 /// The different operator symbols that are recognized.
 #[derive(Debug, PartialEq, Eq, Hash)]

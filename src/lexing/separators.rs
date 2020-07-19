@@ -42,12 +42,12 @@ mod grouping {
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
     use crate::token::collect::{colon, comma, ellipsis, newline, period, unlexable};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::lex_separators;
 
     fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
+        let expected: TokenCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), &expected);

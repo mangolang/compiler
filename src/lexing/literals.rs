@@ -70,7 +70,7 @@ mod test_util {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -91,7 +91,7 @@ mod constants {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -140,7 +140,7 @@ mod int {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -221,7 +221,7 @@ mod real {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int, literal_real};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -283,7 +283,7 @@ mod text {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
@@ -357,7 +357,7 @@ mod exhaustion {
     use crate::lexing::tests::create_lexer;
     use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;

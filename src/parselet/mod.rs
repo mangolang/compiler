@@ -1,15 +1,12 @@
-mod node;
+pub use self::collect::AST;
+pub use self::collect::FullAST;
 pub use self::node::*;
-
-mod terminal;
+pub use self::special::*;
 pub use self::terminal::*;
 
+mod node;
+mod terminal;
 mod special;
-pub use self::special::*;
-
 mod collect;
-pub use self::collect::FullAST;
-pub use self::collect::AST;
-
 #[cfg(test)]
 mod tests;

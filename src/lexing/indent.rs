@@ -51,12 +51,12 @@ mod indents {
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::lex_indents;
 
     fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
+        let expected: TokenCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
         lex_indents(&mut reader, &mut lexer);

@@ -26,7 +26,7 @@ pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 mod operators {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::Tokens;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
@@ -34,7 +34,7 @@ mod operators {
     use super::lex_operator;
 
     fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
+        let expected: TokenCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_operator(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), &expected);
@@ -137,14 +137,14 @@ mod associations {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{AssociationToken, Tokens};
-    use crate::token::collect::token_list::TokenList;
+    use crate::lexing::lexer::token_collector::TokenCollector;
     use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
 
     fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
+        let expected: TokenCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_association(&mut reader, &mut lexer);
         assert_eq!(lexer.tokens(), &expected);
