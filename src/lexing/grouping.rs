@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^[\(\)\[\]\{\}]").unwrap();
@@ -32,9 +32,9 @@ mod test_util {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::collect::token_list::TokenList;
 
     pub fn check(input: &str, expected: &[Tokens]) {
         let expected: TokenList = expected.into();
@@ -50,9 +50,9 @@ mod mismatch {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::collect::token_list::TokenList;
 
     use super::test_util::check;
 
@@ -83,9 +83,9 @@ mod parenthese {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{parenthesis_close, parenthesis_open};
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::{parenthesis_close, parenthesis_open};
+    use crate::token::collect::token_list::TokenList;
 
     use super::test_util::check;
 
@@ -124,9 +124,9 @@ mod brackets {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{bracket_close, bracket_open};
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::{bracket_close, bracket_open};
+    use crate::token::collect::token_list::TokenList;
 
     use super::test_util::check;
 
@@ -162,9 +162,9 @@ mod mixed {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
+    use crate::token::collect::token_list::TokenList;
 
     use super::test_util::check;
 

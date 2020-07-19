@@ -72,9 +72,10 @@ impl Token for AssociationToken {}
 
 #[cfg(test)]
 mod from_str {
-    use super::*;
     use crate::common::tests::assert_panic_silent;
     use crate::token::Tokens;
+
+    use super::*;
 
     #[test]
     fn empty() {

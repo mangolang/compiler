@@ -49,11 +49,11 @@ mod indents {
     use crate::io::source::SourceFile;
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexing::tests::create_lexer;
     use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::token::collect::token_list::TokenList;
 
     use super::lex_indents;
-    use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
 
     fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
         let expected: TokenList = expected.into();

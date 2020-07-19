@@ -1,8 +1,7 @@
-mod unary_operation;
+pub use self::assignment::AssignmentAST;
+pub use self::binary_operation::BinaryOperationAST;
 pub use self::unary_operation::UnaryOperationAST;
 
+mod unary_operation;
 mod binary_operation;
-pub use self::binary_operation::BinaryOperationAST;
-
 mod assignment;
-pub use self::assignment::AssignmentAST;

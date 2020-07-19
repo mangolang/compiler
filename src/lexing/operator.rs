@@ -3,8 +3,8 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::token::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 
@@ -27,8 +27,8 @@ mod operators {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::collect::token_list::TokenList;
-    use crate::token::tokens::OperatorToken;
     use crate::token::Tokens;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
 
     use super::lex_operator;
@@ -136,9 +136,9 @@ mod operators {
 mod associations {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
+    use crate::token::{AssociationToken, Tokens};
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
-    use crate::token::{AssociationToken, Tokens};
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;

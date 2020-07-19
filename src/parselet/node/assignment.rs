@@ -1,5 +1,5 @@
-use crate::parselet::AST;
 use crate::parselet::{FullAST, VariableAST};
+use crate::parselet::AST;
 use crate::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.

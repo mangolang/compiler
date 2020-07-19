@@ -1,8 +1,9 @@
+use std::str::FromStr;
+
 use crate::common::error::{MangoErr, MangoResult};
 use crate::token::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
-use std::str::FromStr;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.

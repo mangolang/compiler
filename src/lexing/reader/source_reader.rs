@@ -298,12 +298,11 @@ mod tests {
     }
 
     mod remaining_len {
-        use crate::lexing::reader::source_reader::tests::check;
         use crate::lexing::reader::source_reader::SourceReader;
+        use crate::lexing::reader::source_reader::tests::check;
+        use crate::lexing::reader::source_reader::tests::TEST_RE;
         use crate::lexing::reader::typ::Reader;
         use crate::lexing::reader::typ::ReaderResult::*;
-
-        use crate::lexing::reader::source_reader::tests::TEST_RE;
 
         #[test]
         fn at_start() {

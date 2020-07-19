@@ -5,11 +5,11 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::collect::{association, identifier, keyword_or_reserved, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::token::collect::{association, identifier, keyword_or_reserved, operator, parenthesis_close, parenthesis_open, unlexable};
+use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
-use crate::util::codeparts::Keyword;
 use crate::util::strtype::name::IDENTIFIER_RE;
 
 /// Lex an identifier or keyword.
@@ -29,13 +29,13 @@ mod identifiers {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
+    use crate::token::{IdentifierToken, Tokens};
     use crate::token::collect::identifier;
     use crate::token::collect::token_list::TokenList;
     use crate::token::tokens::OperatorToken;
-    use crate::token::{IdentifierToken, Tokens};
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
 
@@ -117,14 +117,14 @@ mod keywords {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, keyword_or_reserved};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
-    use crate::util::codeparts::keyword::KEYWORDS;
+    use crate::token::collect::{identifier, keyword_or_reserved};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::{Keyword, Symbol};
-    use crate::util::strtype::typ::StrType;
+    use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
     use super::mixed::check;
@@ -155,14 +155,14 @@ mod mixed {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, keyword_or_reserved};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, KeywordToken, Tokens};
-    use crate::util::codeparts::keyword::KEYWORDS;
+    use crate::token::collect::{identifier, keyword_or_reserved};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::{Keyword, Symbol};
-    use crate::util::strtype::typ::StrType;
+    use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
 

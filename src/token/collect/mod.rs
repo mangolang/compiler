@@ -1,10 +1,8 @@
-mod all;
 pub use self::all::Tokens;
-
-mod typ;
+pub use self::short::*;
 pub use self::typ::Token;
 
+mod all;
+mod typ;
 mod short;
-pub use self::short::*;
-
 pub mod token_list;

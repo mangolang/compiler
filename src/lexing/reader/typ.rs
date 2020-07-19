@@ -1,9 +1,9 @@
 use ::std::fmt::Debug;
+use std::rc::Rc;
 
 use ::regex::Regex;
 
 use crate::io::source::SourceSlice;
-use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ReaderResult {

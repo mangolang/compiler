@@ -1,9 +1,10 @@
+use std::fs::File;
+use std::io;
+
 use crate::towasm::collect::Statement;
 use crate::towasm::values::Expression;
 use crate::towasm::values::Local;
 use crate::towasm::Wasm;
-use std::fs::File;
-use std::io;
 
 pub struct Assign {
     assignee: Local,

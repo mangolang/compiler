@@ -3,15 +3,15 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
+use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::token::collect::{
     association, identifier, literal_bool, literal_int, literal_real, literal_text, operator, parenthesis_close, parenthesis_open,
     unlexable,
 };
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
-use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::int::INT_RE;
+use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
 use crate::util::parsetxt::real::REAL_RE;
 use crate::util::parsetxt::text::parse_single_quote;
@@ -68,13 +68,13 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 mod test_util {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::lex_literal;
 
@@ -89,13 +89,13 @@ mod test_util {
 mod constants {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -138,13 +138,13 @@ mod constants {
 mod int {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -219,13 +219,13 @@ mod int {
 mod real {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -281,13 +281,13 @@ mod real {
 mod text {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -355,17 +355,17 @@ mod text {
 mod exhaustion {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
-    use crate::token::tokens::OperatorToken;
     use crate::token::{IdentifierToken, Tokens};
+    use crate::token::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
+    use crate::token::collect::token_list::TokenList;
+    use crate::token::tokens::OperatorToken;
     use crate::util::codeparts::Symbol;
-    use crate::util::strtype::typ::StrType;
     use crate::util::strtype::Name;
+    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
-    //TODO @mark: TEMPORARY! REMOVE THIS!
+//TODO @mark: TEMPORARY! REMOVE THIS!
     // // Constants.
     // while let ReaderResult::Match(sym) = reader.strip_match( & * CONSTANTS_RE) {
     // lexer.add( match sym.as_str() {

@@ -1,6 +1,7 @@
-use crate::token::Tokens;
 use ::std::fmt;
-use std::iter::FromIterator;
+use ::std::iter::FromIterator;
+
+use crate::token::Tokens;
 
 #[derive(PartialEq, Eq)]
 pub struct TokenList {

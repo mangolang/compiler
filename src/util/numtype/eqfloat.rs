@@ -131,8 +131,8 @@ impl From<f64> for f64eq {
 #[cfg(test)]
 mod tests {
     use std::collections::hash_map::RandomState;
-    use std::f64::consts::PI;
     use std::f64::{INFINITY, NAN, NEG_INFINITY};
+    use std::f64::consts::PI;
     use std::hash::{BuildHasher, Hash, Hasher};
 
     use lazy_static::lazy_static;

@@ -30,10 +30,11 @@ pub fn lex_eof(reader: &mut impl Reader) -> bool {
 
 #[cfg(test)]
 mod unlexable {
-    use super::lex_unlexable;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::token::{Tokens, UnlexableToken};
+
+    use super::lex_unlexable;
 
     #[test]
     fn letter() {
@@ -53,11 +54,12 @@ mod unlexable {
 
 #[cfg(test)]
 mod eof {
-    use super::lex_unlexable;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::special::lex_eof;
     use crate::lexing::tests::create_lexer;
     use crate::token::{Tokens, UnlexableToken};
+
+    use super::lex_unlexable;
 
     #[test]
     fn empty() {

@@ -1,8 +1,9 @@
-use crate::util::errors::CodeProblem;
-use crate::util::errors::Context;
 use derive_new::new;
 use std::slice;
+
 use crate::common::error::ErrMsg;
+use crate::util::errors::CodeProblem;
+use crate::util::errors::Context;
 
 #[derive(new, Debug)]
 pub struct ProblemCollector {
@@ -42,9 +43,10 @@ impl<'a> IntoIterator for &'a ProblemCollector {
 
 #[cfg(test)]
 mod tests {
-    use super::ProblemCollector;
     use crate::util::errors::Context;
     use crate::util::strtype::StrType;
+
+    use super::ProblemCollector;
 
     #[test]
     fn test_iter_collector() {

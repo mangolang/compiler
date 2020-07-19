@@ -1,8 +1,7 @@
+use ::derive_new::new;
 use ::std::cmp::Ordering;
 use ::std::fmt;
 use ::std::fmt::{Display, Formatter};
-
-use ::derive_new::new;
 
 use crate::common::error::ErrMsg;
 

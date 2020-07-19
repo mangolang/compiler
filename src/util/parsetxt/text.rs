@@ -22,7 +22,7 @@ pub fn parse_single_quote(text: &str) -> String {
 mod single_quoted {
     use super::parse_single_quote;
 
-    //TODO @mark: test coverage could probably be better, i.e.
+//TODO @mark: test coverage could probably be better, i.e.
     //TODO @mark: - escaping of quotes
     //TODO @mark: - escaping of escapes (\\)
     //TODO @mark: - specials like \t \n
