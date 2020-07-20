@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens, UnlexableToken};
+use crate::lexeme::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens, UnlexableToken};
 
 lazy_static! {
     static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.").unwrap();
@@ -32,7 +32,7 @@ pub fn lex_eof(reader: &mut impl Reader) -> bool {
 mod unlexable {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{Tokens, UnlexableToken};
+    use crate::lexeme::{Tokens, UnlexableToken};
 
     use super::lex_unlexable;
 
@@ -57,7 +57,7 @@ mod eof {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::special::lex_eof;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{Tokens, UnlexableToken};
+    use crate::lexeme::{Tokens, UnlexableToken};
 
     use super::lex_unlexable;
 

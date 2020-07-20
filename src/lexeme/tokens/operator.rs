@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use crate::common::error::{MangoErr, MangoResult};
-use crate::token::Token;
+use crate::lexeme::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 

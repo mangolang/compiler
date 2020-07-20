@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::lexeme::Token;
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 use crate::util::parsetxt::int::parse_int;

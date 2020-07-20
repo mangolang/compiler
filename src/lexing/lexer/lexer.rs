@@ -1,13 +1,13 @@
 use crate::lexing::lexer::token_collector::TokenCollector;
-use crate::token::collect::FileTokens;
-use crate::token::Tokens;
+use crate::lexeme::collect::FileTokens;
+use crate::lexeme::Tokens;
 
 pub trait Lexer {
-    /// Add a lexed token.
+    /// Add a lexed lexeme.
     fn add(&mut self, token: Tokens);
 
     /// An identifier that indicates the progress. The only guarantee is that this
-    /// will increase by some amount whenever a token is added.
+    /// will increase by some amount whenever a lexeme is added.
     fn progress(&self) -> usize;
 
     /// Return a slice of tokens `add`ed so far.

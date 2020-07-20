@@ -1,4 +1,4 @@
-use crate::token::Tokens;
+use crate::lexeme::Tokens;
 use std::ops::Index;
 
 #[derive(Debug)]
@@ -70,7 +70,7 @@ impl Index<TokenIndex> for FileTokens {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::token::collect::unlexable;
+    use crate::lexeme::collect::unlexable;
 
     #[test]
     fn indexing() {

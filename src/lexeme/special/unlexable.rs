@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::lexeme::Token;
 use crate::util::encdec::ToText;
 
 /// Represents an unlexable string.

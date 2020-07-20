@@ -1,19 +1,19 @@
 use ::std::fmt;
 
-use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
-use crate::token::separators::ColonToken;
-use crate::token::special::EndBlockToken;
-use crate::token::special::StartBlockToken;
-use crate::token::special::UnlexableToken;
-use crate::token::tokens::AssociationToken;
-use crate::token::tokens::EndStatementToken;
-use crate::token::tokens::IdentifierToken;
-use crate::token::tokens::KeywordToken;
-use crate::token::tokens::LiteralToken;
-use crate::token::tokens::OperatorToken;
-use crate::token::tokens::ParenthesisCloseToken;
-use crate::token::tokens::ParenthesisOpenToken;
-use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
+use crate::lexeme::brackets::{BracketCloseToken, BracketOpenToken};
+use crate::lexeme::separators::ColonToken;
+use crate::lexeme::special::EndBlockToken;
+use crate::lexeme::special::StartBlockToken;
+use crate::lexeme::special::UnlexableToken;
+use crate::lexeme::tokens::AssociationToken;
+use crate::lexeme::tokens::EndStatementToken;
+use crate::lexeme::tokens::IdentifierToken;
+use crate::lexeme::tokens::KeywordToken;
+use crate::lexeme::tokens::LiteralToken;
+use crate::lexeme::tokens::OperatorToken;
+use crate::lexeme::tokens::ParenthesisCloseToken;
+use crate::lexeme::tokens::ParenthesisOpenToken;
+use crate::lexeme::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::util::encdec::ToText;
 
 /// Collection of all possible tokens.
@@ -68,7 +68,7 @@ impl fmt::Debug for Tokens {
 mod tests {
     use std::mem::size_of;
 
-    use crate::token::Tokens;
+    use crate::lexeme::Tokens;
 
     use super::*;
 

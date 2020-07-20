@@ -1,7 +1,7 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::token::Token;
+use crate::lexeme::Token;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 
@@ -73,7 +73,7 @@ impl Token for AssociationToken {}
 #[cfg(test)]
 mod from_str {
     use crate::common::tests::assert_panic_silent;
-    use crate::token::Tokens;
+    use crate::lexeme::Tokens;
 
     use super::*;
 

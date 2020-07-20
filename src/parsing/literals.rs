@@ -3,7 +3,7 @@
 // pub fn parse_literal(lex: LexList) {}
 
 use crate::parsing::util::cursor::ParseCursor;
-use crate::token::Tokens;
+use crate::lexeme::Tokens;
 
 pub fn parse_literal(mut cursor: ParseCursor) -> Option<Tokens> {
     match cursor.take() {

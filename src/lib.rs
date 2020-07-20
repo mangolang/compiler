@@ -22,7 +22,7 @@ pub(crate) mod ir;
 pub(crate) mod sem;
 
 pub(crate) mod lexing;
-pub(crate) mod token;
+pub(crate) mod lexeme;
 pub(crate) mod parsing;
 
 // Operations

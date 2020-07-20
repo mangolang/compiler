@@ -1,7 +1,7 @@
 use ::std::fmt;
 use ::std::iter::FromIterator;
 
-use crate::token::Tokens;
+use crate::lexeme::Tokens;
 
 #[derive(PartialEq, Eq)]
 pub struct TokenCollector {

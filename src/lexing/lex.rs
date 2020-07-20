@@ -13,8 +13,8 @@ use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
-use crate::token::{Tokens, UnlexableToken};
-use crate::token::collect::FileTokens;
+use crate::lexeme::{Tokens, UnlexableToken};
+use crate::lexeme::collect::FileTokens;
 
 //TODO performance: one day maybe use arena allocation
 
@@ -62,7 +62,7 @@ mod try_lex {
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::UnlexableToken;
+    use crate::lexeme::UnlexableToken;
 
     use super::*;
 

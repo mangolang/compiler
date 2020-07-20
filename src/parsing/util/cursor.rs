@@ -1,7 +1,7 @@
 use ::std::rc::Rc;
 
-use crate::token::collect::{FileTokens, TokenIndex};
-use crate::token::Tokens;
+use crate::lexeme::collect::{FileTokens, TokenIndex};
+use crate::lexeme::Tokens;
 
 #[derive(Debug)]
 pub struct ParseCursor<'a> {
@@ -52,7 +52,7 @@ impl<'a> ParseCursor<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::token::collect::unlexable;
+    use crate::lexeme::collect::unlexable;
 
     #[test]
     fn increment() {

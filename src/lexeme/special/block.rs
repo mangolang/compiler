@@ -1,4 +1,4 @@
-use crate::token::Token;
+use crate::lexeme::Token;
 use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.

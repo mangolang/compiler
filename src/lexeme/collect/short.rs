@@ -1,17 +1,17 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::token::{
+use crate::lexeme::{
     AssociationToken, EndBlockToken, EndStatementToken, IdentifierToken, KeywordToken, LiteralToken, OperatorToken, ParenthesisCloseToken,
     ParenthesisOpenToken, StartBlockToken, Tokens, UnlexableToken,
 };
-use crate::token::brackets::{BracketCloseToken, BracketOpenToken};
-use crate::token::separators::ColonToken;
-use crate::token::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
+use crate::lexeme::brackets::{BracketCloseToken, BracketOpenToken};
+use crate::lexeme::separators::ColonToken;
+use crate::lexeme::tokens::separators::{CommaToken, EllipsisToken, NewlineToken, PeriodToken};
 use crate::util::codeparts::Keyword;
 use crate::util::numtype::f64eq;
 
-//TODO @mark: replace more token usages by short versions
+//TODO @mark: replace more lexeme usages by short versions
 
 pub fn association(txt: &str) -> MsgResult<Tokens> {
     Ok(Tokens::Association(AssociationToken::from_str(txt)?))

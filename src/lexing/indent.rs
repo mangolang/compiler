@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
 
 lazy_static! {
     static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\n)").unwrap();
@@ -50,7 +50,7 @@ mod indents {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
     use crate::lexing::lexer::token_collector::TokenCollector;
 
     use super::lex_indents;

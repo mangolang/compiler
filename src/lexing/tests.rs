@@ -2,7 +2,7 @@ use crate::common::error::ErrMsg;
 use crate::io::source::SourceFile;
 use crate::lexing::lexer::CodeLexer;
 use crate::lexing::reader::source_reader::SourceReader;
-use crate::token::collect::*;
+use crate::lexeme::collect::*;
 
 use super::lex;
 

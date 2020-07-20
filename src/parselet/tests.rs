@@ -12,10 +12,10 @@ use crate::parselet::terminal::LiteralAST;
 use crate::parselet::terminal::OperatorAST;
 use crate::parselet::terminal::StringLiteralAST;
 use crate::parselet::terminal::VariableAST;
-use crate::token::Tokens;
-use crate::token::tokens::IdentifierToken;
-use crate::token::tokens::LiteralToken;
-use crate::token::tokens::OperatorToken;
+use crate::lexeme::Tokens;
+use crate::lexeme::tokens::IdentifierToken;
+use crate::lexeme::tokens::LiteralToken;
+use crate::lexeme::tokens::OperatorToken;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
 
