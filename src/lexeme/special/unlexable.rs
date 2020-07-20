@@ -1,22 +1,22 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Represents an unlexable string.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub struct UnlexableToken {
+pub struct UnlexableLexeme {
     pub text: String,
 }
 
-impl UnlexableToken {
-    pub fn new(text: String) -> UnlexableToken {
-        UnlexableToken { text }
+impl UnlexableLexeme {
+    pub fn new(text: String) -> UnlexableLexeme {
+        UnlexableLexeme { text }
     }
 }
 
-impl ToText for UnlexableToken {
+impl ToText for UnlexableLexeme {
     fn to_text(&self) -> String {
         format!(" [cannot lex: {}] ", self.text)
     }
 }
 
-impl Token for UnlexableToken {}
+impl Lexeme for UnlexableLexeme {}

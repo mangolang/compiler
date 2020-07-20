@@ -3,12 +3,12 @@
 // pub fn parse_literal(lex: LexList) {}
 
 use crate::parsing::util::cursor::ParseCursor;
-use crate::lexeme::Tokens;
+use crate::lexeme::Lexemes;
 
-pub fn parse_literal(mut cursor: ParseCursor) -> Option<Tokens> {
+pub fn parse_literal(mut cursor: ParseCursor) -> Option<Lexemes> {
     match cursor.take() {
-        Some(token) => {
-            if let Tokens::Literal(literal) = token {
+        Some(lexeme) => {
+            if let Lexemes::Literal(literal) = lexeme {
                 Some(literal)
             } else {
                 None

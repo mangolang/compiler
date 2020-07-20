@@ -1,57 +1,57 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct ColonToken {}
+pub struct ColonLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct CommaToken {}
+pub struct CommaLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct EllipsisToken {}
+pub struct EllipsisLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct PeriodToken {}
+pub struct PeriodLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct NewlineToken {}
+pub struct NewlineLexeme {}
 
-impl ColonToken {
+impl ColonLexeme {
     pub fn new() -> Self {
-        ColonToken {}
+        ColonLexeme {}
     }
 }
 
-impl CommaToken {
+impl CommaLexeme {
     pub fn new() -> Self {
-        CommaToken {}
+        CommaLexeme {}
     }
 }
 
-impl EllipsisToken {
+impl EllipsisLexeme {
     pub fn new() -> Self {
-        EllipsisToken {}
+        EllipsisLexeme {}
     }
 }
 
-impl PeriodToken {
+impl PeriodLexeme {
     pub fn new() -> Self {
-        PeriodToken {}
+        PeriodLexeme {}
     }
 }
 
-impl NewlineToken {
+impl NewlineLexeme {
     pub fn new() -> Self {
-        NewlineToken {}
+        NewlineLexeme {}
     }
 }
 
-impl Token for ColonToken {}
+impl Lexeme for ColonLexeme {}
 
-impl Token for CommaToken {}
+impl Lexeme for CommaLexeme {}
 
-impl Token for EllipsisToken {}
+impl Lexeme for EllipsisLexeme {}
 
-impl Token for PeriodToken {}
+impl Lexeme for PeriodLexeme {}
 
-impl Token for NewlineToken {}
+impl Lexeme for NewlineLexeme {}

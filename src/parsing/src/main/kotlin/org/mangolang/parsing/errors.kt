@@ -3,21 +3,21 @@
 
 package org.mangolang.parsing
 
-import org.mangolang.token.Token
+import org.mangolang.lexeme.Lexeme
 import org.mangolang.util.text.Message
 import org.mangolang.util.errors.CompileError
 
 /**
  * An error that occurs during mango.parsing.
  */
-class SyntaxError(val msg: Message, val token: Token?) : CompileError {
+class SyntaxError(val msg: Message, val lexeme: Lexeme?) : CompileError {
     override fun brief(): CharSequence = "syntax error: $msg"
 
     override fun detailed(): CharSequence {
         // LATER: do the context information better
         var text = "syntax error: $msg"
-        if (token != null) {
-            text += "\nnear input ${token.asText()}"
+        if (lexeme != null) {
+            text += "\nnear input ${lexeme.asText()}"
         }
         return text
     }

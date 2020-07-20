@@ -1,57 +1,57 @@
-use crate::lexeme::Tokens;
+use crate::lexeme::Lexemes;
 use std::ops::Index;
 
 #[derive(Debug)]
-pub struct FileTokens {
-    tokens: Vec<Tokens>,
+pub struct FileLexemes {
+    lexemes: Vec<Lexemes>,
 }
 
-impl FileTokens {
-    pub fn new(tokens: Vec<Tokens>) -> Self {
-        FileTokens { tokens }
+impl FileLexemes {
+    pub fn new(lexemes: Vec<Lexemes>) -> Self {
+        FileLexemes { lexemes }
     }
 
-    /// Get the requested element, or None if there are not that many tokens.
-    pub fn peek(&self, index: TokenIndex) -> Option<&Tokens> {
+    /// Get the requested element, or None if there are not that many lexemes.
+    pub fn peek(&self, index: LexemeIndex) -> Option<&Lexemes> {
         if index >= self.len() {
             return None;
         }
         Some(&self[index])
     }
 
-    pub fn index_at_start(&self) -> TokenIndex {
-        TokenIndex::at_start()
+    pub fn index_at_start(&self) -> LexemeIndex {
+        LexemeIndex::at_start()
     }
 
-    pub fn len(&self) -> TokenIndex {
-        TokenIndex { value: self.tokens.len() }
+    pub fn len(&self) -> LexemeIndex {
+        LexemeIndex { value: self.lexemes.len() }
     }
 }
 
-impl From<Vec<Tokens>> for FileTokens {
-    fn from(tokens: Vec<Tokens>) -> Self {
-        FileTokens::new(tokens)
+impl From<Vec<Lexemes>> for FileLexemes {
+    fn from(lexemes: Vec<Lexemes>) -> Self {
+        FileLexemes::new(lexemes)
     }
 }
 
 #[cfg(test)]
-impl PartialEq for FileTokens {
+impl PartialEq for FileLexemes {
     fn eq(&self, other: &Self) -> bool {
-        self.tokens == other.tokens
+        self.lexemes == other.lexemes
     }
 }
 
 #[cfg(test)]
-impl Eq for FileTokens {}
+impl Eq for FileLexemes {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct TokenIndex {
+pub struct LexemeIndex {
     value: usize,
 }
 
-impl TokenIndex {
+impl LexemeIndex {
     pub fn at_start() -> Self {
-        TokenIndex { value: 0 }
+        LexemeIndex { value: 0 }
     }
 
     pub fn increment(&mut self) {
@@ -59,11 +59,11 @@ impl TokenIndex {
     }
 }
 
-impl Index<TokenIndex> for FileTokens {
-    type Output = Tokens;
+impl Index<LexemeIndex> for FileLexemes {
+    type Output = Lexemes;
 
-    fn index(&self, index: TokenIndex) -> &Self::Output {
-        &self.tokens[index.value]
+    fn index(&self, index: LexemeIndex) -> &Self::Output {
+        &self.lexemes[index.value]
     }
 }
 
@@ -74,16 +74,16 @@ mod tests {
 
     #[test]
     fn indexing() {
-        let tokens = FileTokens::new(vec![
+        let lexemes = FileLexemes::new(vec![
             unlexable("a"), unlexable("b"), unlexable("c")]);
-        let mut index = tokens.index_at_start();
-        assert!(index < tokens.len());
-        assert_eq!(&unlexable("a"), &tokens[index]);
+        let mut index = lexemes.index_at_start();
+        assert!(index < lexemes.len());
+        assert_eq!(&unlexable("a"), &lexemes[index]);
         index.increment();
-        assert_eq!(&unlexable("b"), &tokens[index]);
+        assert_eq!(&unlexable("b"), &lexemes[index]);
         index.increment();
-        assert_eq!(Some(&unlexable("c")), tokens.peek(index));
+        assert_eq!(Some(&unlexable("c")), lexemes.peek(index));
         index.increment();
-        assert_eq!(None, tokens.peek(index));
+        assert_eq!(None, lexemes.peek(index));
     }
 }

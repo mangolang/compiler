@@ -1,20 +1,20 @@
-use crate::token::collect::all::Tokens;
+use crate::lexeme::collect::all::Lexemes;
 use crate::util::encdec::to_text::ToText;
 
-/// Represents all the lex tokens in a source.
+/// Represents all the lex lexemes in a source.
 #[derive(PartialEq, Eq, Debug)]
 pub struct LexList {
-    tokens: Vec<Tokens>,
+    lexemes: Vec<Lexemes>,
 }
 
 impl LexList {
-    pub fn from_tokens(tokens: Vec<Tokens>) -> Self {
-        LexList { tokens }
+    pub fn from_lexemes(lexemes: Vec<Lexemes>) -> Self {
+        LexList { lexemes }
     }
 }
 
 impl ToText for LexList {
     fn to_text(&self) -> String {
-        self.tokens.iter().map(ToText::to_text).collect::<Vec<_>>().join(" ")
+        self.lexemes.iter().map(ToText::to_text).collect::<Vec<_>>().join(" ")
     }
 }

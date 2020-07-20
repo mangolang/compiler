@@ -1,15 +1,15 @@
-pub use self::association::AssociationToken;
-pub use self::end_statement::EndStatementToken;
-pub use self::identifier::IdentifierToken;
-pub use self::keyword::KeywordToken;
-pub use self::literal::LiteralToken;
-pub use self::operator::OperatorToken;
-pub use self::parentheses::ParenthesisCloseToken;
-pub use self::parentheses::ParenthesisOpenToken;
+pub use self::association::AssociationLexeme;
+pub use self::end_statement::EndStatementLexeme;
+pub use self::identifier::IdentifierLexeme;
+pub use self::keyword::KeywordLexeme;
+pub use self::literal::LiteralLexeme;
+pub use self::operator::OperatorLexeme;
+pub use self::parentheses::ParenthesisCloseLexeme;
+pub use self::parentheses::ParenthesisOpenLexeme;
 
 pub mod association;
 //pub mod declaration;
-//pub use self::declaration::DeclarationToken;
+//pub use self::declaration::DeclarationLexeme;
 
 pub mod parentheses;
 pub mod brackets;

@@ -12,10 +12,10 @@ use crate::parselet::terminal::LiteralAST;
 use crate::parselet::terminal::OperatorAST;
 use crate::parselet::terminal::StringLiteralAST;
 use crate::parselet::terminal::VariableAST;
-use crate::lexeme::Tokens;
-use crate::lexeme::tokens::IdentifierToken;
-use crate::lexeme::tokens::LiteralToken;
-use crate::lexeme::tokens::OperatorToken;
+use crate::lexeme::Lexemes;
+use crate::lexeme::lexemes::IdentifierLexeme;
+use crate::lexeme::lexemes::LiteralLexeme;
+use crate::lexeme::lexemes::OperatorLexeme;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
 
@@ -78,16 +78,16 @@ fn test_simple_ast_eq_ne() {
 #[test]
 fn test_unparseable_equality() {
     let unp: UnparseableAST;
-    unp = UnparseableAST::from_tokens(vec![
-        Tokens::Identifier(IdentifierToken::from_str("x").unwrap()),
-        Tokens::Operator(OperatorToken::from_str("<").unwrap()),
-        Tokens::Literal(LiteralToken::Int(128)),
+    unp = UnparseableAST::from_lexemes(vec![
+        Lexemes::Identifier(IdentifierLexeme::from_str("x").unwrap()),
+        Lexemes::Operator(OperatorLexeme::from_str("<").unwrap()),
+        Lexemes::Literal(LiteralLexeme::Int(128)),
     ]);
     assert_eq!(unp, unp);
-    let unp2 = UnparseableAST::from_tokens(vec![
-        Tokens::Identifier(IdentifierToken::from_str("y").unwrap()),
-        Tokens::Operator(OperatorToken::from_str("<").unwrap()),
-        Tokens::Literal(LiteralToken::Int(128)),
+    let unp2 = UnparseableAST::from_lexemes(vec![
+        Lexemes::Identifier(IdentifierLexeme::from_str("y").unwrap()),
+        Lexemes::Operator(OperatorLexeme::from_str("<").unwrap()),
+        Lexemes::Literal(LiteralLexeme::Int(128)),
     ]);
     assert_ne!(unp, unp2);
 }

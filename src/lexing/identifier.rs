@@ -5,7 +5,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
 use crate::lexeme::collect::{association, identifier, keyword_or_reserved, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
@@ -29,10 +29,10 @@ mod identifiers {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierToken, Tokens};
+    use crate::lexeme::{IdentifierLexeme, Lexemes};
     use crate::lexeme::collect::identifier;
-    use crate::lexing::lexer::token_collector::TokenCollector;
-    use crate::lexeme::tokens::OperatorToken;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
@@ -42,11 +42,11 @@ mod identifiers {
     fn check(input: &str, expected_names: &[&str]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
-        let expected: TokenCollector = expected_names
+        let expected: LexemeCollector = expected_names
             .iter()
-            .map(|n| Tokens::Identifier(IdentifierToken::from_name(Name::new(*n).unwrap())))
+            .map(|n| Lexemes::Identifier(IdentifierLexeme::from_name(Name::new(*n).unwrap())))
             .collect();
-        assert_eq!(lexer.tokens(), &expected);
+        assert_eq!(lexer.lexemes(), &expected);
     }
 
     #[test]
@@ -117,10 +117,10 @@ mod keywords {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierToken, KeywordToken, Tokens};
+    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexemes};
     use crate::lexeme::collect::{identifier, keyword_or_reserved};
-    use crate::lexing::lexer::token_collector::TokenCollector;
-    use crate::lexeme::tokens::OperatorToken;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
@@ -131,8 +131,8 @@ mod keywords {
 
     #[test]
     fn all_keywords() {
-        for (name, token) in KEYWORDS.iter() {
-            check(name, &[Tokens::Keyword(KeywordToken::from_keyword(token.clone()))]);
+        for (name, lexeme) in KEYWORDS.iter() {
+            check(name, &[Lexemes::Keyword(KeywordLexeme::from_keyword(lexeme.clone()))]);
         }
     }
 
@@ -141,9 +141,9 @@ mod keywords {
         check(
             "let mut mango",
             &[
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Let)),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Mut)),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()))),
             ],
         );
     }
@@ -155,10 +155,10 @@ mod mixed {
 
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierToken, KeywordToken, Tokens};
+    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexemes};
     use crate::lexeme::collect::{identifier, keyword_or_reserved};
-    use crate::lexing::lexer::token_collector::TokenCollector;
-    use crate::lexeme::tokens::OperatorToken;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
@@ -166,10 +166,10 @@ mod mixed {
 
     use super::lex_keyword_identifier;
 
-    pub fn check(input: &str, expected_keywords: &[Tokens]) {
+    pub fn check(input: &str, expected_keywords: &[Lexemes]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected_keywords.into());
+        assert_eq!(lexer.lexemes(), &expected_keywords.into());
     }
 
     #[test]
@@ -177,10 +177,10 @@ mod mixed {
         check(
             "let mut python mango",
             &[
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Let)),
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Mut)),
-                Tokens::Identifier(IdentifierToken::from_name(Name::new("python").unwrap())),
-                Tokens::Keyword(KeywordToken::from_keyword(Keyword::Reserved("mango".to_owned()))),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Let)),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Mut)),
+                Lexemes::Identifier(IdentifierLexeme::from_name(Name::new("python").unwrap())),
+                Lexemes::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()))),
             ],
         );
     }

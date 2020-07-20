@@ -1,28 +1,28 @@
 use std::str::FromStr;
 
 use crate::common::error::{MangoErr, MangoResult};
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub struct OperatorToken {
+pub struct OperatorLexeme {
     symbol: Symbol,
 }
 
-impl FromStr for OperatorToken {
+impl FromStr for OperatorLexeme {
     type Err = String;
 
-    fn from_str(symbol_txt: &str) -> Result<OperatorToken, String> {
-        Ok(OperatorToken::from_symbol(Symbol::new(symbol_txt)?))
+    fn from_str(symbol_txt: &str) -> Result<OperatorLexeme, String> {
+        Ok(OperatorLexeme::from_symbol(Symbol::new(symbol_txt)?))
     }
 }
 
-impl OperatorToken {
-    pub fn from_symbol(symbol: Symbol) -> OperatorToken {
-        OperatorToken { symbol }
+impl OperatorLexeme {
+    pub fn from_symbol(symbol: Symbol) -> OperatorLexeme {
+        OperatorLexeme { symbol }
     }
 
     pub fn is_negate(&self) -> bool {
@@ -42,10 +42,10 @@ impl OperatorToken {
     }
 }
 
-impl ToText for OperatorToken {
+impl ToText for OperatorLexeme {
     fn to_text(&self) -> String {
         format!(" {} ", self.symbol)
     }
 }
 
-impl Token for OperatorToken {}
+impl Lexeme for OperatorLexeme {}

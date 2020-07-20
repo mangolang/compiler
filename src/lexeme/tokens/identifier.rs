@@ -1,18 +1,18 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub struct IdentifierToken {
+pub struct IdentifierLexeme {
     pub name: Name,
 }
 
-impl FromStr for IdentifierToken {
+impl FromStr for IdentifierLexeme {
     type Err = ErrMsg;
 
     fn from_str(text: &str) -> MsgResult<Self> {
@@ -21,16 +21,16 @@ impl FromStr for IdentifierToken {
     }
 }
 
-impl IdentifierToken {
+impl IdentifierLexeme {
     pub fn from_name(name: Name) -> Self {
-        IdentifierToken { name }
+        IdentifierLexeme { name }
     }
 }
 
-impl ToText for IdentifierToken {
+impl ToText for IdentifierLexeme {
     fn to_text(&self) -> String {
         self.name.to_string()
     }
 }
 
-impl Token for IdentifierToken {}
+impl Lexeme for IdentifierLexeme {}

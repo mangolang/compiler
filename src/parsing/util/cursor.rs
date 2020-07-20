@@ -1,19 +1,19 @@
 use ::std::rc::Rc;
 
-use crate::lexeme::collect::{FileTokens, TokenIndex};
-use crate::lexeme::Tokens;
+use crate::lexeme::collect::{FileLexemes, LexemeIndex};
+use crate::lexeme::Lexemes;
 
 #[derive(Debug)]
 pub struct ParseCursor<'a> {
-    index: TokenIndex,
-    tokens: &'a FileTokens,
+    index: LexemeIndex,
+    lexemes: &'a FileLexemes,
 }
 
 impl<'a> ParseCursor<'a> {
-    pub fn new(tokens: &'a FileTokens) -> Self {
+    pub fn new(lexemes: &'a FileLexemes) -> Self {
         ParseCursor {
-            index: tokens.index_at_start(),
-            tokens: tokens,
+            index: lexemes.index_at_start(),
+            lexemes: lexemes,
         }
     }
 
@@ -21,22 +21,22 @@ impl<'a> ParseCursor<'a> {
         self.index.increment()
     }
 
-    /// Get the requested element, or None if there are not that many tokens.
-    pub fn peek(&self) -> Option<&Tokens> {
-        if self.index >= self.tokens.len() {
+    /// Get the requested element, or None if there are not that many lexemes.
+    pub fn peek(&self) -> Option<&Lexemes> {
+        if self.index >= self.lexemes.len() {
             return None;
         }
-        Some(&self.tokens[self.index])
+        Some(&self.lexemes[self.index])
     }
 
-    /// Get the requested element, or None if there are not that many tokens.
-    pub fn take(&mut self) -> Option<&Tokens> {
-        if self.index >= self.tokens.len() {
+    /// Get the requested element, or None if there are not that many lexemes.
+    pub fn take(&mut self) -> Option<&Lexemes> {
+        if self.index >= self.lexemes.len() {
             return None;
         }
-        let token = &self.tokens[self.index];
+        let lexeme = &self.lexemes[self.index];
         self.index += 1;
-        Some(token)
+        Some(lexeme)
     }
 
     /// Fork the cursor, to try to parse something.
@@ -44,7 +44,7 @@ impl<'a> ParseCursor<'a> {
     pub fn fork(&self) -> Self {
         ParseCursor {
             index: self.index,
-            tokens: self.tokens.clone(),
+            lexemes: self.lexemes.clone(),
         }
     }
 }
@@ -56,8 +56,8 @@ mod tests {
 
     #[test]
     fn increment() {
-        let tokens = vec![unlexable("a"), unlexable("b")].into();
-        let mut cursor = ParseCursor::new(&tokens);
+        let lexemes = vec![unlexable("a"), unlexable("b")].into();
+        let mut cursor = ParseCursor::new(&lexemes);
         assert_eq!(Some(&unlexable("a")), cursor.peek());
         cursor.increment();
         assert_eq!(Some(&unlexable("b")), cursor.take());
@@ -66,8 +66,8 @@ mod tests {
 
     #[test]
     fn backtrack() {
-        let tokens = vec![unlexable("a"), unlexable("b")].into();
-        let mut cursor1 = ParseCursor::new(&tokens);
+        let lexemes = vec![unlexable("a"), unlexable("b")].into();
+        let mut cursor1 = ParseCursor::new(&lexemes);
         assert_eq!(Some(&unlexable("a")), cursor1.peek());
         let mut cursor2 = cursor1.fork();
         cursor1.increment();

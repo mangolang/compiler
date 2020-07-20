@@ -1,29 +1,29 @@
 use std::str::FromStr;
 
-use crate::token::collect::MemoryTokenStream;
-use crate::token::tokens::AssociationToken;
-use crate::token::tokens::EndStatementToken;
-use crate::token::tokens::IdentifierToken;
-use crate::token::tokens::KeywordToken;
-use crate::token::tokens::LiteralToken;
+use crate::lexeme::collect::MemoryLexemeStream;
+use crate::lexeme::lexemes::AssociationLexeme;
+use crate::lexeme::lexemes::EndStatementLexeme;
+use crate::lexeme::lexemes::IdentifierLexeme;
+use crate::lexeme::lexemes::KeywordLexeme;
+use crate::lexeme::lexemes::LiteralLexeme;
 use crate::util::strtype::Name;
 use crate::util::strtype::StrType;
 
 #[test]
-fn test_tokens_eq() {
-    use super::Tokens::*;
+fn test_lexemes_eq() {
+    use super::Lexemes::*;
     let my_var = Name::new("my_var").unwrap();
-    let tokens = MemoryTokenStream::new(vec![
-        Keyword(KeywordToken::from_str("let").unwrap()),
-        Keyword(KeywordToken::from_str("mut").unwrap()),
-        Identifier(IdentifierToken::from_name(my_var)),
-        Association(AssociationToken::from_unprefixed()),
-        Literal(LiteralToken::Int(21)),
-        EndStatement(EndStatementToken::new_semicolon()),
-        Identifier(IdentifierToken::from_name(my_var)),
-        Association(AssociationToken::from_str("+").unwrap()),
-        Identifier(IdentifierToken::from_name(my_var)),
+    let lexemes = MemoryLexemeStream::new(vec![
+        Keyword(KeywordLexeme::from_str("let").unwrap()),
+        Keyword(KeywordLexeme::from_str("mut").unwrap()),
+        Identifier(IdentifierLexeme::from_name(my_var)),
+        Association(AssociationLexeme::from_unprefixed()),
+        Literal(LiteralLexeme::Int(21)),
+        EndStatement(EndStatementLexeme::new_semicolon()),
+        Identifier(IdentifierLexeme::from_name(my_var)),
+        Association(AssociationLexeme::from_str("+").unwrap()),
+        Identifier(IdentifierLexeme::from_name(my_var)),
     ]);
-    assert_eq!(tokens, tokens);
-    assert_ne!(tokens, MemoryTokenStream::new(vec![]));
+    assert_eq!(lexemes, lexemes);
+    assert_ne!(lexemes, MemoryLexemeStream::new(vec![]));
 }

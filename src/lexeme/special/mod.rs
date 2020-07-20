@@ -1,5 +1,5 @@
-pub use self::block::{EndBlockToken, StartBlockToken};
-pub use self::unlexable::UnlexableToken;
+pub use self::block::{EndBlockLexeme, StartBlockLexeme};
+pub use self::unlexable::UnlexableLexeme;
 
 pub mod unlexable;
 pub mod block;

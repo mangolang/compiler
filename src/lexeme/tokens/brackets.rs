@@ -1,37 +1,37 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Open and close parentheses: (, )
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct BracketOpenToken {}
+pub struct BracketOpenLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct BracketCloseToken {}
+pub struct BracketCloseLexeme {}
 
-impl BracketOpenToken {
-    pub fn new() -> BracketOpenToken {
-        BracketOpenToken {}
+impl BracketOpenLexeme {
+    pub fn new() -> BracketOpenLexeme {
+        BracketOpenLexeme {}
     }
 }
 
-impl BracketCloseToken {
-    pub fn new() -> BracketCloseToken {
-        BracketCloseToken {}
+impl BracketCloseLexeme {
+    pub fn new() -> BracketCloseLexeme {
+        BracketCloseLexeme {}
     }
 }
 
-impl ToText for BracketOpenToken {
+impl ToText for BracketOpenLexeme {
     fn to_text(&self) -> String {
         " (".to_owned()
     }
 }
 
-impl ToText for BracketCloseToken {
+impl ToText for BracketCloseLexeme {
     fn to_text(&self) -> String {
         ") ".to_owned()
     }
 }
 
-impl Token for BracketOpenToken {}
+impl Lexeme for BracketOpenLexeme {}
 
-impl Token for BracketCloseToken {}
+impl Lexeme for BracketCloseLexeme {}

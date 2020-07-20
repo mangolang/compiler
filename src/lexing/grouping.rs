@@ -3,14 +3,14 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
 use crate::lexeme::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
     static ref GROUPING_RE: Regex = Regex::new(r"^[\(\)\[\]\{\}]").unwrap();
 }
 
-/// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
+/// Lex any number of parentheses, braces and brackets, and add the lexemes to the Lexer.
 pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
         lexer.add(match sym.as_str() {
@@ -32,15 +32,15 @@ mod test_util {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
-    pub fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenCollector = expected.into();
+    pub fn check(input: &str, expected: &[Lexemes]) {
+        let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_grouping(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected);
+        assert_eq!(lexer.lexemes(), &expected);
     }
 }
 
@@ -50,9 +50,9 @@ mod mismatch {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::test_util::check;
 
@@ -83,9 +83,9 @@ mod parenthese {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::test_util::check;
 
@@ -124,9 +124,9 @@ mod brackets {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{bracket_close, bracket_open};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::test_util::check;
 
@@ -162,9 +162,9 @@ mod mixed {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::test_util::check;
 

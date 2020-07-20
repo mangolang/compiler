@@ -11,8 +11,8 @@ Note: step 2, 3 and 4 are currently 'replaced' by a PEST parser.
 
 1. **Text** in source files or memory
 2. *Lexing*: recognize words from the language
-3. **Tokens**
-4. *Parsing*: connect the tokens
+3. **Lexemes**
+4. *Parsing*: connect the lexemes
 5. **fullAST** (full abstract syntax tree)
 6. *Reducing*: map synonymous expressions to the same construct
 7. **coreAST** (reduced subset of abstract syntax tree)

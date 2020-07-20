@@ -1,34 +1,34 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub struct AssociationToken {
+pub struct AssociationLexeme {
     //TODO @mark: note that some symbols aren't allowed
     symbol: Option<Symbol>,
 }
 
-impl FromStr for AssociationToken {
+impl FromStr for AssociationLexeme {
     type Err = ErrMsg;
 
-    fn from_str(association_txt: &str) -> MsgResult<AssociationToken> {
+    fn from_str(association_txt: &str) -> MsgResult<AssociationLexeme> {
         if association_txt == "=" {
-            return Ok(AssociationToken::from_unprefixed());
+            return Ok(AssociationLexeme::from_unprefixed());
         }
         assert!(association_txt.ends_with('='));
         let symbol = Symbol::new(&association_txt[0..association_txt.len() - 1])?;
-        AssociationToken::from_symbol(symbol)
+        AssociationLexeme::from_symbol(symbol)
     }
 }
 
-impl AssociationToken {
+impl AssociationLexeme {
     pub fn from_unprefixed() -> Self {
-        AssociationToken { symbol: Option::None }
+        AssociationLexeme { symbol: Option::None }
     }
 
     pub fn from_symbol(symbol: Symbol) -> MsgResult<Self> {
@@ -52,13 +52,13 @@ impl AssociationToken {
                 symbol
             )));
         }
-        Ok(AssociationToken {
+        Ok(AssociationLexeme {
             symbol: Option::Some(symbol),
         })
     }
 }
 
-impl ToText for AssociationToken {
+impl ToText for AssociationLexeme {
     fn to_text(&self) -> String {
         // LATER: this seems to compile, but IDEA flags it...
         match self.symbol {
@@ -68,23 +68,23 @@ impl ToText for AssociationToken {
     }
 }
 
-impl Token for AssociationToken {}
+impl Lexeme for AssociationLexeme {}
 
 #[cfg(test)]
 mod from_str {
     use crate::common::tests::assert_panic_silent;
-    use crate::lexeme::Tokens;
+    use crate::lexeme::Lexemes;
 
     use super::*;
 
     #[test]
     fn empty() {
-        assert_panic_silent(|| AssociationToken::from_str(""));
+        assert_panic_silent(|| AssociationLexeme::from_str(""));
     }
 
     #[test]
     fn mismatch() {
-        let err = AssociationToken::from_str("abc=").unwrap_err();
+        let err = AssociationLexeme::from_str("abc=").unwrap_err();
         assert!(err.as_str().to_lowercase().contains("unknown symbol"));
         assert!(err.as_str().to_lowercase().contains("abc"));
     }
@@ -92,31 +92,31 @@ mod from_str {
     #[test]
     fn valid() {
         assert_eq!(
-            AssociationToken::from_str("+=").unwrap(),
-            AssociationToken::from_symbol(Symbol::Plus).unwrap()
+            AssociationLexeme::from_str("+=").unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Plus).unwrap()
         );
         assert_eq!(
-            AssociationToken::from_str("-=").unwrap(),
-            AssociationToken::from_symbol(Symbol::Dash).unwrap()
+            AssociationLexeme::from_str("-=").unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Dash).unwrap()
         );
         assert_eq!(
-            AssociationToken::from_str("*=").unwrap(),
-            AssociationToken::from_symbol(Symbol::Asterisk).unwrap()
+            AssociationLexeme::from_str("*=").unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap()
         );
         assert_eq!(
-            AssociationToken::from_str("/=").unwrap(),
-            AssociationToken::from_symbol(Symbol::Slash).unwrap()
+            AssociationLexeme::from_str("/=").unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Slash).unwrap()
         );
-        //assert_eq!(AssociationToken::from_str("?=").unwrap(), AssociationToken::from_symbol(Symbol::Exclamation));
-        //assert_eq!(AssociationToken::from_str("!=").unwrap(), AssociationToken::from_symbol(Symbol::Question));
+        //assert_eq!(AssociationLexeme::from_str("?=").unwrap(), AssociationLexeme::from_symbol(Symbol::Exclamation));
+        //assert_eq!(AssociationLexeme::from_str("!=").unwrap(), AssociationLexeme::from_symbol(Symbol::Question));
     }
 
     #[test]
     fn invalid() {
-        assert!(AssociationToken::from_str("===").is_err());
-        assert!(AssociationToken::from_str("<=").is_err());
-        assert!(AssociationToken::from_str(">=").is_err());
-        assert!(AssociationToken::from_str("<==").is_err());
-        assert!(AssociationToken::from_str(">==").is_err());
+        assert!(AssociationLexeme::from_str("===").is_err());
+        assert!(AssociationLexeme::from_str("<=").is_err());
+        assert!(AssociationLexeme::from_str(">=").is_err());
+        assert!(AssociationLexeme::from_str("<==").is_err());
+        assert!(AssociationLexeme::from_str(">==").is_err());
     }
 }

@@ -3,18 +3,18 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
 use crate::lexeme::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
 
 lazy_static! {
     static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
 }
 
-/// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
+/// Lex any number of parentheses, braces and brackets, and add the lexemes to the Lexer.
 pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     let mut found_newline = false;
     while let ReaderResult::Match(sym) = reader.strip_match(&*SEPARATOR_RE) {
-        let token = match sym.as_str() {
+        let lexeme = match sym.as_str() {
             r"..." | r"…" => ellipsis(),
             r"." => period(),
             r"," => comma(),
@@ -27,7 +27,7 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
             }
             _ => unreachable!(),
         };
-        lexer.add(token);
+        lexer.add(lexeme);
         if found_newline {
             break;
         }
@@ -40,17 +40,17 @@ mod grouping {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
     use crate::lexeme::collect::{colon, comma, ellipsis, newline, period, unlexable};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_separators;
 
-    fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenCollector = expected.into();
+    fn check(input: &str, expected: &[Lexemes]) {
+        let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected);
+        assert_eq!(lexer.lexemes(), &expected);
     }
 
     #[test]

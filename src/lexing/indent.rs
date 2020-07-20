@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
+use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
 
 lazy_static! {
     static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\n)").unwrap();
@@ -13,7 +13,7 @@ lazy_static! {
 //TODO @mark: should not be called, or should be undone, after continuation (...)
 //TODO @mark: should not be called, or should be undone, for empty lines
 
-/// Process the indents at the start of a line, and add the tokens to the Lexer.
+/// Process the indents at the start of a line, and add the lexemes to the Lexer.
 pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Only try to lex indents if at the start of a line.
     if !lexer.is_at_indentable() {
@@ -31,13 +31,13 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         line_indent += 1;
     }
 
-    // Determine the tokens to create.
+    // Determine the lexemes to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent..prev_indent {
-        lexer.add(Tokens::EndBlock(EndBlockToken::new(true, false)));
+        lexer.add(Lexemes::EndBlock(EndBlockLexeme::new(true, false)));
     }
     for i in prev_indent..line_indent {
-        lexer.add(Tokens::StartBlock(StartBlockToken::new()));
+        lexer.add(Lexemes::StartBlock(StartBlockLexeme::new()));
     }
 
     lexer.set_at_indentable(false);
@@ -50,17 +50,17 @@ mod indents {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockToken, StartBlockToken, Tokens};
-    use crate::lexing::lexer::token_collector::TokenCollector;
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_indents;
 
-    fn check(initial_indent: u32, input: &str, expected: &[Tokens]) {
-        let expected: TokenCollector = expected.into();
+    fn check(initial_indent: u32, input: &str, expected: &[Lexemes]) {
+        let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
         lex_indents(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected);
+        assert_eq!(lexer.lexemes(), &expected);
     }
 
     #[test]
@@ -69,15 +69,15 @@ mod indents {
             0,
             "\t    hello",
             &[
-                Tokens::StartBlock(StartBlockToken::new()),
-                Tokens::StartBlock(StartBlockToken::new()),
+                Lexemes::StartBlock(StartBlockLexeme::new()),
+                Lexemes::StartBlock(StartBlockLexeme::new()),
             ],
         );
     }
 
     #[test]
     fn decrease_to_two() {
-        check(3, "    \thello", &[Tokens::EndBlock(EndBlockToken::new(true, false))]);
+        check(3, "    \thello", &[Lexemes::EndBlock(EndBlockLexeme::new(true, false))]);
     }
 
     #[test]
@@ -86,8 +86,8 @@ mod indents {
             2,
             "hello",
             &[
-                Tokens::EndBlock(EndBlockToken::new(true, false)),
-                Tokens::EndBlock(EndBlockToken::new(true, false)),
+                Lexemes::EndBlock(EndBlockLexeme::new(true, false)),
+                Lexemes::EndBlock(EndBlockLexeme::new(true, false)),
             ],
         );
     }

@@ -1,10 +1,10 @@
-pub use self::all::Tokens;
+pub use self::all::Lexemes;
 pub use self::short::*;
-pub use self::typ::Token;
-pub use self::file_tokens::FileTokens;
-pub use self::file_tokens::TokenIndex;
+pub use self::typ::Lexeme;
+pub use self::file_lexemes::FileLexemes;
+pub use self::file_lexemes::LexemeIndex;
 
 mod all;
 mod typ;
 mod short;
-mod file_tokens;
+mod file_lexemes;

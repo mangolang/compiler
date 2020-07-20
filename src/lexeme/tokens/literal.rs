@@ -1,4 +1,4 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 use crate::util::parsetxt::int::parse_int;
@@ -9,22 +9,22 @@ use crate::util::parsetxt::real::parse_real;
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub enum LiteralToken {
+pub enum LiteralLexeme {
     Text(String),
     Int(i64),
     Real(f64eq),
     Boolean(bool),
 }
 
-impl ToText for LiteralToken {
+impl ToText for LiteralLexeme {
     fn to_text(&self) -> String {
         match self {
-            LiteralToken::Text(val) => val.to_string(),
-            LiteralToken::Int(val) => format!("{}", val),
-            LiteralToken::Real(val) => format!("{}", val),
-            LiteralToken::Boolean(val) => format!("{}", val),
+            LiteralLexeme::Text(val) => val.to_string(),
+            LiteralLexeme::Int(val) => format!("{}", val),
+            LiteralLexeme::Real(val) => format!("{}", val),
+            LiteralLexeme::Boolean(val) => format!("{}", val),
         }
     }
 }
 
-impl Token for LiteralToken {}
+impl Lexeme for LiteralLexeme {}

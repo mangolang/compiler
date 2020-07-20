@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because
-/// so that all further tokens can refer to slices of the source, without allocating strings.
+/// so that all further lexemes can refer to slices of the source, without allocating strings.
 // Feel free to clone this when needed, it's just a wrapper for an Rc version.
 #[derive(PartialEq, Eq, Clone)]
 pub struct SourceFile {

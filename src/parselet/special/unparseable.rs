@@ -1,17 +1,17 @@
 use crate::parselet::AST;
-use crate::lexeme::Tokens;
+use crate::lexeme::Lexemes;
 use crate::util::encdec::ToText;
 
-/// Represents an unparseable list of tokens.
+/// Represents an unparseable list of lexemes.
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableAST {
-    // should I box the tokens to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
-    tokens: Vec<Tokens>,
+    // should I box the lexemes to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
+    lexemes: Vec<Lexemes>,
 }
 
 impl UnparseableAST {
-    pub fn from_tokens(tokens: Vec<Tokens>) -> UnparseableAST {
-        UnparseableAST { tokens }
+    pub fn from_lexemes(lexemes: Vec<Lexemes>) -> UnparseableAST {
+        UnparseableAST { lexemes }
     }
 }
 
@@ -19,7 +19,7 @@ impl UnparseableAST {
 //     fn to_text(&self) -> String {
 //         format!(
 //             " [cannot parse: {}] ",
-//             self.tokens.iter().map(Tokens::to_text).collect::<Vec<String>>().join(" / ")
+//             self.lexemes.iter().map(Lexemes::to_text).collect::<Vec<String>>().join(" / ")
 //         )
 //     }
 // }

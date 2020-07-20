@@ -1,26 +1,26 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct StartBlockToken {}
+pub struct StartBlockLexeme {}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct EndBlockToken {
+pub struct EndBlockLexeme {
     is_dedent: bool,
     is_end_keyword: bool,
 }
 
-impl StartBlockToken {
+impl StartBlockLexeme {
     pub fn new() -> Self {
-        StartBlockToken {}
+        StartBlockLexeme {}
     }
 }
 
-impl EndBlockToken {
+impl EndBlockLexeme {
     pub fn new(is_dedent: bool, is_end_keyword: bool) -> Self {
         assert!(is_dedent || is_end_keyword);
-        EndBlockToken { is_dedent, is_end_keyword }
+        EndBlockLexeme { is_dedent, is_end_keyword }
     }
 
     //TODO @mark: customization options temporarily optional
@@ -29,20 +29,20 @@ impl EndBlockToken {
     }
 }
 
-impl ToText for StartBlockToken {
+impl ToText for StartBlockLexeme {
     // TODO: needs context information to render indents
     fn to_text(&self) -> String {
         " { ".to_owned()
     }
 }
 
-impl ToText for EndBlockToken {
+impl ToText for EndBlockLexeme {
     // TODO: needs context information to render indents
     fn to_text(&self) -> String {
         " } ".to_owned()
     }
 }
 
-impl Token for StartBlockToken {}
+impl Lexeme for StartBlockLexeme {}
 
-impl Token for EndBlockToken {}
+impl Lexeme for EndBlockLexeme {}

@@ -1,31 +1,31 @@
-use crate::lexeme::Token;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// End of statement.
 /// Strictly, this doesn't always end a statement, e.g. if it follows a continuation.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub enum EndStatementToken {
+pub enum EndStatementLexeme {
     EndLine,
     Semicolon,
 }
 
-impl EndStatementToken {
+impl EndStatementLexeme {
     // End of line
     pub fn new_end_line() -> Self {
-        EndStatementToken::EndLine
+        EndStatementLexeme::EndLine
     }
 
     // Semicolon
     pub fn new_semicolon() -> Self {
-        EndStatementToken::Semicolon
+        EndStatementLexeme::Semicolon
     }
 }
 
-impl ToText for EndStatementToken {
+impl ToText for EndStatementLexeme {
     // Currently always print newlines; keeping original formatting is not a priority
     fn to_text(&self) -> String {
         "\n".to_owned()
     }
 }
 
-impl Token for EndStatementToken {}
+impl Lexeme for EndStatementLexeme {}
