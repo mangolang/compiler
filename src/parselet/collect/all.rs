@@ -16,4 +16,10 @@ pub enum Parselets {
     Unparseable(UnparseableParselet),
 }
 
+impl From<ExpressionParselets> for Parselets {
+    fn from(expression: ExpressionParselets) -> Self {
+        Parselets::Expression(expression)
+    }
+}
+
 impl Parselet for Parselets {}

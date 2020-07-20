@@ -16,6 +16,8 @@ use crate::lexeme::lexemes::ParenthesisOpenLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::util::encdec::ToText;
 
+//TODO @mark: pass code slice along with lexeme
+
 /// Collection of all possible lexemes.
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Lexemes {

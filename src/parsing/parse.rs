@@ -7,7 +7,7 @@ use crate::util::parsetxt::int::parse_int;
 
 pub fn parse(file_lex: FileLexemes) {
     let mut cursor = ParseCursor::new(&file_lex);
-    let parselet = parse_literal(cursor);
+    let parselet = parse_literal(&mut cursor);
     // let parse_parenthese(cursor);
     //parse_addition(lex);
     unimplemented!()
