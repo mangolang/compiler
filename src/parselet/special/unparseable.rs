@@ -5,7 +5,6 @@ use crate::util::encdec::ToText;
 /// Represents an unparseable list of lexemes.
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableParselet {
-    // should I box the lexemes to save space? Probably not, they're not that big (40) and pointer is 8 overhead plus time
     lexemes: Vec<Lexemes>,
 }
 

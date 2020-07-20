@@ -13,19 +13,17 @@ Note: step 2, 3 and 4 are currently 'replaced' by a PEST parser.
 2. *Lexing*: recognize words from the language
 3. **Lexemes**
 4. *Parsing*: connect the lexemes
-5. **fullParselet** (full abstract syntax tree)
-6. *Reducing*: map synonymous expressions to the same construct
-7. **coreParselet** (reduced subset of abstract syntax tree)
-8. *Semanticate* (semantic analysis): check types and signatures, connect variables
-9. **mango.sem** variables are connected but code not validated
-10. *checking* Do type checking and other static analysis
-11. **IR**
-12. *mango.optimizing* platform-independent optimizations
-13. **IR** (still)
-14. *Generation*
-15. **target** representation at low or high level, depending on target; also optimized and preliminary mode
-16. *PD-mango.optimizing* platform-dependent optimizations
-17. **target** (still)
-18. *Writing*
+5. **Parselet** (full abstract syntax tree)
+6. *Semanticate* (semantic analysis): check types and signatures, connect variables
+7. **mango.sem** variables are connected but code not validated
+8. *checking* Do type checking and other static analysis
+9. **IR**
+10. *mango.optimizing* platform-independent optimizations
+11. **IR** (still)
+12. *Generation*
+13. **target** representation at low or high level, depending on target; also optimized and preliminary mode
+14. *PD-mango.optimizing* platform-dependent optimizations
+15. **target** (still)
+16. *Writing*
 
 Each of these has it's own sub-project.

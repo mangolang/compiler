@@ -8,4 +8,4 @@ pub mod special;
 //TODO @mark: re-enable test
 //#[cfg(test)]
 //mod tests;
-pub mod lexemes;
+pub mod tokens;
