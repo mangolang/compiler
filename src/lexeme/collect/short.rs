@@ -38,16 +38,16 @@ pub fn literal_text(txt: impl Into<String>) -> Lexemes {
     Lexemes::Literal(LiteralLexeme::Text(txt.into()))
 }
 
-pub fn literal_bool(b: bool) -> Lexemes {
-    Lexemes::Literal(LiteralLexeme::Boolean(b))
-}
-
 pub fn literal_int(nr: i64) -> Lexemes {
     Lexemes::Literal(LiteralLexeme::Int(nr))
 }
 
 pub fn literal_real(nr: impl Into<f64eq>) -> Lexemes {
     Lexemes::Literal(LiteralLexeme::Real(nr.into()))
+}
+
+pub fn literal_bool(b: bool) -> Lexemes {
+    Lexemes::Literal(LiteralLexeme::Boolean(b))
 }
 
 pub fn operator(txt: &str) -> MsgResult<Lexemes> {
