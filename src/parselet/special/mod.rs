@@ -1,3 +1,3 @@
-pub use self::unparseable::UnparseableAST;
+pub use self::unparseable::UnparseableParselet;
 
 mod unparseable;

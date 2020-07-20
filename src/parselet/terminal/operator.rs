@@ -4,7 +4,7 @@ use std::fmt::Result as fResult;
 use std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::parselet::AST;
+use crate::parselet::Parselet;
 use crate::util::encdec::ToText;
 use crate::util::strtype::StrType;
 
@@ -46,21 +46,21 @@ impl Display for BinOpSymbol {
 
 /// An operator (unary, binary, ...).
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct OperatorAST {
+pub struct OperatorParselet {
     symbol: BinOpSymbol,
 }
 
-impl FromStr for OperatorAST {
+impl FromStr for OperatorParselet {
     type Err = ErrMsg;
 
-    fn from_str(symbol_txt: &str) -> Result<OperatorAST, ErrMsg> {
-        Ok(OperatorAST::from_symbol(BinOpSymbol::new(symbol_txt)?))
+    fn from_str(symbol_txt: &str) -> Result<OperatorParselet, ErrMsg> {
+        Ok(OperatorParselet::from_symbol(BinOpSymbol::new(symbol_txt)?))
     }
 }
 
-impl OperatorAST {
-    pub fn from_symbol(symbol: BinOpSymbol) -> OperatorAST {
-        OperatorAST { symbol }
+impl OperatorParselet {
+    pub fn from_symbol(symbol: BinOpSymbol) -> OperatorParselet {
+        OperatorParselet { symbol }
     }
 
     pub fn is_add_sub(&self) -> bool {
@@ -72,10 +72,10 @@ impl OperatorAST {
     }
 }
 
-impl ToText for OperatorAST {
+impl ToText for OperatorParselet {
     fn to_text(&self) -> String {
         format!(" {} ", self.symbol)
     }
 }
 
-impl AST for OperatorAST {}
+impl Parselet for OperatorParselet {}

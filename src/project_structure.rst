@@ -4,7 +4,7 @@ Project structure
 
 Compilation broadly proceeds in these steps, with representations in **bold** and operations in *italics*:
 
-TODO: Change 'AST' to 'Parselet'
+TODO: Change 'Parselet' to 'Parselet'
 TODO: Merge full and core ast, they're the same structs in different enum
 
 Note: step 2, 3 and 4 are currently 'replaced' by a PEST parser.
@@ -13,9 +13,9 @@ Note: step 2, 3 and 4 are currently 'replaced' by a PEST parser.
 2. *Lexing*: recognize words from the language
 3. **Lexemes**
 4. *Parsing*: connect the lexemes
-5. **fullAST** (full abstract syntax tree)
+5. **fullParselet** (full abstract syntax tree)
 6. *Reducing*: map synonymous expressions to the same construct
-7. **coreAST** (reduced subset of abstract syntax tree)
+7. **coreParselet** (reduced subset of abstract syntax tree)
 8. *Semanticate* (semantic analysis): check types and signatures, connect variables
 9. **mango.sem** variables are connected but code not validated
 10. *checking* Do type checking and other static analysis

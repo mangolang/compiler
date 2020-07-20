@@ -1,38 +1,38 @@
-use crate::parselet::AST;
-use crate::parselet::node::AssignmentAST;
-use crate::parselet::node::BinaryOperationAST;
-use crate::parselet::node::UnaryOperationAST;
-use crate::parselet::special::UnparseableAST;
-use crate::parselet::terminal::LiteralAST;
-use crate::parselet::terminal::OperatorAST;
-use crate::parselet::terminal::VariableAST;
+use crate::parselet::Parselet;
+use crate::parselet::node::AssignmentParselet;
+use crate::parselet::node::BinaryOperationParselet;
+use crate::parselet::node::UnaryOperationParselet;
+use crate::parselet::special::UnparseableParselet;
+use crate::parselet::terminal::LiteralParselet;
+use crate::parselet::terminal::OperatorParselet;
+use crate::parselet::terminal::VariableParselet;
 use crate::util::encdec::ToText;
 
 /// Collection of all possible nodes in the full abstract syntax tree.
 #[derive(PartialEq, Eq, Hash, Debug)]
-pub enum FullAST {
-    Operator(OperatorAST),
-    Literal(LiteralAST),
-    UnaryOperation(UnaryOperationAST),
-    BinaryOperation(BinaryOperationAST),
-    Variable(VariableAST),
-    Assignment(AssignmentAST),
+pub enum FullParselet {
+    Operator(OperatorParselet),
+    Literal(LiteralParselet),
+    UnaryOperation(UnaryOperationParselet),
+    BinaryOperation(BinaryOperationParselet),
+    Variable(VariableParselet),
+    Assignment(AssignmentParselet),
 
-    Unparseable(UnparseableAST),
+    Unparseable(UnparseableParselet),
 }
 
-// impl ToText for FullAST {
+// impl ToText for FullParselet {
 //     fn to_text(&self) -> String {
 //         match self {
-//             FullAST::Operator(val) => val.to_text(),
-//             FullAST::Literal(val) => val.to_text(),
-//             FullAST::UnaryOperation(val) => val.to_text(),
-//             FullAST::BinaryOperation(val) => val.to_text(),
-//             FullAST::Variable(val) => val.to_text(),
-//             FullAST::Assignment(val) => val.to_text(),
-//             FullAST::Unparseable(val) => val.to_text(),
+//             FullParselet::Operator(val) => val.to_text(),
+//             FullParselet::Literal(val) => val.to_text(),
+//             FullParselet::UnaryOperation(val) => val.to_text(),
+//             FullParselet::BinaryOperation(val) => val.to_text(),
+//             FullParselet::Variable(val) => val.to_text(),
+//             FullParselet::Assignment(val) => val.to_text(),
+//             FullParselet::Unparseable(val) => val.to_text(),
 //         }
 //     }
 // }
 
-impl AST for FullAST {}
+impl Parselet for FullParselet {}

@@ -1,70 +1,70 @@
 use derive_new::new;
 
-use crate::parselet::AST;
+use crate::parselet::Parselet;
 use crate::util::encdec::ToText;
 use crate::util::format::to_double_quoted_str;
 use crate::util::numtype::f64eq;
 
 /// Closed collection of literal values
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub enum LiteralAST {
-    Int(IntLiteralAST),
-    Float(FloatLiteralAST),
-    String(StringLiteralAST),
+pub enum LiteralParselet {
+    Int(IntLiteralParselet),
+    Float(FloatLiteralParselet),
+    String(StringLiteralParselet),
 }
 
 /// A literal integer value.
 #[derive(new, Debug, PartialEq, Eq, Hash)]
-pub struct IntLiteralAST {
+pub struct IntLiteralParselet {
     value: i64,
 }
 
 /// A literal float value.
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct FloatLiteralAST {
+pub struct FloatLiteralParselet {
     value: f64eq,
 }
 
 /// A literal text value.
 #[derive(new, Debug, PartialEq, Eq, Hash)]
-pub struct StringLiteralAST {
+pub struct StringLiteralParselet {
     value: String,
 }
 
-impl FloatLiteralAST {
+impl FloatLiteralParselet {
     pub fn new(value: f64) -> Self {
-        FloatLiteralAST { value: f64eq::new(value) }
+        FloatLiteralParselet { value: f64eq::new(value) }
     }
 }
 
-impl ToText for IntLiteralAST {
+impl ToText for IntLiteralParselet {
     fn to_text(&self) -> String {
         format!(" {:} ", self.value)
     }
 }
 
-impl ToText for FloatLiteralAST {
+impl ToText for FloatLiteralParselet {
     fn to_text(&self) -> String {
         format!(" {:.e} ", self.value)
     }
 }
 
-impl ToText for StringLiteralAST {
+impl ToText for StringLiteralParselet {
     fn to_text(&self) -> String {
         format!(" {:} ", to_double_quoted_str(&self.value))
     }
 }
 
-impl ToText for LiteralAST {
+impl ToText for LiteralParselet {
     fn to_text(&self) -> String {
         match self {
-            LiteralAST::Int(val) => val.to_text(),
-            LiteralAST::Float(val) => val.to_text(),
-            LiteralAST::String(val) => val.to_text(),
+            LiteralParselet::Int(val) => val.to_text(),
+            LiteralParselet::Float(val) => val.to_text(),
+            LiteralParselet::String(val) => val.to_text(),
         }
     }
 }
 
-impl AST for IntLiteralAST {}
-impl AST for FloatLiteralAST {}
-impl AST for StringLiteralAST {}
+impl Parselet for IntLiteralParselet {}
+impl Parselet for FloatLiteralParselet {}
+impl Parselet for StringLiteralParselet {}

@@ -3,35 +3,35 @@ use std::hash::Hash;
 
 use crate::util::encdec::ToText;
 
-/// AST trait to be implemented by all AST nodes.
-pub trait AST: PartialEq + Eq + Hash + Debug {}
+/// Parselet trait to be implemented by all Parselet nodes.
+pub trait Parselet: PartialEq + Eq + Hash + Debug {}
 
 //TODO @mark: remove?
 ///// Trait to be implemented by everything in the full abstract syntax tree.
-////pub trait BaseAST: ToText + ToObjectNotation {  // todo: add ON again later
-//pub trait BaseAST: ToText + Debug {}
+////pub trait BaseParselet: ToText + ToObjectNotation {  // todo: add ON again later
+//pub trait BaseParselet: ToText + Debug {}
 //
-///// AST trait to be used for AST trait objects (implements Eq).
-//// later: When specialization feature is stable, merge BaseAST and AST: https://stackoverflow.com/questions/49466199/default-trait-method-implementation-for-all-trait-objects
-//pub trait AST: BaseAST {
+///// Parselet trait to be used for Parselet trait objects (implements Eq).
+//// later: When specialization feature is stable, merge BaseParselet and Parselet: https://stackoverflow.com/questions/49466199/default-trait-method-implementation-for-all-trait-objects
+//pub trait Parselet: BaseParselet {
 //    /// Should return an &Any so that we can test equality on a casted value.
 //    fn as_any(&self) -> &Any;
 //
 //    /// Do the equality test.
-//    fn equals(&self, other: &AST) -> bool;
+//    fn equals(&self, other: &Parselet) -> bool;
 //
 //    //    /// Create hash, but using a Hasher trait object instead of generic function.
 //    //    fn as_hash(&self, state: &mut Hasher);
 //}
 //
-///// This makes all AST nodes comparable (Eq).
+///// This makes all Parselet nodes comparable (Eq).
 //// I *think* that 'static here refers to the type S (not instances).
-//impl<S: 'static + BaseAST + PartialEq> AST for S {
+//impl<S: 'static + BaseParselet + PartialEq> Parselet for S {
 //    fn as_any(&self) -> &Any {
 //        self as &Any
 //    }
 //
-//    fn equals(&self, other: &AST) -> bool {
+//    fn equals(&self, other: &Parselet) -> bool {
 //        // Do a type-safe casting. If types are differents
 //        // return false, else test for equality.
 //        match other.as_any().downcast_ref::<S>() {
@@ -43,8 +43,8 @@ pub trait AST: PartialEq + Eq + Hash + Debug {}
 //
 ///// Actually implement PartialEq to delegate to .equals(...).
 //// From https://stackoverflow.com/a/49138717/723090
-//impl<'a> PartialEq for AST + 'a {
-//    fn eq(&self, other: &AST) -> bool {
+//impl<'a> PartialEq for Parselet + 'a {
+//    fn eq(&self, other: &Parselet) -> bool {
 //        self.equals(other)
 //    }
 //}

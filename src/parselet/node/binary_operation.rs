@@ -1,19 +1,19 @@
-use crate::parselet::AST;
-use crate::parselet::FullAST;
-use crate::parselet::terminal::OperatorAST;
+use crate::parselet::Parselet;
+use crate::parselet::FullParselet;
+use crate::parselet::terminal::OperatorParselet;
 use crate::util::encdec::ToText;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct BinaryOperationAST {
-    left: Box<FullAST>,
-    operator: OperatorAST,
-    right: Box<FullAST>,
+pub struct BinaryOperationParselet {
+    left: Box<FullParselet>,
+    operator: OperatorParselet,
+    right: Box<FullParselet>,
 }
 
-impl BinaryOperationAST {
+impl BinaryOperationParselet {
     // No derive(new) because of boxing
-    pub fn new(left: FullAST, operator: OperatorAST, right: FullAST) -> Self {
-        BinaryOperationAST {
+    pub fn new(left: FullParselet, operator: OperatorParselet, right: FullParselet) -> Self {
+        BinaryOperationParselet {
             left: Box::new(left),
             operator,
             right: Box::new(right),
@@ -21,7 +21,7 @@ impl BinaryOperationAST {
     }
 }
 
-// impl ToText for BinaryOperationAST {
+// impl ToText for BinaryOperationParselet {
 //     fn to_text(&self) -> String {
 //         return format!(
 //             "({0:} {1:} {2:})",
@@ -32,4 +32,4 @@ impl BinaryOperationAST {
 //     }
 // }
 
-impl AST for BinaryOperationAST {}
+impl Parselet for BinaryOperationParselet {}
