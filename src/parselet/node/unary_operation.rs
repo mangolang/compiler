@@ -1,18 +1,18 @@
+use crate::lexeme::OperatorLexeme;
 use crate::parselet::Parselet;
 use crate::parselet::Parselets;
-use crate::parselet::terminal::OperatorParselet;
 use crate::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnaryOperationParselet {
-    operator: OperatorParselet,
+    operator: OperatorLexeme,
     subject: Box<Parselets>,
 }
 
 impl UnaryOperationParselet {
     // No derive(new) because of boxing
-    pub fn new(operator: OperatorParselet, subject: Parselets) -> Self {
+    pub fn new(operator: OperatorLexeme, subject: Parselets) -> Self {
         UnaryOperationParselet {
             operator,
             subject: Box::new(subject),
