@@ -4,7 +4,7 @@ use crate::parselet::Parselet;
 use crate::util::encdec::ToText;
 use crate::util::format::to_double_quoted_str;
 use crate::util::numtype::f64eq;
-use crate::lexeme::tokens::LiteralLexeme;
+use crate::lexeme::lexemes::LiteralLexeme;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct LiteralParselet {

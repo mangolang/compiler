@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn increment() {
-        let lexemes = vec![unlexable("a"), unlexable("b")].into();
+        let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
         let mut cursor = ParseCursor::new(&lexemes);
         assert_eq!(Some(&unlexable("a")), cursor.peek());
         cursor.increment();
@@ -66,7 +66,7 @@ mod tests {
 
     #[test]
     fn backtrack() {
-        let lexemes = vec![unlexable("a"), unlexable("b")].into();
+        let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
         let mut cursor1 = ParseCursor::new(&lexemes);
         assert_eq!(Some(&unlexable("a")), cursor1.peek());
         let mut cursor2 = cursor1.fork();
