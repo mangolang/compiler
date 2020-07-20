@@ -1,4 +1,4 @@
-pub use self::all::FullParselet;
+pub use self::all::Parselets;
 pub use self::typ::Parselet;
 
 mod all;

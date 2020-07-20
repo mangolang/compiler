@@ -1,5 +1,5 @@
 use crate::parselet::Parselet;
-use crate::parselet::FullParselet;
+use crate::parselet::Parselets;
 use crate::parselet::terminal::OperatorParselet;
 use crate::util::encdec::ToText;
 
@@ -7,12 +7,12 @@ use crate::util::encdec::ToText;
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnaryOperationParselet {
     operator: OperatorParselet,
-    subject: Box<FullParselet>,
+    subject: Box<Parselets>,
 }
 
 impl UnaryOperationParselet {
     // No derive(new) because of boxing
-    pub fn new(operator: OperatorParselet, subject: FullParselet) -> Self {
+    pub fn new(operator: OperatorParselet, subject: Parselets) -> Self {
         UnaryOperationParselet {
             operator,
             subject: Box::new(subject),

@@ -30,12 +30,14 @@ impl<'a> ParseCursor<'a> {
     }
 
     /// Get the requested element, or None if there are not that many lexemes.
+    /// This returns a borrow which can be cloned, because dealing with taking things
+    /// out of the Cursor is too complex in combination with rollbacks.
     pub fn take(&mut self) -> Option<&Lexemes> {
         if self.index >= self.lexemes.len() {
             return None;
         }
         let lexeme = &self.lexemes[self.index];
-        self.index += 1;
+        self.index.increment();
         Some(lexeme)
     }
 

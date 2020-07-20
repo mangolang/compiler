@@ -1,4 +1,4 @@
-use crate::parselet::{FullParselet, VariableParselet};
+use crate::parselet::{Parselets, VariableParselet};
 use crate::parselet::Parselet;
 use crate::util::encdec::ToText;
 
@@ -6,12 +6,12 @@ use crate::util::encdec::ToText;
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct AssignmentParselet {
     assignee: Box<VariableParselet>,
-    value: Box<FullParselet>,
+    value: Box<Parselets>,
 }
 
 impl AssignmentParselet {
     // No derive(new) because of boxing
-    pub fn new(assignee: VariableParselet, value: FullParselet) -> Self {
+    pub fn new(assignee: VariableParselet, value: Parselets) -> Self {
         AssignmentParselet {
             assignee: Box::new(assignee),
             value: Box::new(value),

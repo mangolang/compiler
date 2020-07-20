@@ -10,7 +10,7 @@ use crate::util::encdec::ToText;
 
 /// Collection of all possible nodes in the full abstract syntax tree.
 #[derive(PartialEq, Eq, Hash, Debug)]
-pub enum FullParselet {
+pub enum Parselets {
     Operator(OperatorParselet),
     Literal(LiteralParselet),
     UnaryOperation(UnaryOperationParselet),
@@ -21,18 +21,18 @@ pub enum FullParselet {
     Unparseable(UnparseableParselet),
 }
 
-// impl ToText for FullParselet {
+// impl ToText for Parselets {
 //     fn to_text(&self) -> String {
 //         match self {
-//             FullParselet::Operator(val) => val.to_text(),
-//             FullParselet::Literal(val) => val.to_text(),
-//             FullParselet::UnaryOperation(val) => val.to_text(),
-//             FullParselet::BinaryOperation(val) => val.to_text(),
-//             FullParselet::Variable(val) => val.to_text(),
-//             FullParselet::Assignment(val) => val.to_text(),
-//             FullParselet::Unparseable(val) => val.to_text(),
+//             Parselets::Operator(val) => val.to_text(),
+//             Parselets::Literal(val) => val.to_text(),
+//             Parselets::UnaryOperation(val) => val.to_text(),
+//             Parselets::BinaryOperation(val) => val.to_text(),
+//             Parselets::Variable(val) => val.to_text(),
+//             Parselets::Assignment(val) => val.to_text(),
+//             Parselets::Unparseable(val) => val.to_text(),
 //         }
 //     }
 // }
 
-impl Parselet for FullParselet {}
+impl Parselet for Parselets {}

@@ -14,7 +14,7 @@ pub struct LiteralParselet {
 impl LiteralParselet {
     pub fn new(lexeme: LiteralLexeme) -> Self {
         LiteralParselet {
-            lexeme: LiteralLexeme,
+            lexeme,
         }
     }
 }

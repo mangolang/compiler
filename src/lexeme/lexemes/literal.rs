@@ -10,6 +10,7 @@ use crate::util::parsetxt::real::parse_real;
 /// Note that null does not exist.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum LiteralLexeme {
+    //TODO @mark: to Ustr for cheaper clone:
     Text(String),
     Int(i64),
     Real(f64eq),

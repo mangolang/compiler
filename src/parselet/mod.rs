@@ -1,5 +1,5 @@
 pub use self::collect::Parselet;
-pub use self::collect::FullParselet;
+pub use self::collect::Parselets;
 pub use self::node::*;
 pub use self::special::*;
 pub use self::terminal::*;
