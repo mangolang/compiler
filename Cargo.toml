@@ -1,7 +1,8 @@
 [package]
-name = "mango"
-description = "The Mango programming language (UNDER CONSTRUCTION)"
-version = "0.4.0"
+name = "mangolib"
+description = "The Mango programming language (front-end library) (UNDER CONSTRUCTION)"
+# Note: until version 0.4.0, the crates.io 'mango' crate was what since 0.5.0 is 'mangolib'
+version = "0.5.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangocode.org/"
 license = "Apache-2.0"
