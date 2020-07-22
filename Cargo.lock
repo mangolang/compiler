@@ -111,6 +111,8 @@ dependencies = [
 [[package]]
 name = "mango_ir"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bc2bf9def26a83dc2c21245343613efbe2ff64e5daf844c8bdd01f1fab73fee"
 
 [[package]]
 name = "mangolib"
@@ -206,6 +208,8 @@ checksum = "26412eb97c6b088a6997e05f69403a802a92d520de2f8e63c2b65f9e0f47c4e8"
 [[package]]
 name = "scoped_name"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "766ef28e5b092e54c1ec885b0969c571f581c3c0521dde6ff6bf9d8227cad788"
 dependencies = [
  "lazy_static",
  "ustr",
