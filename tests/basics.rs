@@ -3,7 +3,7 @@
 
 use ::std::io::Cursor;
 
-use ::mango::run;
+use ::mangolib::run;
 
 fn assert_source_output(source: &str, expected_output: &str) {
     let inp: Cursor<Vec<u8>> = Cursor::new(vec![]);

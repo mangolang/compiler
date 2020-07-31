@@ -31,13 +31,15 @@ There are hundreds of pages of design notes, but the plan still lacks coherence,
 How to use
 -------------------------------
 
-The compiler is written in Rust. You can test and compile the library with Docker:
+To interact with Mango from the command line, use the CLI_ crate.
+
+This crate is a Rust library. You cannot execute it directly, use the CLI_. Use this library if you're making another Rust tool that relies on the Mango compiler.
+
+You can test and compile the library with Docker:
 
     docker build .
 
 Or run the cargo commands from the Dockerfile yourself.
-
-This compiles to native code, with WebAssembly to be added later (#34).
 
 Links
 -------------------------------
@@ -49,6 +51,7 @@ Links
 .. _Official website: https://mangocode.org/
 .. _`Documentation`: https://docs.mangocode.org/
 .. _`Code of conduct and contributing`: https://github.com/mangolang/mango
+.. _CLI: https://github.com/mangolang/cli
 .. _IR: https://github.com/mangolang/mango_ir
 .. _compiled: https://github.com/mangolang/wasm
 .. _interpreted: https://github.com/mangolang/interpreter

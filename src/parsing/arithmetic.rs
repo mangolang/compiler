@@ -1,26 +1,23 @@
-use crate::lexing::util::lex_list::LexLis;
 use crate::lexeme::Lexemes;
+use crate::lexing::util::lex_list::LexLis;
+use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
+use crate::parsing::literals::parse_literal;
+use crate::parsing::util::cursor::ParseCursor;
 
-pub fn parse_addition(lex: LexList) -> Lexemes {
-    //TODO @mark:
-    let lhs = parse_multiplication(lex);
-    unimplemented!()
-
-//    lex
-//    val lhsMultiplication = parseMultiplication(listener, lexemes)
-//    val maybeOperator = lexemes.peek()
-//    if (maybeOperator is OperatorLexeme && maybeOperator.isAddSub) {
-//        /* Attempt to parse `Multiplication ("+" | "-") Multiplication`. */
-//        lexemes.take()
-//        val rhsMultiplication = parseExpression(listener, lexemes)
-//        return ConcreteBinaryOperation(
-//            lhsMultiplication,
-//            ConcreteBinaryOperator(maybeOperator),
-//            rhsMultiplication
-//        )
-//    }
-//    /* Parsing `Multiplication ("+" | "-") Multiplication` failed, just use Multiplication. */
-//    return lhsMultiplication
+pub fn parse_binary(cursor: &mut ParseCursor) -> Option<ExpressionParselets> {
+    match cursor.take() {
+        Some(lexeme) => {
+            parse_literal()
+            if let Lexemes::Operator(operator_lexeme) = lexeme {
+                Some(ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
+                    operator_lexeme.clone()
+                )))
+            } else {
+                None
+            }
+        },
+        None => None,
+    }
 }
 
 pub fn parse_multiplication(lex: LexList) {}
