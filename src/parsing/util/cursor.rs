@@ -2,6 +2,7 @@ use ::std::rc::Rc;
 
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexemes;
+use crate::parsing::util::maybe::MaybeEnd;
 
 #[derive(Debug)]
 pub struct ParseCursor<'a> {
@@ -32,13 +33,13 @@ impl<'a> ParseCursor<'a> {
     /// Get the requested element, or None if there are not that many lexemes.
     /// This returns a borrow which can be cloned, because dealing with taking things
     /// out of the Cursor is too complex in combination with rollbacks.
-    pub fn take(&mut self) -> Option<&Lexemes> {
+    pub fn take(&mut self) -> MaybeEnd<&Lexemes> {
         if self.index >= self.lexemes.len() {
-            return None;
+            return MaybeEnd::End;
         }
         let lexeme = &self.lexemes[self.index];
         self.index.increment();
-        Some(lexeme)
+        MaybeEnd::Item(lexeme)
     }
 
     /// Fork the cursor, to try to parse something.
