@@ -5,7 +5,7 @@ use crate::parsing::literals::parse_literal;
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_binary(cursor: &mut ParseCursor) -> Option<ExpressionParselets> {
-    match cursor.take() {
+    match cursor.take()? {
         Some(lexeme) => {
             parse_literal()
             if let Lexemes::Operator(operator_lexeme) = lexeme {

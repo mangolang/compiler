@@ -2,7 +2,9 @@ use ::std::rc::Rc;
 
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexemes;
-use crate::parsing::util::maybe::MaybeEnd;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct End;
 
 #[derive(Debug)]
 pub struct ParseCursor<'a> {
@@ -23,23 +25,23 @@ impl<'a> ParseCursor<'a> {
     }
 
     /// Get the requested element, or None if there are not that many lexemes.
-    pub fn peek(&self) -> Option<&Lexemes> {
+    pub fn peek(&self) -> Result<&Lexemes, End> {
         if self.index >= self.lexemes.len() {
-            return None;
+            return Err(End);
         }
-        Some(&self.lexemes[self.index])
+        Ok(&self.lexemes[self.index])
     }
 
     /// Get the requested element, or None if there are not that many lexemes.
     /// This returns a borrow which can be cloned, because dealing with taking things
     /// out of the Cursor is too complex in combination with rollbacks.
-    pub fn take(&mut self) -> MaybeEnd<&Lexemes> {
+    pub fn take(&mut self) -> Result<&Lexemes, End> {
         if self.index >= self.lexemes.len() {
-            return MaybeEnd::End;
+            return Err(End);
         }
         let lexeme = &self.lexemes[self.index];
         self.index.increment();
-        MaybeEnd::Item(lexeme)
+        Ok(lexeme)
     }
 
     /// Fork the cursor, to try to parse something.
@@ -54,33 +56,34 @@ impl<'a> ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::lexeme::collect::unlexable;
+
+    use super::*;
 
     #[test]
     fn increment() {
         let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
         let mut cursor = ParseCursor::new(&lexemes);
-        assert_eq!(Some(&unlexable("a")), cursor.peek());
+        assert_eq!(Ok(&unlexable("a")), cursor.peek());
         cursor.increment();
-        assert_eq!(Some(&unlexable("b")), cursor.take());
-        assert_eq!(None, cursor.take());
+        assert_eq!(Ok(&unlexable("b")), cursor.take());
+        assert_eq!(Err(End), cursor.take());
     }
 
     #[test]
     fn backtrack() {
         let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
         let mut cursor1 = ParseCursor::new(&lexemes);
-        assert_eq!(Some(&unlexable("a")), cursor1.peek());
+        assert_eq!(Ok(&unlexable("a")), cursor1.peek());
         let mut cursor2 = cursor1.fork();
         cursor1.increment();
         cursor1.increment();
-        assert_eq!(None, cursor1.take());
-        assert_eq!(Some(&unlexable("a")), cursor2.peek());
+        assert_eq!(Err(End), cursor1.take());
+        assert_eq!(Ok(&unlexable("a")), cursor2.peek());
         cursor2.increment();
         let mut cursor3 = cursor2.fork();
-        assert_eq!(Some(&unlexable("b")), cursor3.take());
-        assert_eq!(None, cursor3.take());
-        assert_eq!(Some(&unlexable("b")), cursor2.take());
+        assert_eq!(Ok(&unlexable("b")), cursor3.take());
+        assert_eq!(Err(End), cursor3.take());
+        assert_eq!(Ok(&unlexable("b")), cursor2.take());
     }
 }

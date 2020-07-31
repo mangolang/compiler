@@ -7,7 +7,7 @@ pub mod util;
 // mod grouping;
 // mod arithmetic;
 mod literals;
-mod arithmetic;
+//mod arithmetic;
 mod parse;
 
 #[cfg(test)]

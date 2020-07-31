@@ -3,34 +3,32 @@ use crate::lexeme::LiteralLexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::LiteralParselet;
 use crate::parselet::Parselet;
-use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::cursor::{End, ParseCursor};
+use crate::parsing::util::NoMatch;
 
-pub fn parse_literal(cursor: &mut ParseCursor) -> Option<ExpressionParselets> {
-    match cursor.take() {
-        Some(lexeme) => {
-            if let Lexemes::Literal(literal_lexeme) = lexeme {
-                Some(ExpressionParselets::Literal(LiteralParselet::new(literal_lexeme.clone())))
-            } else {
-                None
-            }
-        },
-        None => None,
+pub fn parse_literal(cursor: &mut ParseCursor) -> Result<ExpressionParselets, NoMatch> {
+    if let Lexemes::Literal(literal_lexeme) = cursor.take()? {
+        Ok(ExpressionParselets::Literal(LiteralParselet::new(literal_lexeme.clone())))
+    } else {
+        Err(NoMatch)
     }
 }
 
 #[cfg(test)]
 mod literal {
-    use super::*;
-    use crate::lexeme::collect::{FileLexemes, literal_text, literal_int, literal_real, literal_bool, unlexable, comma};
+    use crate::lexeme::collect::{comma, FileLexemes, literal_bool, literal_int, literal_real, literal_text, unlexable};
     use crate::parselet::short::literal;
+    use crate::parsing::util::cursor::End;
     use crate::util::numtype::f64eq;
+
+    use super::*;
 
     fn check(lexeme: Lexemes, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
         let mut cursor = ParseCursor::new(&lexemes);
         let parselet = parse_literal(&mut cursor);
         assert_eq!(expected, parselet.unwrap());
-        assert_eq!(None, cursor.peek());
+        assert_eq!(Err(End), cursor.peek());
     }
 
     #[test]
@@ -70,8 +68,7 @@ mod literal {
         let lexemes = vec![].into();
         let mut cursor = ParseCursor::new(&lexemes);
         let parselet = parse_literal(&mut cursor);
-        assert!(parselet.is_none());
-        assert_eq!(None, cursor.peek());
+        assert_eq!(Err(End), cursor.peek());
     }
 
     #[test]
@@ -79,7 +76,7 @@ mod literal {
         let lexemes = vec![comma()].into();
         let mut cursor = ParseCursor::new(&lexemes);
         let parselet = parse_literal(&mut cursor);
-        assert!(parselet.is_none());
-        assert_eq!(None, cursor.peek());
+        assert!(parselet.is_err());
+        assert_eq!(Err(End), cursor.peek());
     }
 }
