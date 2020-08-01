@@ -5,16 +5,22 @@ use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (cursor, left) = parse_multiplication(cursor.clone())?;
-    let (cursor, operator) = parse_operator(cursor, |op| op.is_add_sub())?;
+    let (cursor, left) = parse_multiplication(cursor)?;
+    let (cursor, operator) = match parse_operator(cursor, |op| op.is_add_sub()) {
+        Ok(m) => m,
+        Err(_) => return Ok((cursor, left)),
+    };
     let (cursor, right) = parse_addition(cursor)?;
     Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
         left, operator, right))))
 }
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (cursor, left) = parse_literal(cursor.clone())?;
-    let (cursor, operator) = parse_operator(cursor, |op| op.is_mult_div())?;
+    let (cursor, left) = parse_literal(cursor)?;
+    let (cursor, operator) = match parse_operator(cursor, |op| op.is_mult_div()) {
+        Ok(m) => m,
+        Err(_) => return Ok((cursor, left)),
+    };
     let (cursor, right) = parse_multiplication(cursor)?;
     Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
         left, operator, right))))
