@@ -7,13 +7,13 @@ use crate::parsing::util::cursor::{End, ParseCursor};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::expression::grouping::parse_parenthesised_group;
 
-pub fn parse_literal(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    if let Lexemes::Literal(literal_lexeme) = cursor.take()? {
+pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+    let mut literal_cursor = cursor.clone();
+    if let Lexemes::Literal(literal_lexeme) = literal_cursor.take()? {
         let literal = literal_lexeme.clone();
-        Ok((cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
-    } else {
-        parse_parenthesised_group(cursor)
+        return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
     }
+    parse_parenthesised_group(cursor)
 }
 
 #[cfg(test)]
