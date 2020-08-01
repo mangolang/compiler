@@ -4,8 +4,8 @@ use ::std::str::FromStr;
 // use crate::util::codeparts::Keyword;
 // use crate::util::numtype::f64eq;
 // use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
-use crate::lexeme::{Lexemes, LiteralLexeme};
-use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet};
+use crate::lexeme::{Lexemes, LiteralLexeme, OperatorLexeme};
+use crate::parselet::{BinaryOperationParselet, ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -30,6 +30,10 @@ use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, Unparseab
 
 pub fn literal(lexeme: LiteralLexeme) -> ExpressionParselets {
     ExpressionParselets::Literal(LiteralParselet::new(lexeme))
+}
+
+pub fn binary(left: ExpressionParselets, operator: OperatorLexeme, right: ExpressionParselets) -> ExpressionParselets {
+    ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right))
 }
 
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {

@@ -30,15 +30,57 @@ pub fn parse_multiplication(cursor: &mut ParseCursor) -> ParseRes<ExpressionPars
 
 #[cfg(test)]
 mod addition {
-    use super::*;
+    use crate::lexeme::collect::{literal_int, literal_text, operator};
+    use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
-    use crate::lexeme::collect::literal_text;
 
-    // fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
-    //     let lexemes = vec![lexeme].into();
-    //     let mut cursor = ParseCursor::new(&lexemes);
-    //     let parselet = parse_addition(&mut cursor);
-    //     assert_eq!(expected, parselet.unwrap());
-    //     assert_eq!(Err(End), cursor.peek());
-    // }
+    use super::*;
+    use crate::lexeme::{OperatorLexeme, LiteralLexeme};
+    use crate::util::codeparts::Symbol;
+
+    fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
+        let lexemes = lexeme.into();
+        let mut cursor = ParseCursor::new(&lexemes);
+        let parselet = parse_addition(&mut cursor);
+        assert_eq!(expected, parselet.unwrap());
+        assert_eq!(Err(End), cursor.peek());
+    }
+
+    #[test]
+    fn single_addition() {
+        check(
+            vec![
+                literal_int(4),
+                operator("+").unwrap(),
+                literal_int(3),
+            ],
+            binary(
+                literal(LiteralLexeme::Int(4)),
+                OperatorLexeme::from_symbol(Symbol::Plus),
+                literal(LiteralLexeme::Int(3))
+            ),
+        );
+    }
+
+    #[test]
+    fn multi_addition() {
+        check(
+            vec![
+                literal_int(4),
+                operator("+").unwrap(),
+                literal_int(3),
+                operator("+").unwrap(),
+                literal_int(2),
+            ],
+            binary(
+                binary(
+                    literal(LiteralLexeme::Int(4)),
+                    OperatorLexeme::from_symbol(Symbol::Plus),
+                    literal(LiteralLexeme::Int(3))
+                ),
+                OperatorLexeme::from_symbol(Symbol::Plus),
+                literal(LiteralLexeme::Int(2))
+            ),
+        );
+    }
 }
