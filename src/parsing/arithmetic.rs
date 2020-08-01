@@ -50,8 +50,8 @@ mod addition {
     fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_addition(cursor.clone());
-        assert_eq!(expected, parselet.unwrap());
+        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
+        assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -82,13 +82,13 @@ mod addition {
                 literal_int(2),
             ],
             binary(
-                binary(
-                    literal(LiteralLexeme::Int(4)),
-                    OperatorLexeme::from_symbol(Symbol::Plus),
-                    literal(LiteralLexeme::Int(3))
-                ),
+                literal(LiteralLexeme::Int(4)),
                 OperatorLexeme::from_symbol(Symbol::Plus),
-                literal(LiteralLexeme::Int(2))
+                binary(
+                    literal(LiteralLexeme::Int(3)),
+                    OperatorLexeme::from_symbol(Symbol::Plus),
+                    literal(LiteralLexeme::Int(2))
+                )
             ),
         );
     }

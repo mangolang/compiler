@@ -27,8 +27,8 @@ mod literal {
     fn check(lexeme: Lexemes, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
-        assert_eq!(expected, parselet.unwrap());
+        let (cursor, parselet) = parse_literal(cursor).unwrap();
+        assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -78,15 +78,15 @@ mod literal {
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_literal(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Err(End), cursor.peek());
+        assert_eq!(Ok(&comma()), cursor.peek());
     }
 
     #[test]
     fn leftover_literal() {
         let lexemes = vec![literal_int(37), literal_bool(true)].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
-        assert_eq!(Ok(literal(LiteralLexeme::Int(37))), parselet);
+        let (cursor, parselet) = parse_literal(cursor).unwrap();
+        assert_eq!(literal(LiteralLexeme::Int(37)), parselet);
         assert_eq!(Ok(&literal_bool(true)), cursor.peek());
     }
 
@@ -94,8 +94,8 @@ mod literal {
     fn leftover_other() {
         let lexemes = vec![literal_int(37), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
-        assert_eq!(Ok(literal(LiteralLexeme::Int(37))), parselet);
+        let (cursor, parselet) = parse_literal(cursor).unwrap();
+        assert_eq!(literal(LiteralLexeme::Int(37)), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
