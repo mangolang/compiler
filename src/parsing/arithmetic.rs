@@ -1,38 +1,32 @@
-use crate::lexeme::Lexemes;
+use crate::lexeme::{Lexemes, OperatorLexeme};
 use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
 use crate::parsing::literals::parse_literal;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (mut cursor, left) = parse_multiplication(cursor.clone())?;
-    if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
-        if !operator_lexeme.is_add_sub() {
-            //TODO @mark: should this also return the updated cursor?
-            return Ok((cursor, left));
-        }
-        //TODO @mark: is clone needed?
-        let operator = operator_lexeme.clone();
-        let (cursor, right) = parse_addition(cursor)?;
-        return Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator, right,
-        ))))
-    }
-    Err(NoMatch)
+    let (cursor, left) = parse_multiplication(cursor.clone())?;
+    let (cursor, operator) = parse_operator(cursor, |op| op.is_add_sub())?;
+    let (cursor, right) = parse_addition(cursor)?;
+    Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
+        left, operator, right))))
 }
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (mut cursor, left) = parse_literal(cursor.clone())?;
+    let (cursor, left) = parse_literal(cursor.clone())?;
+    let (cursor, operator) = parse_operator(cursor, |op| op.is_mult_div())?;
+    let (cursor, right) = parse_multiplication(cursor)?;
+    Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
+        left, operator, right))))
+}
+
+fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool) -> ParseRes<OperatorLexeme> {
     if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
-        if !operator_lexeme.is_mult_div() {
-            return Ok((cursor, left));
+        if op_test(operator_lexeme) {
+            //TODO @mark: is clone needed?
+            let operator = operator_lexeme.clone();
+            return Ok((cursor, operator))
         }
-        //TODO @mark: is clone needed?
-        let operator = operator_lexeme.clone();
-        let (cursor, right) = parse_multiplication(cursor)?;
-        return Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator, right,
-        ))))
     }
     Err(NoMatch)
 }
