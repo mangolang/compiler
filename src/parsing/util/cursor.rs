@@ -6,8 +6,13 @@ use crate::lexeme::Lexemes;
 #[derive(Debug, PartialEq, Eq)]
 pub struct End;
 
-//TODO @mark: do not borrow this, but instead force a clone each time, so that you get an error if you forget
-#[derive(Debug, Clone)]
+/// This cursor tracks the lexemes and the current read position.
+///
+/// The position must be reverted if no match is found (dead end), and advanced on a match.
+///
+/// To achieve this, the type is Copy, so that reverts are automatic, but updates must be communicated.
+//TODO @mark: not very happy about the above, must be an easier way
+#[derive(Debug, Clone, Copy)]
 pub struct ParseCursor<'a> {
     index: LexemeIndex,
     lexemes: &'a FileLexemes,

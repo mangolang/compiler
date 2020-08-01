@@ -4,33 +4,35 @@ use crate::parsing::literals::parse_literal;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
-pub fn parse_addition(cursor: &mut ParseCursor) -> ParseRes<ExpressionParselets> {
-    let left = parse_multiplication(cursor)?;
+pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+    let (mut cursor, left) = parse_multiplication(cursor.clone())?;
     if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
         if !operator_lexeme.is_add_sub() {
             //TODO @mark: should this also return the updated cursor?
-            return Ok(left);
+            return Ok((cursor, left));
         }
-        let right = parse_addition(cursor)?;
         //TODO @mark: is clone needed?
-        return Ok(ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator_lexeme.clone(), right
-        )))
+        let operator = operator_lexeme.clone();
+        let (cursor, right) = parse_addition(cursor)?;
+        return Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
+            left, operator, right,
+        ))))
     }
     Err(NoMatch)
 }
 
-pub fn parse_multiplication(cursor: &mut ParseCursor) -> ParseRes<ExpressionParselets> {
-    let left = parse_literal(cursor)?;
+pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+    let (mut cursor, left) = parse_literal(cursor.clone())?;
     if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
         if !operator_lexeme.is_mult_div() {
-            return Ok(left);
+            return Ok((cursor, left));
         }
-        let right = parse_multiplication(cursor)?;
         //TODO @mark: is clone needed?
-        return Ok(ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator_lexeme.clone(), right
-        )))
+        let operator = operator_lexeme.clone();
+        let (cursor, right) = parse_multiplication(cursor)?;
+        return Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
+            left, operator, right,
+        ))))
     }
     Err(NoMatch)
 }
@@ -47,8 +49,8 @@ mod addition {
 
     fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
-        let mut cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_addition(&mut cursor);
+        let cursor = ParseCursor::new(&lexemes);
+        let parselet = parse_addition(cursor.clone());
         assert_eq!(expected, parselet.unwrap());
         assert_eq!(Err(End), cursor.peek());
     }
