@@ -6,7 +6,8 @@ use crate::lexeme::Lexemes;
 #[derive(Debug, PartialEq, Eq)]
 pub struct End;
 
-#[derive(Debug)]
+//TODO @mark: do not borrow this, but instead force a clone each time, so that you get an error if you forget
+#[derive(Debug, Clone)]
 pub struct ParseCursor<'a> {
     index: LexemeIndex,
     lexemes: &'a FileLexemes,

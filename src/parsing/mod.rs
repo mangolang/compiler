@@ -5,9 +5,8 @@ pub use self::parse::parse;
 
 pub mod util;
 // mod grouping;
-// mod arithmetic;
+mod arithmetic;
 mod literals;
-//mod arithmetic;
 mod parse;
 
 #[cfg(test)]
