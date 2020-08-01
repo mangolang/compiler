@@ -11,7 +11,7 @@ use derive_new::new;
 /// for e.g. HashMap keys.
 #[derive(new, Debug, Clone, Copy)]
 #[allow(non_camel_case_types)]
-pub struct f64eq(f64);
+pub struct f64eq(pub f64);
 
 impl fmt::Display for f64eq {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
