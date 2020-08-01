@@ -5,12 +5,16 @@ use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_addition(cursor: &mut ParseCursor) -> ParseRes<ExpressionParselets> {
-    let left = parse_literal(cursor)?;
-    //TODO @mark: is clone needed?
-    if let Lexemes::Operator(operator_lexeme) = cursor.take()?.clone() {
-        let right = parse_literal(cursor)?;
+    let left = parse_multiplication(cursor)?;
+    if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
+        if !operator_lexeme.is_add_sub() {
+            //TODO @mark: should this also return the updated cursor?
+            return Ok(left);
+        }
+        let right = parse_addition(cursor)?;
+        //TODO @mark: is clone needed?
         return Ok(ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator_lexeme, right
+            left, operator_lexeme.clone(), right
         )))
     }
     Err(NoMatch)
@@ -18,11 +22,14 @@ pub fn parse_addition(cursor: &mut ParseCursor) -> ParseRes<ExpressionParselets>
 
 pub fn parse_multiplication(cursor: &mut ParseCursor) -> ParseRes<ExpressionParselets> {
     let left = parse_literal(cursor)?;
-    //TODO @mark: is clone needed?
-    if let Lexemes::Operator(operator_lexeme) = cursor.take()?.clone() {
-        let right = parse_literal(cursor)?;
+    if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
+        if !operator_lexeme.is_mult_div() {
+            return Ok(left);
+        }
+        let right = parse_multiplication(cursor)?;
+        //TODO @mark: is clone needed?
         return Ok(ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-            left, operator_lexeme, right
+            left, operator_lexeme.clone(), right
         )))
     }
     Err(NoMatch)
