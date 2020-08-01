@@ -1,13 +1,13 @@
 use crate::lexeme::{Lexemes, OperatorLexeme};
 use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
-use crate::parsing::literals::parse_literal;
+use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
     let (cursor, operator) = match parse_operator(cursor, |op| op.is_add_sub()) {
-        Ok(m) => m,
+        Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_addition(cursor)?;
@@ -18,7 +18,7 @@ pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_literal(cursor)?;
     let (cursor, operator) = match parse_operator(cursor, |op| op.is_mult_div()) {
-        Ok(m) => m,
+        Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_multiplication(cursor)?;

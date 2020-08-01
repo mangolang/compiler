@@ -24,6 +24,9 @@ But for reference, this is the grammar::
     NegateOperation -> "-" UnaryOperation
 
     Literal -> INTEGER
+        | REAL
+        | BOOL
+        | TEXT
         | Group
 
     Group -> "(" Expression ")"
