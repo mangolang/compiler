@@ -80,6 +80,28 @@ mod parenthese {
     }
 
     #[test]
+    fn nested() {
+        check(
+            vec![
+                parenthesis_open(),
+                parenthesis_open(),
+                literal_int(4),
+                parenthesis_close(),
+                operator("+").unwrap(),
+                parenthesis_open(),
+                literal_int(3),
+                parenthesis_close(),
+                parenthesis_close(),
+            ],
+            binary(
+                literal(LiteralLexeme::Int(4)),
+                OperatorLexeme::from_symbol(Symbol::Plus),
+                literal(LiteralLexeme::Int(3))
+            ),
+        );
+    }
+
+    #[test]
     fn repeated() {
         check(
             vec![
@@ -93,6 +115,31 @@ mod parenthese {
             ],
             literal(LiteralLexeme::Text("hello world".to_owned())),
         );
+    }
+
+    #[test]
+    fn change_affinity() {
+        let lexemes = vec![
+            literal_int(4),
+            operator("*").unwrap(),
+            parenthesis_open(),
+            literal_int(3),
+            operator("-").unwrap(),
+            literal_int(2),
+            parenthesis_close(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        // Since the '(' is not at the start, use parse_expression as entry point.
+        let parselet = parse_expression(cursor).unwrap().1;
+        assert_eq!(binary(
+            literal(LiteralLexeme::Int(4)),
+            OperatorLexeme::from_symbol(Symbol::Asterisk),
+            binary(
+                literal(LiteralLexeme::Int(3)),
+                OperatorLexeme::from_symbol(Symbol::Dash),
+                literal(LiteralLexeme::Int(2)),
+            ),
+        ), parselet);
     }
 
     #[test]

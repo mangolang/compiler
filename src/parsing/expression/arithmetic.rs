@@ -40,7 +40,7 @@ fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool)
 #[cfg(test)]
 mod addition {
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_int, literal_real, literal_text, operator};
+    use crate::lexeme::collect::{comma, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
@@ -116,6 +116,23 @@ mod addition {
         );
     }
 
+    /// This is not valid Mango, but it should be accepted at the parse level.
+    #[test]
+    fn wrong_types() {
+        check(
+            vec![
+                literal_text("hello"),
+                operator("-").unwrap(),
+                literal_bool(true),
+            ],
+            binary(
+                literal(LiteralLexeme::Text("hello".to_owned())),
+                OperatorLexeme::from_symbol(Symbol::Dash),
+                literal(LiteralLexeme::Boolean(true))
+            ),
+        );
+    }
+
     #[test]
     fn not_recognized() {
         let lexemes = vec![comma()].into();
@@ -129,7 +146,7 @@ mod addition {
 #[cfg(test)]
 mod multiplication {
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_int, literal_real, literal_text, operator};
+    use crate::lexeme::collect::{comma, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
@@ -201,6 +218,23 @@ mod multiplication {
                         literal(LiteralLexeme::Int(1))
                     )
                 )
+            ),
+        );
+    }
+
+    /// This is not valid Mango, but it should be accepted at the parse level.
+    #[test]
+    fn wrong_types() {
+        check(
+            vec![
+                literal_text("hello"),
+                operator("/").unwrap(),
+                literal_bool(true),
+            ],
+            binary(
+                literal(LiteralLexeme::Text("hello".to_owned())),
+                OperatorLexeme::from_symbol(Symbol::Slash),
+                literal(LiteralLexeme::Boolean(true))
             ),
         );
     }
