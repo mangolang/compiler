@@ -19,19 +19,19 @@ pub fn association(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
 }
 
 pub fn identifier(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt)?))
+    Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt, source)?))
 }
 
 /// Parse a keyword, including reserved keywords for future use.
 pub fn keyword_or_reserved(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Keyword(KeywordLexeme::from_str(txt)?))
+    Ok(Lexeme::Keyword(KeywordLexeme::from_str(txt, source)?))
 }
 
 /// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
 pub fn keyword_supported(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
     match Keyword::from_str(txt)? {
         Keyword::Reserved(word) => Err(ErrMsg::new(format!("Keyword '{}' not implemented", word))),
-        kw => Ok(Lexeme::Keyword(KeywordLexeme::from_keyword(kw))),
+        kw => Ok(Lexeme::Keyword(KeywordLexeme::from_keyword(kw, source))),
     }
 }
 

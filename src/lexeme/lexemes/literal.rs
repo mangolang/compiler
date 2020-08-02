@@ -19,17 +19,22 @@ pub enum LiteralLexeme {
 
 impl SourceLocation for LiteralLexeme {
     fn source(&self) -> &SourceSlice {
-        &self.source
+        match self {
+            LiteralLexeme::Text(_, source) => &source,
+            LiteralLexeme::Int(_, source) => &source,
+            LiteralLexeme::Real(_, source) => &source,
+            LiteralLexeme::Boolean(_, source) => &source,
+        }
     }
 }
 
 impl ToText for LiteralLexeme {
     fn to_text(&self) -> String {
         match self {
-            LiteralLexeme::Text(val) => val.to_string(),
-            LiteralLexeme::Int(val) => format!("{}", val),
-            LiteralLexeme::Real(val) => format!("{}", val),
-            LiteralLexeme::Boolean(val) => format!("{}", val),
+            LiteralLexeme::Text(val, _) => val.to_string(),
+            LiteralLexeme::Int(val, _) => format!("{}", val),
+            LiteralLexeme::Real(val, _) => format!("{}", val),
+            LiteralLexeme::Boolean(val, _) => format!("{}", val),
         }
     }
 }

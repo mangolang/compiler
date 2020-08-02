@@ -1,27 +1,27 @@
 use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct ColonLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct CommaLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct EllipsisLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct PeriodLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct NewlineLexeme {
     source: SourceSlice,
 }

@@ -13,16 +13,12 @@ pub struct IdentifierLexeme {
     source: SourceSlice,
 }
 
-impl FromStr for IdentifierLexeme {
-    type Err = ErrMsg;
-
-    fn from_str(text: &str) -> MsgResult<Self> {
-        let name = Name::new(text)?;
-        Ok(Self::from_name(name))
-    }
-}
-
 impl IdentifierLexeme {
+    pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
+        let name = Name::new(text)?;
+        Ok(Self::from_name(name, source))
+    }
+
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
         IdentifierLexeme { name, source }
     }

@@ -18,7 +18,7 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
         let word = source.as_str();
         lexer.add(match keyword_or_reserved(word, source.clone()) {
             Ok(kw) => kw,
-            Err(err) => identifier(word, source).unwrap(),
+            Err(err) => identifier(word, source.clone()).unwrap(),
         });
     }
 }

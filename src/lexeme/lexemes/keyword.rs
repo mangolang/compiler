@@ -13,16 +13,12 @@ pub struct KeywordLexeme {
 }
 
 impl KeywordLexeme {
-    pub fn from_keyword(word: Keyword) -> Self {
-        KeywordLexeme { word }
+    pub fn from_str(word: &str, source: SourceSlice) -> MsgResult<Self> {
+        Result::Ok(KeywordLexeme::from_keyword(Keyword::from_str(word)?, source))
     }
-}
 
-impl FromStr for KeywordLexeme {
-    type Err = ErrMsg;
-
-    fn from_str(word: &str) -> Result<Self, Self::Err> {
-        Result::Ok(KeywordLexeme::from_keyword(Keyword::from_str(word)?))
+    pub fn from_keyword(word: Keyword, source: SourceSlice) -> Self {
+        KeywordLexeme { word, source }
     }
 }
 

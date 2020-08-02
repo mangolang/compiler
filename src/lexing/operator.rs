@@ -11,14 +11,14 @@ use crate::util::codeparts::operator::SYMBOL_RE;
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(source) = reader.strip_match(&*SYMBOL_RE) {
-        lexer.add(operator(source.as_str(), source).unwrap());
+        lexer.add(operator(source.as_str(), source.clone()).unwrap());
     }
 }
 
 /// Lex an equals sign, with optional arithmetic or boolean operator prefix.
 pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(source) = reader.strip_match(&*ASSOCIATION_RE) {
-        lexer.add(association(source.as_str(), source).unwrap());
+        lexer.add(association(source.as_str(), source.clone()).unwrap());
     }
 }
 
