@@ -87,7 +87,7 @@ impl fmt::Debug for Lexeme {
             Lexeme::Ellipsis(ellipsis) => write!(f, "..."),
             Lexeme::Period(period) => write!(f, "."),
             Lexeme::Newline(newline) => writeln!(f, "NL"),
-            Lexeme::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text),
+            Lexeme::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text()),
         }
     }
 }

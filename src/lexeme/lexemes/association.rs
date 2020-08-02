@@ -11,6 +11,7 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 pub struct AssociationLexeme {
     //TODO @mark: note that some symbols aren't allowed
     symbol: Option<Symbol>,
+    source: SourceSlice,
 }
 
 impl FromStr for AssociationLexeme {
@@ -60,7 +61,7 @@ impl AssociationLexeme {
 
 impl SourceLocation for AssociationLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

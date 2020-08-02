@@ -10,63 +10,64 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::util::codeparts::Keyword;
 use crate::util::numtype::f64eq;
+use crate::io::slice::SourceSlice;
 
 //TODO @mark: replace more lexeme usages by short versions
 
-pub fn association(txt: &str) -> MsgResult<Lexeme> {
+pub fn association(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
     Ok(Lexeme::Association(AssociationLexeme::from_str(txt)?))
 }
 
-pub fn identifier(txt: &str) -> MsgResult<Lexeme> {
+pub fn identifier(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
     Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt)?))
 }
 
 /// Parse a keyword, including reserved keywords for future use.
-pub fn keyword_or_reserved(txt: &str) -> MsgResult<Lexeme> {
+pub fn keyword_or_reserved(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
     Ok(Lexeme::Keyword(KeywordLexeme::from_str(txt)?))
 }
 
 /// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
-pub fn keyword_supported(txt: &str) -> MsgResult<Lexeme> {
+pub fn keyword_supported(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
     match Keyword::from_str(txt)? {
         Keyword::Reserved(word) => Err(ErrMsg::new(format!("Keyword '{}' not implemented", word))),
         kw => Ok(Lexeme::Keyword(KeywordLexeme::from_keyword(kw))),
     }
 }
 
-pub fn literal_text(txt: impl Into<String>) -> Lexeme {
-    Lexeme::Literal(LiteralLexeme::Text(txt.into()))
+pub fn literal_text(txt: impl Into<String>, source: SourceSlice) -> Lexeme {
+    Lexeme::Literal(LiteralLexeme::Text(txt.into(), source))
 }
 
-pub fn literal_int(nr: i64) -> Lexeme {
-    Lexeme::Literal(LiteralLexeme::Int(nr))
+pub fn literal_int(nr: i64, source: SourceSlice) -> Lexeme {
+    Lexeme::Literal(LiteralLexeme::Int(nr, source))
 }
 
-pub fn literal_real(nr: impl Into<f64eq>) -> Lexeme {
-    Lexeme::Literal(LiteralLexeme::Real(nr.into()))
+pub fn literal_real(nr: impl Into<f64eq>, source: SourceSlice) -> Lexeme {
+    Lexeme::Literal(LiteralLexeme::Real(nr.into(), source))
 }
 
-pub fn literal_bool(b: bool) -> Lexeme {
-    Lexeme::Literal(LiteralLexeme::Boolean(b))
+pub fn literal_bool(b: bool, source: SourceSlice) -> Lexeme {
+    Lexeme::Literal(LiteralLexeme::Boolean(b, source))
 }
 
 pub fn operator(txt: &str) -> MsgResult<Lexeme> {
     Ok(Lexeme::Operator(OperatorLexeme::from_str(&txt)?))
 }
 
-pub fn parenthesis_open() -> Lexeme {
+pub fn parenthesis_open(source: SourceSlice) -> Lexeme {
     Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new())
 }
 
-pub fn parenthesis_close() -> Lexeme {
+pub fn parenthesis_close(source: SourceSlice) -> Lexeme {
     Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new())
 }
 
-pub fn bracket_open() -> Lexeme {
+pub fn bracket_open(source: SourceSlice) -> Lexeme {
     Lexeme::BracketOpen(BracketOpenLexeme::new())
 }
 
-pub fn bracket_close() -> Lexeme {
+pub fn bracket_close(source: SourceSlice) -> Lexeme {
     Lexeme::BracketClose(BracketCloseLexeme::new())
 }
 
@@ -75,30 +76,30 @@ pub fn bracket_close() -> Lexeme {
 //     Lexemes::EndStatement(EndStatementLexeme::new_end_line())
 // }
 
-pub fn start_block() -> Lexeme {
+pub fn start_block(source: SourceSlice) -> Lexeme {
     Lexeme::StartBlock(StartBlockLexeme::new())
 }
 
-pub fn end_block() -> Lexeme {
+pub fn end_block(source: SourceSlice) -> Lexeme {
     Lexeme::EndBlock(EndBlockLexeme::new2())
 }
 
-pub fn colon() -> Lexeme {
+pub fn colon(source: SourceSlice) -> Lexeme {
     Lexeme::Colon(ColonLexeme::new())
 }
-pub fn comma() -> Lexeme {
+pub fn comma(source: SourceSlice) -> Lexeme {
     Lexeme::Comma(CommaLexeme::new())
 }
-pub fn ellipsis() -> Lexeme {
+pub fn ellipsis(source: SourceSlice) -> Lexeme {
     Lexeme::Ellipsis(EllipsisLexeme::new())
 }
-pub fn period() -> Lexeme {
+pub fn period(source: SourceSlice) -> Lexeme {
     Lexeme::Period(PeriodLexeme::new())
 }
-pub fn newline() -> Lexeme {
+pub fn newline(source: SourceSlice) -> Lexeme {
     Lexeme::Newline(NewlineLexeme::new())
 }
 
-pub fn unlexable(txt: impl Into<String>) -> Lexeme {
-    Lexeme::Unlexable(UnlexableLexeme::new(txt.into()))
+pub fn unlexable(source: SourceSlice) -> Lexeme {
+    Lexeme::Unlexable(UnlexableLexeme::new(source))
 }

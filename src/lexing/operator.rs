@@ -18,7 +18,7 @@ pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 /// Lex an equals sign, with optional arithmetic or boolean operator prefix.
 pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*ASSOCIATION_RE) {
-        lexer.add(association(sym.as_str()).unwrap());
+        lexer.add(association(sym.as_str(), sym).unwrap());
     }
 }
 

@@ -4,23 +4,27 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 /// Represents an unlexable string.
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct UnlexableLexeme {
-    pub text: String,
+    source: SourceSlice,
 }
 
 impl UnlexableLexeme {
-    pub fn new(text: String) -> UnlexableLexeme {
-        UnlexableLexeme { text }
+    pub fn new(source: SourceSlice) -> UnlexableLexeme {
+        UnlexableLexeme { source }
+    }
+
+    pub fn text(&self) -> &str {
+        self.source.as_str()
     }
 }
 
 impl SourceLocation for UnlexableLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl ToText for UnlexableLexeme {
     fn to_text(&self) -> String {
-        format!(" [cannot lex: {}] ", self.text)
+        format!(" [cannot lex: {}] ", self.text())
     }
 }

@@ -10,6 +10,7 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct OperatorLexeme {
     symbol: Symbol,
+    source: SourceSlice,
 }
 
 impl FromStr for OperatorLexeme {
@@ -44,7 +45,7 @@ impl OperatorLexeme {
 
 impl SourceLocation for OperatorLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

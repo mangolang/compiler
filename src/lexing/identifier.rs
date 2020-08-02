@@ -16,9 +16,9 @@ use crate::util::strtype::name::IDENTIFIER_RE;
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*IDENTIFIER_RE) {
         let word = sym.as_str();
-        lexer.add(match keyword_or_reserved(word) {
+        lexer.add(match keyword_or_reserved(word, sym.clone()) {
             Ok(kw) => kw,
-            Err(err) => identifier(word).unwrap(),
+            Err(err) => identifier(word, sym).unwrap(),
         });
     }
 }

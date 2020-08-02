@@ -3,10 +3,14 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Open and close parentheses: (, )
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct ParenthesisOpenLexeme {}
+pub struct ParenthesisOpenLexeme {
+    source: SourceSlice,
+}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct ParenthesisCloseLexeme {}
+pub struct ParenthesisCloseLexeme {
+    source: SourceSlice,
+}
 
 impl ParenthesisOpenLexeme {
     pub fn new() -> ParenthesisOpenLexeme {
@@ -22,13 +26,13 @@ impl ParenthesisCloseLexeme {
 
 impl SourceLocation for ParenthesisOpenLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl SourceLocation for ParenthesisCloseLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

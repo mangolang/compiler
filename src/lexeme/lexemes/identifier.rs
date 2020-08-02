@@ -10,6 +10,7 @@ use crate::util::strtype::typ::StrType;
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct IdentifierLexeme {
     pub name: Name,
+    source: SourceSlice,
 }
 
 impl FromStr for IdentifierLexeme {
@@ -29,7 +30,7 @@ impl IdentifierLexeme {
 
 impl SourceLocation for IdentifierLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

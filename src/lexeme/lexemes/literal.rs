@@ -11,15 +11,15 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum LiteralLexeme {
     //TODO @mark: to Ustr for cheaper clone:
-    Text(String),
-    Int(i64),
-    Real(f64eq),
-    Boolean(bool),
+    Text(String, SourceSlice),
+    Int(i64, SourceSlice),
+    Real(f64eq, SourceSlice),
+    Boolean(bool, SourceSlice),
 }
 
 impl SourceLocation for LiteralLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

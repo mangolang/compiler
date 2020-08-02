@@ -14,7 +14,7 @@ use super::source::SourceFile;
 //   which this is not.
 // Therefore Rc is used for the foreseeable future. Don't leak slices or create cycles,
 // otherwise the file won't drop.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct SourceSlice {
     file: SourceFile,
     start: usize,
@@ -24,7 +24,7 @@ pub struct SourceSlice {
 impl SourceSlice {
     pub fn new(file: &SourceFile, start: usize, end: usize) -> Self {
         debug_assert!(end >= start);
-        debug_assert!(end <= file.content.data.len());
+        debug_assert!(end < file.content.data.len());
         SourceSlice {
             file: file.clone(),
             start,
@@ -38,6 +38,15 @@ impl SourceSlice {
 
     pub fn as_str(&self) -> &str {
         &self.file.text()[self.start..self.end]
+    }
+
+    #[cfg(test)]
+    pub fn mock() -> Self {
+        SourceSlice {
+            file: SourceFile::test("[mock]"),
+            start: 0,
+            end: 6,
+        }
     }
 }
 

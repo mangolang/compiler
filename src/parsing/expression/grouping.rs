@@ -40,6 +40,7 @@ mod parenthese {
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -132,12 +133,12 @@ mod parenthese {
         // Since the '(' is not at the start, use parse_expression as entry point.
         let parselet = parse_expression(cursor).unwrap().1;
         assert_eq!(binary(
-            literal(LiteralLexeme::Int(4)),
+            literal(LiteralLexeme::Int(4, SourceSlice::mock())),
             OperatorLexeme::from_symbol(Symbol::Asterisk),
             binary(
-                literal(LiteralLexeme::Int(3)),
+                literal(LiteralLexeme::Int(3, SourceSlice::mock())),
                 OperatorLexeme::from_symbol(Symbol::Dash),
-                literal(LiteralLexeme::Int(2)),
+                literal(LiteralLexeme::Int(2, SourceSlice::mock())),
             ),
         ), parselet);
     }

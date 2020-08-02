@@ -9,6 +9,7 @@ use crate::io::slice::{SourceSlice, SourceLocation};
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct KeywordLexeme {
     pub word: Keyword,
+    source: SourceSlice,
 }
 
 impl KeywordLexeme {
@@ -27,7 +28,7 @@ impl FromStr for KeywordLexeme {
 
 impl SourceLocation for KeywordLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

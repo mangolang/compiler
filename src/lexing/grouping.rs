@@ -14,12 +14,12 @@ lazy_static! {
 pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
         lexer.add(match sym.as_str() {
-            "(" => parenthesis_open(),
-            ")" => parenthesis_close(),
-            "[" => bracket_open(),
-            "]" => bracket_close(),
-            "{" => unlexable("{ not yet implemented"), //TODO @mark
-            "}" => unlexable("} not yet implemented"), //TODO @mark
+            "(" => parenthesis_open(sym),
+            ")" => parenthesis_close(sym),
+            "[" => bracket_open(sym),
+            "]" => bracket_close(sym),
+            "{" => unlexable(sym), //TODO @mark
+            "}" => unlexable(sym), //TODO @mark
             _ => unreachable!(),
         });
     }

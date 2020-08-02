@@ -34,7 +34,7 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Determine the lexemes to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent..prev_indent {
-        lexer.add(Lexeme::EndBlock(EndBlockLexeme::new(true, false)));
+        lexer.add(Lexeme::EndBlock(EndBlockLexeme::new(true, false, )));
     }
     for i in prev_indent..line_indent {
         lexer.add(Lexeme::StartBlock(StartBlockLexeme::new()));

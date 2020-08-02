@@ -2,47 +2,57 @@ use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct ColonLexeme {}
+pub struct ColonLexeme {
+    source: SourceSlice,
+}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct CommaLexeme {}
+pub struct CommaLexeme {
+    source: SourceSlice,
+}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct EllipsisLexeme {}
+pub struct EllipsisLexeme {
+    source: SourceSlice,
+}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct PeriodLexeme {}
+pub struct PeriodLexeme {
+    source: SourceSlice,
+}
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
-pub struct NewlineLexeme {}
+pub struct NewlineLexeme {
+    source: SourceSlice,
+}
 
 impl SourceLocation for ColonLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl SourceLocation for CommaLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl SourceLocation for EllipsisLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl SourceLocation for PeriodLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 
 impl SourceLocation for NewlineLexeme {
     fn source(&self) -> &SourceSlice {
-        unimplemented!()  //TODO @mark: source slice
+        &self.source
     }
 }
 

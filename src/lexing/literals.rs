@@ -30,8 +30,8 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         // Constants.
         if let ReaderResult::Match(sym) = reader.strip_match(&*CONSTANTS_RE) {
             lexer.add(match sym.as_str() {
-                "true" => literal_bool(true),
-                "false" => literal_bool(false),
+                "true" => literal_bool(true, sym),
+                "false" => literal_bool(false, sym),
                 //TODO: deal with NaN and infinity (how?)
                 "NaN" => panic!("NaN is not currently supported"),
                 "infinity" => panic!("infinity is not currently supported"),
@@ -43,20 +43,20 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         // Real numbers.
         if let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
             //TODO: get rid of this 'unwrap'
-            lexer.add(literal_real(parse_real(sym.as_str()).unwrap()));
+            lexer.add(literal_real(parse_real(sym.as_str()).unwrap(), sym));
             continue;
         }
 
         // Integers.
         if let ReaderResult::Match(sym) = reader.strip_match(&*INT_RE) {
             //TODO: get rid of this 'unwrap'
-            lexer.add(literal_int(parse_int(sym.as_str()).unwrap()));
+            lexer.add(literal_int(parse_int(sym.as_str()).unwrap(), sym));
             continue;
         }
 
         // Text (string literals).
         if let ReaderResult::Match(sym) = reader.strip_match(&*SINGLE_QUOTE_RE) {
-            lexer.add(literal_text(parse_single_quote(sym.as_str())));
+            lexer.add(literal_text(parse_single_quote(sym.as_str()), sym));
             continue;
         }
 
