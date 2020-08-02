@@ -1,0 +1,126 @@
+use ::std::str::FromStr;
+
+use crate::common::error::{ErrMsg, MsgResult};
+use crate::io::slice::SourceSlice;
+use crate::lexeme::{
+    AssociationLexeme, EndBlockLexeme, EndStatementLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
+    ParenthesisCloseLexeme, ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
+};
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
+use crate::util::codeparts::{Keyword, Symbol};
+use crate::util::numtype::f64eq;
+use crate::io::source::SourceFile;
+
+pub fn association(txt: &str) -> MsgResult<Lexeme> {
+    Ok(Lexeme::Association(AssociationLexeme::from_str(txt, SourceSlice::mock())?))
+}
+
+pub fn identifier(txt: &str) -> MsgResult<Lexeme> {
+    Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock())?))
+}
+
+/// Parse a keyword, including reserved keywords for future use.
+pub fn keyword_or_reserved(txt: &str) -> MsgResult<Lexeme> {
+    Ok(Lexeme::Keyword(KeywordLexeme::from_str(txt, SourceSlice::mock())?))
+}
+
+/// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
+pub fn keyword_supported(txt: &str) -> MsgResult<Lexeme> {
+    match Keyword::from_str(txt)? {
+        Keyword::Reserved(word) => Err(ErrMsg::new(format!("Keyword '{}' not implemented", word))),
+        kw => Ok(Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))),
+    }
+}
+
+pub fn literal_text(txt: impl Into<String>) -> LiteralLexeme {
+    LiteralLexeme::Text(txt.into(), SourceSlice::mock())
+}
+
+pub fn literal_int(nr: i64) -> LiteralLexeme {
+    LiteralLexeme::Int(nr, SourceSlice::mock())
+}
+
+pub fn literal_real(nr: impl Into<f64eq>) -> LiteralLexeme {
+    LiteralLexeme::Real(nr.into(), SourceSlice::mock())
+}
+
+pub fn literal_bool(b: bool) -> LiteralLexeme {
+    LiteralLexeme::Boolean(b, SourceSlice::mock())
+}
+
+trait IntoSymbol {
+    fn symbol(&self) -> Result<Symbol, ()>;
+}
+
+impl IntoSymbol for &str {
+    fn symbol(self) -> Result<Symbol, ()> {
+        match Symbol::new(self) {
+            Ok(s) => Ok(s),
+            Err(_) => Err(()),
+        }
+    }
+}
+
+impl IntoSymbol for Symbol {
+    fn symbol(self) -> Result<Symbol, ()> {
+        Ok(self)
+    }
+}
+
+pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
+    OperatorLexeme::from_symbol(txt.symbol().unwrap(), SourceSlice::mock())
+}
+
+pub fn parenthesis_open() -> Lexeme {
+    Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(SourceSlice::mock()))
+}
+
+pub fn parenthesis_close() -> Lexeme {
+    Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(SourceSlice::mock()))
+}
+
+pub fn bracket_open() -> Lexeme {
+    Lexeme::BracketOpen(BracketOpenLexeme::new(SourceSlice::mock()))
+}
+
+pub fn bracket_close() -> Lexeme {
+    Lexeme::BracketClose(BracketCloseLexeme::new(SourceSlice::mock()))
+}
+
+// pub fn end_statement() -> Lexemes {
+//     //TODO @mark: for now only create newlines
+//     Lexemes::EndStatement(EndStatementLexeme::new_end_line())
+// }
+
+pub fn start_block() -> Lexeme {
+    Lexeme::StartBlock(StartBlockLexeme::new(SourceSlice::mock()))
+}
+
+pub fn end_block() -> Lexeme {
+    Lexeme::EndBlock(EndBlockLexeme::new2(SourceSlice::mock()))
+}
+
+pub fn colon() -> Lexeme {
+    Lexeme::Colon(ColonLexeme::new(SourceSlice::mock()))
+}
+pub fn comma() -> Lexeme {
+    Lexeme::Comma(CommaLexeme::new(SourceSlice::mock()))
+}
+pub fn ellipsis() -> Lexeme {
+    Lexeme::Ellipsis(EllipsisLexeme::new(SourceSlice::mock()))
+}
+pub fn period() -> Lexeme {
+    Lexeme::Period(PeriodLexeme::new(SourceSlice::mock()))
+}
+pub fn newline() -> Lexeme {
+    Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
+}
+
+pub fn unlexable(text: impl Into<String>) -> Lexeme {
+    let text = text.into();
+    let len = if text.is_empty() { 0 } else { text.len() - 1 };
+    let src = SourceFile::mock(text);
+    Lexeme::Unlexable(UnlexableLexeme::new(src.slice(0, len)))
+}

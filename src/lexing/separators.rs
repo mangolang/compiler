@@ -4,7 +4,11 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
-use crate::lexeme::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
+use crate::lexeme::collect::short::ellipsis;
+use crate::lexeme::collect::short::period;
+use crate::lexeme::collect::short::comma;
+use crate::lexeme::collect::short::colon;
+use crate::lexeme::collect::short::newline;
 
 lazy_static! {
     static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
@@ -41,7 +45,6 @@ mod grouping {
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
     use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
-    use crate::lexeme::collect::{colon, comma, ellipsis, newline, period, unlexable};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_separators;

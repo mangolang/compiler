@@ -3,9 +3,9 @@ use crate::lexeme::LiteralLexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::LiteralParselet;
 use crate::parselet::Parselet;
-use crate::parsing::util::cursor::{End, ParseCursor};
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::expression::grouping::parse_parenthesised_group;
+use crate::parsing::util::{NoMatch, ParseRes};
+use crate::parsing::util::cursor::{End, ParseCursor};
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut literal_cursor = cursor.clone();
@@ -18,12 +18,12 @@ pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod literal {
-    use crate::lexeme::collect::{comma, FileLexemes, literal_bool, literal_int, literal_real, literal_text, unlexable};
-    use crate::parselet::short::literal;
+    use crate::lexeme::collect::for_test::*;
     use crate::parsing::util::cursor::End;
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -36,32 +36,32 @@ mod literal {
     #[test]
     fn text() {
         check(
-            literal_text("hello42"),
-            literal(LiteralLexeme::Text("hello42".to_owned())),
+            literal_text("hello42").into(),
+            literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())),
         );
     }
 
     #[test]
     fn integer() {
         check(
-            literal_int(37),
-            literal(LiteralLexeme::Int(37)),
+            literal_int(37).into(),
+            literal(LiteralLexeme::Int(37, SourceSlice::mock())),
         );
     }
 
     #[test]
     fn real() {
         check(
-            literal_real(1.234),
-            literal(LiteralLexeme::Real(f64eq::from(1.234))),
+            literal_real(1.234).into(),
+            literal(literal_real(1.234)),
         );
     }
 
     #[test]
     fn boolean() {
         check(
-            literal_bool(true),
-            literal(LiteralLexeme::Boolean(true)),
+            literal_bool(true).into(),
+            literal(LiteralLexeme::Boolean(true, SourceSlice::mock())),
         );
     }
 
@@ -84,19 +84,19 @@ mod literal {
 
     #[test]
     fn leftover_literal() {
-        let lexemes = vec![literal_int(37), literal_bool(true)].into();
+        let lexemes = vec![literal_int(37).into(), literal_bool(true).into()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
-        assert_eq!(literal(LiteralLexeme::Int(37)), parselet);
-        assert_eq!(Ok(&literal_bool(true)), cursor.peek());
+        assert_eq!(literal(literal_int(37)), parselet);
+        assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
     }
 
     #[test]
     fn leftover_other() {
-        let lexemes = vec![literal_int(37), comma()].into();
+        let lexemes = vec![literal_int(37).into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
-        assert_eq!(literal(LiteralLexeme::Int(37)), parselet);
+        assert_eq!(literal(literal_int(37)), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

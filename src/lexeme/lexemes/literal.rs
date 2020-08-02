@@ -3,6 +3,7 @@ use crate::util::numtype::f64eq;
 use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::lexeme::Lexeme;
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 
@@ -15,6 +16,12 @@ pub enum LiteralLexeme {
     Int(i64, SourceSlice),
     Real(f64eq, SourceSlice),
     Boolean(bool, SourceSlice),
+}
+
+impl From<LiteralLexeme> for Lexeme {
+    fn from(literal: LiteralLexeme) -> Self {
+        Lexeme::Literal(literal)
+    }
 }
 
 impl SourceLocation for LiteralLexeme {

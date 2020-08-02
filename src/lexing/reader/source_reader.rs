@@ -104,7 +104,7 @@ mod tests {
     }
 
     fn check(txt: &str, t: fn(r: SourceReader)) {
-        let source = SourceFile::test(txt);
+        let source = SourceFile::mock(txt);
         let reader = SourceReader::new(&source);
         t(reader);
     }

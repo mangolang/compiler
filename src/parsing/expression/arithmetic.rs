@@ -40,13 +40,14 @@ fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool)
 #[cfg(test)]
 mod addition {
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_bool, literal_int, literal_real, literal_text, operator};
+    use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -60,14 +61,14 @@ mod addition {
     fn single_addition() {
         check(
             vec![
-                literal_int(4),
-                operator("+").unwrap(),
-                literal_int(3),
+                literal_int(4).into(),
+                operator("+").into(),
+                literal_int(3).into(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus),
-                literal(LiteralLexeme::Int(3))
+                literal(literal_int(4)),
+                operator(Symbol::Plus),
+                literal(literal_int(3))
             ),
         );
     }
@@ -76,14 +77,14 @@ mod addition {
     fn single_subtraction() {
         check(
             vec![
-                literal_real(10.),
-                operator("-").unwrap(),
-                literal_real(5.),
+                literal_real(10.).into(),
+                operator("-").into(),
+                literal_real(5.).into(),
             ],
             binary(
-                literal(LiteralLexeme::Real(f64eq(10.))),
-                OperatorLexeme::from_symbol(Symbol::Dash),
-                literal(LiteralLexeme::Real(f64eq(5.)))
+                literal(literal_real(10.)),
+                operator(Symbol::Dash),
+                literal(literal_real(5.)),
             ),
         );
     }
@@ -92,24 +93,24 @@ mod addition {
     fn multi_addition() {
         check(
             vec![
-                literal_int(4),
-                operator("+").unwrap(),
-                literal_int(3),
-                operator("+").unwrap(),
-                literal_int(2),
-                operator("+").unwrap(),
-                literal_int(1),
+                literal_int(4).into(),
+                operator("+").into(),
+                literal_int(3).into(),
+                operator("+").into(),
+                literal_int(2).into(),
+                operator("+").into(),
+                literal_int(1).into(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus),
+                literal(literal_int(4)),
+                operator(Symbol::Plus),
                 binary(
-                    literal(LiteralLexeme::Int(3)),
-                    OperatorLexeme::from_symbol(Symbol::Plus),
+                    literal(literal_int(3)),
+                    operator(Symbol::Plus),
                     binary(
-                        literal(LiteralLexeme::Int(2)),
-                        OperatorLexeme::from_symbol(Symbol::Plus),
-                        literal(LiteralLexeme::Int(1))
+                        literal(literal_int(2)),
+                        operator(Symbol::Plus),
+                        literal(literal_int(1))
                     )
                 )
             ),
@@ -121,14 +122,14 @@ mod addition {
     fn wrong_types() {
         check(
             vec![
-                literal_text("hello"),
-                operator("-").unwrap(),
-                literal_bool(true),
+                literal_text("hello").into(),
+                operator("-").into(),
+                literal_bool(true).into(),
             ],
             binary(
-                literal(LiteralLexeme::Text("hello".to_owned())),
-                OperatorLexeme::from_symbol(Symbol::Dash),
-                literal(LiteralLexeme::Boolean(true))
+                literal(literal_text("hello")),
+                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
+                literal(literal_bool(true))
             ),
         );
     }
@@ -146,13 +147,14 @@ mod addition {
 #[cfg(test)]
 mod multiplication {
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_bool, literal_int, literal_real, literal_text, operator};
+    use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -166,14 +168,14 @@ mod multiplication {
     fn single_multiplication() {
         check(
             vec![
-                literal_int(4),
-                operator("*").unwrap(),
-                literal_int(3),
+                literal_int(4).into(),
+                operator("*").into(),
+                literal_int(3).into(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Asterisk),
-                literal(LiteralLexeme::Int(3))
+                literal(literal_int(4)),
+                OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                literal(literal_int(3)),
             ),
         );
     }
@@ -182,14 +184,14 @@ mod multiplication {
     fn single_division() {
         check(
             vec![
-                literal_real(10.),
-                operator("/").unwrap(),
-                literal_real(5.),
+                literal_real(10.).into(),
+                operator("/").into(),
+                literal_real(5.).into(),
             ],
             binary(
-                literal(LiteralLexeme::Real(f64eq(10.))),
-                OperatorLexeme::from_symbol(Symbol::Slash),
-                literal(LiteralLexeme::Real(f64eq(5.)))
+                literal(literal_real(10.)),
+                OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
+                literal(literal_real(5.)),
             ),
         );
     }
@@ -198,24 +200,24 @@ mod multiplication {
     fn multi_multiplication() {
         check(
             vec![
-                literal_int(4),
-                operator("*").unwrap(),
-                literal_int(3),
-                operator("*").unwrap(),
-                literal_int(2),
-                operator("*").unwrap(),
-                literal_int(1),
+                literal_int(4).into(),
+                operator("*").into(),
+                literal_int(3).into(),
+                operator("*").into(),
+                literal_int(2).into(),
+                operator("*").into(),
+                literal_int(1).into(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Asterisk),
+                literal(literal_int(4)),
+                OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
                 binary(
-                    literal(LiteralLexeme::Int(3)),
-                    OperatorLexeme::from_symbol(Symbol::Asterisk),
+                    literal(literal_int(3)),
+                    OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
                     binary(
-                        literal(LiteralLexeme::Int(2)),
-                        OperatorLexeme::from_symbol(Symbol::Asterisk),
-                        literal(LiteralLexeme::Int(1))
+                        literal(literal_int(2)),
+                        OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                        literal(literal_int(1))
                     )
                 )
             ),
@@ -227,14 +229,14 @@ mod multiplication {
     fn wrong_types() {
         check(
             vec![
-                literal_text("hello"),
-                operator("/").unwrap(),
-                literal_bool(true),
+                literal_text("hello").into(),
+                operator("/").into(),
+                literal_bool(true).into(),
             ],
             binary(
-                literal(LiteralLexeme::Text("hello".to_owned())),
-                OperatorLexeme::from_symbol(Symbol::Slash),
-                literal(LiteralLexeme::Boolean(true))
+                literal(literal_text("hello".to_owned())),
+                OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
+                literal(literal_bool(true))
             ),
         );
     }
@@ -252,13 +254,14 @@ mod multiplication {
 #[cfg(test)]
 mod mixed {
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_int, literal_real, literal_text, operator};
+    use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -272,25 +275,25 @@ mod mixed {
     fn multi_mixed() {
         check(
             vec![
-                literal_real(4.),
-                operator("*").unwrap(),
-                literal_real(3.),
-                operator("-").unwrap(),
-                literal_int(8),
-                operator("/").unwrap(),
-                literal_int(2),
+                literal_real(4.).into(),
+                operator("*").into(),
+                literal_real(3.).into(),
+                operator("-").into(),
+                literal_int(8).into(),
+                operator("/").into(),
+                literal_int(2).into(),
             ],
             binary(
                 binary(
-                    literal(LiteralLexeme::Real(f64eq(4.))),
-                    OperatorLexeme::from_symbol(Symbol::Asterisk),
-                    literal(LiteralLexeme::Real(f64eq(3.))),
+                    literal(literal_real(f64eq(4.))),
+                    OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                    literal(literal_real(f64eq(3.))),
                 ),
-                OperatorLexeme::from_symbol(Symbol::Dash),
+                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
                 binary(
-                    literal(LiteralLexeme::Int(8)),
-                    OperatorLexeme::from_symbol(Symbol::Slash),
-                    literal(LiteralLexeme::Int(2)),
+                    literal(literal_Int(8)),
+                    OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
+                    literal(literal_Int(2)),
                 ),
             ),
         );
@@ -307,18 +310,18 @@ mod mixed {
     #[test]
     fn leftover() {
         let lexemes = vec![
-            literal_int(4),
-            operator("+").unwrap(),
-            literal_int(3),
+            literal_int(4).into(),
+            operator("+").into(),
+            literal_int(3).into(),
             comma(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus),
-                literal(LiteralLexeme::Int(3))
+                literal(literal_int(4)),
+                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
+                literal(literal_int(3))
             ),
             parselet);
         assert_eq!(Ok(&comma()), cursor.peek());

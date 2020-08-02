@@ -70,7 +70,7 @@ impl Index<LexemeIndex> for FileLexemes {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lexeme::collect::unlexable;
+    use crate::lexeme::collect::for_test::*;
 
     #[test]
     fn indexing() {

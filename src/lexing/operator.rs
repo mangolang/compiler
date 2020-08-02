@@ -4,9 +4,10 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
-use crate::lexeme::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
+use crate::lexeme::collect::short::operator;
+use crate::lexeme::collect::short::association;
 
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {

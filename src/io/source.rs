@@ -38,7 +38,7 @@ impl SourceFile {
     }
 
     #[cfg(test)]
-    pub fn test(text: impl Into<String>) -> Self {
+    pub fn mock(text: impl Into<String>) -> Self {
         SourceFileContent {
             source_identifier: "for_test".to_owned(),
             data: text.into(),

@@ -35,12 +35,14 @@ mod unlexable {
     use crate::lexeme::{Lexeme, UnlexableLexeme};
 
     use super::lex_unlexable;
+    use crate::lexeme::collect::short::unlexable;
+    use crate::io::source::SourceFile;
 
     #[test]
     fn letter() {
         let (source, mut reader, mut lexer) = create_lexer("abc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_lexemes(), vec![Lexeme::Unlexable(UnlexableLexeme::new("a".to_owned()))].into());
+        assert_eq!(lexer.into_lexemes(), vec![unlexable(SourceFile::mock("a").slice(0, 1))].into());
     }
 
     #[test]
@@ -48,7 +50,7 @@ mod unlexable {
         // Newline is a special case, because normally regex's '.' does not match it.
         let (source, mut reader, mut lexer) = create_lexer("\nabc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_lexemes(), vec![Lexeme::Unlexable(UnlexableLexeme::new("\n".to_owned()))].into());
+        assert_eq!(lexer.into_lexemes(), vec![unlexable(SourceFile::mock("\n").slice(0, 1))].into());
     }
 }
 

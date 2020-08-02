@@ -1,8 +1,8 @@
-use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisOpenLexeme, ParenthesisCloseLexeme};
+use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
+use crate::parsing::expression::parse_expression;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::expression::parse_expression;
 
 pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_parenthesis_open(cursor)?;
@@ -32,15 +32,15 @@ fn parse_parenthesis_close(mut cursor: ParseCursor) -> ParseRes<ParenthesisClose
 
 #[cfg(test)]
 mod parenthese {
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::{comma, literal_int, literal_real, literal_text, operator, parenthesis_open, parenthesis_close};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
+    use crate::lexeme::collect::for_test::*;
 
     use super::*;
-    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -55,10 +55,10 @@ mod parenthese {
         check(
             vec![
                 parenthesis_open(),
-                literal_text("hello world"),
+                literal_text("hello world").into(),
                 parenthesis_close(),
             ],
-            literal(LiteralLexeme::Text("hello world".to_owned())),
+            literal(LiteralLexeme::Text("hello world".to_owned(), SourceSlice::mock())),
         );
     }
 
@@ -67,15 +67,15 @@ mod parenthese {
         check(
             vec![
                 parenthesis_open(),
-                literal_int(4),
-                operator("+").unwrap(),
-                literal_int(3),
+                literal_int(4).into(),
+                operator("+").into(),
+                literal_int(3).into(),
                 parenthesis_close(),
             ],
-            binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus),
-                literal(LiteralLexeme::Int(3))
+            test_binary(
+                literal_int(4).into(),
+                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
+                literal_int(3).into(),
             ),
         );
     }
@@ -86,18 +86,18 @@ mod parenthese {
             vec![
                 parenthesis_open(),
                 parenthesis_open(),
-                literal_int(4),
+                literal_int(4).into(),
                 parenthesis_close(),
-                operator("+").unwrap(),
+                operator("+").into(),
                 parenthesis_open(),
-                literal_int(3),
+                literal_int(3).into(),
                 parenthesis_close(),
                 parenthesis_close(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus),
-                literal(LiteralLexeme::Int(3))
+                literal(LiteralLexeme::Int(4, SourceSlice::mock())),
+                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
+                literal(LiteralLexeme::Int(3, SourceSlice::mock()))
             ),
         );
     }
@@ -109,24 +109,24 @@ mod parenthese {
                 parenthesis_open(),
                 parenthesis_open(),
                 parenthesis_open(),
-                literal_text("hello world"),
+                literal_text("hello world").into(),
                 parenthesis_close(),
                 parenthesis_close(),
                 parenthesis_close(),
             ],
-            literal(LiteralLexeme::Text("hello world".to_owned())),
+            literal(LiteralLexeme::Text("hello world".to_owned(), SourceSlice::mock())),
         );
     }
 
     #[test]
     fn change_affinity() {
         let lexemes = vec![
-            literal_int(4),
-            operator("*").unwrap(),
+            literal_int(4).into(),
+            operator("*").into(),
             parenthesis_open(),
-            literal_int(3),
-            operator("-").unwrap(),
-            literal_int(2),
+            literal_int(3).into(),
+            operator("-").into(),
+            literal_int(2).into(),
             parenthesis_close(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
@@ -134,10 +134,10 @@ mod parenthese {
         let parselet = parse_expression(cursor).unwrap().1;
         assert_eq!(binary(
             literal(LiteralLexeme::Int(4, SourceSlice::mock())),
-            OperatorLexeme::from_symbol(Symbol::Asterisk),
+            OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
             binary(
                 literal(LiteralLexeme::Int(3, SourceSlice::mock())),
-                OperatorLexeme::from_symbol(Symbol::Dash),
+                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
                 literal(LiteralLexeme::Int(2, SourceSlice::mock())),
             ),
         ), parselet);
@@ -155,21 +155,21 @@ mod parenthese {
     #[test]
     fn ungrouped_fail() {
         let lexemes = vec![
-            literal_int(4),
-            operator("+").unwrap(),
-            literal_int(3),
+            literal_int(4).into(),
+            operator("+").into(),
+            literal_int(3).into(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&literal_int(4)), cursor.peek());
+        assert_eq!(Ok(&literal_int(4).into()), cursor.peek());
     }
 
     #[test]
     fn only_open() {
         let lexemes = vec![
             parenthesis_open(),
-            literal_int(1),
+            literal_int(1).into(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
@@ -181,7 +181,7 @@ mod parenthese {
     fn unbalanced() {
         let lexemes = vec![
             parenthesis_open(),
-            literal_int(1),
+            literal_int(1).into(),
             parenthesis_open(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
@@ -194,7 +194,7 @@ mod parenthese {
     fn only_close() {
         let lexemes = vec![
             parenthesis_close(),
-            literal_int(1),
+            literal_int(1).into(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);

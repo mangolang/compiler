@@ -84,12 +84,12 @@ mod from_str {
 
     #[test]
     fn empty() {
-        assert_panic_silent(|| AssociationLexeme::from_str(""));
+        assert_panic_silent(|| AssociationLexeme::from_str("", SourceSlice::mock()));
     }
 
     #[test]
     fn mismatch() {
-        let err = AssociationLexeme::from_str("abc=").unwrap_err();
+        let err = AssociationLexeme::from_str("abc=", SourceSlice::mock()).unwrap_err();
         assert!(err.as_str().to_lowercase().contains("unknown symbol"));
         assert!(err.as_str().to_lowercase().contains("abc"));
     }
@@ -97,20 +97,20 @@ mod from_str {
     #[test]
     fn valid() {
         assert_eq!(
-            AssociationLexeme::from_str("+=").unwrap(),
-            AssociationLexeme::from_symbol(Symbol::Plus).unwrap()
+            AssociationLexeme::from_str("+=", SourceSlice::mock()).unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()).unwrap()
         );
         assert_eq!(
-            AssociationLexeme::from_str("-=").unwrap(),
-            AssociationLexeme::from_symbol(Symbol::Dash).unwrap()
+            AssociationLexeme::from_str("-=", SourceSlice::mock()).unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()).unwrap()
         );
         assert_eq!(
-            AssociationLexeme::from_str("*=").unwrap(),
-            AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap()
+            AssociationLexeme::from_str("*=", SourceSlice::mock()).unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()).unwrap()
         );
         assert_eq!(
-            AssociationLexeme::from_str("/=").unwrap(),
-            AssociationLexeme::from_symbol(Symbol::Slash).unwrap()
+            AssociationLexeme::from_str("/=", SourceSlice::mock()).unwrap(),
+            AssociationLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()).unwrap()
         );
         //assert_eq!(AssociationLexeme::from_str("?=").unwrap(), AssociationLexeme::from_symbol(Symbol::Exclamation));
         //assert_eq!(AssociationLexeme::from_str("!=").unwrap(), AssociationLexeme::from_symbol(Symbol::Question));
@@ -118,10 +118,10 @@ mod from_str {
 
     #[test]
     fn invalid() {
-        assert!(AssociationLexeme::from_str("===").is_err());
-        assert!(AssociationLexeme::from_str("<=").is_err());
-        assert!(AssociationLexeme::from_str(">=").is_err());
-        assert!(AssociationLexeme::from_str("<==").is_err());
-        assert!(AssociationLexeme::from_str(">==").is_err());
+        assert!(AssociationLexeme::from_str("===", SourceSlice::mock()).is_err());
+        assert!(AssociationLexeme::from_str("<=", SourceSlice::mock()).is_err());
+        assert!(AssociationLexeme::from_str(">=", SourceSlice::mock()).is_err());
+        assert!(AssociationLexeme::from_str("<==", SourceSlice::mock()).is_err());
+        assert!(AssociationLexeme::from_str(">==", SourceSlice::mock()).is_err());
     }
 }

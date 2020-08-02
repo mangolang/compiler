@@ -53,7 +53,7 @@ impl SourceSlice {
     #[cfg(test)]
     pub fn mock() -> Self {
         SourceSlice {
-            file: SourceFile::test("[mock]"),
+            file: SourceFile::mock("[mock]"),
             start: 0,
             end: 6,
         }
@@ -85,31 +85,31 @@ mod tests {
 
     #[test]
     fn slice_str() {
-        let f = SourceFile::test("hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_eq!(f.slice(3, 7).as_str(), "lo w");
     }
 
     #[test]
     fn slice_from_str() {
-        let f = SourceFile::test("hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_eq!(f.slice_from(6).as_str(), "world!");
     }
 
     #[test]
     fn slice_empty() {
-        let f = SourceFile::test("hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_eq!(f.slice(3, 3).as_str(), "");
     }
 
     #[test]
     fn slice_all() {
-        let f = SourceFile::test("hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_eq!(f.slice(0, 12).as_str(), "hello world!");
     }
 
     #[test]
     fn slice_eq() {
-        let f = SourceFile::test("hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_eq!(SourceSlice::new(&f, 3, 7), f.slice(3, 7));
     }
 

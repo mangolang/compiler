@@ -6,11 +6,12 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
-use crate::lexeme::collect::{association, identifier, keyword_or_reserved, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
+use crate::lexeme::collect::short::keyword_or_reserved;
+use crate::lexeme::collect::short::identifier;
 
 /// Lex an identifier or keyword.
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -30,7 +31,6 @@ mod identifiers {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::lexeme::{IdentifierLexeme, Lexeme};
-    use crate::lexeme::collect::identifier;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
@@ -118,8 +118,6 @@ mod keywords {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
-    use crate::lexeme::collect::{identifier, keyword_or_reserved};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
@@ -156,9 +154,7 @@ mod mixed {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
-    use crate::lexeme::collect::{identifier, keyword_or_reserved};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;

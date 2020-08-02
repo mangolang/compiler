@@ -10,7 +10,7 @@ use super::lex;
 
 /// Create a set of source, reader and lexer for testing purposes.
 pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
-    let source = SourceFile::test(txt);
+    let source = SourceFile::mock(txt);
     let reader = SourceReader::new(&source);
     let lexer = CodeLexer::new(source.len());
     (source, reader, lexer)
@@ -19,7 +19,7 @@ pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
 #[test]
 fn lex_01() -> Result<(), ErrMsg> {
     let input = "(x * x + y * y)";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -48,7 +48,7 @@ fn lex_02() -> Result<(), ErrMsg> {
     x * x + ...
     y * y
 )";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -76,7 +76,7 @@ fn lex_02() -> Result<(), ErrMsg> {
 #[test]
 fn lex_03() -> Result<(), ErrMsg> {
     let input = "(3*3 + 5.0 * 5.0)";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -98,7 +98,7 @@ fn lex_03() -> Result<(), ErrMsg> {
 #[test]
 fn lex_04() -> Result<(), ErrMsg> {
     let input = "((3*3 + 5.0 * 5.0) == 25.0) == true";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -126,7 +126,7 @@ fn lex_04() -> Result<(), ErrMsg> {
 #[test]
 fn lex_05() -> Result<(), ErrMsg> {
     let input = "let mut x = [3, 5]\nprint(sqrt(x[0] * x[0] + x[1] * x[1]))";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -184,7 +184,7 @@ while changed:
             changed = true
 assert seq == [1, 2, 3, 4, 5]
 ";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,

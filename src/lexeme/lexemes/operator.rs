@@ -4,6 +4,7 @@ use crate::common::error::{MangoErr, MangoResult};
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::lexeme::Lexeme;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -36,6 +37,12 @@ impl OperatorLexeme {
 
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
+    }
+}
+
+impl From<OperatorLexeme> for Lexeme {
+    fn from(operator: OperatorLexeme) -> Self {
+        Lexeme::Operator(operator)
     }
 }
 
