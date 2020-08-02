@@ -42,7 +42,7 @@ pub enum Lexeme {
     Unlexable(UnlexableLexeme),
 }
 
-impl Lexeme {
+impl SourceLocation for Lexeme {
     fn source(&self) -> &SourceSlice {
         match self {
             Lexeme::Association(association) => association.source(),

@@ -3,6 +3,7 @@ use ::std::str::FromStr;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
+use crate::io::source::SourceSlice;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
