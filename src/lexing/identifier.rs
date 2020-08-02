@@ -14,11 +14,11 @@ use crate::util::strtype::name::IDENTIFIER_RE;
 
 /// Lex an identifier or keyword.
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-    while let ReaderResult::Match(sym) = reader.strip_match(&*IDENTIFIER_RE) {
-        let word = sym.as_str();
-        lexer.add(match keyword_or_reserved(word, sym.clone()) {
+    while let ReaderResult::Match(source) = reader.strip_match(&*IDENTIFIER_RE) {
+        let word = source.as_str();
+        lexer.add(match keyword_or_reserved(word, source.clone()) {
             Ok(kw) => kw,
-            Err(err) => identifier(word, sym).unwrap(),
+            Err(err) => identifier(word, source).unwrap(),
         });
     }
 }

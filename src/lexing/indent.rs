@@ -4,6 +4,7 @@ use ::regex::Regex;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
+use crate::io::slice::SourceSlice;
 
 lazy_static! {
     static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\n)").unwrap();
@@ -27,17 +28,20 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
     // Determine the indent of the line.
     let mut line_indent = 0;
-    while let ReaderResult::Match(_) = reader.direct_match(&*INDENT_RE) {
+    let mut source: SourceSlice = reader.source_at_current();
+    while let ReaderResult::Match(more_src) = reader.direct_match(&*INDENT_RE) {
         line_indent += 1;
+        //TODO @mark: need test coverage for this source slice thing
+        source = source.join(more_src).unwrap()
     }
 
     // Determine the lexemes to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent..prev_indent {
-        lexer.add(Lexeme::EndBlock(EndBlockLexeme::new(true, false, )));
+        lexer.add(Lexeme::EndBlock(EndBlockLexeme::new(true, false, source.clone())));
     }
     for i in prev_indent..line_indent {
-        lexer.add(Lexeme::StartBlock(StartBlockLexeme::new()));
+        lexer.add(Lexeme::StartBlock(StartBlockLexeme::new(source.clone())));
     }
 
     lexer.set_at_indentable(false);

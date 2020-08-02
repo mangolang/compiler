@@ -13,17 +13,17 @@ lazy_static! {
 /// Lex any number of parentheses, braces and brackets, and add the lexemes to the Lexer.
 pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     let mut found_newline = false;
-    while let ReaderResult::Match(sym) = reader.strip_match(&*SEPARATOR_RE) {
-        let lexeme = match sym.as_str() {
-            r"..." | r"…" => ellipsis(sym),
-            r"." => period(sym),
-            r"," => comma(sym),
-            r":" => colon(sym),
+    while let ReaderResult::Match(source) = reader.strip_match(&*SEPARATOR_RE) {
+        let lexeme = match source.as_str() {
+            r"..." | r"…" => ellipsis(source),
+            r"." => period(source),
+            r"," => comma(source),
+            r":" => colon(source),
             "\r\n" | "\n" | "\r" => {
                 // Indentation should be parsed after a newline, so stop.
                 found_newline = true;
                 lexer.set_at_indentable(true);
-                newline(sym)
+                newline(source)
             }
             _ => unreachable!(),
         };

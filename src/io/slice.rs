@@ -40,6 +40,16 @@ impl SourceSlice {
         &self.file.text()[self.start..self.end]
     }
 
+    /// If the first slice (`self`) is right before the second (`other`), they are combined
+    /// into a new slice. If they are not adjacent, an (empty) error is returned.
+    pub fn join(mut self, other: SourceSlice) -> Result<SourceSlice, ()> {
+        if self.end == other.start || self.end + 1 == other.start {
+            self.end = other.end;
+            return Ok(self)
+        }
+        Err(())
+    }
+
     #[cfg(test)]
     pub fn mock() -> Self {
         SourceSlice {
@@ -74,51 +84,82 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_slice_str() {
+    fn slice_str() {
         let f = SourceFile::test("hello world!");
         assert_eq!(f.slice(3, 7).as_str(), "lo w");
     }
 
     #[test]
-    fn test_slice_from_str() {
+    fn slice_from_str() {
         let f = SourceFile::test("hello world!");
         assert_eq!(f.slice_from(6).as_str(), "world!");
     }
 
     #[test]
-    fn test_slice_empty() {
+    fn slice_empty() {
         let f = SourceFile::test("hello world!");
         assert_eq!(f.slice(3, 3).as_str(), "");
     }
 
     #[test]
-    fn test_slice_all() {
+    fn slice_all() {
         let f = SourceFile::test("hello world!");
         assert_eq!(f.slice(0, 12).as_str(), "hello world!");
     }
 
     #[test]
-    fn test_slice_eq() {
+    fn slice_eq() {
         let f = SourceFile::test("hello world!");
         assert_eq!(SourceSlice::new(&f, 3, 7), f.slice(3, 7));
     }
 
     #[test]
-    fn test_slice_neq_file() {
+    fn slice_neq_file() {
         let f1 = SourceFile::new("a.txt", "hello world!");
         let f2 = SourceFile::new("b.txt", "hello world!");
         assert_ne!(f2.slice(3, 7), f1.slice(3, 7));
     }
 
     #[test]
-    fn test_slice_neq_start() {
+    fn slice_neq_start() {
         let f = SourceFile::new("a.txt", "hello world!");
         assert_ne!(f.slice(3, 7), f.slice(2, 7));
     }
 
     #[test]
-    fn test_slice_neq_end() {
+    fn slice_neq_end() {
         let f = SourceFile::new("a.txt", "hello world!");
         assert_ne!(f.slice(3, 6), f.slice(3, 7));
+    }
+
+    #[test]
+    fn join_adjacent() {
+        let f = SourceFile::new("a.txt", "hello world!");
+        let s = f.slice(1, 5).join(f.slice(6, 9)).unwrap();
+        assert_eq!(1, s.start);
+        assert_eq!(9, s.end);
+    }
+
+    #[test]
+    fn join_overlap() {
+        let f = SourceFile::new("a.txt", "hello world!");
+        let s = f.slice(1, 3).join(f.slice(3, 5)).unwrap();
+        assert_eq!(1, s.start);
+        assert_eq!(9, s.end);
+    }
+
+    #[test]
+    fn join_empty() {
+        let f = SourceFile::new("a.txt", "hello world!");
+        let s = f.slice(1, 1).join(f.slice(1, 1)).unwrap();
+        assert_eq!(1, s.start);
+        assert_eq!(1, s.end);
+    }
+
+    #[test]
+    fn disjoint_join() {
+        let f = SourceFile::new("a.txt", "hello world!");
+        let s = f.slice(1, 1).join(f.slice(1, 1));
+        assert!(s.is_err());
     }
 }

@@ -28,10 +28,10 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Using overall loop instead of per match is needed, because otherwise '1 1.5' is matches as 1, 1
     loop {
         // Constants.
-        if let ReaderResult::Match(sym) = reader.strip_match(&*CONSTANTS_RE) {
-            lexer.add(match sym.as_str() {
-                "true" => literal_bool(true, sym),
-                "false" => literal_bool(false, sym),
+        if let ReaderResult::Match(source) = reader.strip_match(&*CONSTANTS_RE) {
+            lexer.add(match source.as_str() {
+                "true" => literal_bool(true, source),
+                "false" => literal_bool(false, source),
                 //TODO: deal with NaN and infinity (how?)
                 "NaN" => panic!("NaN is not currently supported"),
                 "infinity" => panic!("infinity is not currently supported"),
@@ -41,22 +41,22 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
         }
 
         // Real numbers.
-        if let ReaderResult::Match(sym) = reader.strip_match(&*REAL_RE) {
+        if let ReaderResult::Match(source) = reader.strip_match(&*REAL_RE) {
             //TODO: get rid of this 'unwrap'
-            lexer.add(literal_real(parse_real(sym.as_str()).unwrap(), sym));
+            lexer.add(literal_real(parse_real(source.as_str()).unwrap(), source));
             continue;
         }
 
         // Integers.
-        if let ReaderResult::Match(sym) = reader.strip_match(&*INT_RE) {
+        if let ReaderResult::Match(source) = reader.strip_match(&*INT_RE) {
             //TODO: get rid of this 'unwrap'
-            lexer.add(literal_int(parse_int(sym.as_str()).unwrap(), sym));
+            lexer.add(literal_int(parse_int(source.as_str()).unwrap(), source));
             continue;
         }
 
         // Text (string literals).
-        if let ReaderResult::Match(sym) = reader.strip_match(&*SINGLE_QUOTE_RE) {
-            lexer.add(literal_text(parse_single_quote(sym.as_str()), sym));
+        if let ReaderResult::Match(source) = reader.strip_match(&*SINGLE_QUOTE_RE) {
+            lexer.add(literal_text(parse_single_quote(source.as_str()), source));
             continue;
         }
 
@@ -365,7 +365,7 @@ mod exhaustion {
 
     use super::test_util::check;
 
-//TODO @mark: TEMPORARY! REMOVE THIS!
+    //TODO @mark: TEMPORARY! REMOVE THIS!
     // // Constants.
     // while let ReaderResult::Match(sym) = reader.strip_match( & * CONSTANTS_RE) {
     // lexer.add( match sym.as_str() {

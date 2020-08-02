@@ -12,14 +12,14 @@ lazy_static! {
 
 /// Lex any number of parentheses, braces and brackets, and add the lexemes to the Lexer.
 pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-    while let ReaderResult::Match(sym) = reader.strip_match(&*GROUPING_RE) {
-        lexer.add(match sym.as_str() {
-            "(" => parenthesis_open(sym),
-            ")" => parenthesis_close(sym),
-            "[" => bracket_open(sym),
-            "]" => bracket_close(sym),
-            "{" => unlexable(sym), //TODO @mark
-            "}" => unlexable(sym), //TODO @mark
+    while let ReaderResult::Match(source) = reader.strip_match(&*GROUPING_RE) {
+        lexer.add(match source.as_str() {
+            "(" => parenthesis_open(source),
+            ")" => parenthesis_close(source),
+            "[" => bracket_open(source),
+            "]" => bracket_close(source),
+            "{" => unlexable(source), //TODO @mark
+            "}" => unlexable(source), //TODO @mark
             _ => unreachable!(),
         });
     }

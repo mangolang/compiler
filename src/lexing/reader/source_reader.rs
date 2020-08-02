@@ -5,6 +5,7 @@ use ::regex::Regex;
 
 use crate::io::source::SourceFile;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
+use crate::io::slice::SourceSlice;
 
 lazy_static! {
     static ref WHITESPACE_RE: Regex = Regex::new(r"^[ \t]+").unwrap();
@@ -83,6 +84,10 @@ impl Reader for SourceReader {
 
     fn remaining_len(&self) -> usize {
         self.source.len() - self.pos
+    }
+
+    fn source_at_current(&self) -> SourceSlice {
+        self.source.slice(self.pos, self.pos)
     }
 }
 
