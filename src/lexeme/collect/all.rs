@@ -1,7 +1,10 @@
 use ::std::fmt;
 
-use crate::io::source::SourceSlice;
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::special::EndBlockLexeme;
+use crate::lexeme::special::StartBlockLexeme;
+use crate::lexeme::special::UnlexableLexeme;
 use crate::lexeme::lexemes::AssociationLexeme;
 use crate::lexeme::lexemes::EndStatementLexeme;
 use crate::lexeme::lexemes::IdentifierLexeme;
@@ -11,21 +14,14 @@ use crate::lexeme::lexemes::OperatorLexeme;
 use crate::lexeme::lexemes::ParenthesisCloseLexeme;
 use crate::lexeme::lexemes::ParenthesisOpenLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::separators::ColonLexeme;
-use crate::lexeme::special::EndBlockLexeme;
-use crate::lexeme::special::StartBlockLexeme;
-use crate::lexeme::special::UnlexableLexeme;
 use crate::util::encdec::ToText;
+use crate::io::source::SourceSlice;
 
-#[derive(PartialEq, Eq, Hash, Clone)]
-pub struct Lexeme {
-    pub typ: LexemeType,
-    pub location: SourceSlice,
-}
+//TODO @mark: pass code slice along with lexeme
 
 /// Collection of all possible lexemes.
 #[derive(PartialEq, Eq, Hash, Clone)]
-pub enum LexemeType {
+pub enum Lexeme {
     Association(AssociationLexeme),
     Identifier(IdentifierLexeme),
     Keyword(KeywordLexeme),
@@ -44,6 +40,31 @@ pub enum LexemeType {
     Period(PeriodLexeme),
     Newline(NewlineLexeme),
     Unlexable(UnlexableLexeme),
+}
+
+impl Lexeme {
+    fn source(&self) -> &SourceSlice {
+        match self {
+            Lexeme::Association(association) => association.source(),
+            Lexeme::Identifier(identifier) => identifier.source(),
+            Lexeme::Keyword(keyword) => keyword.source(),
+            Lexeme::Literal(literal) => literal.source(),
+            Lexeme::Operator(operator) => operator.source(),
+            Lexeme::ParenthesisOpen(parenthesis_open) => parenthesis_open.source(),
+            Lexeme::ParenthesisClose(parenthesis_close) => parenthesis_close.source(),
+            Lexeme::BracketOpen(parenthesis_open) => parenthesis_open.source(),
+            Lexeme::BracketClose(parenthesis_close) => parenthesis_close.source(),
+            //Lexemes::EndStatement(end_statement) => end_statement.source(),
+            Lexeme::StartBlock(start_block) => start_block.source(),
+            Lexeme::EndBlock(end_block) => end_block.source(),
+            Lexeme::Colon(colon) => colon.source(),
+            Lexeme::Comma(comma) => comma.source(),
+            Lexeme::Ellipsis(ellipsis) => ellipsis.source(),
+            Lexeme::Period(period) => period.source(),
+            Lexeme::Newline(newline) => newline.source(),
+            Lexeme::Unlexable(unlexable) => unlexable.source(),
+        }
+    }
 }
 
 impl fmt::Debug for Lexeme {
@@ -71,7 +92,6 @@ impl fmt::Debug for Lexeme {
     }
 }
 
-//TODO @mark: get rid of these tests?
 #[cfg(test)]
 mod tests {
     use std::mem::size_of;

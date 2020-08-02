@@ -1,4 +1,3 @@
-use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Represents an unlexable string.

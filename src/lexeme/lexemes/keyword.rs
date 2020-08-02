@@ -1,7 +1,6 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MangoErr, MangoResult, MsgResult};
-use crate::lexeme::Lexeme;
 use crate::util::codeparts::Keyword;
 use crate::util::encdec::ToText;
 

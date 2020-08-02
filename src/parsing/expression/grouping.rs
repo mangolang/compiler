@@ -14,19 +14,17 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
     Ok((cursor, expression))
 }
 
-fn parse_parenthesis_open(mut cursor: ParseCursor) -> ParseRes<Lexeme> {
-    let lexeme = cursor.take()?;
-    if let LexemeType::ParenthesisOpen(_) = lexeme.typ {
-        let parenthesis = lexeme.clone();
+fn parse_parenthesis_open(mut cursor: ParseCursor) -> ParseRes<ParenthesisOpenLexeme> {
+    if let Lexeme::ParenthesisOpen(parenthesis_lexeme) = cursor.take()? {
+        let parenthesis = parenthesis_lexeme.clone();
         return Ok((cursor, parenthesis))
     }
     Err(NoMatch)
 }
 
-fn parse_parenthesis_close(mut cursor: ParseCursor) -> ParseRes<Lexeme> {
-    let lexeme = cursor.take()?;
-    if let LexemeType::ParenthesisClose(_) = lexeme.typ {
-        let parenthesis = lexeme.clone();
+fn parse_parenthesis_close(mut cursor: ParseCursor) -> ParseRes<ParenthesisCloseLexeme> {
+    if let Lexeme::ParenthesisClose(parenthesis_lexeme) = cursor.take()? {
+        let parenthesis = parenthesis_lexeme.clone();
         return Ok((cursor, parenthesis))
     }
     Err(NoMatch)

@@ -1,6 +1,5 @@
 pub use self::all::Lexeme;
-pub use self::short::*;
-pub use self::typ::Lexeme;
+pub use self::short::*;  //TODO @mark: maybe remove this?
 pub use self::file_lexemes::FileLexemes;
 pub use self::file_lexemes::LexemeIndex;
 

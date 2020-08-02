@@ -1,4 +1,3 @@
-use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.

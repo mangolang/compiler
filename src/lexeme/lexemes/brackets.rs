@@ -1,4 +1,3 @@
-use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Open and close parentheses: (, )

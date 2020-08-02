@@ -1,7 +1,6 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::lexeme::Lexeme;
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 

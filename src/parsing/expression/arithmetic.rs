@@ -27,7 +27,7 @@ pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 }
 
 fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool) -> ParseRes<OperatorLexeme> {
-    if let LexemeType::Operator(operator_lexeme) = cursor.take()?.typ {
+    if let Lexeme::Operator(operator_lexeme) = cursor.take()? {
         if op_test(operator_lexeme) {
             //TODO @mark: is clone needed?
             let operator = operator_lexeme.clone();

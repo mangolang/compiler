@@ -9,9 +9,8 @@ use crate::parsing::expression::grouping::parse_parenthesised_group;
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut literal_cursor = cursor.clone();
-    let lexeme = literal_cursor.take()?;
-    if let LexemeType::Literal(_) = lexeme.typ {
-        let literal = lexeme.clone();
+    if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
+        let literal = literal_lexeme.clone();
         return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
     }
     parse_parenthesised_group(cursor)
