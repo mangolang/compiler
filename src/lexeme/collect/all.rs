@@ -19,8 +19,8 @@ use crate::util::encdec::ToText;
 
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub struct Lexeme {
-    typ: LexemeType,
-    location: SourceSlice,
+    pub typ: LexemeType,
+    pub location: SourceSlice,
 }
 
 /// Collection of all possible lexemes.

@@ -8,7 +8,6 @@ use ::std::str::FromStr;
 use ::lazy_static::lazy_static;
 
 use crate::common::error::{ErrMsg, MangoErr, MangoResult, MsgResult};
-use crate::lexeme::Lexeme;
 use crate::util::strtype::StrType;
 
 /// The different operator codeparts that are recognized.
