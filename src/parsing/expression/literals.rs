@@ -18,12 +18,13 @@ pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod literal {
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
     use crate::util::numtype::f64eq;
 
     use super::*;
-    use crate::io::slice::SourceSlice;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();

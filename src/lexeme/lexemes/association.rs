@@ -4,6 +4,7 @@ use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::lexeme::Lexeme;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -56,6 +57,12 @@ impl AssociationLexeme {
             symbol: Option::Some(symbol),
             source,
         })
+    }
+}
+
+impl From<AssociationLexeme> for Lexeme {
+    fn from(association: AssociationLexeme) -> Self {
+        Lexeme::Association(association)
     }
 }
 

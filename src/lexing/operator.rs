@@ -33,6 +33,7 @@ mod operators {
     use crate::util::codeparts::Symbol;
 
     use super::lex_operator;
+    use crate::lexeme::collect::for_test::operator;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -59,57 +60,57 @@ mod operators {
 
     #[test]
     fn plus() {
-        check("+", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Plus))]);
+        check("+", &[operator(Symbol::Plus).into()]);
     }
 
     #[test]
     fn dash() {
-        check("-", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Dash))]);
+        check("-", &[operator(Symbol::Dash).into()]);
     }
 
     #[test]
     fn asterisk() {
-        check("*", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk))]);
+        check("*", &[operator(Symbol::Asterisk).into()]);
     }
 
     #[test]
     fn slash() {
-        check("/", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash))]);
+        check("/", &[operator(Symbol::Slash).into()]);
     }
 
     #[test]
     fn lt() {
-        check("<", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LT))]);
+        check("<", &[operator(Symbol::LT).into()]);
     }
 
     #[test]
     fn gt() {
-        check(">", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GT))]);
+        check(">", &[operator(Symbol::GT).into()]);
     }
 
     #[test]
     fn eq() {
-        check("==", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::EQ))]);
+        check("==", &[operator(Symbol::EQ).into()]);
     }
 
     #[test]
     fn le() {
-        check("<=", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LE))]);
+        check("<=", &[operator(Symbol::LE).into()]);
     }
 
     #[test]
     fn ge() {
-        check(">=", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GE))]);
+        check(">=", &[operator(Symbol::GE).into()]);
     }
 
     #[test]
     fn exclamation() {
-        check("!", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation))]);
+        check("!", &[operator(Symbol::Exclamation).into()]);
     }
 
     #[test]
     fn question() {
-        check("?", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Question))]);
+        check("?", &[operator(Symbol::Question).into()]);
     }
 
     #[test]
@@ -117,17 +118,17 @@ mod operators {
         check(
             r"+-*/==<=>=<>!?",
             &[
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Plus)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Dash)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::EQ)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LE)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GE)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LT)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GT)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation)),
-                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Question)),
+                operator(Symbol::Plus).into(),
+                operator(Symbol::Dash).into(),
+                operator(Symbol::Asterisk).into(),
+                operator(Symbol::Slash).into(),
+                operator(Symbol::EQ).into(),
+                operator(Symbol::LE).into(),
+                operator(Symbol::GE).into(),
+                operator(Symbol::LT).into(),
+                operator(Symbol::GT).into(),
+                operator(Symbol::Exclamation).into(),
+                operator(Symbol::Question).into(),
             ],
         );
     }
@@ -143,6 +144,8 @@ mod associations {
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
+    use crate::lexeme::collect::for_test::association;
+    use crate::io::slice::SourceSlice;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -169,18 +172,18 @@ mod associations {
 
     #[test]
     fn plain() {
-        check("=", &[Lexeme::Association(AssociationLexeme::from_unprefixed())]);
+        check("=", &[Lexeme::Association(AssociationLexeme::from_unprefixed(SourceSlice::mock()))]);
     }
 
     #[test]
     fn prefix() {
-        check("+=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap())]);
-        check("-=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap())]);
+        check("+=", &[association(Symbol::Plus).into()]);
+        check("-=", &[association(Symbol::Dash).into()]);
         check(
             "*=",
-            &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap())],
+            &[association(Symbol::Asterisk).into()],
         );
-        check("/=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap())]);
+        check("/=", &[association(Symbol::Slash).into()]);
         //check("!=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Exclamation).unwrap())]);
         //check("?=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Question).unwrap())]);
     }
@@ -190,10 +193,10 @@ mod associations {
         check(
             r"+=-=*=/=",
             &[
-                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap()),
-                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap()),
-                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap()),
-                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap()),
+                association(Symbol::Plus).into(),
+                association(Symbol::Dash).into(),
+                association(Symbol::Asterisk).into(),
+                association(Symbol::Slash).into(),
             ],
         );
     }

@@ -1,10 +1,10 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::io::slice::SourceSlice;
+use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
-use crate::io::slice::SourceSlice;
 
 lazy_static! {
     static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\n)").unwrap();
@@ -51,13 +51,15 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod indents {
     use crate::io::source::SourceFile;
+    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexeme::collect::for_test::*;
     use crate::lexing::lexer::{CodeLexer, Lexer};
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_indents;
+    use crate::io::slice::SourceSlice;
 
     fn check(initial_indent: u32, input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -73,15 +75,15 @@ mod indents {
             0,
             "\t    hello",
             &[
-                Lexeme::StartBlock(StartBlockLexeme::new()),
-                Lexeme::StartBlock(StartBlockLexeme::new()),
+                start_block(),
+                start_block(),
             ],
         );
     }
 
     #[test]
     fn decrease_to_two() {
-        check(3, "    \thello", &[Lexeme::EndBlock(EndBlockLexeme::new(true, false))]);
+        check(3, "    \thello", &[Lexeme::EndBlock(EndBlockLexeme::new(true, false, SourceSlice::mock()))]);
     }
 
     #[test]
@@ -90,8 +92,8 @@ mod indents {
             2,
             "hello",
             &[
-                Lexeme::EndBlock(EndBlockLexeme::new(true, false)),
-                Lexeme::EndBlock(EndBlockLexeme::new(true, false)),
+                Lexeme::EndBlock(EndBlockLexeme::new(true, false, SourceSlice::mock())),
+                Lexeme::EndBlock(EndBlockLexeme::new(true, false, SourceSlice::mock())),
             ],
         );
     }

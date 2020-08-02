@@ -3,15 +3,15 @@ use ::std::str::FromStr;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
+use crate::lexeme::collect::short::identifier;
+use crate::lexeme::collect::short::keyword_or_reserved;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::util::codeparts::Keyword;
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
-use crate::lexeme::collect::short::keyword_or_reserved;
-use crate::lexeme::collect::short::identifier;
 
 /// Lex an identifier or keyword.
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -28,11 +28,12 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
 mod identifiers {
     use std::borrow::Cow;
 
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
+    use crate::lexeme::lexemes::OperatorLexeme;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
@@ -44,7 +45,7 @@ mod identifiers {
         lex_keyword_identifier(&mut reader, &mut lexer);
         let expected: LexemeCollector = expected_names
             .iter()
-            .map(|n| Lexeme::Identifier(IdentifierLexeme::from_name(Name::new(*n).unwrap())))
+            .map(|n| Lexeme::Identifier(IdentifierLexeme::from_name(Name::new(*n).unwrap(), SourceSlice::mock())))
             .collect();
         assert_eq!(lexer.lexemes(), &expected);
     }
@@ -115,10 +116,11 @@ mod identifiers {
 mod keywords {
     use ::std::str::FromStr;
 
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
     use crate::lexeme::lexemes::OperatorLexeme;
+    use crate::lexing::lexer::Lexer;
+    use crate::lexing::tests::create_lexer;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
@@ -130,7 +132,7 @@ mod keywords {
     #[test]
     fn all_keywords() {
         for (name, lexeme) in KEYWORDS.iter() {
-            check(name, &[Lexeme::Keyword(KeywordLexeme::from_keyword(lexeme.clone()))]);
+            check(name, &[Lexeme::Keyword(KeywordLexeme::from_keyword(lexeme.clone(), SourceSlice::mock()))]);
         }
     }
 
@@ -139,9 +141,9 @@ mod keywords {
         check(
             "let mut mango",
             &[
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let)),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut)),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()))),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let, SourceSlice::mock())),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut, SourceSlice::mock())),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()), SourceSlice::mock())),
             ],
         );
     }
@@ -151,10 +153,12 @@ mod keywords {
 mod mixed {
     use ::std::str::FromStr;
 
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
+    use crate::lexeme::collect::for_test::keyword_or_reserved;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::util::codeparts::{Keyword, Symbol};
     use crate::util::codeparts::keyword::KEYWORDS;
     use crate::util::strtype::Name;
@@ -173,10 +177,10 @@ mod mixed {
         check(
             "let mut python mango",
             &[
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let)),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut)),
-                Lexeme::Identifier(IdentifierLexeme::from_name(Name::new("python").unwrap())),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()))),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let, SourceSlice::mock())),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut, SourceSlice::mock())),
+                Lexeme::Identifier(IdentifierLexeme::from_name(Name::new("python").unwrap(), SourceSlice::mock())),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()), SourceSlice::mock())),
             ],
         );
     }

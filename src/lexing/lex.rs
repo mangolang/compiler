@@ -65,9 +65,10 @@ mod try_lex {
     use crate::lexeme::UnlexableLexeme;
 
     use super::*;
+    use crate::lexeme::collect::for_test::unlexable;
 
     fn lex_fn_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-        lexer.add(Lexeme::Unlexable(UnlexableLexeme::new("hi".to_owned())))
+        lexer.add(unlexable("hi"))
     }
 
     fn lex_fn_no_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {}

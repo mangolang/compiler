@@ -13,24 +13,20 @@ use crate::util::codeparts::{Keyword, Symbol};
 use crate::util::numtype::f64eq;
 use crate::io::source::SourceFile;
 
-pub fn association(txt: &str) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Association(AssociationLexeme::from_str(txt, SourceSlice::mock())?))
-}
-
-pub fn identifier(txt: &str) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock())?))
+pub fn identifier(txt: &str) -> Lexeme {
+    Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap())
 }
 
 /// Parse a keyword, including reserved keywords for future use.
-pub fn keyword_or_reserved(txt: &str) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Keyword(KeywordLexeme::from_str(txt, SourceSlice::mock())?))
+pub fn keyword_or_reserved(txt: &str) -> Lexeme {
+    Lexeme::Keyword(KeywordLexeme::from_str(txt, SourceSlice::mock()).unwrap())
 }
 
 /// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
-pub fn keyword_supported(txt: &str) -> MsgResult<Lexeme> {
-    match Keyword::from_str(txt)? {
-        Keyword::Reserved(word) => Err(ErrMsg::new(format!("Keyword '{}' not implemented", word))),
-        kw => Ok(Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))),
+pub fn keyword_supported(txt: &str) -> Lexeme {
+    match Keyword::from_str(txt).unwrap() {
+        Keyword::Reserved(word) => panic!("Keyword '{}' not implemented", word),
+        kw => Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock())),
     }
 }
 
@@ -51,7 +47,7 @@ pub fn literal_bool(b: bool) -> LiteralLexeme {
 }
 
 trait IntoSymbol {
-    fn symbol(&self) -> Result<Symbol, ()>;
+    fn symbol(self) -> Result<Symbol, ()>;
 }
 
 impl IntoSymbol for &str {
@@ -71,6 +67,10 @@ impl IntoSymbol for Symbol {
 
 pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
     OperatorLexeme::from_symbol(txt.symbol().unwrap(), SourceSlice::mock())
+}
+
+pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
+    AssociationLexeme::from_symbol(txt.symbol().unwrap(), SourceSlice::mock()).unwrap()
 }
 
 pub fn parenthesis_open() -> Lexeme {

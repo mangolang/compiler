@@ -72,7 +72,7 @@ mod parenthese {
                 literal_int(3).into(),
                 parenthesis_close(),
             ],
-            test_binary(
+            binary(
                 literal_int(4).into(),
                 OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
                 literal_int(3).into(),
