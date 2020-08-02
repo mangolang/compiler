@@ -128,6 +128,7 @@ mod keywords {
 
     use super::lex_keyword_identifier;
     use super::mixed::check;
+    use crate::lexeme::collect::for_test::keyword_or_reserved;
 
     #[test]
     fn all_keywords() {
@@ -141,9 +142,9 @@ mod keywords {
         check(
             "let mut mango",
             &[
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let, SourceSlice::mock())),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut, SourceSlice::mock())),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()), SourceSlice::mock())),
+                keyword_or_reserved(Keyword::Let),
+                keyword_or_reserved(Keyword::Mut),
+                keyword_or_reserved(Keyword::Reserved("mango".to_owned())),
             ],
         );
     }

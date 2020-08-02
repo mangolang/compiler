@@ -17,17 +17,38 @@ pub fn identifier(txt: &str) -> Lexeme {
     Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap())
 }
 
+pub trait IntoKeyword {
+    fn keyword(self) -> Result<Keyword, ()>;
+}
+
+impl IntoKeyword for &str {
+    fn keyword(self) -> Result<Keyword, ()> {
+        match Keyword::from_str(self) {
+            Ok(s) => Ok(s),
+            Err(_) => Err(()),
+        }
+    }
+}
+
+impl IntoKeyword for Keyword {
+    fn keyword(self) -> Result<Keyword, ()> {
+        Ok(self)
+    }
+}
+
 /// Parse a keyword, including reserved keywords for future use.
-pub fn keyword_or_reserved(txt: &str) -> Lexeme {
-    Lexeme::Keyword(KeywordLexeme::from_str(txt, SourceSlice::mock()).unwrap())
+pub fn keyword_or_reserved(kw: impl IntoKeyword) -> Lexeme {
+    let kw = kw.keyword().unwrap();
+    Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
 }
 
 /// Parse a keyword, but fail if it a reserved keyword, rather than one that already works.
-pub fn keyword_supported(txt: &str) -> Lexeme {
-    match Keyword::from_str(txt).unwrap() {
-        Keyword::Reserved(word) => panic!("Keyword '{}' not implemented", word),
-        kw => Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock())),
+pub fn keyword_supported(kw: impl IntoKeyword) -> Lexeme {
+    let kw = kw.keyword().unwrap();
+    if let Keyword::Reserved(word) = kw {
+        panic!("Keyword '{}' is reserved but not implemented", word);
     }
+    Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
 }
 
 pub fn literal_text(txt: impl Into<String>) -> LiteralLexeme {
@@ -46,7 +67,7 @@ pub fn literal_bool(b: bool) -> LiteralLexeme {
     LiteralLexeme::Boolean(b, SourceSlice::mock())
 }
 
-trait IntoSymbol {
+pub trait IntoSymbol {
     fn symbol(self) -> Result<Symbol, ()>;
 }
 

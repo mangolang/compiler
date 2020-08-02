@@ -128,7 +128,7 @@ mod addition {
             ],
             binary(
                 literal(literal_text("hello")),
-                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
+                operator(Symbol::Dash),
                 literal(literal_bool(true))
             ),
         );
@@ -174,7 +174,7 @@ mod multiplication {
             ],
             binary(
                 literal(literal_int(4)),
-                OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                operator(Symbol::Asterisk),
                 literal(literal_int(3)),
             ),
         );
@@ -190,7 +190,7 @@ mod multiplication {
             ],
             binary(
                 literal(literal_real(10.)),
-                OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
+                operator(Symbol::Slash),
                 literal(literal_real(5.)),
             ),
         );
@@ -210,13 +210,13 @@ mod multiplication {
             ],
             binary(
                 literal(literal_int(4)),
-                OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                operator(Symbol::Asterisk),
                 binary(
                     literal(literal_int(3)),
-                    OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                    operator(Symbol::Asterisk),
                     binary(
                         literal(literal_int(2)),
-                        OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                        operator(Symbol::Asterisk),
                         literal(literal_int(1))
                     )
                 )
@@ -235,7 +235,7 @@ mod multiplication {
             ],
             binary(
                 literal(literal_text("hello".to_owned())),
-                OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
+                operator(Symbol::Slash),
                 literal(literal_bool(true))
             ),
         );
@@ -286,14 +286,14 @@ mod mixed {
             binary(
                 binary(
                     literal(literal_real(f64eq(4.))),
-                    OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+                    operator(Symbol::Asterisk),
                     literal(literal_real(f64eq(3.))),
                 ),
-                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
+                operator(Symbol::Dash),
                 binary(
-                    literal(literal_Int(8)),
-                    OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()),
-                    literal(literal_Int(2)),
+                    literal(literal_int(8)),
+                    operator(Symbol::Slash),
+                    literal(literal_int(2)),
                 ),
             ),
         );
@@ -320,7 +320,7 @@ mod mixed {
         assert_eq!(
             binary(
                 literal(literal_int(4)),
-                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
+                operator(Symbol::Plus),
                 literal(literal_int(3))
             ),
             parselet);

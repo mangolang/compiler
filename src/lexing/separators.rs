@@ -1,14 +1,14 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
+use crate::lexeme::collect::short::colon;
+use crate::lexeme::collect::short::comma;
+use crate::lexeme::collect::short::ellipsis;
+use crate::lexeme::collect::short::newline;
+use crate::lexeme::collect::short::period;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
-use crate::lexeme::collect::short::ellipsis;
-use crate::lexeme::collect::short::period;
-use crate::lexeme::collect::short::comma;
-use crate::lexeme::collect::short::colon;
-use crate::lexeme::collect::short::newline;
 
 lazy_static! {
     static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
@@ -41,11 +41,12 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod grouping {
     use crate::io::source::SourceFile;
+    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexeme::collect::for_test::*;
     use crate::lexing::lexer::{CodeLexer, Lexer};
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_separators;
 

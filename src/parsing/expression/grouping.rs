@@ -58,7 +58,7 @@ mod parenthese {
                 literal_text("hello world").into(),
                 parenthesis_close(),
             ],
-            literal(LiteralLexeme::Text("hello world".to_owned(), SourceSlice::mock())),
+            literal(literal_text("hello world")),
         );
     }
 
@@ -73,9 +73,9 @@ mod parenthese {
                 parenthesis_close(),
             ],
             binary(
-                literal_int(4).into(),
-                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
-                literal_int(3).into(),
+                literal(literal_int(4)),
+                operator(Symbol::Plus),
+                literal(literal_int(3)),
             ),
         );
     }
@@ -95,9 +95,9 @@ mod parenthese {
                 parenthesis_close(),
             ],
             binary(
-                literal(LiteralLexeme::Int(4, SourceSlice::mock())),
-                OperatorLexeme::from_symbol(Symbol::Plus, SourceSlice::mock()),
-                literal(LiteralLexeme::Int(3, SourceSlice::mock()))
+                literal(literal_int(4)),
+                operator(Symbol::Plus),
+                literal(literal_int(3)),
             ),
         );
     }
@@ -114,7 +114,7 @@ mod parenthese {
                 parenthesis_close(),
                 parenthesis_close(),
             ],
-            literal(LiteralLexeme::Text("hello world".to_owned(), SourceSlice::mock())),
+            literal(literal_text("hello world")),
         );
     }
 
@@ -133,12 +133,12 @@ mod parenthese {
         // Since the '(' is not at the start, use parse_expression as entry point.
         let parselet = parse_expression(cursor).unwrap().1;
         assert_eq!(binary(
-            literal(LiteralLexeme::Int(4, SourceSlice::mock())),
-            OperatorLexeme::from_symbol(Symbol::Asterisk, SourceSlice::mock()),
+            literal(literal_int(4)),
+            operator(Symbol::Asterisk),
             binary(
-                literal(LiteralLexeme::Int(3, SourceSlice::mock())),
-                OperatorLexeme::from_symbol(Symbol::Dash, SourceSlice::mock()),
-                literal(LiteralLexeme::Int(2, SourceSlice::mock())),
+                literal(literal_int(3)),
+                operator(Symbol::Dash),
+                literal(literal_int(2)),
             ),
         ), parselet);
     }

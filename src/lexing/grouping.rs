@@ -126,6 +126,7 @@ mod parenthese {
 mod brackets {
     use crate::io::source::SourceFile;
     use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexeme::collect::for_test::*;
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::reader::source_reader::SourceReader;
@@ -163,6 +164,7 @@ mod brackets {
 mod mixed {
     use crate::io::source::SourceFile;
     use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexeme::collect::for_test::*;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
@@ -173,12 +175,20 @@ mod mixed {
     fn parenthese_inside_brackets() {
         check(
             "[ ( ) ]",
-            &[bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
+            &[
+                bracket_open(),
+                parenthesis_open(),
+                parenthesis_close(),
+                bracket_close(),
+            ],
         );
     }
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)", &[bracket_open(), parenthesis_close()]);
+        check("[)", &[
+            bracket_open(),
+            parenthesis_close(),
+        ]);
     }
 }
