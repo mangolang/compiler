@@ -1,7 +1,7 @@
 use ::std::fmt;
 
 use crate::common::error::MangoErrType::Read;
-use crate::io::source::SourceSlice;
+use crate::io::slice::SourceSlice;
 
 pub type MangoResult<T> = Result<T, MangoErr>;
 pub type MsgResult<T> = Result<T, ErrMsg>;

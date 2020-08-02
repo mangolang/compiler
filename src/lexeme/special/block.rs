@@ -1,4 +1,5 @@
 use crate::util::encdec::ToText;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Start and end of blocks, signalled e.g. by indentation.
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
@@ -25,6 +26,18 @@ impl EndBlockLexeme {
     //TODO @mark: customization options temporarily optional
     pub fn new2() -> Self {
         Self::new(true, false)
+    }
+}
+
+impl SourceLocation for StartBlockLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
+    }
+}
+
+impl SourceLocation for EndBlockLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
     }
 }
 

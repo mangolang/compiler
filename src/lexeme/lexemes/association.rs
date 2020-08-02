@@ -3,7 +3,7 @@ use ::std::str::FromStr;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::codeparts::Symbol;
 use crate::util::encdec::ToText;
-use crate::io::source::SourceSlice;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -55,6 +55,12 @@ impl AssociationLexeme {
         Ok(AssociationLexeme {
             symbol: Option::Some(symbol),
         })
+    }
+}
+
+impl SourceLocation for AssociationLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
     }
 }
 

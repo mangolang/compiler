@@ -1,4 +1,5 @@
 use crate::util::encdec::ToText;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Open and close parentheses: (, )
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
@@ -16,6 +17,18 @@ impl ParenthesisOpenLexeme {
 impl ParenthesisCloseLexeme {
     pub fn new() -> ParenthesisCloseLexeme {
         ParenthesisCloseLexeme {}
+    }
+}
+
+impl SourceLocation for ParenthesisOpenLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
+    }
+}
+
+impl SourceLocation for ParenthesisCloseLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
     }
 }
 

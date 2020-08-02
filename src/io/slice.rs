@@ -45,7 +45,7 @@ impl fmt::Debug for SourceSlice {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "SourceSlice{{ of '{:?}' [{}..{}]: {}}}",
+            "SourceSlice{{ of '{:?}' [{}..{}]: '{}'}}",
             self.file.identifier(),
             self.start,
             self.end,

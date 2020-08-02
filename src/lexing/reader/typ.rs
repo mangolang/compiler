@@ -2,8 +2,7 @@ use ::std::fmt::Debug;
 use std::rc::Rc;
 
 use ::regex::Regex;
-
-use crate::io::source::SourceSlice;
+use crate::io::slice::SourceSlice;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ReaderResult {

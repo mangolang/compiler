@@ -1,5 +1,6 @@
 use ::std::fmt;
 use ::std::rc::Rc;
+use crate::io::slice::SourceSlice;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because

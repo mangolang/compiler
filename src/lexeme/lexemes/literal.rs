@@ -2,6 +2,7 @@ use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 
@@ -14,6 +15,12 @@ pub enum LiteralLexeme {
     Int(i64),
     Real(f64eq),
     Boolean(bool),
+}
+
+impl SourceLocation for LiteralLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
+    }
 }
 
 impl ToText for LiteralLexeme {

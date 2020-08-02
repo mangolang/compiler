@@ -1,6 +1,7 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
+use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
@@ -23,6 +24,12 @@ impl FromStr for IdentifierLexeme {
 impl IdentifierLexeme {
     pub fn from_name(name: Name) -> Self {
         IdentifierLexeme { name }
+    }
+}
+
+impl SourceLocation for IdentifierLexeme {
+    fn source(&self) -> &SourceSlice {
+        unimplemented!()  //TODO @mark: source slice
     }
 }
 

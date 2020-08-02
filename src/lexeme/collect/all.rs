@@ -15,7 +15,7 @@ use crate::lexeme::lexemes::ParenthesisCloseLexeme;
 use crate::lexeme::lexemes::ParenthesisOpenLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::util::encdec::ToText;
-use crate::io::source::SourceSlice;
+use crate::io::slice::{SourceSlice, SourceLocation};
 
 //TODO @mark: pass code slice along with lexeme
 
