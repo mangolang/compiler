@@ -7,7 +7,7 @@ use crate::parselet::node::UnaryOperationParselet;
 use crate::parselet::special::UnparseableParselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 use crate::lexeme::lexemes::IdentifierLexeme;
 use crate::lexeme::lexemes::LiteralLexeme;
 use crate::lexeme::lexemes::OperatorLexeme;

@@ -31,7 +31,3 @@ impl ToText for ParenthesisCloseLexeme {
         ") ".to_owned()
     }
 }
-
-impl Lexeme for ParenthesisOpenLexeme {}
-
-impl Lexeme for ParenthesisCloseLexeme {}

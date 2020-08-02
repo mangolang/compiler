@@ -1,5 +1,5 @@
 use crate::lexeme::collect::FileLexemes;
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::util::cursor::ParseCursor;
 

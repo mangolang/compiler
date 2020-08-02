@@ -45,13 +45,3 @@ impl NewlineLexeme {
         NewlineLexeme {}
     }
 }
-
-impl Lexeme for ColonLexeme {}
-
-impl Lexeme for CommaLexeme {}
-
-impl Lexeme for EllipsisLexeme {}
-
-impl Lexeme for PeriodLexeme {}
-
-impl Lexeme for NewlineLexeme {}

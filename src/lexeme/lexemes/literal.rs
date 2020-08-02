@@ -27,5 +27,3 @@ impl ToText for LiteralLexeme {
         }
     }
 }
-
-impl Lexeme for LiteralLexeme {}

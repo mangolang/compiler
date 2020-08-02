@@ -1,4 +1,4 @@
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 use crate::lexeme::LiteralLexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::LiteralParselet;
@@ -9,7 +9,7 @@ use crate::parsing::expression::grouping::parse_parenthesised_group;
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut literal_cursor = cursor.clone();
-    if let Lexemes::Literal(literal_lexeme) = literal_cursor.take()? {
+    if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
         let literal = literal_lexeme.clone();
         return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
     }
@@ -25,7 +25,7 @@ mod literal {
 
     use super::*;
 
-    fn check(lexeme: Lexemes, expected: ExpressionParselets) {
+    fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();

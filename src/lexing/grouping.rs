@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::lexeme::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open, unlexable};
 
 lazy_static! {
@@ -32,11 +32,11 @@ mod test_util {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
-    pub fn check(input: &str, expected: &[Lexemes]) {
+    pub fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_grouping(&mut reader, &mut lexer);
@@ -50,7 +50,7 @@ mod mismatch {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
@@ -83,7 +83,7 @@ mod parenthese {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{parenthesis_close, parenthesis_open};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
@@ -124,7 +124,7 @@ mod brackets {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{bracket_close, bracket_open};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
@@ -162,7 +162,7 @@ mod mixed {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{bracket_close, bracket_open, parenthesis_close, parenthesis_open};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 

@@ -1,15 +1,15 @@
 use crate::parselet::Parselet;
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 
 /// Represents an unparseable list of lexemes.
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct UnparseableParselet {
-    lexemes: Vec<Lexemes>,
+    lexemes: Vec<Lexeme>,
 }
 
 impl UnparseableParselet {
-    pub fn from_lexemes(lexemes: Vec<Lexemes>) -> UnparseableParselet {
+    pub fn from_lexemes(lexemes: Vec<Lexeme>) -> UnparseableParselet {
         UnparseableParselet { lexemes }
     }
 }

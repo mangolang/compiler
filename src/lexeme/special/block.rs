@@ -42,7 +42,3 @@ impl ToText for EndBlockLexeme {
         " } ".to_owned()
     }
 }
-
-impl Lexeme for StartBlockLexeme {}
-
-impl Lexeme for EndBlockLexeme {}

@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::lexeme::collect::{association, operator, parenthesis_close, parenthesis_open, unlexable};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
@@ -27,13 +27,13 @@ mod operators {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexeme::Lexemes;
+    use crate::lexeme::Lexeme;
     use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
 
     use super::lex_operator;
 
-    fn check(input: &str, expected: &[Lexemes]) {
+    fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_operator(&mut reader, &mut lexer);
@@ -58,57 +58,57 @@ mod operators {
 
     #[test]
     fn plus() {
-        check("+", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Plus))]);
+        check("+", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Plus))]);
     }
 
     #[test]
     fn dash() {
-        check("-", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Dash))]);
+        check("-", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Dash))]);
     }
 
     #[test]
     fn asterisk() {
-        check("*", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk))]);
+        check("*", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk))]);
     }
 
     #[test]
     fn slash() {
-        check("/", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Slash))]);
+        check("/", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash))]);
     }
 
     #[test]
     fn lt() {
-        check("<", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::LT))]);
+        check("<", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LT))]);
     }
 
     #[test]
     fn gt() {
-        check(">", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::GT))]);
+        check(">", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GT))]);
     }
 
     #[test]
     fn eq() {
-        check("==", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::EQ))]);
+        check("==", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::EQ))]);
     }
 
     #[test]
     fn le() {
-        check("<=", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::LE))]);
+        check("<=", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LE))]);
     }
 
     #[test]
     fn ge() {
-        check(">=", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::GE))]);
+        check(">=", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GE))]);
     }
 
     #[test]
     fn exclamation() {
-        check("!", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation))]);
+        check("!", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation))]);
     }
 
     #[test]
     fn question() {
-        check("?", &[Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Question))]);
+        check("?", &[Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Question))]);
     }
 
     #[test]
@@ -116,17 +116,17 @@ mod operators {
         check(
             r"+-*/==<=>=<>!?",
             &[
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Plus)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Dash)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Slash)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::EQ)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::LE)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::GE)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::LT)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::GT)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation)),
-                Lexemes::Operator(OperatorLexeme::from_symbol(Symbol::Question)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Plus)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Dash)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Asterisk)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::EQ)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LE)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GE)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LT)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::GT)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Exclamation)),
+                Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Question)),
             ],
         );
     }
@@ -136,14 +136,14 @@ mod operators {
 mod associations {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{AssociationLexeme, Lexemes};
+    use crate::lexeme::{AssociationLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
 
-    fn check(input: &str, expected: &[Lexemes]) {
+    fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_association(&mut reader, &mut lexer);
@@ -168,18 +168,18 @@ mod associations {
 
     #[test]
     fn plain() {
-        check("=", &[Lexemes::Association(AssociationLexeme::from_unprefixed())]);
+        check("=", &[Lexeme::Association(AssociationLexeme::from_unprefixed())]);
     }
 
     #[test]
     fn prefix() {
-        check("+=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap())]);
-        check("-=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap())]);
+        check("+=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap())]);
+        check("-=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap())]);
         check(
             "*=",
-            &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap())],
+            &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap())],
         );
-        check("/=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap())]);
+        check("/=", &[Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap())]);
         //check("!=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Exclamation).unwrap())]);
         //check("?=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Question).unwrap())]);
     }
@@ -189,10 +189,10 @@ mod associations {
         check(
             r"+=-=*=/=",
             &[
-                Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap()),
-                Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap()),
-                Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap()),
-                Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap()),
+                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Plus).unwrap()),
+                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Dash).unwrap()),
+                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Asterisk).unwrap()),
+                Lexeme::Association(AssociationLexeme::from_symbol(Symbol::Slash).unwrap()),
             ],
         );
     }

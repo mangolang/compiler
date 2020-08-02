@@ -31,7 +31,3 @@ impl ToText for BracketCloseLexeme {
         ") ".to_owned()
     }
 }
-
-impl Lexeme for BracketOpenLexeme {}
-
-impl Lexeme for BracketCloseLexeme {}

@@ -1,4 +1,4 @@
-use crate::lexeme::{Lexemes, OperatorLexeme, ParenthesisOpenLexeme, ParenthesisCloseLexeme};
+use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisOpenLexeme, ParenthesisCloseLexeme};
 use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
@@ -15,7 +15,7 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 }
 
 fn parse_parenthesis_open(mut cursor: ParseCursor) -> ParseRes<ParenthesisOpenLexeme> {
-    if let Lexemes::ParenthesisOpen(parenthesis_lexeme) = cursor.take()? {
+    if let Lexeme::ParenthesisOpen(parenthesis_lexeme) = cursor.take()? {
         let parenthesis = parenthesis_lexeme.clone();
         return Ok((cursor, parenthesis))
     }
@@ -23,7 +23,7 @@ fn parse_parenthesis_open(mut cursor: ParseCursor) -> ParseRes<ParenthesisOpenLe
 }
 
 fn parse_parenthesis_close(mut cursor: ParseCursor) -> ParseRes<ParenthesisCloseLexeme> {
-    if let Lexemes::ParenthesisClose(parenthesis_lexeme) = cursor.take()? {
+    if let Lexeme::ParenthesisClose(parenthesis_lexeme) = cursor.take()? {
         let parenthesis = parenthesis_lexeme.clone();
         return Ok((cursor, parenthesis))
     }
@@ -41,7 +41,7 @@ mod parenthese {
 
     use super::*;
 
-    fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
+    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_parenthesised_group(cursor.clone()).unwrap();

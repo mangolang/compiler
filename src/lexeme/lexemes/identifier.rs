@@ -32,5 +32,3 @@ impl ToText for IdentifierLexeme {
         self.name.to_string()
     }
 }
-
-impl Lexeme for IdentifierLexeme {}

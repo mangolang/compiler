@@ -1,4 +1,4 @@
-use crate::lexeme::{Lexemes, OperatorLexeme};
+use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
 use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::util::{NoMatch, ParseRes};
@@ -27,7 +27,7 @@ pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 }
 
 fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool) -> ParseRes<OperatorLexeme> {
-    if let Lexemes::Operator(operator_lexeme) = cursor.take()? {
+    if let Lexeme::Operator(operator_lexeme) = cursor.take()? {
         if op_test(operator_lexeme) {
             //TODO @mark: is clone needed?
             let operator = operator_lexeme.clone();
@@ -48,7 +48,7 @@ mod addition {
 
     use super::*;
 
-    fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
+    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
@@ -154,7 +154,7 @@ mod multiplication {
 
     use super::*;
 
-    fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
+    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_multiplication(cursor.clone()).unwrap();
@@ -260,7 +260,7 @@ mod mixed {
 
     use super::*;
 
-    fn check(lexeme: Vec<Lexemes>, expected: ExpressionParselets) {
+    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();

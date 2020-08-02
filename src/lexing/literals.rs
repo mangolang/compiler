@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::lexeme::collect::{
     association, identifier, literal_bool, literal_int, literal_real, literal_text, operator, parenthesis_close, parenthesis_open,
     unlexable,
@@ -68,7 +68,7 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 mod test_util {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
@@ -78,7 +78,7 @@ mod test_util {
 
     use super::lex_literal;
 
-    pub fn check(input: &str, expected: &[Lexemes]) {
+    pub fn check(input: &str, expected: &[Lexeme]) {
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_literal(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected.into());
@@ -89,7 +89,7 @@ mod test_util {
 mod constants {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
@@ -138,7 +138,7 @@ mod constants {
 mod int {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
@@ -219,7 +219,7 @@ mod int {
 mod real {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int, literal_real};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
@@ -281,7 +281,7 @@ mod real {
 mod text {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;
@@ -355,7 +355,7 @@ mod text {
 mod exhaustion {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{IdentifierLexeme, Lexemes};
+    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::{identifier, literal_bool, literal_int, literal_real, literal_text};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexeme::lexemes::OperatorLexeme;

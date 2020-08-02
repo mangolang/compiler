@@ -1,7 +1,7 @@
 use ::std::rc::Rc;
 
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct End;
@@ -31,7 +31,7 @@ impl<'a> ParseCursor<'a> {
     }
 
     /// Get the requested element, or None if there are not that many lexemes.
-    pub fn peek(&self) -> Result<&Lexemes, End> {
+    pub fn peek(&self) -> Result<&Lexeme, End> {
         if self.index >= self.lexemes.len() {
             return Err(End);
         }
@@ -41,7 +41,7 @@ impl<'a> ParseCursor<'a> {
     /// Get the requested element, or None if there are not that many lexemes.
     /// This returns a borrow which can be cloned, because dealing with taking things
     /// out of the Cursor is too complex in combination with rollbacks.
-    pub fn take(&mut self) -> Result<&Lexemes, End> {
+    pub fn take(&mut self) -> Result<&Lexeme, End> {
         if self.index >= self.lexemes.len() {
             return Err(End);
         }

@@ -27,5 +27,3 @@ impl ToText for EndStatementLexeme {
         "\n".to_owned()
     }
 }
-
-impl Lexeme for EndStatementLexeme {}

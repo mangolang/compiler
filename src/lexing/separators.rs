@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexemes};
+use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::lexeme::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
 
 lazy_static! {
@@ -40,13 +40,13 @@ mod grouping {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexeme::collect::{colon, comma, ellipsis, newline, period, unlexable};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_separators;
 
-    fn check(input: &str, expected: &[Lexemes]) {
+    fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);

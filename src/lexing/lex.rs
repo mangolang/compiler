@@ -13,7 +13,7 @@ use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
-use crate::lexeme::{Lexemes, UnlexableLexeme};
+use crate::lexeme::{Lexeme, UnlexableLexeme};
 use crate::lexeme::collect::FileLexemes;
 
 //TODO performance: one day maybe use arena allocation
@@ -67,7 +67,7 @@ mod try_lex {
     use super::*;
 
     fn lex_fn_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-        lexer.add(Lexemes::Unlexable(UnlexableLexeme::new("hi".to_owned())))
+        lexer.add(Lexeme::Unlexable(UnlexableLexeme::new("hi".to_owned())))
     }
 
     fn lex_fn_no_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {}

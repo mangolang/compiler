@@ -30,5 +30,3 @@ impl ToText for KeywordLexeme {
         self.word.to_string()
     }
 }
-
-impl Lexeme for KeywordLexeme {}

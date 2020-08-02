@@ -1,18 +1,18 @@
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 use std::ops::Index;
 
 #[derive(Debug)]
 pub struct FileLexemes {
-    lexemes: Vec<Lexemes>,
+    lexemes: Vec<Lexeme>,
 }
 
 impl FileLexemes {
-    pub fn new(lexemes: Vec<Lexemes>) -> Self {
+    pub fn new(lexemes: Vec<Lexeme>) -> Self {
         FileLexemes { lexemes }
     }
 
     /// Get the requested element, or None if there are not that many lexemes.
-    pub fn peek(&self, index: LexemeIndex) -> Option<&Lexemes> {
+    pub fn peek(&self, index: LexemeIndex) -> Option<&Lexeme> {
         if index >= self.len() {
             return None;
         }
@@ -28,8 +28,8 @@ impl FileLexemes {
     }
 }
 
-impl From<Vec<Lexemes>> for FileLexemes {
-    fn from(lexemes: Vec<Lexemes>) -> Self {
+impl From<Vec<Lexeme>> for FileLexemes {
+    fn from(lexemes: Vec<Lexeme>) -> Self {
         FileLexemes::new(lexemes)
     }
 }
@@ -60,7 +60,7 @@ impl LexemeIndex {
 }
 
 impl Index<LexemeIndex> for FileLexemes {
-    type Output = Lexemes;
+    type Output = Lexeme;
 
     fn index(&self, index: LexemeIndex) -> &Self::Output {
         &self.lexemes[index.value]

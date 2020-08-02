@@ -1,5 +1,4 @@
 pub use self::collect::Lexeme;
-pub use self::collect::Lexemes;
 pub use self::special::*;
 pub use self::lexemes::*;
 

@@ -68,12 +68,10 @@ impl ToText for AssociationLexeme {
     }
 }
 
-impl Lexeme for AssociationLexeme {}
-
 #[cfg(test)]
 mod from_str {
     use crate::common::tests::assert_panic_silent;
-    use crate::lexeme::Lexemes;
+    use crate::lexeme::Lexeme;
 
     use super::*;
 

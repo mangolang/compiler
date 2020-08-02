@@ -1,10 +1,7 @@
 use ::std::fmt;
 
+use crate::io::source::SourceSlice;
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::separators::ColonLexeme;
-use crate::lexeme::special::EndBlockLexeme;
-use crate::lexeme::special::StartBlockLexeme;
-use crate::lexeme::special::UnlexableLexeme;
 use crate::lexeme::lexemes::AssociationLexeme;
 use crate::lexeme::lexemes::EndStatementLexeme;
 use crate::lexeme::lexemes::IdentifierLexeme;
@@ -14,13 +11,21 @@ use crate::lexeme::lexemes::OperatorLexeme;
 use crate::lexeme::lexemes::ParenthesisCloseLexeme;
 use crate::lexeme::lexemes::ParenthesisOpenLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::special::EndBlockLexeme;
+use crate::lexeme::special::StartBlockLexeme;
+use crate::lexeme::special::UnlexableLexeme;
 use crate::util::encdec::ToText;
 
-//TODO @mark: pass code slice along with lexeme
+#[derive(PartialEq, Eq, Hash, Clone)]
+pub struct Lexeme {
+    typ: LexemeType,
+    location: SourceSlice,
+}
 
 /// Collection of all possible lexemes.
 #[derive(PartialEq, Eq, Hash, Clone)]
-pub enum Lexemes {
+pub enum LexemeType {
     Association(AssociationLexeme),
     Identifier(IdentifierLexeme),
     Keyword(KeywordLexeme),
@@ -41,36 +46,37 @@ pub enum Lexemes {
     Unlexable(UnlexableLexeme),
 }
 
-impl fmt::Debug for Lexemes {
+impl fmt::Debug for Lexeme {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Lexemes::Association(association) => write!(f, "as:{}", association.to_text()),
-            Lexemes::Identifier(identifier) => write!(f, "${}", identifier.name),
-            Lexemes::Keyword(keyword) => write!(f, "{}", keyword.word.to_str().as_ref().to_uppercase()),
-            Lexemes::Literal(literal) => write!(f, "'{}'", literal.to_text()),
-            Lexemes::Operator(operator) => write!(f, "op:{}", operator.to_text()),
-            Lexemes::ParenthesisOpen(parenthesis_open) => write!(f, "'('"),
-            Lexemes::ParenthesisClose(parenthesis_close) => write!(f, "')'"),
-            Lexemes::BracketOpen(parenthesis_open) => write!(f, "'['"),
-            Lexemes::BracketClose(parenthesis_close) => write!(f, "']'"),
+            Lexeme::Association(association) => write!(f, "as:{}", association.to_text()),
+            Lexeme::Identifier(identifier) => write!(f, "${}", identifier.name),
+            Lexeme::Keyword(keyword) => write!(f, "{}", keyword.word.to_str().as_ref().to_uppercase()),
+            Lexeme::Literal(literal) => write!(f, "'{}'", literal.to_text()),
+            Lexeme::Operator(operator) => write!(f, "op:{}", operator.to_text()),
+            Lexeme::ParenthesisOpen(parenthesis_open) => write!(f, "'('"),
+            Lexeme::ParenthesisClose(parenthesis_close) => write!(f, "')'"),
+            Lexeme::BracketOpen(parenthesis_open) => write!(f, "'['"),
+            Lexeme::BracketClose(parenthesis_close) => write!(f, "']'"),
             //Lexemes::EndStatement(end_statement) => write!(f, "end_statement"),
-            Lexemes::StartBlock(start_block) => write!(f, "start_block"),
-            Lexemes::EndBlock(end_block) => write!(f, "end_block"),
-            Lexemes::Colon(colon) => write!(f, ":"),
-            Lexemes::Comma(comma) => write!(f, "comma"),
-            Lexemes::Ellipsis(ellipsis) => write!(f, "..."),
-            Lexemes::Period(period) => write!(f, "."),
-            Lexemes::Newline(newline) => writeln!(f, "NL"),
-            Lexemes::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text),
+            Lexeme::StartBlock(start_block) => write!(f, "start_block"),
+            Lexeme::EndBlock(end_block) => write!(f, "end_block"),
+            Lexeme::Colon(colon) => write!(f, ":"),
+            Lexeme::Comma(comma) => write!(f, "comma"),
+            Lexeme::Ellipsis(ellipsis) => write!(f, "..."),
+            Lexeme::Period(period) => write!(f, "."),
+            Lexeme::Newline(newline) => writeln!(f, "NL"),
+            Lexeme::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text),
         }
     }
 }
 
+//TODO @mark: get rid of these tests?
 #[cfg(test)]
 mod tests {
     use std::mem::size_of;
 
-    use crate::lexeme::Lexemes;
+    use crate::lexeme::Lexeme;
 
     use super::*;
 
@@ -78,7 +84,7 @@ mod tests {
 
     #[test]
     fn test_lexemes_size() {
-        assert!(size_of::<Lexemes>() <= 5 * LONG_SIZE, size_of::<Lexemes>());
+        assert!(size_of::<Lexeme>() <= 5 * LONG_SIZE, size_of::<Lexeme>());
     }
 
     //TODO @mark: these tests seem useless, they're already covered by `test_lexemes_size` :

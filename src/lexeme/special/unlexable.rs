@@ -18,5 +18,3 @@ impl ToText for UnlexableLexeme {
         format!(" [cannot lex: {}] ", self.text)
     }
 }
-
-impl Lexeme for UnlexableLexeme {}

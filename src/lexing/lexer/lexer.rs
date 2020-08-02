@@ -1,10 +1,10 @@
 use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 use crate::lexeme::collect::FileLexemes;
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 
 pub trait Lexer {
     /// Add a lexed lexeme.
-    fn add(&mut self, lexeme: Lexemes);
+    fn add(&mut self, lexeme: Lexeme);
 
     /// An identifier that indicates the progress. The only guarantee is that this
     /// will increase by some amount whenever a lexeme is added.
@@ -57,7 +57,7 @@ impl CodeLexer {
 }
 
 impl Lexer for CodeLexer {
-    fn add(&mut self, lexeme: Lexemes) {
+    fn add(&mut self, lexeme: Lexeme) {
         self.lexemes.add(lexeme);
     }
 

@@ -1,11 +1,11 @@
 use ::std::fmt;
 use ::std::iter::FromIterator;
 
-use crate::lexeme::Lexemes;
+use crate::lexeme::Lexeme;
 
 #[derive(PartialEq, Eq)]
 pub struct LexemeCollector {
-    lexemes: Vec<Lexemes>,
+    lexemes: Vec<Lexeme>,
 }
 
 impl LexemeCollector {
@@ -23,11 +23,11 @@ impl LexemeCollector {
         self.lexemes.len()
     }
 
-    pub fn add(&mut self, lexeme: Lexemes) {
+    pub fn add(&mut self, lexeme: Lexeme) {
         self.lexemes.push(lexeme);
     }
 
-    pub fn into_vec(self) -> Vec<Lexemes> {
+    pub fn into_vec(self) -> Vec<Lexeme> {
         self.lexemes
     }
 }
@@ -48,20 +48,20 @@ impl fmt::Debug for LexemeCollector {
     }
 }
 
-impl From<&[Lexemes]> for LexemeCollector {
-    fn from(lexemes: &[Lexemes]) -> Self {
+impl From<&[Lexeme]> for LexemeCollector {
+    fn from(lexemes: &[Lexeme]) -> Self {
         LexemeCollector { lexemes: lexemes.to_vec() }
     }
 }
 
-impl From<Vec<Lexemes>> for LexemeCollector {
-    fn from(lexemes: Vec<Lexemes>) -> Self {
+impl From<Vec<Lexeme>> for LexemeCollector {
+    fn from(lexemes: Vec<Lexeme>) -> Self {
         LexemeCollector { lexemes }
     }
 }
 
-impl FromIterator<Lexemes> for LexemeCollector {
-    fn from_iter<T: IntoIterator<Item = Lexemes>>(iter: T) -> Self {
+impl FromIterator<Lexeme> for LexemeCollector {
+    fn from_iter<T: IntoIterator<Item =Lexeme>>(iter: T) -> Self {
         let mut lexeme_list = LexemeCollector::new();
         for lexeme in iter {
             lexeme_list.add(lexeme)

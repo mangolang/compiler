@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
 
 lazy_static! {
     static ref NO_CODE_LINE_RE: Regex = Regex::new(r"^(#|\n)").unwrap();
@@ -34,10 +34,10 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     // Determine the lexemes to create.
     let prev_indent = lexer.get_indent();
     for i in line_indent..prev_indent {
-        lexer.add(Lexemes::EndBlock(EndBlockLexeme::new(true, false)));
+        lexer.add(Lexeme::EndBlock(EndBlockLexeme::new(true, false)));
     }
     for i in prev_indent..line_indent {
-        lexer.add(Lexemes::StartBlock(StartBlockLexeme::new()));
+        lexer.add(Lexeme::StartBlock(StartBlockLexeme::new()));
     }
 
     lexer.set_at_indentable(false);
@@ -50,12 +50,12 @@ mod indents {
     use crate::lexing::lexer::{CodeLexer, Lexer};
     use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexemes};
+    use crate::lexeme::{EndBlockLexeme, StartBlockLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
     use super::lex_indents;
 
-    fn check(initial_indent: u32, input: &str, expected: &[Lexemes]) {
+    fn check(initial_indent: u32, input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
         let (source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
@@ -69,15 +69,15 @@ mod indents {
             0,
             "\t    hello",
             &[
-                Lexemes::StartBlock(StartBlockLexeme::new()),
-                Lexemes::StartBlock(StartBlockLexeme::new()),
+                Lexeme::StartBlock(StartBlockLexeme::new()),
+                Lexeme::StartBlock(StartBlockLexeme::new()),
             ],
         );
     }
 
     #[test]
     fn decrease_to_two() {
-        check(3, "    \thello", &[Lexemes::EndBlock(EndBlockLexeme::new(true, false))]);
+        check(3, "    \thello", &[Lexeme::EndBlock(EndBlockLexeme::new(true, false))]);
     }
 
     #[test]
@@ -86,8 +86,8 @@ mod indents {
             2,
             "hello",
             &[
-                Lexemes::EndBlock(EndBlockLexeme::new(true, false)),
-                Lexemes::EndBlock(EndBlockLexeme::new(true, false)),
+                Lexeme::EndBlock(EndBlockLexeme::new(true, false)),
+                Lexeme::EndBlock(EndBlockLexeme::new(true, false)),
             ],
         );
     }

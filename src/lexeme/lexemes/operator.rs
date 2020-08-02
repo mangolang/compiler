@@ -47,5 +47,3 @@ impl ToText for OperatorLexeme {
         format!(" {} ", self.symbol)
     }
 }
-
-impl Lexeme for OperatorLexeme {}
