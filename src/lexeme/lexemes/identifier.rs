@@ -23,8 +23,8 @@ impl FromStr for IdentifierLexeme {
 }
 
 impl IdentifierLexeme {
-    pub fn from_name(name: Name) -> Self {
-        IdentifierLexeme { name }
+    pub fn from_name(name: Name, source: SourceSlice) -> Self {
+        IdentifierLexeme { name, source }
     }
 }
 

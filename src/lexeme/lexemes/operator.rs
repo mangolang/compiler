@@ -13,17 +13,13 @@ pub struct OperatorLexeme {
     source: SourceSlice,
 }
 
-impl FromStr for OperatorLexeme {
-    type Err = String;
-
-    fn from_str(symbol_txt: &str) -> Result<OperatorLexeme, String> {
-        Ok(OperatorLexeme::from_symbol(Symbol::new(symbol_txt)?))
-    }
-}
-
 impl OperatorLexeme {
-    pub fn from_symbol(symbol: Symbol) -> OperatorLexeme {
-        OperatorLexeme { symbol }
+    pub fn from_str(symbol_txt: &str, source: SourceSlice) -> Result<OperatorLexeme, String> {
+        Ok(OperatorLexeme::from_symbol(Symbol::new(symbol_txt)?, source))
+    }
+
+    pub fn from_symbol(symbol: Symbol, source: SourceSlice) -> OperatorLexeme {
+        OperatorLexeme { symbol, source }
     }
 
     pub fn is_negate(&self) -> bool {

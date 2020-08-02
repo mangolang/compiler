@@ -26,6 +26,36 @@ pub struct NewlineLexeme {
     source: SourceSlice,
 }
 
+impl ColonLexeme {
+    pub fn new(source: SourceSlice) -> Self {
+        ColonLexeme { source}
+    }
+}
+
+impl CommaLexeme {
+    pub fn new(source: SourceSlice) -> Self {
+        CommaLexeme { source}
+    }
+}
+
+impl EllipsisLexeme {
+    pub fn new(source: SourceSlice) -> Self {
+        EllipsisLexeme { source}
+    }
+}
+
+impl PeriodLexeme {
+    pub fn new(source: SourceSlice) -> Self {
+        PeriodLexeme { source}
+    }
+}
+
+impl NewlineLexeme {
+    pub fn new(source: SourceSlice) -> Self {
+        NewlineLexeme { source}
+    }
+}
+
 impl SourceLocation for ColonLexeme {
     fn source(&self) -> &SourceSlice {
         &self.source
@@ -53,35 +83,5 @@ impl SourceLocation for PeriodLexeme {
 impl SourceLocation for NewlineLexeme {
     fn source(&self) -> &SourceSlice {
         &self.source
-    }
-}
-
-impl ColonLexeme {
-    pub fn new() -> Self {
-        ColonLexeme {}
-    }
-}
-
-impl CommaLexeme {
-    pub fn new() -> Self {
-        CommaLexeme {}
-    }
-}
-
-impl EllipsisLexeme {
-    pub fn new() -> Self {
-        EllipsisLexeme {}
-    }
-}
-
-impl PeriodLexeme {
-    pub fn new() -> Self {
-        PeriodLexeme {}
-    }
-}
-
-impl NewlineLexeme {
-    pub fn new() -> Self {
-        NewlineLexeme {}
     }
 }

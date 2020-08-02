@@ -14,25 +14,24 @@ pub struct AssociationLexeme {
     source: SourceSlice,
 }
 
-impl FromStr for AssociationLexeme {
-    type Err = ErrMsg;
-
-    fn from_str(association_txt: &str) -> MsgResult<AssociationLexeme> {
+impl AssociationLexeme {
+    pub fn from_str(association_txt: &str, source: SourceSlice) -> MsgResult<AssociationLexeme> {
         if association_txt == "=" {
-            return Ok(AssociationLexeme::from_unprefixed());
+            return Ok(AssociationLexeme::from_unprefixed(source));
         }
         assert!(association_txt.ends_with('='));
         let symbol = Symbol::new(&association_txt[0..association_txt.len() - 1])?;
-        AssociationLexeme::from_symbol(symbol)
-    }
-}
-
-impl AssociationLexeme {
-    pub fn from_unprefixed() -> Self {
-        AssociationLexeme { symbol: Option::None }
+        AssociationLexeme::from_symbol(symbol, source)
     }
 
-    pub fn from_symbol(symbol: Symbol) -> MsgResult<Self> {
+    pub fn from_unprefixed(source: SourceSlice) -> Self {
+        AssociationLexeme {
+            symbol: Option::None,
+            source,
+        }
+    }
+
+    pub fn from_symbol(symbol: Symbol, source: SourceSlice) -> MsgResult<Self> {
         let is_valid = match symbol {
             Symbol::Plus => true,
             Symbol::Dash => true,
@@ -55,6 +54,7 @@ impl AssociationLexeme {
         }
         Ok(AssociationLexeme {
             symbol: Option::Some(symbol),
+            source,
         })
     }
 }

@@ -2,25 +2,25 @@ use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Open and close parentheses: (, )
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisOpenLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub struct ParenthesisCloseLexeme {
     source: SourceSlice,
 }
 
 impl ParenthesisOpenLexeme {
-    pub fn new() -> ParenthesisOpenLexeme {
-        ParenthesisOpenLexeme {}
+    pub fn new(source: SourceSlice) -> ParenthesisOpenLexeme {
+        ParenthesisOpenLexeme { source }
     }
 }
 
 impl ParenthesisCloseLexeme {
-    pub fn new() -> ParenthesisCloseLexeme {
-        ParenthesisCloseLexeme {}
+    pub fn new(source: SourceSlice) -> ParenthesisCloseLexeme {
+        ParenthesisCloseLexeme { source }
     }
 }
 

@@ -11,7 +11,7 @@ use crate::util::codeparts::operator::SYMBOL_RE;
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(source) = reader.strip_match(&*SYMBOL_RE) {
-        lexer.add(operator(source.as_str()).unwrap());
+        lexer.add(operator(source.as_str(), source).unwrap());
     }
 }
 

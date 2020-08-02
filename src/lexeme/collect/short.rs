@@ -15,7 +15,7 @@ use crate::io::slice::SourceSlice;
 //TODO @mark: replace more lexeme usages by short versions
 
 pub fn association(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Association(AssociationLexeme::from_str(txt)?))
+    Ok(Lexeme::Association(AssociationLexeme::from_str(txt, source)?))
 }
 
 pub fn identifier(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
@@ -51,24 +51,24 @@ pub fn literal_bool(b: bool, source: SourceSlice) -> Lexeme {
     Lexeme::Literal(LiteralLexeme::Boolean(b, source))
 }
 
-pub fn operator(txt: &str) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Operator(OperatorLexeme::from_str(&txt)?))
+pub fn operator(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
+    Ok(Lexeme::Operator(OperatorLexeme::from_str(&txt, source)?))
 }
 
 pub fn parenthesis_open(source: SourceSlice) -> Lexeme {
-    Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new())
+    Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(source))
 }
 
 pub fn parenthesis_close(source: SourceSlice) -> Lexeme {
-    Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new())
+    Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(source))
 }
 
 pub fn bracket_open(source: SourceSlice) -> Lexeme {
-    Lexeme::BracketOpen(BracketOpenLexeme::new())
+    Lexeme::BracketOpen(BracketOpenLexeme::new(source))
 }
 
 pub fn bracket_close(source: SourceSlice) -> Lexeme {
-    Lexeme::BracketClose(BracketCloseLexeme::new())
+    Lexeme::BracketClose(BracketCloseLexeme::new(source))
 }
 
 // pub fn end_statement() -> Lexemes {
@@ -77,27 +77,27 @@ pub fn bracket_close(source: SourceSlice) -> Lexeme {
 // }
 
 pub fn start_block(source: SourceSlice) -> Lexeme {
-    Lexeme::StartBlock(StartBlockLexeme::new())
+    Lexeme::StartBlock(StartBlockLexeme::new(source))
 }
 
 pub fn end_block(source: SourceSlice) -> Lexeme {
-    Lexeme::EndBlock(EndBlockLexeme::new2())
+    Lexeme::EndBlock(EndBlockLexeme::new2(source))
 }
 
 pub fn colon(source: SourceSlice) -> Lexeme {
-    Lexeme::Colon(ColonLexeme::new())
+    Lexeme::Colon(ColonLexeme::new(source))
 }
 pub fn comma(source: SourceSlice) -> Lexeme {
-    Lexeme::Comma(CommaLexeme::new())
+    Lexeme::Comma(CommaLexeme::new(source))
 }
 pub fn ellipsis(source: SourceSlice) -> Lexeme {
-    Lexeme::Ellipsis(EllipsisLexeme::new())
+    Lexeme::Ellipsis(EllipsisLexeme::new(source))
 }
 pub fn period(source: SourceSlice) -> Lexeme {
-    Lexeme::Period(PeriodLexeme::new())
+    Lexeme::Period(PeriodLexeme::new(source))
 }
 pub fn newline(source: SourceSlice) -> Lexeme {
-    Lexeme::Newline(NewlineLexeme::new())
+    Lexeme::Newline(NewlineLexeme::new(source))
 }
 
 pub fn unlexable(source: SourceSlice) -> Lexeme {

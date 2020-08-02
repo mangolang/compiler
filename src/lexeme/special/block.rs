@@ -27,8 +27,8 @@ impl EndBlockLexeme {
     }
 
     //TODO @mark: customization options temporarily optional
-    pub fn new2() -> Self {
-        Self::new(true, false)
+    pub fn new2(source: SourceSlice) -> Self {
+        Self::new(true, false, source)
     }
 }
 
