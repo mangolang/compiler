@@ -110,11 +110,6 @@ pub fn bracket_close() -> Lexeme {
     Lexeme::BracketClose(BracketCloseLexeme::new(SourceSlice::mock()))
 }
 
-// pub fn end_statement() -> Lexemes {
-//     //TODO @mark: for now only create newlines
-//     Lexemes::EndStatement(EndStatementLexeme::new_end_line())
-// }
-
 pub fn start_block() -> Lexeme {
     Lexeme::StartBlock(StartBlockLexeme::new(SourceSlice::mock()))
 }
@@ -140,8 +135,5 @@ pub fn newline() -> Lexeme {
 }
 
 pub fn unlexable(text: impl Into<String>) -> Lexeme {
-    let text = text.into();
-    let len = if text.is_empty() { 0 } else { text.len() - 1 };
-    let src = SourceFile::mock(text);
-    Lexeme::Unlexable(UnlexableLexeme::new(src.slice(0, len)))
+    Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))
 }

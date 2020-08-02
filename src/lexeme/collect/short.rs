@@ -101,5 +101,5 @@ pub fn newline(source: SourceSlice) -> Lexeme {
 }
 
 pub fn unlexable(source: SourceSlice) -> Lexeme {
-    Lexeme::Unlexable(UnlexableLexeme::new(source))
+    Lexeme::Unlexable(UnlexableLexeme::from_source(source))
 }

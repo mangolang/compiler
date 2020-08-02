@@ -1,7 +1,5 @@
-use std::cmp::Ordering;
-use std::fmt;
-use std::hash::Hash;
-use std::hash::Hasher;
+use ::std::{fmt, hash};
+use ::std::cmp::Ordering;
 
 use derive_new::new;
 
@@ -44,8 +42,8 @@ impl PartialEq for f64eq {
 
 impl Eq for f64eq {}
 
-impl Hash for f64eq {
-    fn hash<H: Hasher>(&self, hasher: &mut H) {
+impl hash::Hash for f64eq {
+    fn hash<H: hash::Hasher>(&self, hasher: &mut H) {
         // Inspired by https://docs.rs/ordered-float/0.5.0/src/ordered_float/lib.rs.html#543
         if self.0 == -0. {
             (0f64).to_bits().hash(hasher);

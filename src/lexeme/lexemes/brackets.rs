@@ -1,16 +1,40 @@
-use crate::util::encdec::ToText;
+use ::std::hash;
+
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::util::encdec::ToText;
 
 /// Open and close parentheses: (, )
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct BracketOpenLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct BracketCloseLexeme {
     source: SourceSlice,
 }
+
+
+impl PartialEq for BracketOpenLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        true
+    }
+}
+
+impl hash::Hash for BracketOpenLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+}
+
+impl PartialEq for BracketCloseLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        true
+    }
+}
+
+impl hash::Hash for BracketCloseLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+}
+
 
 impl BracketOpenLexeme {
     pub fn new(source: SourceSlice) -> BracketOpenLexeme {

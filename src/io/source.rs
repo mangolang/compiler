@@ -2,7 +2,6 @@ use ::std::fmt;
 use ::std::rc::Rc;
 use crate::io::slice::SourceSlice;
 use std::hash;
-use std::hash::Hasher;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because
@@ -39,9 +38,10 @@ impl SourceFile {
 
     #[cfg(test)]
     pub fn mock(text: impl Into<String>) -> Self {
+        let text = text.into();
         SourceFileContent {
-            source_identifier: "for_test".to_owned(),
-            data: text.into(),
+            source_identifier: format!("mock-file:{}", &text),
+            data: text,
         }
         .into()
     }
@@ -87,7 +87,7 @@ impl PartialEq for SourceFileContent {
 }
 
 impl hash::Hash for SourceFileContent {
-    fn hash<H: Hasher>(&self, state: &mut H) {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
         // The same note as PartialEq, about only checking filename, applies here.
         // Note that for Hash, it's not strictly incorrect to ignore content,
         // even if they are different, but it might be slow.

@@ -1,12 +1,13 @@
+use ::std::hash;
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MangoErr, MangoResult, MsgResult};
+use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::util::codeparts::Keyword;
 use crate::util::encdec::ToText;
-use crate::io::slice::{SourceSlice, SourceLocation};
 
 /// A built-in language keyword.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct KeywordLexeme {
     pub word: Keyword,
     source: SourceSlice,
@@ -19,6 +20,18 @@ impl KeywordLexeme {
 
     pub fn from_keyword(word: Keyword, source: SourceSlice) -> Self {
         KeywordLexeme { word, source }
+    }
+}
+
+impl PartialEq for KeywordLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        self.word == other.word
+    }
+}
+
+impl hash::Hash for KeywordLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.word.hash(state)
     }
 }
 

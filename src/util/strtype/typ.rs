@@ -1,11 +1,11 @@
 use ::std::borrow::Cow;
 use ::std::fmt;
-use ::std::hash::Hash;
+use ::std::hash;
 
 use crate::common::error::MsgResult;
 
 /// A trait for types that wrap a string matching a certain structure.
-pub trait StrType: Sized + fmt::Display + Hash + PartialEq<Self> + Eq {
+pub trait StrType: Sized + fmt::Display + hash::Hash + PartialEq<Self> + Eq {
     /// Validate whether this is a valid string for this type. Returns an explanation message if not.
     fn validate(value: &str) -> MsgResult<()>;
 

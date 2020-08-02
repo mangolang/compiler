@@ -1,3 +1,4 @@
+use ::std::hash;
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
@@ -7,7 +8,7 @@ use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct IdentifierLexeme {
     pub name: Name,
     source: SourceSlice,
@@ -21,6 +22,18 @@ impl IdentifierLexeme {
 
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
         IdentifierLexeme { name, source }
+    }
+}
+
+impl PartialEq for IdentifierLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
+}
+
+impl hash::Hash for IdentifierLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.name.hash(state)
     }
 }
 

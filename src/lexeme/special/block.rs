@@ -1,13 +1,15 @@
-use crate::util::encdec::ToText;
+use ::std::hash;
+
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::util::encdec::ToText;
 
 /// Start and end of blocks, signalled e.g. by indentation.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct StartBlockLexeme {
     source: SourceSlice,
 }
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct EndBlockLexeme {
     is_dedent: bool,
     is_end_keyword: bool,
@@ -30,6 +32,26 @@ impl EndBlockLexeme {
     pub fn new2(source: SourceSlice) -> Self {
         Self::new(true, false, source)
     }
+}
+
+impl PartialEq for StartBlockLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        true
+    }
+}
+
+impl hash::Hash for StartBlockLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+}
+
+impl PartialEq for EndBlockLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        true
+    }
+}
+
+impl hash::Hash for EndBlockLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
 }
 
 impl SourceLocation for StartBlockLexeme {

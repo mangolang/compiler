@@ -24,7 +24,7 @@ pub struct SourceSlice {
 impl SourceSlice {
     pub fn new(file: &SourceFile, start: usize, end: usize) -> Self {
         debug_assert!(end >= start);
-        debug_assert!(end < file.content.data.len());
+        debug_assert!(end <= file.content.data.len());
         SourceSlice {
             file: file.clone(),
             start,
@@ -102,6 +102,12 @@ mod tests {
     }
 
     #[test]
+    fn slice_letter() {
+        let f = SourceFile::mock("hello world!");
+        assert_eq!(f.slice(11, 12).as_str(), "!");
+    }
+
+    #[test]
     fn slice_all() {
         let f = SourceFile::mock("hello world!");
         assert_eq!(f.slice(0, 12).as_str(), "hello world!");
@@ -122,19 +128,19 @@ mod tests {
 
     #[test]
     fn slice_neq_start() {
-        let f = SourceFile::new("a.txt", "hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_ne!(f.slice(3, 7), f.slice(2, 7));
     }
 
     #[test]
     fn slice_neq_end() {
-        let f = SourceFile::new("a.txt", "hello world!");
+        let f = SourceFile::mock("hello world!");
         assert_ne!(f.slice(3, 6), f.slice(3, 7));
     }
 
     #[test]
     fn join_adjacent() {
-        let f = SourceFile::new("a.txt", "hello world!");
+        let f = SourceFile::mock("hello world!");
         let s = f.slice(1, 5).join(f.slice(6, 9)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(9, s.end);
@@ -142,15 +148,15 @@ mod tests {
 
     #[test]
     fn join_overlap() {
-        let f = SourceFile::new("a.txt", "hello world!");
+        let f = SourceFile::mock("hello world!");
         let s = f.slice(1, 3).join(f.slice(3, 5)).unwrap();
         assert_eq!(1, s.start);
-        assert_eq!(9, s.end);
+        assert_eq!(5, s.end);
     }
 
     #[test]
     fn join_empty() {
-        let f = SourceFile::new("a.txt", "hello world!");
+        let f = SourceFile::mock("hello world!");
         let s = f.slice(1, 1).join(f.slice(1, 1)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(1, s.end);
@@ -158,8 +164,8 @@ mod tests {
 
     #[test]
     fn disjoint_join() {
-        let f = SourceFile::new("a.txt", "hello world!");
-        let s = f.slice(1, 1).join(f.slice(1, 1));
+        let f = SourceFile::mock("hello world!");
+        let s = f.slice(1, 3).join(f.slice(5, 5));
         assert!(s.is_err());
     }
 }

@@ -1,10 +1,10 @@
-use std::fmt::Debug;
-use std::hash::Hash;
+use ::std::fmt;
+use ::std::hash;
 
 use crate::util::encdec::ToText;
 
 /// Parselet trait to be implemented by all Parselet nodes.
-pub trait Parselet: PartialEq + Eq + Hash + Debug {}
+pub trait Parselet: PartialEq + Eq + hash::Hash + fmt::Debug {}
 
 //TODO @mark: remove?
 ///// Trait to be implemented by everything in the full abstract syntax tree.

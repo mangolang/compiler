@@ -1,15 +1,17 @@
+use ::std::hash;
+
+use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::lexeme::{KeywordLexeme, Lexeme};
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
-use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::Lexeme;
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub enum LiteralLexeme {
     //TODO @mark: to Ustr for cheaper clone:
     Text(String, SourceSlice),
@@ -21,6 +23,31 @@ pub enum LiteralLexeme {
 impl From<LiteralLexeme> for Lexeme {
     fn from(literal: LiteralLexeme) -> Self {
         Lexeme::Literal(literal)
+    }
+}
+
+impl PartialEq for LiteralLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        use LiteralLexeme::*;
+        match (self, other) {
+            (Text(left, _), Text(right, _)) => left == right,
+            (Int(left, _), Int(right, _)) => left == right,
+            (Real(left, _), Real(right, _)) => left == right,
+            (Boolean(left, _), Boolean(right, _)) => left == right,
+            _ => false,
+        }
+    }
+}
+
+impl hash::Hash for LiteralLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        use LiteralLexeme::*;
+        match self {
+            Text(val, _) => val.hash(state),
+            Int(val, _) => val.hash(state),
+            Real(val, _) => val.hash(state),
+            Boolean(val, _) => val.hash(state),
+        }
     }
 }
 

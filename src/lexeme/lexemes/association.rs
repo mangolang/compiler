@@ -1,14 +1,15 @@
+use ::std::hash;
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::util::codeparts::Symbol;
-use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
+use crate::util::codeparts::Symbol;
+use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct AssociationLexeme {
     //TODO @mark: note that some symbols aren't allowed
     symbol: Option<Symbol>,
@@ -57,6 +58,18 @@ impl AssociationLexeme {
             symbol: Option::Some(symbol),
             source,
         })
+    }
+}
+
+impl PartialEq for AssociationLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        self.symbol == other.symbol
+    }
+}
+
+impl hash::Hash for AssociationLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.symbol.hash(state)
     }
 }
 

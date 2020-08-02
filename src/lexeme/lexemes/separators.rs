@@ -1,87 +1,61 @@
-use crate::util::encdec::ToText;
-use crate::io::slice::{SourceLocation, SourceSlice};
+use ::std::hash;
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::util::encdec::ToText;
+
+macro_rules! implement_separator {
+    ($name: ident) => {
+
+        impl $name {
+            pub fn new(source: SourceSlice) -> Self {
+                $name { source}
+            }
+        }
+
+        impl SourceLocation for $name {
+            fn source(&self) -> &SourceSlice {
+                &self.source
+            }
+        }
+
+        impl PartialEq for $name {
+            fn eq(&self, other: &Self) -> bool {
+                true
+            }
+        }
+
+        impl hash::Hash for $name {
+            fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+        }
+    }
+}
+
+#[derive(Debug, Eq, Clone)]
 pub struct ColonLexeme {
     source: SourceSlice,
 }
+implement_separator!(ColonLexeme);
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct CommaLexeme {
     source: SourceSlice,
 }
+implement_separator!(CommaLexeme);
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct EllipsisLexeme {
     source: SourceSlice,
 }
+implement_separator!(EllipsisLexeme);
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct PeriodLexeme {
     source: SourceSlice,
 }
+implement_separator!(PeriodLexeme);
 
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct NewlineLexeme {
     source: SourceSlice,
 }
-
-impl ColonLexeme {
-    pub fn new(source: SourceSlice) -> Self {
-        ColonLexeme { source}
-    }
-}
-
-impl CommaLexeme {
-    pub fn new(source: SourceSlice) -> Self {
-        CommaLexeme { source}
-    }
-}
-
-impl EllipsisLexeme {
-    pub fn new(source: SourceSlice) -> Self {
-        EllipsisLexeme { source}
-    }
-}
-
-impl PeriodLexeme {
-    pub fn new(source: SourceSlice) -> Self {
-        PeriodLexeme { source}
-    }
-}
-
-impl NewlineLexeme {
-    pub fn new(source: SourceSlice) -> Self {
-        NewlineLexeme { source}
-    }
-}
-
-impl SourceLocation for ColonLexeme {
-    fn source(&self) -> &SourceSlice {
-        &self.source
-    }
-}
-
-impl SourceLocation for CommaLexeme {
-    fn source(&self) -> &SourceSlice {
-        &self.source
-    }
-}
-
-impl SourceLocation for EllipsisLexeme {
-    fn source(&self) -> &SourceSlice {
-        &self.source
-    }
-}
-
-impl SourceLocation for PeriodLexeme {
-    fn source(&self) -> &SourceSlice {
-        &self.source
-    }
-}
-
-impl SourceLocation for NewlineLexeme {
-    fn source(&self) -> &SourceSlice {
-        &self.source
-    }
-}
+implement_separator!(NewlineLexeme);

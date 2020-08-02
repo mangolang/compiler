@@ -1,14 +1,15 @@
+use ::std::hash;
 use std::str::FromStr;
 
 use crate::common::error::{MangoErr, MangoResult};
-use crate::util::codeparts::Symbol;
-use crate::util::encdec::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
+use crate::util::codeparts::Symbol;
+use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+#[derive(Debug, Eq, Clone)]
 pub struct OperatorLexeme {
     symbol: Symbol,
     source: SourceSlice,
@@ -37,6 +38,18 @@ impl OperatorLexeme {
 
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
+    }
+}
+
+impl PartialEq for OperatorLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        self.symbol == other.symbol
+    }
+}
+
+impl hash::Hash for OperatorLexeme {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        self.symbol.hash(state)
     }
 }
 
