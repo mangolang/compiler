@@ -1,7 +1,9 @@
+use ::std::fmt;
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::SourceSlice;
+use crate::io::source::SourceFile;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, EndStatementLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
     ParenthesisCloseLexeme, ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
@@ -11,13 +13,12 @@ use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLex
 use crate::lexeme::separators::ColonLexeme;
 use crate::util::codeparts::{Keyword, Symbol};
 use crate::util::numtype::f64eq;
-use crate::io::source::SourceFile;
 
 pub fn identifier(txt: &str) -> Lexeme {
     Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap())
 }
 
-pub trait IntoKeyword {
+pub trait IntoKeyword: fmt::Debug {
     fn keyword(self) -> Result<Keyword, ()>;
 }
 
@@ -67,31 +68,42 @@ pub fn literal_bool(b: bool) -> LiteralLexeme {
     LiteralLexeme::Boolean(b, SourceSlice::mock())
 }
 
-pub trait IntoSymbol {
-    fn symbol(self) -> Result<Symbol, ()>;
+pub trait IntoSymbol: fmt::Debug {
+    fn symbol(self, is_association: bool) -> Result<Option<Symbol>, ()>;
 }
 
 impl IntoSymbol for &str {
-    fn symbol(self) -> Result<Symbol, ()> {
-        match Symbol::new(self) {
-            Ok(s) => Ok(s),
+    /// Get the symbol. If this is for an association, strip a character (should be "=") from the end of the text.
+    fn symbol(self, is_association: bool) -> Result<Option<Symbol>, ()> {
+        let symbol_txt = if is_association {
+            &self[0..self.len()-1]
+        } else {
+            self
+        };
+        if symbol_txt.is_empty() {
+            return Ok(None)
+        }
+        match Symbol::new(symbol_txt) {
+            Ok(s) => Ok(Some(s)),
             Err(_) => Err(()),
         }
     }
 }
 
 impl IntoSymbol for Symbol {
-    fn symbol(self) -> Result<Symbol, ()> {
-        Ok(self)
+    fn symbol(self, is_association: bool) -> Result<Option<Symbol>, ()> {
+        Ok(Some(self))
     }
 }
 
 pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
-    OperatorLexeme::from_symbol(txt.symbol().unwrap(), SourceSlice::mock())
+    OperatorLexeme::from_symbol(txt.symbol(false).unwrap().unwrap(), SourceSlice::mock())
 }
 
 pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
-    AssociationLexeme::from_symbol(txt.symbol().unwrap(), SourceSlice::mock()).unwrap()
+    txt.symbol(true).unwrap()
+        .map(|sym| AssociationLexeme::from_symbol(sym, SourceSlice::mock()).unwrap())
+        .unwrap_or_else(|| AssociationLexeme::from_unprefixed(SourceSlice::mock()))
 }
 
 pub fn parenthesis_open() -> Lexeme {
