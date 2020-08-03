@@ -6,6 +6,12 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
+    NOTE: Is this correct syntax?
+    CommaSeparatedExpressions ->
+        | Expression [("," | "\n") Expression]* ","
+        | Expression [("," | "\n") Expression]*
+        | EMPTY
+
     Expression -> Assignment
 
     Assignment -> Identifier "=" Expression
@@ -17,11 +23,17 @@ But for reference, this is the grammar::
     Multiplication -> UnaryOperation ("*" | "/") Multiplication
         | UnaryOperation
 
-    UnaryOperation -> NegateOperation
-        | "+" UnaryOperation
-        | Literal
+    UnaryOperation -> "-" UnaryOperation
+        | FunctionCall
 
-    NegateOperation -> "-" UnaryOperation
+    FunctionCall -> IndexedIdentifier "(" CommaSeparatedExpressions ")"
+        | IndexedIdentifier
+
+    IndexedIdentifier -> PureIdentifier "[" Expressions "]"
+        | PureIdentifier
+
+    PureIdentifier -> IDENTIFIER
+        | Literal
 
     Literal -> INTEGER
         | REAL
@@ -30,5 +42,5 @@ But for reference, this is the grammar::
         | Group
 
     Group -> "(" Expression ")"
-        | empty
+        | EMPTY
 
