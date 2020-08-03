@@ -16,17 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build (stable)
-        run: ci/pipeline/make/debug.sh
+        run: bash ci/pipeline/make/debug.sh
       - name: Dependency versions
         continue-on-error: true  # allow indirect dependencies to be outdated
-        run: ci/pipeline/deps/versions_deep.sh
+        run: bash ci/pipeline/deps/versions_deep.sh
       - name: Dependency versions
-        run: ci/pipeline/deps/versions_direct.sh
+        run: bash ci/pipeline/deps/versions_direct.sh
       - name: Audit dependecies
-        run: ci/pipeline/deps/audit.sh
+        run: bash ci/pipeline/deps/audit.sh
 #      - name: Dependency licenses
 #        continue-on-error: false
-#        run: ci/pipeline/deps/license.sh
+#        run: bash ci/pipeline/deps/license.sh
 #      - name: Unused dependencies
 #        continue-on-error: false
-#        run: ci/pipeline/deps/usage.sh
+#        run: bash ci/pipeline/deps/usage.sh
