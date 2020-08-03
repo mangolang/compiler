@@ -1,0 +1,15 @@
+
+# Put only whitelisted things in the Docker build context.
+# First remove everything:
+*
+
+# Now explicitly add the source code, Cargo files and readme:
+!ci/image
+!Cargo.toml
+!Cargo.lock
+!rustfmt.toml
+!deny.toml
+!.cargo/
+!src/
+!README.rst
+!LICENSE.txt

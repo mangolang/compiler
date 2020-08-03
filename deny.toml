@@ -1,0 +1,32 @@
+
+[advisories]
+vulnerability = "deny"
+unmaintained = "deny"
+notice = "deny"
+
+[bans]
+multiple-versions = "deny"
+deny = []
+skip = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = []
+
+[licenses]
+unlicensed = "deny"
+allow-osi-fsf-free = "both"
+copyleft = "deny"
+# We want really high confidence when inferring licenses from text
+confidence-threshold = 0.95
+allow = [
+#    "Apache-2.0",
+#    "MIT",
+#    "BSD-2-Clause",
+]
+
+exceptions = [
+    #{ allow = ["Zlib"], name = "tinyvec" },
+]
+
