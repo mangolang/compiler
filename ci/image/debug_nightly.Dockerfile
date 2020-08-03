@@ -10,10 +10,10 @@ COPY rustfmt.toml Cargo.toml Cargo.lock ./
 COPY src src
 
 # This makes sure things are rebuilt
-RUN touch src/main.rs
+RUN bash -c 'touch -c src/main.rs; touch -c src/lib.rs'
 
 # Build the code (debug mode)
-RUN cargo build --all-targets --all-features --bin mango
+RUN cargo build --all-targets --all-features
 
 # Miscellaneous other files
 COPY ci/image/cargo_for_coverage.sh deny.toml ./

@@ -21,44 +21,30 @@ STEP 'make/base.sh' 'build - dependencies image'
 
 STEP 'make/debug.sh' 'build - ci image'
 
-#STEP 'test/test.sh' 'test'
-#
-#STEP 'test/lint.sh' 'lint'
-#STEP 'test/lint.sh' 'lint'
-#
-#STEP 'test/style.sh' 'style'
-#
-##TODO @mark: turn on
-##STEP 'test/test_miri.sh' 'test (miri)'
-#
-#STEP 'test/cov.sh' 'coverage'
-#
-#STEP 'deps/versions_direct.sh' 'dependencies - versions'
-##TODO: do something with indirect dependencies, version_deep
-#
-#STEP 'deps/audit.sh' 'dependencies - audit'
-#
-##TODO @mark: turn on
-##STEP 'deps/license.sh' 'dependencies - license'
-#
-##TODO @mark: turn on
-##STEP 'deps/usage.sh' 'dependencies - unused'
-#
-#STEP 'make/docs.sh' 'documentation'
-#
-#STEP 'release/api_help.sh' 'api help'
+STEP 'test/test.sh' 'test'
 
-STEP 'release/dist_image.sh' 'release - image (distributable)'
+STEP 'test/lint.sh' 'lint'
+STEP 'test/lint.sh' 'lint'
 
-STEP 'release/dist_exe.sh' 'release - executable (linux)'
+STEP 'test/style.sh' 'style'
 
-STEP 'release/dependencies.sh' 'release - dependencies'
+#TODO @mark: turn on
+#STEP 'test/test_miri.sh' 'test (miri)'
 
-STEP 'release/exe_info.sh' 'release - executable info'
+STEP 'test/cov.sh' 'coverage'
 
-STEP 'release/static_files.sh' 'release - readme, license, etc'
+STEP 'deps/versions_direct.sh' 'dependencies - versions'
+#TODO: do something with indirect dependencies, version_deep
 
-STEP 'release/package.sh' 'release - package'
+STEP 'deps/audit.sh' 'dependencies - audit'
+
+#TODO @mark: turn on
+#STEP 'deps/license.sh' 'dependencies - license'
+
+#TODO @mark: turn on
+#STEP 'deps/usage.sh' 'dependencies - unused'
+
+STEP 'make/docs.sh' 'documentation'
 
 printf '== cleanup ==\n'
 # Untag the docker images so next run cannot accidentally rely on old versions.
