@@ -1,0 +1,36 @@
+
+# Check that the code compiles. Also checks tests and style, but non-blocking.
+
+name: 'Create a release'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  github:
+    name: Compile and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build for CI
+        run: ci/pipeline/make/debug.sh
+      - name: Optimized image
+        run: ci/pipeline/release/dist_image.sh
+      - name: Binary (linux)
+        run: ci/pipeline/release/dist_exe.sh
+      - name: Executable info
+        run: ci/pipeline/release/exe_info.sh
+      - name: Static files
+        run: ci/pipeline/release/static_files.sh
+      - name: Cli api help
+        run: ci/pipeline/release/api_help.sh
+      - name: Documentation
+        run: ci/pipeline/make/docs.sh
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mango-artifact
+          path: ./artifact/mango-*/*
+          if-no-files-found: error
+      - name: Package
+        run: ci/pipeline/release/package.sh
