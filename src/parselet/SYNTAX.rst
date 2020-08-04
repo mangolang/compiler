@@ -6,17 +6,14 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
+    Assignment:
+        | Identifier "=" Expression
+        | Addition
+
     CommaSeparatedExpressions:
         | Expression [("," | "\n") Expression]* ","
         | Expression [("," | "\n") Expression]*
         | EMPTY
-
-    Expression:
-        | Assignment
-
-    Assignment:
-        | Identifier "=" Expression
-        | Addition
 
     Addition:
         | Multiplication ("+" | "-") Addition
@@ -40,7 +37,6 @@ But for reference, this is the grammar::
 
     Identifier:
         | Literal
-        | KEYWORD
         | IDENTIFIER
 
     Literal:
