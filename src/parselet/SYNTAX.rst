@@ -6,41 +6,51 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
-    NOTE: Is this correct syntax?
-    CommaSeparatedExpressions ->
+    CommaSeparatedExpressions:
         | Expression [("," | "\n") Expression]* ","
         | Expression [("," | "\n") Expression]*
         | EMPTY
 
-    Expression -> Assignment
+    Expression:
+        | Assignment
 
-    Assignment -> Identifier "=" Expression
+    Assignment:
+        | Identifier "=" Expression
         | Addition
 
-    Addition -> Multiplication ("+" | "-") Addition
+    Addition:
+        | Multiplication ("+" | "-") Addition
         | Multiplication
 
-    Multiplication -> UnaryOperation ("*" | "/") Multiplication
+    Multiplication:
+        | UnaryOperation ("*" | "/") Multiplication
         | UnaryOperation
 
-    UnaryOperation -> "-" UnaryOperation
+    UnaryOperation:
+        | "-" UnaryOperation
         | FunctionCall
 
-    FunctionCall -> IndexedIdentifier "(" CommaSeparatedExpressions ")"
-        | IndexedIdentifier
+    IdentifierCall:
+        | IndexedIdentifier "(" CommaSeparatedExpressions ")"
+        | IdentifierIndex
 
-    IndexedIdentifier -> PureIdentifier "[" Expressions "]"
-        | PureIdentifier
+    IdentifierIndex:
+        | Value "[" Expressions "]"
+        | Identifier
 
-    PureIdentifier -> IDENTIFIER
+    Identifier:
         | Literal
+        | KEYWORD
+        | IDENTIFIER
 
-    Literal -> INTEGER
+    Literal:
+        | INTEGER
         | REAL
         | BOOL
         | TEXT
         | Group
 
-    Group -> "(" Expression ")"
+    Group:
+        | "(" Expression ")"
         | EMPTY
 
