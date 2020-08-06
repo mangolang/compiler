@@ -6,7 +6,7 @@ use crate::parsing::expression::arithmetic::parse_addition;
 pub(self) mod single_token;
 mod arithmetic;
 mod literals;
-mod invoke;
+mod function_call;
 mod grouping;
 
 pub fn parse_expression(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {

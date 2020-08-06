@@ -8,7 +8,7 @@ use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    //TODO @mark: change to parse_identifier later
+    //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_literal(cursor)?;
     match parse_parenthesis_open(iden_cursor) {
         Ok((cursor, _)) => match parse_parenthesis_close(cursor) {

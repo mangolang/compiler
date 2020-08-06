@@ -6,14 +6,14 @@ use crate::towasm::Expression;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct FunctionCallParselet {
-    function: ExpressionParselets,
+    function: Box<ExpressionParselets>,
     args: (),
 }
 
 impl FunctionCallParselet {
     pub fn new(function: ExpressionParselets) -> Self {
         FunctionCallParselet {
-            function,
+            function: Box::new(function),
             args: (),
         }
     }

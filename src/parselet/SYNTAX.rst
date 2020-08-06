@@ -36,7 +36,7 @@ But for reference, this is the grammar::
         | IdentifierIndex
 
     IdentifierIndex:
-        | Value "[" Expressions "]"
+        | Value "[" Expression "]"
         | Identifier
 
     Identifier:
