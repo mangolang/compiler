@@ -1,8 +1,9 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
-use crate::parselet::{BinaryOperationParselet, ExpressionParselets};
 use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parselet::ExpressionParselets;
+use crate::parselet::binary_operation::BinaryOperationParselet;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;

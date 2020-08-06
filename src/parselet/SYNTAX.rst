@@ -10,10 +10,14 @@ But for reference, this is the grammar::
         | Identifier "=" Expression
         | Addition
 
+    #TODO: arguments can also be passed as name=value, but only after positional arguments
     CommaSeparatedExpressions:
         | Expression [("," | "\n") Expression]* ","
         | Expression [("," | "\n") Expression]*
         | EMPTY
+
+    Expression:
+        Addition
 
     Addition:
         | Multiplication ("+" | "-") Addition
