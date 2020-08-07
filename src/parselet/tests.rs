@@ -1,9 +1,6 @@
 use std::str::FromStr;
 
 use crate::parselet::Parselets;
-use crate::parselet::node::AssignmentParselet;
-use crate::parselet::node::BinaryOperationParselet;
-use crate::parselet::node::UnaryOperationParselet;
 use crate::parselet::special::UnparseableParselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;

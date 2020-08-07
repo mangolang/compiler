@@ -4,9 +4,10 @@ use ::std::str::FromStr;
 // use crate::util::codeparts::Keyword;
 // use crate::util::numtype::f64eq;
 // use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
-use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme};
-use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet};
+use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme, IdentifierLexeme};
+use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
+use crate::parselet::node::function_call::FunctionCallParselet;
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -29,12 +30,20 @@ use crate::parselet::node::binary_operation::BinaryOperationParselet;
 //     }
 // }
 
+pub fn variable(lexeme: IdentifierLexeme) -> ExpressionParselets {
+    ExpressionParselets::Variable(VariableParselet::new(lexeme))
+}
+
 pub fn literal(lexeme: LiteralLexeme) -> ExpressionParselets {
     ExpressionParselets::Literal(LiteralParselet::new(lexeme))
 }
 
 pub fn binary(left: ExpressionParselets, operator: OperatorLexeme, right: ExpressionParselets) -> ExpressionParselets {
     ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right))
+}
+
+pub fn function_call(function: ExpressionParselets) -> ExpressionParselets {
+    ExpressionParselets::Call(FunctionCallParselet::new(function))
 }
 
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {

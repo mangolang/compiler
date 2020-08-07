@@ -14,8 +14,8 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::util::codeparts::{Keyword, Symbol};
 use crate::util::numtype::f64eq;
 
-pub fn identifier(txt: &str) -> Lexeme {
-    Lexeme::Identifier(IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap())
+pub fn identifier(txt: &str) -> IdentifierLexeme {
+    IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap()
 }
 
 pub trait IntoKeyword: fmt::Debug {

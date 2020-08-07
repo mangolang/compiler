@@ -6,6 +6,7 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::util::encdec::ToText;
 use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
+use crate::lexeme::Lexeme;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, Eq, Clone)]
@@ -43,8 +44,14 @@ impl SourceLocation for IdentifierLexeme {
     }
 }
 
-impl ToText for IdentifierLexeme {
-    fn to_text(&self) -> String {
-        self.name.to_string()
+// impl ToText for IdentifierLexeme {
+//     fn to_text(&self) -> String {
+//         self.name.to_string()
+//     }
+// }
+
+impl From<IdentifierLexeme> for Lexeme {
+    fn from(identifier: IdentifierLexeme) -> Self {
+        Lexeme::Identifier(identifier)
     }
 }
