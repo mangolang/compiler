@@ -1,15 +1,15 @@
 use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
-use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::expression::variable::parse_variable;
 
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
-    let (iden_cursor, identifier) = parse_literal(cursor)?;
+    let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor) {
         Ok((cursor, _)) => match parse_parenthesis_close(cursor) {
             Ok((cursor, _)) => Ok((cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier)))),

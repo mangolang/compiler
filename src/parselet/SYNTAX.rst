@@ -34,16 +34,16 @@ TODO: right hand sides should go back up to Expression?
         | FunctionCall
 
     IdentifierCall:
-        | IndexedIdentifier "(" CommaSeparatedExpressions ")"
-        | IndexedIdentifier
+        | IndexedVariable "(" CommaSeparatedExpressions ")"
+        | IndexedVariable
 
     IdentifierIndex:
-        | Identifier "[" Expression "]"
-        | Identifier
+        | Variable "[" Expression "]"
+        | Variable
 
-    Identifier:
-        | Literal
+    Variable:
         | IDENTIFIER
+        | Literal
 
     Literal:
         | INTEGER

@@ -50,8 +50,8 @@ opt-level = 3  # or 'z' ?
 lto = true
 
 [profile.test]
-opt-level = 2
-lto = 'thin'
+#opt-level = 2
+#lto = 'thin'
 
 [profile.dev.package."*"]
 opt-level = 3
