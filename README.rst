@@ -31,7 +31,7 @@ There are hundreds of pages of design notes, but the plan still lacks coherence,
 How to use
 -------------------------------
 
-To interact with Mango from the command line, use the CLI_ crate.
+To interact with Mango from the command line, use the CLI_ crate (also available via Docker_).
 
 This crate is a Rust library. You cannot execute it directly, use the CLI_. Use this library if you're making another Rust tool that relies on the Mango compiler.
 
@@ -55,3 +55,4 @@ Links
 .. _IR: https://github.com/mangolang/mango_ir
 .. _compiled: https://github.com/mangolang/wasm
 .. _interpreted: https://github.com/mangolang/interpreter
+.. _Docker: https://hub.docker.com/r/mangocode/mango.

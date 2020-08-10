@@ -6,6 +6,8 @@ At this stage of development, the implementation is perhaps a more up-to-date re
 
 But for reference, this is the grammar::
 
+TODO: right hand sides should go back up to Expression?
+
     Assignment:
         | Identifier "=" Expression
         | Addition
@@ -33,10 +35,10 @@ But for reference, this is the grammar::
 
     IdentifierCall:
         | IndexedIdentifier "(" CommaSeparatedExpressions ")"
-        | IdentifierIndex
+        | IndexedIdentifier
 
     IdentifierIndex:
-        | Value "[" Expression "]"
+        | Identifier "[" Expression "]"
         | Identifier
 
     Identifier:
