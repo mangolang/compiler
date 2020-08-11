@@ -47,7 +47,7 @@ mod unlexable {
 
     #[test]
     fn newline() {
-        // Newline is a special case, because normally regex's '.' does not match it.
+        // Newline is a groups case, because normally regex's '.' does not match it.
         let (source, mut reader, mut lexer) = create_lexer("\nabc");
         lex_unlexable(&mut reader, &mut lexer);
         assert_eq!(lexer.into_lexemes(), vec![unlexable(SourceFile::mock("\n").slice(0, 1))].into());
