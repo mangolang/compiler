@@ -32,85 +32,47 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
     Ok((cursor, expressions))
 }
 
-//TODO @mark: tests
-// #[cfg(test)]
-// mod by_name {
-//     use crate::io::slice::SourceSlice;
-//     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-//     use crate::lexeme::collect::for_test::*;
-//     use crate::parselet::short::{function_call, variable};
-//     use crate::parsing::util::cursor::End;
-//     use crate::util::codeparts::Symbol;
-//     use crate::util::numtype::f64eq;
-//
-//     use super::*;
-//
-//     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-//         let lexemes = lexeme.into();
-//         let cursor = ParseCursor::new(&lexemes);
-//         let (cursor, parselet) = parse_call(cursor.clone()).unwrap();
-//         assert_eq!(expected, parselet);
-//         assert_eq!(Err(End), cursor.peek());
-//     }
-//
-//     #[test]
-//     fn no_args() {
-//         check(
-//             vec![
-//                 identifier("f").into(),
-//                 parenthesis_open(),
-//                 parenthesis_close(),
-//             ],
-//             function_call(variable(identifier("f"))),
-//         );
-//     }
-//
-//     #[test]
-//     fn single_literal_positional_arg() {
-//         check(
-//             vec![
-//                 identifier("faculty").into(),
-//                 parenthesis_open(),
-//                 literal_int(42).into(),
-//                 parenthesis_close(),
-//             ],
-//             function_call(variable(identifier("faculty"))),
-//         );
-//     }
-//
-//     #[test]
-//     fn single_identifier_positional_arg() {
-//         check(
-//             vec![
-//                 identifier("f").into(),
-//                 parenthesis_open(),
-//                 identifier("x").into(),
-//                 parenthesis_close(),
-//             ],
-//             function_call(variable(identifier("f"))),
-//         );
-//     }
-//
-//     #[test]
-//     fn single_arithmetic_positional_arg() {
-//         check(
-//             vec![
-//                 identifier("f").into(),
-//                 parenthesis_open(),
-//                 parenthesis_open(),
-//                 identifier("x").into(),
-//                 operator("-").into(),
-//                 literal_int(1).into(),
-//                 parenthesis_close(),
-//                 operator("*").into(),
-//                 parenthesis_open(),
-//                 identifier("y").into(),
-//                 operator("+").into(),
-//                 literal_int(1).into(),
-//                 parenthesis_close(),
-//                 parenthesis_close(),
-//             ],
-//             function_call(variable(identifier("f"))),
-//         );
-//     }
-// }
+#[cfg(test)]
+mod expressions {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{function_call, variable};
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
+
+    fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>) {
+        let lexemes = lexeme.into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselets) = parse_multi_expression(cursor.clone()).unwrap();
+        assert_eq!(expected, parselets);
+        assert_eq!(Err(End), cursor.peek());
+    }
+
+    fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Lexeme) {
+        let lexemes = lexeme.into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_multi_expression(cursor.clone());
+        assert!(result.is_err());
+        assert_eq!(Ok(&lexeme_at_cursor), cursor.peek());
+    }
+
+    #[test]
+    fn empty() {
+        check(
+            vec![],
+            vec![],
+        );
+    }
+
+    #[test]
+    fn just_comma() {
+        check_fail(
+            vec![comma()],
+            comma(),
+        );
+    }
+}
