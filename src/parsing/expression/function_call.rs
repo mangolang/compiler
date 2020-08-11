@@ -50,4 +50,53 @@ mod by_name {
             function_call(variable(identifier("f"))),
         );
     }
+
+    #[test]
+    fn single_literal_positional_arg() {
+        check(
+            vec![
+                identifier("faculty").into(),
+                parenthesis_open(),
+                literal_int(42).into(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("faculty"))),
+        );
+    }
+
+    #[test]
+    fn single_identifier_positional_arg() {
+        check(
+            vec![
+                identifier("f").into(),
+                parenthesis_open(),
+                identifier("x").into(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("f"))),
+        );
+    }
+
+    #[test]
+    fn single_arithmetic_positional_arg() {
+        check(
+            vec![
+                identifier("f").into(),
+                parenthesis_open(),
+                parenthesis_open(),
+                identifier("x").into(),
+                operator("-").into(),
+                literal_int(1).into(),
+                parenthesis_close(),
+                operator("*").into(),
+                parenthesis_open(),
+                identifier("y").into(),
+                operator("+").into(),
+                literal_int(1).into(),
+                parenthesis_close(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("f"))),
+        );
+    }
 }
