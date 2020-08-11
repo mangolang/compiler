@@ -37,27 +37,29 @@ mod expressions {
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{function_call, variable};
+    use crate::parselet::short::{function_call, variable, literal, binary};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use std::env::var;
 
-    fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>) {
+    fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselets) = parse_multi_expression(cursor.clone()).unwrap();
         assert_eq!(expected, parselets);
         assert_eq!(Err(End), cursor.peek());
+        assert_eq!(lexeme_at_cursor, cursor.peek());
     }
 
-    fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Lexeme) {
+    fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_multi_expression(cursor.clone());
         assert!(result.is_err());
-        assert_eq!(Ok(&lexeme_at_cursor), cursor.peek());
+        assert_eq!(lexeme_at_cursor, cursor.peek());
     }
 
     #[test]
@@ -65,14 +67,77 @@ mod expressions {
         check(
             vec![],
             vec![],
+            Err(End),
         );
     }
 
     #[test]
     fn just_comma() {
-        check_fail(
+        check(
             vec![comma()],
-            comma(),
+            vec![],
+            Ok(&comma()),
         );
     }
+
+    #[test]
+    fn single_literal() {
+        check(
+            vec![literal_text("hello").into()],
+            vec![literal(literal_text("hello"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn single_variable() {
+        check(
+            vec![identifier("hello").into()],
+            vec![variable(identifier("hello"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn single_arithmetic() {
+        check(
+            vec![
+                parenthesis_open(),
+                identifier("x").into(),
+                operator("-").into(),
+                literal_int(1).into(),
+                parenthesis_close(),
+                operator("*").into(),
+                parenthesis_open(),
+                identifier("y").into(),
+                operator("+").into(),
+                literal_int(10).into(),
+                parenthesis_close(),
+            ],
+            vec![
+                binary(
+                    binary(
+                        variable(identifier("x")),
+                        operator(Symbol::Dash),
+                        literal(literal_int(1)),
+                    ),
+                    operator(Symbol::Asterisk),
+                    binary(
+                        variable(identifier("y")),
+                        operator(Symbol::Plus),
+                        literal(literal_int(10)),
+                    ),
+                )
+            ],
+            Err(End),
+        );
+    }
+
+    //TODO @mark: multiple expressions
+    //TODO @mark: close with e.g. ) or ]  (not consumed)
+    //TODO @mark: different indentation
+    //TODO @mark: 3 separators: comma, newline, both
+    //TODO @mark: with and without trailing separtor
+    //TODO @mark: head is correct
+    //TODO @mark: non-expression (start, middle)
 }

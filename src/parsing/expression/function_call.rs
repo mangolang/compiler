@@ -24,7 +24,7 @@ mod by_name {
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{function_call, variable};
+    use crate::parselet::short::{function_call, variable, binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
@@ -92,11 +92,25 @@ mod by_name {
                 parenthesis_open(),
                 identifier("y").into(),
                 operator("+").into(),
-                literal_int(1).into(),
+                literal_int(10).into(),
                 parenthesis_close(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f"))),
+            function_call(
+                binary(
+                    binary(
+                        variable(identifier("x")),
+                        operator(Symbol::Dash),
+                        literal(literal_int(1)),
+                    ),
+                    operator(Symbol::Asterisk),
+                    binary(
+                        variable(identifier("y")),
+                        operator(Symbol::Plus),
+                        literal(literal_int(10)),
+                    ),
+                )
+            ),
         );
     }
 }
