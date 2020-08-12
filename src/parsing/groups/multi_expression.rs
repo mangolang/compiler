@@ -53,13 +53,14 @@ mod test_util {
         assert_eq!(lexeme_at_cursor, cursor.peek());
     }
 
-    pub fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Result<&Lexeme, End>) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor.clone());
-        assert!(result.is_err());
-        assert_eq!(lexeme_at_cursor, cursor.peek());
-    }
+    //TODO @mark: remove?
+    // pub fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Result<&Lexeme, End>) {
+    //     let lexemes = lexeme.into();
+    //     let cursor = ParseCursor::new(&lexemes);
+    //     let result = parse_multi_expression(cursor.clone());
+    //     assert!(result.is_err());
+    //     assert_eq!(lexeme_at_cursor, cursor.peek());
+    // }
 }
 
 #[cfg(test)]
@@ -75,7 +76,6 @@ mod basic {
     use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::test_util::check_fail;
     use super::*;
 
     #[test]
@@ -84,15 +84,6 @@ mod basic {
             vec![],
             vec![],
             Err(End),
-        );
-    }
-
-    #[test]
-    fn just_comma() {
-        check(
-            vec![comma()],
-            vec![],
-            Ok(&comma()),
         );
     }
 
@@ -128,7 +119,6 @@ mod complex_expr {
     use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::test_util::check_fail;
     use super::*;
 
     #[test]
@@ -241,7 +231,6 @@ mod separators {
     use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::test_util::check_fail;
     use super::*;
 
     #[test]
@@ -310,6 +299,70 @@ mod separators {
 }
 
 #[cfg(test)]
+mod ending {
+    use ::std::env::var;
+
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::test_util::check;
+    use super::*;
+
+    #[test]
+    fn two_no_tail() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into()],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn two_tail_comma() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), comma()],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn two_tail_newline() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), newline()],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn two_tail_newline_comma() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), newline(), comma()],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn two_tail_comma_newline() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), newline(), newline()],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
+        );
+    }
+}
+
+
+/// Most are not actually errors; on problematic lexemes, the multi-expression
+/// is ended, and it's up to the caller to determine whether what comes after is ok.
+#[cfg(test)]
 mod errors {
     use ::std::env::var;
 
@@ -322,7 +375,6 @@ mod errors {
     use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::test_util::check_fail;
     use super::*;
 
     #[test]
@@ -334,13 +386,58 @@ mod errors {
         );
     }
 
+    #[test]
+    fn just_comma() {
+        check(
+            vec![comma()],
+            vec![],
+            Ok(&comma()),
+        );
+    }
 
+    #[test]
+    fn close_parenthesis() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), parenthesis_close(),],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Ok(&parenthesis_close()),
+        );
+    }
 
+    #[test]
+    fn close_bracket() {
+        check(
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), bracket_close(),],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Ok(&bracket_close()),
+        );
+    }
 
-    //TODO @mark: close with e.g. ) or ]  (not consumed)
-    //TODO @mark: different indentation
-    //TODO @mark: 3 separators: comma, newline, both
-    //TODO @mark: with and without trailing separtor
-    //TODO @mark: head is correct
-    //TODO @mark: non-expression (start, middle)
+    #[test]
+    fn syntax_err_first_expr() {
+        let lexemes = vec![
+            identifier("q").into(),
+            operator("+").into(),
+            parenthesis_close(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_multi_expression(cursor.clone());
+        assert!(result.is_err());
+        assert_eq!(Ok(&identifier("q").into()), cursor.peek());
+    }
+
+    #[test]
+    fn syntax_err_second_expr() {
+        let lexemes = vec![
+            literal_bool(true).into(),
+            comma(),
+            identifier("q").into(),
+            operator("+").into(),
+            parenthesis_close(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_multi_expression(cursor.clone());
+        assert!(result.is_err());
+        assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
+    }
 }
