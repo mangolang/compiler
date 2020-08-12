@@ -24,6 +24,7 @@ mod var {
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::parsing::expression::parse_expression;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -80,6 +81,15 @@ mod var {
         let lexemes = vec![identifier("hello").into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_variable(cursor).unwrap();
+        assert_eq!(variable(identifier("hello")), parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
+    }
+
+    #[test]
+    fn is_expression() {
+        let lexemes = vec![identifier("hello").into(), comma()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
