@@ -4,6 +4,7 @@ use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::binary_operation::BinaryOperationParselet;
+use crate::parsing::expression::variable::parse_variable;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
@@ -17,7 +18,7 @@ pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 }
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (cursor, left) = parse_literal(cursor)?;
+    let (cursor, left) = parse_variable(cursor)?;
     let (cursor, operator) = match parse_operator(cursor, |op| op.is_mult_div()) {
         Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
