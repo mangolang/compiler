@@ -85,6 +85,18 @@ mod var {
         assert_eq!(variable(identifier("hello")), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
+}
+
+#[cfg(test)]
+mod special {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{literal, variable};
+    use crate::parsing::util::cursor::End;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
+    use crate::parsing::expression::parse_expression;
 
     #[test]
     fn is_expression() {

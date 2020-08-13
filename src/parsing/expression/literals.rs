@@ -123,7 +123,7 @@ mod special {
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())),, parselet);
+        assert_eq!(literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
