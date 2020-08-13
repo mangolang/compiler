@@ -101,3 +101,29 @@ mod literal {
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
+
+#[cfg(test)]
+mod special {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
+    use crate::parsing::expression::parse_expression;
+
+    #[test]
+    fn is_expression() {
+        let lexemes = vec![
+            literal_text("hello42").into(),
+            comma(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        assert_eq!(literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())),, parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
+    }
+}

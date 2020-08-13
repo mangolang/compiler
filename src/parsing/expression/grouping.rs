@@ -1,6 +1,6 @@
 use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parsing::expression::parse_expression;
-use crate::parsing::expression::single_token::{parse_parenthesis_close, parse_parenthesis_open};
+use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parselet::ExpressionParselets;
@@ -138,6 +138,20 @@ mod parenthese {
     }
 
     #[test]
+    fn leftover() {
+        let lexemes = vec![
+            parenthesis_open(),
+            literal_text("hello world").into(),
+            parenthesis_close(),
+            comma(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
+        assert_eq!(literal(literal_text("hello world")), parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
+    }
+
+    #[test]
     fn ungrouped_fail() {
         let lexemes = vec![
             literal_int(4).into(),
@@ -185,5 +199,32 @@ mod parenthese {
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&parenthesis_close()), cursor.peek());
+    }
+}
+
+#[cfg(test)]
+mod special {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
+
+    #[test]
+    fn is_expression() {
+        let lexemes = vec![
+            parenthesis_open(),
+            literal_text("hello world").into(),
+            parenthesis_close(),
+            comma(),
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        assert_eq!(literal(literal_text("hello world")), parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

@@ -2,7 +2,7 @@ use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisO
 use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
 use crate::parsing::expression::parse_expression;
-use crate::parsing::expression::single_token::{parse_parenthesis_close, parse_parenthesis_open};
+use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::expression::variable::parse_variable;
@@ -112,5 +112,33 @@ mod by_name {
                 )
             ),
         );
+    }
+}
+
+#[cfg(test)]
+mod special {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
+
+    #[test]
+    fn is_expression() {
+        let lexemes = vec![
+            identifier("faculty").into(),
+            parenthesis_open(),
+            literal_int(42).into(),
+            parenthesis_close(),
+            comma()
+        ].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        assert_eq!(function_call(variable(identifier("faculty"))), parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

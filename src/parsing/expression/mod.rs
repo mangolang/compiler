@@ -3,7 +3,6 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 use crate::parsing::expression::arithmetic::parse_addition;
 
-pub(self) mod single_token;
 mod arithmetic;
 mod variable;
 mod literals;

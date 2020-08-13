@@ -5,7 +5,7 @@ pub use self::parse::parse;
 
 pub mod util;
 pub mod expression;
-pub mod groups;
+pub mod partial;
 mod parse;
 
 #[cfg(test)]
