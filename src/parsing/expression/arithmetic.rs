@@ -1,10 +1,10 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
+use crate::parselet::binary_operation::BinaryOperationParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::literals::parse_literal;
+use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parselet::ExpressionParselets;
-use crate::parselet::binary_operation::BinaryOperationParselet;
-use crate::parsing::expression::variable::parse_variable;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
@@ -40,7 +40,32 @@ fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool)
 }
 
 #[cfg(test)]
+mod test_util {
+    use crate::lexeme::Lexeme;
+    use crate::parselet::ExpressionParselets;
+    use crate::parsing::expression::arithmetic::parse_addition;
+    use crate::parsing::util::cursor::{End, ParseCursor};
+
+    pub fn check_add(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
+        let lexemes = lexeme.into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(Err(End), cursor.peek());
+    }
+
+    pub fn check_mul(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
+        let lexemes = lexeme.into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(Err(End), cursor.peek());
+    }
+}
+
+#[cfg(test)]
 mod addition {
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
@@ -49,15 +74,7 @@ mod addition {
     use crate::util::numtype::f64eq;
 
     use super::*;
-    use crate::io::slice::SourceSlice;
-
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
-        assert_eq!(expected, parselet);
-        assert_eq!(Err(End), cursor.peek());
-    }
+    use super::test_util::check_add as check;
 
     #[test]
     fn single_addition() {
@@ -140,7 +157,7 @@ mod addition {
     fn not_recognized() {
         let lexemes = vec![comma()].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
+        let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
         assert_eq!(Ok(&comma()), cursor.peek());
     }
@@ -148,6 +165,7 @@ mod addition {
 
 #[cfg(test)]
 mod multiplication {
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
@@ -156,15 +174,7 @@ mod multiplication {
     use crate::util::numtype::f64eq;
 
     use super::*;
-    use crate::io::slice::SourceSlice;
-
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_multiplication(cursor.clone()).unwrap();
-        assert_eq!(expected, parselet);
-        assert_eq!(Err(End), cursor.peek());
-    }
+    use super::test_util::check_mul as check;
 
     #[test]
     fn single_multiplication() {
@@ -247,7 +257,7 @@ mod multiplication {
     fn not_recognized() {
         let lexemes = vec![comma()].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
+        let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
         assert_eq!(Ok(&comma()), cursor.peek());
     }
@@ -255,6 +265,7 @@ mod multiplication {
 
 #[cfg(test)]
 mod mixed {
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
@@ -263,19 +274,11 @@ mod mixed {
     use crate::util::numtype::f64eq;
 
     use super::*;
-    use crate::io::slice::SourceSlice;
-
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
-        assert_eq!(expected, parselet);
-        assert_eq!(Err(End), cursor.peek());
-    }
+    use super::test_util::check_add;
 
     #[test]
     fn multi_mixed() {
-        check(
+        check_add(
             vec![
                 literal_real(4.).into(),
                 operator("*").into(),
@@ -300,12 +303,26 @@ mod mixed {
             ),
         );
     }
+}
+
+#[cfg(test)]
+mod special {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::collect::for_test::*;
+    use crate::parselet::short::{binary, literal};
+    use crate::parsing::expression::parse_expression;
+    use crate::parsing::util::cursor::End;
+    use crate::util::codeparts::Symbol;
+    use crate::util::numtype::f64eq;
+
+    use super::*;
 
     #[test]
     fn empty() {
         let lexemes = vec![].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_literal(cursor);
+        let parselet = parse_addition(cursor);
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -326,6 +343,23 @@ mod mixed {
                 literal(literal_int(3))
             ),
             parselet);
+        assert_eq!(Ok(&comma()), cursor.peek());
+    }
+
+    #[test]
+    fn is_expression() {
+        let lexemes = vec![
+            literal_int(4).into(),
+            operator("*").into(),
+            literal_int(3).into(),
+            comma()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        assert_eq!(binary(
+            literal(literal_int(4)),
+            operator(Symbol::Asterisk),
+            literal(literal_int(3)),
+        ), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
