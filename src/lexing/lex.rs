@@ -1,4 +1,5 @@
 use crate::io::source::SourceFile;
+use crate::lexeme::collect::FileLexemes;
 use crate::lexing::grouping::lex_grouping;
 use crate::lexing::identifier::lex_keyword_identifier;
 use crate::lexing::indent::lex_indents;
@@ -9,7 +10,6 @@ use crate::lexing::operator::lex_operator;
 use crate::lexing::reader::source_reader::SourceReader;
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
-use crate::lexeme::collect::FileLexemes;
 
 //TODO performance: one day maybe use arena allocation
 
@@ -53,25 +53,22 @@ pub fn lex(source: &SourceFile) -> FileLexemes {
 
 #[cfg(test)]
 mod try_lex {
-    use crate::io::source::SourceFile;
-    use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexeme::collect::for_test::unlexable;
     use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::UnlexableLexeme;
 
     use super::*;
-    use crate::lexeme::collect::for_test::unlexable;
 
-    fn lex_fn_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {
+    fn lex_fn_match(_reader: &mut impl Reader, lexer: &mut impl Lexer) {
         lexer.add(unlexable("hi"))
     }
 
-    fn lex_fn_no_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {}
+    fn lex_fn_no_match(_reader: &mut impl Reader, _lexer: &mut impl Lexer) {}
 
     #[test]
     fn test_match() {
-        let (source, mut reader, mut lexer) = create_lexer("");
-        for i in 0..3 {
+        let (_source, mut reader, mut lexer) = create_lexer("");
+        for _i in 0..3 {
             try_lex!(lex_fn_match, reader, lexer);
             panic!("Execution should not have reached here, because every iteration matches and should do 'continue'");
         }
@@ -79,9 +76,9 @@ mod try_lex {
 
     #[test]
     fn test_no_match() {
-        let (source, mut reader, mut lexer) = create_lexer("");
+        let (_source, mut reader, mut lexer) = create_lexer("");
         let mut end_of_loop_count = 0;
-        for i in 0..3 {
+        for _i in 0..3 {
             try_lex!(lex_fn_no_match, reader, lexer);
             end_of_loop_count += 1;
         }

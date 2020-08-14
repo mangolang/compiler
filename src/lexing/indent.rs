@@ -50,20 +50,18 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod indents {
-    use crate::io::source::SourceFile;
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{EndBlockLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_indents;
-    use crate::io::slice::SourceSlice;
 
     fn check(initial_indent: u32, input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lexer.set_indent(initial_indent);
         lex_indents(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected);

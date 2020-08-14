@@ -39,19 +39,17 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod grouping {
-    use crate::io::source::SourceFile;
     use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_separators;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected);
     }

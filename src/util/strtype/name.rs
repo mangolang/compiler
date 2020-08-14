@@ -8,7 +8,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 use ::string_interner::StringInterner;
 
-use crate::common::error::{MsgResult};
+use crate::common::error::MsgResult;
 use crate::util::strtype::StrType;
 
 lazy_static! {
@@ -127,8 +127,6 @@ mod technical {
 
 #[cfg(test)]
 mod validation {
-    use std::borrow::Cow;
-
     use crate::util::strtype::typ::StrType;
 
     use super::Name;

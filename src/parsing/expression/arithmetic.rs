@@ -1,7 +1,6 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::binary_operation::BinaryOperationParselet;
 use crate::parselet::ExpressionParselets;
-
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
@@ -65,13 +64,9 @@ mod test_util {
 
 #[cfg(test)]
 mod addition {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
     use super::test_util::check_add as check;
@@ -165,13 +160,9 @@ mod addition {
 
 #[cfg(test)]
 mod multiplication {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
     use super::test_util::check_mul as check;
@@ -265,15 +256,11 @@ mod multiplication {
 
 #[cfg(test)]
 mod mixed {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
 
-    use super::*;
     use super::test_util::check_add;
 
     #[test]
@@ -307,14 +294,11 @@ mod mixed {
 
 #[cfg(test)]
 mod special {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::expression::parse_expression;
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
 
@@ -322,7 +306,7 @@ mod special {
     fn empty() {
         let lexemes = vec![].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_addition(cursor);
+        let _parselet = parse_addition(cursor);
         assert_eq!(Err(End), cursor.peek());
     }
 

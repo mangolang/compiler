@@ -30,18 +30,15 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod test_util {
-    use crate::io::source::SourceFile;
     use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
-    use crate::lexeme::collect::for_test::*;
     use crate::lexing::grouping::lex_grouping;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
     use crate::lexing::tests::create_lexer;
 
     pub fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_grouping(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected);
     }
@@ -49,14 +46,6 @@ mod test_util {
 
 #[cfg(test)]
 mod mismatch {
-    use crate::io::source::SourceFile;
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
-    use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
-    use crate::lexing::tests::create_lexer;
-
     use super::test_util::check;
 
     #[test]
@@ -82,13 +71,7 @@ mod mismatch {
 
 #[cfg(test)]
 mod parenthese {
-    use crate::io::source::SourceFile;
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
-    use crate::lexing::tests::create_lexer;
 
     use super::test_util::check;
 
@@ -123,13 +106,7 @@ mod parenthese {
 
 #[cfg(test)]
 mod brackets {
-    use crate::io::source::SourceFile;
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
-    use crate::lexing::tests::create_lexer;
 
     use super::test_util::check;
 
@@ -161,12 +138,7 @@ mod brackets {
 
 #[cfg(test)]
 mod mixed {
-    use crate::io::source::SourceFile;
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::reader::source_reader::SourceReader;
-    use crate::lexing::tests::create_lexer;
 
     use super::test_util::check;
 

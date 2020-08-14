@@ -1,6 +1,5 @@
 use ::std::fmt;
 
-
 use crate::io::slice::SourceSlice;
 
 pub type MangoResult<T> = Result<T, MangoErr>;

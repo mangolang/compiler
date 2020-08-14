@@ -1,8 +1,8 @@
-use crate::lexeme::{Lexeme};
+use crate::lexeme::Lexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::parse_expression;
-use crate::parsing::util::{ParseRes};
-use crate::parsing::util::cursor::{ParseCursor};
+use crate::parsing::util::ParseRes;
+use crate::parsing::util::cursor::ParseCursor;
 
 /// Parse a series of expression, separated by commas and/or newlines.
 /// Occurs as part of e.g. function calls, or array literals.
@@ -33,13 +33,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
 
 #[cfg(test)]
 mod test_util {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
-    use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
 
@@ -64,18 +58,11 @@ mod test_util {
 
 #[cfg(test)]
 mod basic {
-    use ::std::env::var;
-
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::*;
 
     #[test]
     fn empty() {
@@ -107,18 +94,12 @@ mod basic {
 
 #[cfg(test)]
 mod complex_expr {
-    use ::std::env::var;
-
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::*;
 
     #[test]
     fn single_arithmetic() {
@@ -219,18 +200,11 @@ mod complex_expr {
 
 #[cfg(test)]
 mod separators {
-    use ::std::env::var;
-
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::*;
 
     #[test]
     fn two_separate_newline() {
@@ -299,18 +273,11 @@ mod separators {
 
 #[cfg(test)]
 mod ending {
-    use ::std::env::var;
-
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::test_util::check;
-    use super::*;
 
     #[test]
     fn two_no_tail() {
@@ -363,18 +330,11 @@ mod ending {
 /// is ended, and it's up to the caller to determine whether what comes after is ok.
 #[cfg(test)]
 mod errors {
-    use ::std::env::var;
-
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
-    use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
+    use crate::parselet::short::{literal, variable};
 
-    use super::test_util::check;
     use super::*;
+    use super::test_util::check;
 
     #[test]
     fn ellipsis_err() {

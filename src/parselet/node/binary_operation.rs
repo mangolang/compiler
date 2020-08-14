@@ -1,5 +1,5 @@
 use crate::lexeme::OperatorLexeme;
-use crate::parselet::{Parselet, ExpressionParselets};
+use crate::parselet::{ExpressionParselets, Parselet};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct BinaryOperationParselet {

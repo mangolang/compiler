@@ -1,8 +1,10 @@
 use ::std::fmt::Display;
 use ::std::fmt::Formatter;
 use ::std::fmt::Result as fResult;
+
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
+
 use crate::util::strtype::StrType;
 
 lazy_static! {

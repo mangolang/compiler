@@ -1,7 +1,7 @@
 use ::std::hash;
 
-use crate::util::encdec::ToText;
 use crate::io::slice::SourceSlice;
+use crate::util::encdec::ToText;
 
 /// End of statement.
 /// Strictly, this doesn't always end a statement, e.g. if it follows a continuation.

@@ -2,8 +2,8 @@ use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
-use crate::parsing::util::ParseRes;
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::ParseRes;
 
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
@@ -19,13 +19,11 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod by_name {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::Lexeme;
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
 
@@ -115,14 +113,9 @@ mod by_name {
 
 #[cfg(test)]
 mod special {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
-    use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
 

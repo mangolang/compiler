@@ -1,8 +1,8 @@
 use crate::io::fortest::stringreader::StringReader;
+use crate::lexeme::Lexemes;
 use crate::lexing::combi_lexer::CombiLexer;
 use crate::lexing::util::lex_all::lex_all;
 use crate::lexing::util::lex_list::LexList;
-use crate::lexeme::Lexemes;
 use crate::util::encdec::to_text::ToText;
 
 #[allow(dead_code)]

@@ -1,6 +1,6 @@
-use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 use crate::lexeme::collect::FileLexemes;
 use crate::lexeme::Lexeme;
+use crate::lexing::lexer::lexeme_collector::LexemeCollector;
 
 pub trait Lexer {
     /// Add a lexed lexeme.

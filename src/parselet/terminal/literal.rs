@@ -1,5 +1,5 @@
-use crate::parselet::Parselet;
 use crate::lexeme::lexemes::LiteralLexeme;
+use crate::parselet::Parselet;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct LiteralParselet {

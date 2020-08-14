@@ -1,8 +1,8 @@
 use crate::lexeme::Lexeme;
 use crate::parselet::{ExpressionParselets, VariableParselet};
-use crate::parsing::util::{ParseRes};
-use crate::parsing::util::cursor::{ParseCursor};
 use crate::parsing::expression::literals::parse_literal;
+use crate::parsing::util::ParseRes;
+use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     if let Lexeme::Identifier(lexeme) = cursor.take()? {
@@ -14,14 +14,11 @@ pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> 
 
 #[cfg(test)]
 mod var {
-    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{literal, variable};
+    use crate::parselet::short::variable;
     use crate::parsing::util::cursor::End;
-    use crate::util::numtype::f64eq;
 
     use super::*;
-    use crate::parsing::expression::parse_expression;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -51,7 +48,7 @@ mod var {
     fn empty() {
         let lexemes = vec![].into();
         let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_variable(cursor);
+        let _parselet = parse_variable(cursor);
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -85,14 +82,11 @@ mod var {
 
 #[cfg(test)]
 mod special {
-    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{literal, variable};
-    use crate::parsing::util::cursor::End;
-    use crate::util::numtype::f64eq;
+    use crate::parselet::short::variable;
+    use crate::parsing::expression::parse_expression;
 
     use super::*;
-    use crate::parsing::expression::parse_expression;
 
     #[test]
     fn is_expression() {

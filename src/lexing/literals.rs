@@ -62,19 +62,15 @@ pub fn lex_literal(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod test_util {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexeme::Lexeme;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
     use super::lex_literal;
 
     pub fn check(input: &str, expected: &[Lexeme]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_literal(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected.into());
     }
@@ -82,14 +78,7 @@ mod test_util {
 
 #[cfg(test)]
 mod constants {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
-    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -135,13 +124,7 @@ mod constants {
 
 #[cfg(test)]
 mod int {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
@@ -220,15 +203,7 @@ mod int {
 
 #[cfg(test)]
 mod real {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
-    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -287,15 +262,7 @@ mod real {
 
 #[cfg(test)]
 mod text {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
-    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 
@@ -361,15 +328,7 @@ mod text {
 
 #[cfg(test)]
 mod exhaustion {
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
-    use crate::util::strtype::Name;
-    use crate::util::strtype::typ::StrType;
 
     use super::test_util::check;
 

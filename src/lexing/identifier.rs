@@ -17,22 +17,18 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
 
 #[cfg(test)]
 mod identifiers {
-    use std::borrow::Cow;
-
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, Lexeme};
-    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
 
     fn check(input: &str, expected_names: &[&str]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
         let expected: LexemeCollector = expected_names
             .iter()
@@ -105,21 +101,13 @@ mod identifiers {
 
 #[cfg(test)]
 mod keywords {
-    use ::std::str::FromStr;
-
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
-    use crate::lexeme::lexemes::OperatorLexeme;
-    use crate::lexing::lexer::Lexer;
-    use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::{Keyword, Symbol};
-    use crate::util::codeparts::keyword::KEYWORDS;
-    use crate::util::strtype::Name;
-    use crate::util::strtype::typ::StrType;
-
-    use super::lex_keyword_identifier;
-    use super::mixed::check;
+    use crate::lexeme::{KeywordLexeme, Lexeme};
     use crate::lexeme::collect::for_test::keyword_or_reserved;
+    use crate::util::codeparts::Keyword;
+    use crate::util::codeparts::keyword::KEYWORDS;
+
+    use super::mixed::check;
 
     #[test]
     fn all_keywords() {
@@ -143,23 +131,18 @@ mod keywords {
 
 #[cfg(test)]
 mod mixed {
-    use ::std::str::FromStr;
-
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
-    use crate::lexeme::collect::for_test::keyword_or_reserved;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::{Keyword, Symbol};
-    use crate::util::codeparts::keyword::KEYWORDS;
+    use crate::util::codeparts::Keyword;
     use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
 
     use super::lex_keyword_identifier;
 
     pub fn check(input: &str, expected_keywords: &[Lexeme]) {
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_keyword_identifier(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected_keywords.into());
     }

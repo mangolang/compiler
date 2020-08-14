@@ -1,5 +1,6 @@
-use crate::lexeme::Lexeme;
 use std::ops::Index;
+
+use crate::lexeme::Lexeme;
 
 #[derive(Debug)]
 pub struct FileLexemes {
@@ -69,8 +70,9 @@ impl Index<LexemeIndex> for FileLexemes {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::lexeme::collect::for_test::*;
+
+    use super::*;
 
     #[test]
     fn indexing() {

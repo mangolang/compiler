@@ -1,11 +1,9 @@
 use ::std::fmt;
 use ::std::str::FromStr;
 
-use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::SourceSlice;
-use crate::io::source::SourceFile;
 use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, EndStatementLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
+    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
     ParenthesisCloseLexeme, ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
@@ -91,7 +89,7 @@ impl IntoSymbol for &str {
 }
 
 impl IntoSymbol for Symbol {
-    fn symbol(self, is_association: bool) -> Result<Option<Symbol>, ()> {
+    fn symbol(self, _is_association: bool) -> Result<Option<Symbol>, ()> {
         Ok(Some(self))
     }
 }

@@ -3,9 +3,9 @@ use ::std::fmt::Debug;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::io::slice::SourceSlice;
 
 lazy_static! {
     static ref WHITESPACE_RE: Regex = Regex::new(r"^[ \t]+").unwrap();
@@ -303,11 +303,9 @@ mod tests {
     }
 
     mod remaining_len {
-        use crate::lexing::reader::source_reader::SourceReader;
         use crate::lexing::reader::source_reader::tests::check;
         use crate::lexing::reader::source_reader::tests::TEST_RE;
         use crate::lexing::reader::typ::Reader;
-        use crate::lexing::reader::typ::ReaderResult::*;
 
         #[test]
         fn at_start() {

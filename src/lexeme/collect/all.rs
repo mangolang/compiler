@@ -1,12 +1,8 @@
 use ::std::fmt;
 
+use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::separators::ColonLexeme;
-use crate::lexeme::special::EndBlockLexeme;
-use crate::lexeme::special::StartBlockLexeme;
-use crate::lexeme::special::UnlexableLexeme;
 use crate::lexeme::lexemes::AssociationLexeme;
-
 use crate::lexeme::lexemes::IdentifierLexeme;
 use crate::lexeme::lexemes::KeywordLexeme;
 use crate::lexeme::lexemes::LiteralLexeme;
@@ -14,8 +10,11 @@ use crate::lexeme::lexemes::OperatorLexeme;
 use crate::lexeme::lexemes::ParenthesisCloseLexeme;
 use crate::lexeme::lexemes::ParenthesisOpenLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::special::EndBlockLexeme;
+use crate::lexeme::special::StartBlockLexeme;
+use crate::lexeme::special::UnlexableLexeme;
 use crate::util::encdec::ToText;
-use crate::io::slice::{SourceSlice, SourceLocation};
 
 //TODO @mark: pass code slice along with lexeme
 
@@ -97,8 +96,6 @@ mod tests {
     use std::mem::size_of;
 
     use crate::lexeme::Lexeme;
-
-    use super::*;
 
     const LONG_SIZE: usize = size_of::<f64>();
 

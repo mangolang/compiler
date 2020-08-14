@@ -1,16 +1,16 @@
 use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
+use crate::io::slice::SourceSlice;
 use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
-    ParenthesisOpenLexeme, StartBlockLexeme, Lexeme, UnlexableLexeme,
+    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
+    ParenthesisCloseLexeme, ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
 use crate::util::codeparts::Keyword;
 use crate::util::numtype::f64eq;
-use crate::io::slice::SourceSlice;
 
 //TODO @mark: replace more lexeme usages by short versions
 

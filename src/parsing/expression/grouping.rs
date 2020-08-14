@@ -16,13 +16,11 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 
 #[cfg(test)]
 mod parenthese {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::Lexeme;
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::*;
 
@@ -203,13 +201,8 @@ mod parenthese {
 
 #[cfg(test)]
 mod special {
-    use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
-    use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
+    use crate::parselet::short::literal;
 
     use super::*;
 

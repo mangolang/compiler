@@ -1,5 +1,5 @@
-use crate::parselet::Parselet;
 use crate::lexeme::IdentifierLexeme;
+use crate::parselet::Parselet;
 
 /// A name that identifies a variable (or is an undefined reference, if not checked yet).
 /// Note that variables can things that can be assigned, like e.g. functions.

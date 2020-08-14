@@ -1,9 +1,9 @@
+use crate::lexeme::collect::short::association;
+use crate::lexeme::collect::short::operator;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
-use crate::lexeme::collect::short::operator;
-use crate::lexeme::collect::short::association;
 
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -21,19 +21,18 @@ pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod operators {
+    use crate::lexeme::collect::for_test::operator;
+    use crate::lexeme::Lexeme;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexeme::Lexeme;
-    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
 
     use super::lex_operator;
-    use crate::lexeme::collect::for_test::operator;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_operator(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected);
     }
@@ -132,20 +131,19 @@ mod operators {
 
 #[cfg(test)]
 mod associations {
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::{AssociationLexeme, Lexeme};
+    use crate::lexeme::collect::for_test::association;
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::lexeme::{AssociationLexeme, Lexeme};
-    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
-    use crate::lexeme::lexemes::OperatorLexeme;
     use crate::util::codeparts::Symbol;
 
     use super::lex_association;
-    use crate::lexeme::collect::for_test::association;
-    use crate::io::slice::SourceSlice;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_association(&mut reader, &mut lexer);
         assert_eq!(lexer.lexemes(), &expected);
     }

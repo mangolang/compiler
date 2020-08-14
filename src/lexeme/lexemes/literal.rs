@@ -1,7 +1,7 @@
 use ::std::hash;
 
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::{Lexeme};
+use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 

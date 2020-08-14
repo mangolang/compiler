@@ -1,4 +1,3 @@
-use crate::common::error::ErrMsg;
 use crate::io::source::SourceFile;
 use crate::lexeme::collect::for_test::*;
 use crate::lexing::lexer::CodeLexer;

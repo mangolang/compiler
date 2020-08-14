@@ -1,6 +1,7 @@
 use ::std::fmt::Debug;
 
 use ::regex::Regex;
+
 use crate::io::slice::SourceSlice;
 
 #[derive(Debug, PartialEq, Eq)]

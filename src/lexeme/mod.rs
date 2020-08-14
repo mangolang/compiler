@@ -1,6 +1,6 @@
 pub use self::collect::Lexeme;
-pub use self::special::*;
 pub use self::lexemes::*;
+pub use self::special::*;
 
 pub mod collect;
 pub mod special;

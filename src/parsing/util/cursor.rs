@@ -60,8 +60,9 @@ impl<'a> ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::lexeme::collect::for_test::unlexable;
+
+    use super::*;
 
     #[test]
     fn increment() {
