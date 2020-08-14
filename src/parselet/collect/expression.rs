@@ -3,10 +3,8 @@ use crate::parselet::node::assignment::AssignmentParselet;
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::unary_operation::UnaryOperationParselet;
 use crate::parselet::Parselet;
-use crate::parselet::special::UnparseableParselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;
-use crate::util::encdec::ToText;
 
 /// Collection of all possible nodes in the full abstract syntax tree.
 #[derive(PartialEq, Eq, Hash, Debug)]

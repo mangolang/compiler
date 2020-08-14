@@ -1,6 +1,6 @@
 use ::std::fmt;
 
-use crate::common::error::MangoErrType::Read;
+
 use crate::io::slice::SourceSlice;
 
 pub type MangoResult<T> = Result<T, MangoErr>;
@@ -29,7 +29,7 @@ pub enum MangoErrType {
 }
 
 impl MangoErr {
-    pub fn new(msg: impl Into<String>, severity: Severity, typ: MangoErrType) -> Self {
+    pub fn new(msg: impl Into<String>, _severity: Severity, _typ: MangoErrType) -> Self {
         MangoErr {
             typ: MangoErrType::Read,
             message: ErrMsg::new(msg),
@@ -37,7 +37,7 @@ impl MangoErr {
         }
     }
 
-    pub fn new_debug(msg: impl Into<String>, debug: impl Into<String>, severity: Severity, typ: MangoErrType) -> Self {
+    pub fn new_debug(msg: impl Into<String>, debug: impl Into<String>, _severity: Severity, _typ: MangoErrType) -> Self {
         MangoErr {
             typ: MangoErrType::Read,
             message: ErrMsg::new_debug(msg, debug),

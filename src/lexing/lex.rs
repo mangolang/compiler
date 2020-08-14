@@ -1,6 +1,3 @@
-use ::lazy_static::lazy_static;
-use ::regex::Regex;
-
 use crate::io::source::SourceFile;
 use crate::lexing::grouping::lex_grouping;
 use crate::lexing::identifier::lex_keyword_identifier;
@@ -10,10 +7,8 @@ use crate::lexing::literals::lex_literal;
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
 use crate::lexing::reader::source_reader::SourceReader;
-use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
-use crate::lexeme::{Lexeme, UnlexableLexeme};
 use crate::lexeme::collect::FileLexemes;
 
 //TODO performance: one day maybe use arena allocation

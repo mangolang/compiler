@@ -1,7 +1,7 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::binary_operation::BinaryOperationParselet;
 use crate::parselet::ExpressionParselets;
-use crate::parsing::expression::literals::parse_literal;
+
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;

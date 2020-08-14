@@ -1,6 +1,5 @@
 use crate::lexeme::Lexeme;
 use crate::parselet::Parselet;
-use crate::util::encdec::ToText;
 
 /// Represents an unparseable list of lexemes.
 #[derive(Debug, PartialEq, Eq, Hash)]

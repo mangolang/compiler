@@ -1,8 +1,6 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::util::strslice::char_ops::CharOps;
-
 lazy_static! {
     // From a single quote until the first non-escaped single-quote on the same line.
     // TODO: Only single-quoted, single-line strings for now; double-quoted strings may become templates?

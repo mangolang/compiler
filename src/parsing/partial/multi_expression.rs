@@ -1,9 +1,8 @@
-use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
+use crate::lexeme::{Lexeme};
 use crate::parselet::ExpressionParselets;
-use crate::parselet::function_call::FunctionCallParselet;
 use crate::parsing::expression::parse_expression;
-use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{End, ParseCursor};
+use crate::parsing::util::{ParseRes};
+use crate::parsing::util::cursor::{ParseCursor};
 
 /// Parse a series of expression, separated by commas and/or newlines.
 /// Occurs as part of e.g. function calls, or array literals.
@@ -18,7 +17,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
                 Lexeme::Comma(_) | Lexeme::Newline(_) => cursor = expr_cursor,
                 // No separator, so this is the end of the multi-expression (or a syntax
                 // error, but that's for the next parser to find out). Revert eating separator.
-                other => return Ok((expr_cursor, expressions)),
+                _other => return Ok((expr_cursor, expressions)),
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,

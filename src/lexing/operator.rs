@@ -1,9 +1,5 @@
-use ::lazy_static::lazy_static;
-use ::regex::Regex;
-
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme};
 use crate::util::codeparts::operator::ASSOCIATION_RE;
 use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::lexeme::collect::short::operator;

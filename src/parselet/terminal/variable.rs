@@ -1,8 +1,4 @@
-use derive_new::new;
-
 use crate::parselet::Parselet;
-use crate::util::encdec::ToText;
-use crate::util::strtype::Name;
 use crate::lexeme::IdentifierLexeme;
 
 /// A name that identifies a variable (or is an undefined reference, if not checked yet).

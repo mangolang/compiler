@@ -1,7 +1,6 @@
 use crate::lexeme::OperatorLexeme;
 use crate::parselet::Parselet;
 use crate::parselet::Parselets;
-use crate::util::encdec::ToText;
 
 //#[derive(Debug, Hash)]
 #[derive(Debug, PartialEq, Eq, Hash)]

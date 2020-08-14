@@ -8,7 +8,7 @@ use ::lazy_static::lazy_static;
 use ::regex::Regex;
 use ::string_interner::StringInterner;
 
-use crate::common::error::{ErrMsg, MsgResult};
+use crate::common::error::{MsgResult};
 use crate::util::strtype::StrType;
 
 lazy_static! {

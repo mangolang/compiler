@@ -1,5 +1,4 @@
 use ::std::fmt::Debug;
-use std::rc::Rc;
 
 use ::regex::Regex;
 use crate::io::slice::SourceSlice;

@@ -1,7 +1,6 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::lexeme::collect::short::bracket_close;
 use crate::lexeme::collect::short::bracket_open;
 use crate::lexeme::collect::short::parenthesis_close;

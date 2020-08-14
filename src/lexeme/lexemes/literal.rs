@@ -1,11 +1,9 @@
 use ::std::hash;
 
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::{KeywordLexeme, Lexeme};
+use crate::lexeme::{Lexeme};
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
-use crate::util::parsetxt::int::parse_int;
-use crate::util::parsetxt::real::parse_real;
 
 // LATER: it is likely that this will be refactored when the type system is in place.
 

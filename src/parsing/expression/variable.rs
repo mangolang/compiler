@@ -1,11 +1,7 @@
 use crate::lexeme::Lexeme;
-use crate::lexeme::LiteralLexeme;
 use crate::parselet::{ExpressionParselets, VariableParselet};
-use crate::parselet::LiteralParselet;
-use crate::parselet::Parselet;
-use crate::parsing::expression::grouping::parse_parenthesised_group;
-use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{End, ParseCursor};
+use crate::parsing::util::{ParseRes};
+use crate::parsing::util::cursor::{ParseCursor};
 use crate::parsing::expression::literals::parse_literal;
 
 pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {

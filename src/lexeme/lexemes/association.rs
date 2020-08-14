@@ -1,5 +1,4 @@
 use ::std::hash;
-use ::std::str::FromStr;
 
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::{SourceLocation, SourceSlice};

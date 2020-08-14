@@ -35,23 +35,23 @@ impl EndBlockLexeme {
 }
 
 impl PartialEq for StartBlockLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for StartBlockLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 impl PartialEq for EndBlockLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for EndBlockLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 impl SourceLocation for StartBlockLexeme {

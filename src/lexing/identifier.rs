@@ -1,16 +1,7 @@
-use ::std::str::FromStr;
-
-use ::lazy_static::lazy_static;
-use ::regex::Regex;
-
-use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::lexeme::collect::short::identifier;
 use crate::lexeme::collect::short::keyword_or_reserved;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::codeparts::Keyword;
-use crate::util::codeparts::operator::ASSOCIATION_RE;
-use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::strtype::name::IDENTIFIER_RE;
 
 /// Lex an identifier or keyword.
@@ -19,7 +10,7 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
         let word = source.as_str();
         lexer.add(match keyword_or_reserved(word, source.clone()) {
             Ok(kw) => kw,
-            Err(err) => identifier(word, source.clone()).unwrap(),
+            Err(_err) => identifier(word, source.clone()).unwrap(),
         });
     }
 }

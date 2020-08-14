@@ -1,5 +1,5 @@
-use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
-use crate::parsing::expression::parse_expression;
+use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
+
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 

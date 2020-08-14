@@ -6,7 +6,7 @@ use crate::lexeme::special::EndBlockLexeme;
 use crate::lexeme::special::StartBlockLexeme;
 use crate::lexeme::special::UnlexableLexeme;
 use crate::lexeme::lexemes::AssociationLexeme;
-use crate::lexeme::lexemes::EndStatementLexeme;
+
 use crate::lexeme::lexemes::IdentifierLexeme;
 use crate::lexeme::lexemes::KeywordLexeme;
 use crate::lexeme::lexemes::LiteralLexeme;
@@ -75,18 +75,18 @@ impl fmt::Debug for Lexeme {
             Lexeme::Keyword(keyword) => write!(f, "{}", keyword.word.to_str().as_ref().to_uppercase()),
             Lexeme::Literal(literal) => write!(f, "'{}'", literal.to_text()),
             Lexeme::Operator(operator) => write!(f, "op:{}", operator.to_text()),
-            Lexeme::ParenthesisOpen(parenthesis_open) => write!(f, "'('"),
-            Lexeme::ParenthesisClose(parenthesis_close) => write!(f, "')'"),
-            Lexeme::BracketOpen(parenthesis_open) => write!(f, "'['"),
-            Lexeme::BracketClose(parenthesis_close) => write!(f, "']'"),
+            Lexeme::ParenthesisOpen(_parenthesis_open) => write!(f, "'('"),
+            Lexeme::ParenthesisClose(_parenthesis_close) => write!(f, "')'"),
+            Lexeme::BracketOpen(_parenthesis_open) => write!(f, "'['"),
+            Lexeme::BracketClose(_parenthesis_close) => write!(f, "']'"),
             //Lexemes::EndStatement(end_statement) => write!(f, "end_statement"),
-            Lexeme::StartBlock(start_block) => write!(f, "start_block"),
-            Lexeme::EndBlock(end_block) => write!(f, "end_block"),
-            Lexeme::Colon(colon) => write!(f, ":"),
-            Lexeme::Comma(comma) => write!(f, "comma"),
-            Lexeme::Ellipsis(ellipsis) => write!(f, "..."),
-            Lexeme::Period(period) => write!(f, "."),
-            Lexeme::Newline(newline) => writeln!(f, "NL"),
+            Lexeme::StartBlock(_start_block) => write!(f, "start_block"),
+            Lexeme::EndBlock(_end_block) => write!(f, "end_block"),
+            Lexeme::Colon(_colon) => write!(f, ":"),
+            Lexeme::Comma(_comma) => write!(f, "comma"),
+            Lexeme::Ellipsis(_ellipsis) => write!(f, "..."),
+            Lexeme::Period(_period) => write!(f, "."),
+            Lexeme::Newline(_newline) => writeln!(f, "NL"),
             Lexeme::Unlexable(unlexable) => write!(f, "??{}??", unlexable.text()),
         }
     }

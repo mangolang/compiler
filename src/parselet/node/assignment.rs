@@ -1,6 +1,5 @@
 use crate::parselet::{Parselets, VariableParselet};
 use crate::parselet::Parselet;
-use crate::util::encdec::ToText;
 
 /// Type for an association, e.g. assignment, parameter binding.
 #[derive(Debug, PartialEq, Eq, Hash)]

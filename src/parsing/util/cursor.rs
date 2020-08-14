@@ -1,5 +1,3 @@
-use ::std::rc::Rc;
-
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexeme;
 
@@ -22,7 +20,7 @@ impl<'a> ParseCursor<'a> {
     pub fn new(lexemes: &'a FileLexemes) -> Self {
         ParseCursor {
             index: lexemes.index_at_start(),
-            lexemes: lexemes,
+            lexemes,
         }
     }
 

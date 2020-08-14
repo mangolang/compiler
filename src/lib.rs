@@ -33,7 +33,7 @@ pub(crate) mod typing;
 
 pub(crate) mod towasm;
 
-pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
+pub fn run<R: Read, O: Write, E: Write>(_source: &str, _inp: &R, _out: &O, _err: &E) {
     //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
     //
     //    //TODO @mark: use result

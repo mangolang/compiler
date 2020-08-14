@@ -16,23 +16,23 @@ pub struct BracketCloseLexeme {
 
 
 impl PartialEq for BracketOpenLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for BracketOpenLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 impl PartialEq for BracketCloseLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for BracketCloseLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 

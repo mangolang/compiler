@@ -1,22 +1,18 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::lexeme::collect::short::literal_bool;
 use crate::lexeme::collect::short::literal_int;
 use crate::lexeme::collect::short::literal_real;
 use crate::lexeme::collect::short::literal_text;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::codeparts::operator::ASSOCIATION_RE;
-use crate::util::codeparts::operator::SYMBOL_RE;
 use crate::util::parsetxt::int::INT_RE;
 use crate::util::parsetxt::int::parse_int;
 use crate::util::parsetxt::real::parse_real;
 use crate::util::parsetxt::real::REAL_RE;
 use crate::util::parsetxt::text::parse_single_quote;
 use crate::util::parsetxt::text::SINGLE_QUOTE_RE;
-use crate::util::strtype::name::IDENTIFIER_RE;
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day

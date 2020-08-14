@@ -3,7 +3,7 @@ use ::regex::Regex;
 
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexeme::{ParenthesisCloseLexeme, ParenthesisOpenLexeme, Lexeme, UnlexableLexeme};
+use crate::lexeme::{Lexeme, UnlexableLexeme};
 
 lazy_static! {
     static ref SINGLE_RE: Regex = Regex::new(r"(?s)^.").unwrap();

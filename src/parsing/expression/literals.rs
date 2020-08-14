@@ -1,11 +1,9 @@
 use crate::lexeme::Lexeme;
-use crate::lexeme::LiteralLexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::LiteralParselet;
-use crate::parselet::Parselet;
 use crate::parsing::expression::grouping::parse_parenthesised_group;
-use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{End, ParseCursor};
+use crate::parsing::util::{ParseRes};
+use crate::parsing::util::cursor::{ParseCursor};
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut literal_cursor = cursor.clone();

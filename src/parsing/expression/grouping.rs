@@ -1,4 +1,3 @@
-use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parsing::expression::parse_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::{NoMatch, ParseRes};
@@ -6,12 +5,12 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parselet::ExpressionParselets;
 
 pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (cursor, left) = parse_parenthesis_open(cursor)?;
+    let (cursor, _left) = parse_parenthesis_open(cursor)?;
     let (cursor, expression) = match parse_expression(cursor) {
         Ok(ex) => ex,
         Err(_) => return Err(NoMatch),
     };
-    let (cursor, right) = parse_parenthesis_close(cursor)?;
+    let (cursor, _right) = parse_parenthesis_close(cursor)?;
     Ok((cursor, expression))
 }
 

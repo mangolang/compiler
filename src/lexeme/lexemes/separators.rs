@@ -1,7 +1,6 @@
 use ::std::hash;
 
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::util::encdec::ToText;
 
 macro_rules! implement_separator {
     ($name: ident) => {
@@ -19,13 +18,13 @@ macro_rules! implement_separator {
         }
 
         impl PartialEq for $name {
-            fn eq(&self, other: &Self) -> bool {
+            fn eq(&self, _other: &Self) -> bool {
                 true
             }
         }
 
         impl hash::Hash for $name {
-            fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+            fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
         }
     }
 }

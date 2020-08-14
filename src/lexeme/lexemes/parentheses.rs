@@ -15,23 +15,23 @@ pub struct ParenthesisCloseLexeme {
 }
 
 impl PartialEq for ParenthesisOpenLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for ParenthesisOpenLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 impl PartialEq for ParenthesisCloseLexeme {
-    fn eq(&self, other: &Self) -> bool {
+    fn eq(&self, _other: &Self) -> bool {
         true
     }
 }
 
 impl hash::Hash for ParenthesisCloseLexeme {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {}
+    fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
 
 impl ParenthesisOpenLexeme {

@@ -1,9 +1,7 @@
-use crate::lexeme::{Lexeme, OperatorLexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
-use crate::parsing::expression::parse_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
-use crate::parsing::util::{NoMatch, ParseRes};
+use crate::parsing::util::{ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::expression::variable::parse_variable;
 
@@ -13,16 +11,16 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     match parse_parenthesis_open(iden_cursor) {
         Ok((cursor, _)) => match parse_parenthesis_close(cursor) {
             Ok((cursor, _)) => Ok((cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier)))),
-            Err(err) => return Ok((iden_cursor, identifier)),
+            Err(_err) => Ok((iden_cursor, identifier)),
         },
-        Err(err) => return Ok((iden_cursor, identifier)),
+        Err(_err) => Ok((iden_cursor, identifier)),
     }
 }
 
 #[cfg(test)]
 mod by_name {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::{LiteralLexeme, OperatorLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{function_call, variable, binary, literal};
     use crate::parsing::util::cursor::End;

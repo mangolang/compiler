@@ -1,8 +1,6 @@
 use ::std::fmt;
 use ::std::hash;
 
-use crate::util::encdec::ToText;
-
 /// Parselet trait to be implemented by all Parselet nodes.
 pub trait Parselet: PartialEq + Eq + hash::Hash + fmt::Debug {}
 
