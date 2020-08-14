@@ -17,12 +17,12 @@ pub(crate) mod io;
 pub(crate) mod util;
 
 // Types
-pub(crate) mod parselet;
 pub(crate) mod ir;
+pub(crate) mod parselet;
 pub(crate) mod sem;
 
-pub(crate) mod lexing;
 pub(crate) mod lexeme;
+pub(crate) mod lexing;
 pub(crate) mod parsing;
 
 // Operations

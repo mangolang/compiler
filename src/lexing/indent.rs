@@ -51,10 +51,10 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod indents {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{EndBlockLexeme, Lexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::Lexer;
+    use crate::lexeme::{EndBlockLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_indents;
@@ -69,19 +69,16 @@ mod indents {
 
     #[test]
     fn increase() {
-        check(
-            0,
-            "\t    hello",
-            &[
-                start_block(),
-                start_block(),
-            ],
-        );
+        check(0, "\t    hello", &[start_block(), start_block()]);
     }
 
     #[test]
     fn decrease_to_two() {
-        check(3, "    \thello", &[Lexeme::EndBlock(EndBlockLexeme::new(true, false, SourceSlice::mock()))]);
+        check(
+            3,
+            "    \thello",
+            &[Lexeme::EndBlock(EndBlockLexeme::new(true, false, SourceSlice::mock()))],
+        );
     }
 
     #[test]

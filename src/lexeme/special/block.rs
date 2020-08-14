@@ -25,7 +25,11 @@ impl StartBlockLexeme {
 impl EndBlockLexeme {
     pub fn new(is_dedent: bool, is_end_keyword: bool, source: SourceSlice) -> Self {
         assert!(is_dedent || is_end_keyword);
-        EndBlockLexeme { is_dedent, is_end_keyword, source }
+        EndBlockLexeme {
+            is_dedent,
+            is_end_keyword,
+            source,
+        }
     }
 
     //TODO @mark: customization options temporarily optional

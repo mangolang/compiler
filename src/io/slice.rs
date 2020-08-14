@@ -44,7 +44,7 @@ impl SourceSlice {
     pub fn join(mut self, other: SourceSlice) -> Result<SourceSlice, ()> {
         if self.end == other.start || self.end + 1 == other.start {
             self.end = other.end;
-            return Ok(self)
+            return Ok(self);
         }
         Err(())
     }

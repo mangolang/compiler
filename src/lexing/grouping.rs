@@ -32,8 +32,8 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 mod test_util {
     use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexing::grouping::lex_grouping;
-    use crate::lexing::lexer::Lexer;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     pub fn check(input: &str, expected: &[Lexeme]) {
@@ -146,20 +146,12 @@ mod mixed {
     fn parenthese_inside_brackets() {
         check(
             "[ ( ) ]",
-            &[
-                bracket_open(),
-                parenthesis_open(),
-                parenthesis_close(),
-                bracket_close(),
-            ],
+            &[bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
         );
     }
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)", &[
-            bracket_open(),
-            parenthesis_close(),
-        ]);
+        check("[)", &[bracket_open(), parenthesis_close()]);
     }
 }

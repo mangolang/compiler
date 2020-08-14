@@ -5,7 +5,7 @@ pub use self::localvar::DeclareLocal;
 pub use self::localvar::GetLocal;
 pub use self::localvar::Local;
 
-mod constant;
-mod localvar;
 mod assign;
+mod constant;
 pub mod expression;
+mod localvar;

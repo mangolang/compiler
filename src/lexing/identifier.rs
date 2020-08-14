@@ -22,8 +22,8 @@ mod identifiers {
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
+    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
@@ -102,17 +102,20 @@ mod identifiers {
 #[cfg(test)]
 mod keywords {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{KeywordLexeme, Lexeme};
     use crate::lexeme::collect::for_test::keyword_or_reserved;
-    use crate::util::codeparts::Keyword;
+    use crate::lexeme::{KeywordLexeme, Lexeme};
     use crate::util::codeparts::keyword::KEYWORDS;
+    use crate::util::codeparts::Keyword;
 
     use super::mixed::check;
 
     #[test]
     fn all_keywords() {
         for (name, lexeme) in KEYWORDS.iter() {
-            check(name, &[Lexeme::Keyword(KeywordLexeme::from_keyword(lexeme.clone(), SourceSlice::mock()))]);
+            check(
+                name,
+                &[Lexeme::Keyword(KeywordLexeme::from_keyword(lexeme.clone(), SourceSlice::mock()))],
+            );
         }
     }
 
@@ -136,8 +139,8 @@ mod mixed {
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
     use crate::util::codeparts::Keyword;
-    use crate::util::strtype::Name;
     use crate::util::strtype::typ::StrType;
+    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
@@ -155,7 +158,10 @@ mod mixed {
                 Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let, SourceSlice::mock())),
                 Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut, SourceSlice::mock())),
                 Lexeme::Identifier(IdentifierLexeme::from_name(Name::new("python").unwrap(), SourceSlice::mock())),
-                Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Reserved("mango".to_owned()), SourceSlice::mock())),
+                Lexeme::Keyword(KeywordLexeme::from_keyword(
+                    Keyword::Reserved("mango".to_owned()),
+                    SourceSlice::mock(),
+                )),
             ],
         );
     }

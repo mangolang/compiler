@@ -4,5 +4,5 @@ pub use self::function::Output;
 pub use self::function::Parameter;
 pub use self::module::Module;
 
-pub mod module;
 pub mod function;
+pub mod module;

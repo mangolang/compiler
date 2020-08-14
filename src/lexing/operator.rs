@@ -132,8 +132,8 @@ mod operators {
 #[cfg(test)]
 mod associations {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{AssociationLexeme, Lexeme};
     use crate::lexeme::collect::for_test::association;
+    use crate::lexeme::{AssociationLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
@@ -173,10 +173,7 @@ mod associations {
     fn prefix() {
         check("+=", &[association(Symbol::Plus).into()]);
         check("-=", &[association(Symbol::Dash).into()]);
-        check(
-            "*=",
-            &[association(Symbol::Asterisk).into()],
-        );
+        check("*=", &[association(Symbol::Asterisk).into()]);
         check("/=", &[association(Symbol::Slash).into()]);
         //check("!=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Exclamation).unwrap())]);
         //check("?=", &[Lexemes::Association(AssociationLexeme::from_symbol(Symbol::Question).unwrap())]);

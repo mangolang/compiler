@@ -39,10 +39,10 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod grouping {
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::lexing::lexer::Lexer;
+    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_separators;

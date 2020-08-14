@@ -2,14 +2,14 @@ use crate::lexeme::Lexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parselet::LiteralParselet;
 use crate::parsing::expression::grouping::parse_parenthesised_group;
-use crate::parsing::util::ParseRes;
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::ParseRes;
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let mut literal_cursor = cursor;  // copy
+    let mut literal_cursor = cursor; // copy
     if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
         let literal = literal_lexeme.clone();
-        return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
+        return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
     }
     parse_parenthesised_group(cursor)
 }
@@ -42,18 +42,12 @@ mod literal {
 
     #[test]
     fn integer() {
-        check(
-            literal_int(37).into(),
-            literal(LiteralLexeme::Int(37, SourceSlice::mock())),
-        );
+        check(literal_int(37).into(), literal(LiteralLexeme::Int(37, SourceSlice::mock())));
     }
 
     #[test]
     fn real() {
-        check(
-            literal_real(1.234).into(),
-            literal(literal_real(1.234)),
-        );
+        check(literal_real(1.234).into(), literal(literal_real(1.234)));
     }
 
     #[test]
@@ -103,8 +97,8 @@ mod literal {
 #[cfg(test)]
 mod special {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::LiteralLexeme;
     use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::expression::parse_expression;
 
@@ -112,10 +106,7 @@ mod special {
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![
-            literal_text("hello42").into(),
-            comma(),
-        ].into();
+        let lexemes = vec![literal_text("hello42").into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())), parselet);

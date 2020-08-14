@@ -2,13 +2,13 @@ use ::std::fmt;
 use ::std::str::FromStr;
 
 use crate::io::slice::SourceSlice;
-use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme,
-    ParenthesisCloseLexeme, ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
-};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::{
+    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
+    ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
+};
 use crate::util::codeparts::{Keyword, Symbol};
 use crate::util::numtype::f64eq;
 
@@ -73,13 +73,9 @@ pub trait IntoSymbol: fmt::Debug {
 impl IntoSymbol for &str {
     /// Get the symbol. If this is for an association, strip a character (should be "=") from the end of the text.
     fn symbol(self, is_association: bool) -> Result<Option<Symbol>, ()> {
-        let symbol_txt = if is_association {
-            &self[0..self.len()-1]
-        } else {
-            self
-        };
+        let symbol_txt = if is_association { &self[0..self.len() - 1] } else { self };
         if symbol_txt.is_empty() {
-            return Ok(None)
+            return Ok(None);
         }
         match Symbol::new(symbol_txt) {
             Ok(s) => Ok(Some(s)),
@@ -99,7 +95,8 @@ pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
 }
 
 pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
-    txt.symbol(true).unwrap()
+    txt.symbol(true)
+        .unwrap()
         .map(|sym| AssociationLexeme::from_symbol(sym, SourceSlice::mock()).unwrap())
         .unwrap_or_else(|| AssociationLexeme::from_unprefixed(SourceSlice::mock()))
 }

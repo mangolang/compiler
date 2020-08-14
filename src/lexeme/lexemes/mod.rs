@@ -11,12 +11,12 @@ pub mod association;
 //pub mod declaration;
 //pub use self::declaration::DeclarationLexeme;
 
-pub mod parentheses;
 pub mod brackets;
+pub mod parentheses;
 
-pub mod operator;
-pub mod identifier;
-pub mod literal;
-pub mod keyword;
 pub mod end_statement;
+pub mod identifier;
+pub mod keyword;
+pub mod literal;
+pub mod operator;
 pub mod separators;

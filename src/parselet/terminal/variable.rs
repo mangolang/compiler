@@ -10,9 +10,7 @@ pub struct VariableParselet {
 
 impl VariableParselet {
     pub fn new(name: IdentifierLexeme) -> Self {
-        VariableParselet {
-            name,
-        }
+        VariableParselet { name }
     }
 }
 

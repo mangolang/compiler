@@ -6,8 +6,8 @@ use crate::towasm::control::Group;
 use crate::towasm::control::Label;
 use crate::towasm::scope::module::Scope;
 use crate::towasm::Wasm;
-use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
+use crate::util::strtype::Name;
 
 pub struct Loop {
     name: Name,

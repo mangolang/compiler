@@ -15,4 +15,3 @@ mod special;
 
 #[cfg(test)]
 mod tests;
-

@@ -3,8 +3,8 @@ use ::std::hash;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
-use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
+use crate::util::strtype::Name;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, Eq, Clone)]

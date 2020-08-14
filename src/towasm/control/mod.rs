@@ -9,5 +9,5 @@ pub use self::repeat::Loop;
 
 pub mod block;
 pub mod branch;
-pub mod repeat;
 pub mod function;
+pub mod repeat;

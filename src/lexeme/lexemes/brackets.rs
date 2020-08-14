@@ -14,7 +14,6 @@ pub struct BracketCloseLexeme {
     source: SourceSlice,
 }
 
-
 impl PartialEq for BracketOpenLexeme {
     fn eq(&self, _other: &Self) -> bool {
         true
@@ -34,7 +33,6 @@ impl PartialEq for BracketCloseLexeme {
 impl hash::Hash for BracketCloseLexeme {
     fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
 }
-
 
 impl BracketOpenLexeme {
     pub fn new(source: SourceSlice) -> BracketOpenLexeme {

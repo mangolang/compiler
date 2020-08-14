@@ -3,10 +3,10 @@
 
 pub use self::parse::parse;
 
-pub mod util;
 pub mod expression;
-pub mod partial;
 mod parse;
+pub mod partial;
+pub mod util;
 
 #[cfg(test)]
 mod tests;

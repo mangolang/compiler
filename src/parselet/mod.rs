@@ -9,9 +9,9 @@ pub use self::special::*;
 //TODO @mark: remove
 pub use self::terminal::*;
 
-mod node;
-mod terminal;
-mod special;
 mod collect;
+mod node;
+mod special;
+mod terminal;
 #[cfg(test)]
 mod tests;

@@ -61,7 +61,7 @@ impl From<Vec<Lexeme>> for LexemeCollector {
 }
 
 impl FromIterator<Lexeme> for LexemeCollector {
-    fn from_iter<T: IntoIterator<Item =Lexeme>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = Lexeme>>(iter: T) -> Self {
         let mut lexeme_list = LexemeCollector::new();
         for lexeme in iter {
             lexeme_list.add(lexeme)

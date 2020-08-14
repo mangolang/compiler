@@ -32,7 +32,8 @@ fn lex_01() {
             operator("*").into(),
             identifier("y").into(),
             parenthesis_close(),
-        ].into()
+        ]
+        .into()
     );
 }
 
@@ -66,7 +67,8 @@ fn lex_02() {
             newline(),
             end_block(),
             parenthesis_close(),
-        ].into()
+        ]
+        .into()
     );
 }
 
@@ -87,7 +89,8 @@ fn lex_03() {
             operator("*").into(),
             literal_real(5.0).into(),
             parenthesis_close(),
-        ].into()
+        ]
+        .into()
     );
 }
 
@@ -114,7 +117,8 @@ fn lex_04() {
             parenthesis_close(),
             operator("==").into(),
             literal_bool(true).into(),
-        ].into()
+        ]
+        .into()
     );
 }
 
@@ -161,7 +165,8 @@ fn lex_05() {
             bracket_close(),
             parenthesis_close(),
             parenthesis_close(),
-        ].into()
+        ]
+        .into()
     );
 }
 
@@ -301,6 +306,7 @@ assert seq == [1, 2, 3, 4, 5]
             literal_int(5).into(),
             bracket_close(),
             newline(),
-        ].into()
+        ]
+        .into()
     );
 }

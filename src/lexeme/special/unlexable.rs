@@ -11,12 +11,8 @@ pub struct UnlexableLexeme {
 }
 
 impl UnlexableLexeme {
-
     pub fn new(text: impl Into<String>, source: SourceSlice) -> UnlexableLexeme {
-        UnlexableLexeme {
-            text: text.into(),
-            source,
-        }
+        UnlexableLexeme { text: text.into(), source }
     }
 
     pub fn from_source(source: SourceSlice) -> UnlexableLexeme {

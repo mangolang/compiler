@@ -14,8 +14,8 @@ use crate::towasm::scope::Parameter;
 use crate::towasm::values::Assign;
 use crate::towasm::values::Const;
 use crate::towasm::values::DeclareLocal;
-use crate::util::strtype::Name;
 use crate::util::strtype::typ::StrType;
+use crate::util::strtype::Name;
 
 #[test]
 #[allow(unused_variables)]

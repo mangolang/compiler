@@ -5,6 +5,6 @@ pub use self::file_lexemes::LexemeIndex;
 
 mod all;
 mod file_lexemes;
-pub mod short;
 #[cfg(test)]
 pub mod for_test;
+pub mod short;

@@ -2,8 +2,8 @@ use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::binary_operation::BinaryOperationParselet;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::variable::parse_variable;
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
@@ -12,8 +12,10 @@ pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
         Err(_) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_addition(cursor)?;
-    Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-        left, operator, right))))
+    Ok((
+        cursor,
+        ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right)),
+    ))
 }
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
@@ -23,8 +25,10 @@ pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets
         Err(_) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_multiplication(cursor)?;
-    Ok((cursor, ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(
-        left, operator, right))))
+    Ok((
+        cursor,
+        ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right)),
+    ))
 }
 
 fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool) -> ParseRes<OperatorLexeme> {
@@ -32,7 +36,7 @@ fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool)
         if op_test(operator_lexeme) {
             //TODO @mark: is clone needed?
             let operator = operator_lexeme.clone();
-            return Ok((cursor, operator))
+            return Ok((cursor, operator));
         }
     }
     Err(NoMatch)
@@ -68,38 +72,22 @@ mod addition {
     use crate::parselet::short::{binary, literal};
     use crate::util::codeparts::Symbol;
 
-    use super::*;
     use super::test_util::check_add as check;
+    use super::*;
 
     #[test]
     fn single_addition() {
         check(
-            vec![
-                literal_int(4).into(),
-                operator("+").into(),
-                literal_int(3).into(),
-            ],
-            binary(
-                literal(literal_int(4)),
-                operator(Symbol::Plus),
-                literal(literal_int(3))
-            ),
+            vec![literal_int(4).into(), operator("+").into(), literal_int(3).into()],
+            binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
 
     #[test]
     fn single_subtraction() {
         check(
-            vec![
-                literal_real(10.).into(),
-                operator("-").into(),
-                literal_real(5.).into(),
-            ],
-            binary(
-                literal(literal_real(10.)),
-                operator(Symbol::Dash),
-                literal(literal_real(5.)),
-            ),
+            vec![literal_real(10.).into(), operator("-").into(), literal_real(5.).into()],
+            binary(literal(literal_real(10.)), operator(Symbol::Dash), literal(literal_real(5.))),
         );
     }
 
@@ -121,12 +109,8 @@ mod addition {
                 binary(
                     literal(literal_int(3)),
                     operator(Symbol::Plus),
-                    binary(
-                        literal(literal_int(2)),
-                        operator(Symbol::Plus),
-                        literal(literal_int(1))
-                    )
-                )
+                    binary(literal(literal_int(2)), operator(Symbol::Plus), literal(literal_int(1))),
+                ),
             ),
         );
     }
@@ -135,16 +119,8 @@ mod addition {
     #[test]
     fn wrong_types() {
         check(
-            vec![
-                literal_text("hello").into(),
-                operator("-").into(),
-                literal_bool(true).into(),
-            ],
-            binary(
-                literal(literal_text("hello")),
-                operator(Symbol::Dash),
-                literal(literal_bool(true))
-            ),
+            vec![literal_text("hello").into(), operator("-").into(), literal_bool(true).into()],
+            binary(literal(literal_text("hello")), operator(Symbol::Dash), literal(literal_bool(true))),
         );
     }
 
@@ -164,38 +140,22 @@ mod multiplication {
     use crate::parselet::short::{binary, literal};
     use crate::util::codeparts::Symbol;
 
-    use super::*;
     use super::test_util::check_mul as check;
+    use super::*;
 
     #[test]
     fn single_multiplication() {
         check(
-            vec![
-                literal_int(4).into(),
-                operator("*").into(),
-                literal_int(3).into(),
-            ],
-            binary(
-                literal(literal_int(4)),
-                operator(Symbol::Asterisk),
-                literal(literal_int(3)),
-            ),
+            vec![literal_int(4).into(), operator("*").into(), literal_int(3).into()],
+            binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3))),
         );
     }
 
     #[test]
     fn single_division() {
         check(
-            vec![
-                literal_real(10.).into(),
-                operator("/").into(),
-                literal_real(5.).into(),
-            ],
-            binary(
-                literal(literal_real(10.)),
-                operator(Symbol::Slash),
-                literal(literal_real(5.)),
-            ),
+            vec![literal_real(10.).into(), operator("/").into(), literal_real(5.).into()],
+            binary(literal(literal_real(10.)), operator(Symbol::Slash), literal(literal_real(5.))),
         );
     }
 
@@ -217,12 +177,8 @@ mod multiplication {
                 binary(
                     literal(literal_int(3)),
                     operator(Symbol::Asterisk),
-                    binary(
-                        literal(literal_int(2)),
-                        operator(Symbol::Asterisk),
-                        literal(literal_int(1))
-                    )
-                )
+                    binary(literal(literal_int(2)), operator(Symbol::Asterisk), literal(literal_int(1))),
+                ),
             ),
         );
     }
@@ -231,15 +187,11 @@ mod multiplication {
     #[test]
     fn wrong_types() {
         check(
-            vec![
-                literal_text("hello").into(),
-                operator("/").into(),
-                literal_bool(true).into(),
-            ],
+            vec![literal_text("hello").into(), operator("/").into(), literal_bool(true).into()],
             binary(
                 literal(literal_text("hello".to_owned())),
                 operator(Symbol::Slash),
-                literal(literal_bool(true))
+                literal(literal_bool(true)),
             ),
         );
     }
@@ -282,11 +234,7 @@ mod mixed {
                     literal(literal_real(f64eq(3.))),
                 ),
                 operator(Symbol::Dash),
-                binary(
-                    literal(literal_int(8)),
-                    operator(Symbol::Slash),
-                    literal(literal_int(2)),
-                ),
+                binary(literal(literal_int(8)), operator(Symbol::Slash), literal(literal_int(2))),
             ),
         );
     }
@@ -312,38 +260,25 @@ mod special {
 
     #[test]
     fn leftover() {
-        let lexemes = vec![
-            literal_int(4).into(),
-            operator("+").into(),
-            literal_int(3).into(),
-            comma(),
-        ].into();
+        let lexemes = vec![literal_int(4).into(), operator("+").into(), literal_int(3).into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(
-            binary(
-                literal(literal_int(4)),
-                operator(Symbol::Plus),
-                literal(literal_int(3))
-            ),
-            parselet);
+            binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
+            parselet
+        );
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![
-            literal_int(4).into(),
-            operator("*").into(),
-            literal_int(3).into(),
-            comma()].into();
+        let lexemes = vec![literal_int(4).into(), operator("*").into(), literal_int(3).into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(binary(
-            literal(literal_int(4)),
-            operator(Symbol::Asterisk),
-            literal(literal_int(3)),
-        ), parselet);
+        assert_eq!(
+            binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3)),),
+            parselet
+        );
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

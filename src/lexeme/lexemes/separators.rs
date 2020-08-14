@@ -4,10 +4,9 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 
 macro_rules! implement_separator {
     ($name: ident) => {
-
         impl $name {
             pub fn new(source: SourceSlice) -> Self {
-                $name { source}
+                $name { source }
             }
         }
 
@@ -26,7 +25,7 @@ macro_rules! implement_separator {
         impl hash::Hash for $name {
             fn hash<H: hash::Hasher>(&self, _state: &mut H) {}
         }
-    }
+    };
 }
 
 #[derive(Debug, Eq, Clone)]

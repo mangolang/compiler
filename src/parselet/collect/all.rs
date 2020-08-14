@@ -1,6 +1,6 @@
 use crate::parselet::collect::expression::ExpressionParselets;
-use crate::parselet::Parselet;
 use crate::parselet::special::UnparseableParselet;
+use crate::parselet::Parselet;
 
 /// Collection of all possible nodes in the full abstract syntax tree.
 #[derive(PartialEq, Eq, Hash, Debug)]

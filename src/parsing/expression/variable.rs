@@ -1,13 +1,13 @@
 use crate::lexeme::Lexeme;
 use crate::parselet::{ExpressionParselets, VariableParselet};
 use crate::parsing::expression::literals::parse_literal;
-use crate::parsing::util::ParseRes;
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::ParseRes;
 
 pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     if let Lexeme::Identifier(lexeme) = cursor.take()? {
         let identifier = lexeme.clone();
-        return Ok((cursor, ExpressionParselets::Variable(VariableParselet::new(identifier))))
+        return Ok((cursor, ExpressionParselets::Variable(VariableParselet::new(identifier))));
     }
     parse_literal(cursor)
 }
@@ -30,18 +30,12 @@ mod var {
 
     #[test]
     fn alpha() {
-        check(
-            identifier("hello").into(),
-            variable(identifier("hello")),
-        );
+        check(identifier("hello").into(), variable(identifier("hello")));
     }
 
     #[test]
     fn alphanumeric() {
-        check(
-            identifier("_h42_").into(),
-            variable(identifier("_h42_")),
-        );
+        check(identifier("_h42_").into(), variable(identifier("_h42_")));
     }
 
     #[test]

@@ -1,5 +1,5 @@
-use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
@@ -19,8 +19,8 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod by_name {
-    use crate::lexeme::Lexeme;
     use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
@@ -38,11 +38,7 @@ mod by_name {
     #[test]
     fn no_args() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                parenthesis_close(),
-            ],
+            vec![identifier("f").into(), parenthesis_open(), parenthesis_close()],
             function_call(variable(identifier("f"))),
         );
     }
@@ -92,21 +88,11 @@ mod by_name {
                 parenthesis_close(),
                 parenthesis_close(),
             ],
-            function_call(
-                binary(
-                    binary(
-                        variable(identifier("x")),
-                        operator(Symbol::Dash),
-                        literal(literal_int(1)),
-                    ),
-                    operator(Symbol::Asterisk),
-                    binary(
-                        variable(identifier("y")),
-                        operator(Symbol::Plus),
-                        literal(literal_int(10)),
-                    ),
-                )
-            ),
+            function_call(binary(
+                binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
+                operator(Symbol::Asterisk),
+                binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
+            )),
         );
     }
 }
@@ -126,8 +112,9 @@ mod special {
             parenthesis_open(),
             literal_int(42).into(),
             parenthesis_close(),
-            comma()
-        ].into();
+            comma(),
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(function_call(variable(identifier("faculty"))), parselet);

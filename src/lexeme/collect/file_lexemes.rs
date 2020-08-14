@@ -76,8 +76,7 @@ mod tests {
 
     #[test]
     fn indexing() {
-        let lexemes = FileLexemes::new(vec![
-            unlexable("a"), unlexable("b"), unlexable("c")]);
+        let lexemes = FileLexemes::new(vec![unlexable("a"), unlexable("b"), unlexable("c")]);
         let mut index = lexemes.index_at_start();
         assert!(index < lexemes.len());
         assert_eq!(&unlexable("a"), &lexemes[index]);

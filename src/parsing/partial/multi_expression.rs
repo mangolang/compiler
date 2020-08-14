@@ -1,8 +1,8 @@
 use crate::lexeme::Lexeme;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::parse_expression;
-use crate::parsing::util::ParseRes;
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::ParseRes;
 
 /// Parse a series of expression, separated by commas and/or newlines.
 /// Occurs as part of e.g. function calls, or array literals.
@@ -10,7 +10,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
     let mut expressions = vec![];
     while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
         expressions.push(expr);
-        let mut separator_cursor = expr_cursor;  // copy
+        let mut separator_cursor = expr_cursor; // copy
         match separator_cursor.take() {
             Ok(token) => match token {
                 // There is a separator, continue for another expression.
@@ -22,7 +22,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,
                 // but that is up to the outer parser (which knows what the opening is).
-                return Ok((expr_cursor, expressions))
+                return Ok((expr_cursor, expressions));
             }
         }
     }
@@ -66,29 +66,17 @@ mod basic {
 
     #[test]
     fn empty() {
-        check(
-            vec![],
-            vec![],
-            Err(End),
-        );
+        check(vec![], vec![], Err(End));
     }
 
     #[test]
     fn single_literal() {
-        check(
-            vec![literal_text("hello").into()],
-            vec![literal(literal_text("hello"))],
-            Err(End),
-        );
+        check(vec![literal_text("hello").into()], vec![literal(literal_text("hello"))], Err(End));
     }
 
     #[test]
     fn single_variable() {
-        check(
-            vec![identifier("hello").into()],
-            vec![variable(identifier("hello"))],
-            Err(End),
-        );
+        check(vec![identifier("hello").into()], vec![variable(identifier("hello"))], Err(End));
     }
 }
 
@@ -117,21 +105,11 @@ mod complex_expr {
                 literal_int(10).into(),
                 parenthesis_close(),
             ],
-            vec![
-                binary(
-                    binary(
-                        variable(identifier("x")),
-                        operator(Symbol::Dash),
-                        literal(literal_int(1)),
-                    ),
-                    operator(Symbol::Asterisk),
-                    binary(
-                        variable(identifier("y")),
-                        operator(Symbol::Plus),
-                        literal(literal_int(10)),
-                    ),
-                )
-            ],
+            vec![binary(
+                binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
+                operator(Symbol::Asterisk),
+                binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
+            )],
             Err(End),
         );
     }
@@ -149,16 +127,8 @@ mod complex_expr {
                 literal_int(10).into(),
             ],
             vec![
-                binary(
-                    variable(identifier("x")),
-                    operator(Symbol::Dash),
-                    literal(literal_int(1)),
-                ),
-                binary(
-                    variable(identifier("y")),
-                    operator(Symbol::Plus),
-                    literal(literal_int(10)),
-                ),
+                binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
+                binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
             ],
             Err(End),
         );
@@ -168,17 +138,27 @@ mod complex_expr {
     fn many() {
         check(
             vec![
-                literal_int(0).into(), comma(),
-                literal_int(1).into(), comma(),
-                literal_int(2).into(), comma(),
-                literal_int(3).into(), comma(),
-                literal_int(4).into(), comma(),
-                literal_int(5).into(), comma(),
-                literal_int(6).into(), comma(),
-                literal_int(7).into(), comma(),
-                literal_int(8).into(), comma(),
-                literal_int(9).into(), comma(),
-                identifier("x").into()
+                literal_int(0).into(),
+                comma(),
+                literal_int(1).into(),
+                comma(),
+                literal_int(2).into(),
+                comma(),
+                literal_int(3).into(),
+                comma(),
+                literal_int(4).into(),
+                comma(),
+                literal_int(5).into(),
+                comma(),
+                literal_int(6).into(),
+                comma(),
+                literal_int(7).into(),
+                comma(),
+                literal_int(8).into(),
+                comma(),
+                literal_int(9).into(),
+                comma(),
+                identifier("x").into(),
             ],
             vec![
                 literal(literal_int(0)),
@@ -246,7 +226,7 @@ mod separators {
     fn double_comma_err() {
         check(
             vec![literal_text("hello").into(), comma(), comma(), identifier("hello").into()],
-            vec![literal(literal_text("hello")), ],
+            vec![literal(literal_text("hello"))],
             Ok(&comma()),
         );
     }
@@ -325,7 +305,6 @@ mod ending {
     }
 }
 
-
 /// Most are not actually errors; on problematic lexemes, the multi-expression
 /// is ended, and it's up to the caller to determine whether what comes after is ok.
 #[cfg(test)]
@@ -333,31 +312,27 @@ mod errors {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{literal, variable};
 
-    use super::*;
     use super::test_util::check;
+    use super::*;
 
     #[test]
     fn ellipsis_err() {
         check(
             vec![literal_text("hello").into(), comma(), ellipsis()],
-            vec![literal(literal_text("hello")),],
+            vec![literal(literal_text("hello"))],
             Ok(&ellipsis()),
         );
     }
 
     #[test]
     fn just_comma() {
-        check(
-            vec![comma()],
-            vec![],
-            Ok(&comma()),
-        );
+        check(vec![comma()], vec![], Ok(&comma()));
     }
 
     #[test]
     fn close_parenthesis() {
         check(
-            vec![literal_bool(true).into(), comma(), identifier("q").into(), parenthesis_close(),],
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), parenthesis_close()],
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&parenthesis_close()),
         );
@@ -366,7 +341,7 @@ mod errors {
     #[test]
     fn close_bracket() {
         check(
-            vec![literal_bool(true).into(), comma(), identifier("q").into(), bracket_close(),],
+            vec![literal_bool(true).into(), comma(), identifier("q").into(), bracket_close()],
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&bracket_close()),
         );
@@ -374,11 +349,7 @@ mod errors {
 
     #[test]
     fn syntax_err_first_expr() {
-        let lexemes = vec![
-            identifier("q").into(),
-            operator("+").into(),
-            parenthesis_close(),
-        ].into();
+        let lexemes = vec![identifier("q").into(), operator("+").into(), parenthesis_close()].into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_multi_expression(cursor);
         assert!(result.is_err());
@@ -393,7 +364,8 @@ mod errors {
             identifier("q").into(),
             operator("+").into(),
             parenthesis_close(),
-        ].into();
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_multi_expression(cursor);
         assert!(result.is_err());

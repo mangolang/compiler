@@ -7,8 +7,8 @@ use crate::lexeme::collect::short::literal_real;
 use crate::lexeme::collect::short::literal_text;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::parsetxt::int::INT_RE;
 use crate::util::parsetxt::int::parse_int;
+use crate::util::parsetxt::int::INT_RE;
 use crate::util::parsetxt::real::parse_real;
 use crate::util::parsetxt::real::REAL_RE;
 use crate::util::parsetxt::text::parse_single_quote;
@@ -254,7 +254,7 @@ mod real {
                 literal_real(1.1).into(),
                 literal_real(2.2).into(),
                 literal_real(3.3).into(),
-                literal_real(0.1234567890).into()
+                literal_real(0.1234567890).into(),
             ],
         );
     }
@@ -322,7 +322,10 @@ mod text {
             "'' 'hello' 'world'",
             &[literal_text("").into(), literal_text("hello").into(), literal_text("world").into()],
         );
-        check("'''' ''", &[literal_text("").into(), literal_text("").into(), literal_text("").into()]);
+        check(
+            "'''' ''",
+            &[literal_text("").into(), literal_text("").into(), literal_text("").into()],
+        );
     }
 }
 
@@ -332,7 +335,7 @@ mod exhaustion {
 
     use super::test_util::check;
 
-//TODO @mark: TEMPORARY! REMOVE THIS!
+    //TODO @mark: TEMPORARY! REMOVE THIS!
     // // Constants.
     // while let ReaderResult::Match(sym) = reader.strip_match( & * CONSTANTS_RE) {
     // lexer.add( match sym.as_str() {
@@ -431,11 +434,7 @@ mod exhaustion {
     fn text_before_number() {
         check(
             "'hello' 'world' 1.0e1",
-            &[
-                literal_text("hello").into(),
-                literal_text("world").into(),
-                literal_real(10.).into(),
-            ],
+            &[literal_text("hello").into(), literal_text("world").into(), literal_real(10.).into()],
         );
     }
 }
