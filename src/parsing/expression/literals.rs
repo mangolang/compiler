@@ -6,7 +6,7 @@ use crate::parsing::util::{ParseRes};
 use crate::parsing::util::cursor::{ParseCursor};
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let mut literal_cursor = cursor.clone();
+    let mut literal_cursor = cursor;  // copy
     if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
         let literal = literal_lexeme.clone();
         return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))))
@@ -23,6 +23,7 @@ mod literal {
     use crate::util::numtype::f64eq;
 
     use super::*;
+    use crate::lexeme::LiteralLexeme;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();

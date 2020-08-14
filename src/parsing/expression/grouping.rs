@@ -1,8 +1,8 @@
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parselet::ExpressionParselets;
 
 pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, _left) = parse_parenthesis_open(cursor)?;
@@ -17,7 +17,7 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 #[cfg(test)]
 mod parenthese {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme};
+    use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
@@ -29,7 +29,7 @@ mod parenthese {
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_parenthesised_group(cursor.clone()).unwrap();
+        let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -206,7 +206,7 @@ mod special {
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;

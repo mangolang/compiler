@@ -10,7 +10,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
     let mut expressions = vec![];
     while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
         expressions.push(expr);
-        let mut separator_cursor = expr_cursor.clone();
+        let mut separator_cursor = expr_cursor;  // copy
         match separator_cursor.take() {
             Ok(token) => match token {
                 // There is a separator, continue for another expression.
@@ -46,7 +46,7 @@ mod test_util {
     pub fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselets) = parse_multi_expression(cursor.clone()).unwrap();
+        let (cursor, parselets) = parse_multi_expression(cursor).unwrap();
         assert_eq!(expected, parselets);
         assert_eq!(Err(End), cursor.peek());
         assert_eq!(lexeme_at_cursor, cursor.peek());
@@ -420,7 +420,7 @@ mod errors {
             parenthesis_close(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor.clone());
+        let result = parse_multi_expression(cursor);
         assert!(result.is_err());
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
@@ -435,7 +435,7 @@ mod errors {
             parenthesis_close(),
         ].into();
         let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor.clone());
+        let result = parse_multi_expression(cursor);
         assert!(result.is_err());
         assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
     }

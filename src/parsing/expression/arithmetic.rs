@@ -49,7 +49,7 @@ mod test_util {
     pub fn check_add(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
+        let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -57,7 +57,7 @@ mod test_util {
     pub fn check_mul(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor.clone()).unwrap();
+        let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }

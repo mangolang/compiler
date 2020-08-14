@@ -1,9 +1,9 @@
 use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
-use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
-use crate::parsing::util::{ParseRes};
-use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::expression::variable::parse_variable;
+use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
+use crate::parsing::util::ParseRes;
+use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
@@ -20,9 +20,9 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 #[cfg(test)]
 mod by_name {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{LiteralLexeme, OperatorLexeme, Lexeme};
+    use crate::lexeme::{Lexeme, LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;
@@ -32,7 +32,7 @@ mod by_name {
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_call(cursor.clone()).unwrap();
+        let (cursor, parselet) = parse_call(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -118,7 +118,8 @@ mod special {
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{LiteralLexeme, OperatorLexeme};
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{function_call, variable, binary, literal};
+    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parsing::expression::parse_expression;
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
     use crate::util::numtype::f64eq;

@@ -53,7 +53,7 @@ impl<'a> ParseCursor<'a> {
     pub fn fork(&self) -> Self {
         ParseCursor {
             index: self.index,
-            lexemes: self.lexemes.clone(),
+            lexemes: self.lexemes,
         }
     }
 }
