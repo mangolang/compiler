@@ -6,19 +6,14 @@ use ::std::sync::Mutex;
 
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
-use ::string_interner::StringInterner;
+use ::ustr::ustr;
+use ::ustr::Ustr;
 
 use crate::common::error::MsgResult;
 use crate::util::strtype::StrType;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
-}
-
-// TODO: this alias just for https://github.com/rust-lang-nursery/rustfmt/issues/2610
-type SIType = Mutex<StringInterner<usize, RandomState>>;
-lazy_static! {
-    static ref INTERNER: SIType = Mutex::new(StringInterner::new());
 }
 
 /// Type for valid identifier names.
@@ -29,47 +24,37 @@ lazy_static! {
 /// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
 #[derive(Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
-    name_id: usize,
+    name: Ustr,
 }
 
 impl Name {
-    pub fn value(self) -> String {
+    pub fn value(self) -> &'static str {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
         // todo: I want this to return &str but that'd need the interner to be borrowed longer
-        INTERNER.lock().unwrap().resolve(self.name_id).unwrap().to_owned()
+        self.name.as_str()
     }
+}
 
-    /// Map function for doing something with the string without doing a copy.
-    pub fn map<T>(self, f: impl FnOnce(&str) -> T) -> T {
-        f(INTERNER.lock().unwrap().resolve(self.name_id).unwrap())
+impl PartialEq<str> for Name {
+    fn eq(&self, other: &str) -> bool {
+        self.value().eq(other)
     }
 }
 
 impl fmt::Debug for Name {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        self.map(|n| write!(f, "Name {{ id: {}, as_str: '{}' }}", self.name_id, n))
+        write!(f, "Name '{}'", self.value())
     }
 }
 
 impl fmt::Display for Name {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // Use interner directly instead of .value(), because that creates a copy
-        write!(f, "{}", INTERNER.lock().unwrap().resolve(self.name_id).unwrap())
+        write!(f, "{}", self.value())
     }
 }
 
 impl StrType for Name {
-    fn new<'a>(name: impl Into<Cow<'a, str>>) -> MsgResult<Self> {
-        let name = name.into();
-        match Name::validate(name.as_ref()) {
-            Ok(_) => {
-                let id = INTERNER.lock().unwrap().get_or_intern(name.to_owned());
-                Ok(Name { name_id: id })
-            }
-            Err(msg) => Err(msg),
-        }
-    }
-
     fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
@@ -98,6 +83,16 @@ impl StrType for Name {
         }
         Ok(())
     }
+
+    fn new<'a>(name: impl AsRef<str>) -> MsgResult<Self> {
+        let name = name.as_ref();
+        match Name::validate(name.as_ref()) {
+            Ok(_) => {
+                Ok(Name { name: ustr(name) })
+            }
+            Err(msg) => Err(msg),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -107,8 +102,8 @@ mod technical {
     #[test]
     fn new_str() {
         // Twice because of interning.
-        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
-        assert!(Name::new("test_name").unwrap().map(|s| s == "test_name"));
+        assert_eq!(Name::new("test_name").unwrap(), "test_name");
+        assert_eq!(Name::new("test_name").unwrap(), "test_name");
     }
 
     #[test]
