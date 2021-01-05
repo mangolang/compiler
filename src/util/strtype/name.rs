@@ -102,15 +102,15 @@ mod technical {
     #[test]
     fn new_str() {
         // Twice because of interning.
-        assert_eq!(Name::new("test_name").unwrap(), "test_name");
-        assert_eq!(Name::new("test_name").unwrap(), "test_name");
+        assert_eq!(Name::new("test_name").unwrap(), *"test_name");
+        assert_eq!(Name::new("test_name").unwrap(), *"test_name");
     }
 
     #[test]
     fn new_string() {
         // Twice because of interning.
-        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
-        assert!(Name::new("test_name".to_owned()).unwrap().map(|s| s == "test_name"));
+        assert_eq!(Name::new("test_name".to_owned()).unwrap(), *"test_name");
+        assert_eq!(Name::new("test_name".to_owned()).unwrap(), *"test_name");
     }
 
     #[test]
@@ -131,7 +131,7 @@ mod validation {
             let name = Name::new(*inp);
             if is_valid {
                 assert!(name.is_ok(), format!("'{}' should be a valid name", inp));
-                name.unwrap().map(|n| assert_eq!(n, *inp));
+                assert_eq!(name.unwrap(), **inp);
             } else {
                 assert!(name.is_err(), format!("'{}' should not be a valid name", inp));
             }
