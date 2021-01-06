@@ -4,7 +4,7 @@ use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
-pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut variable_cursor = cursor; // copy
     if let Lexeme::Identifier(lexeme) = variable_cursor.take()? {
         let identifier = lexeme.clone();
@@ -56,7 +56,6 @@ mod var {
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 
-    //TODO @mark: I need this test for every parse function that has an alternative at the end
     #[test]
     fn try_literal_on_mismatch() {
         let lexemes = vec![literal_bool(true).into(), identifier("no_match").into()].into();

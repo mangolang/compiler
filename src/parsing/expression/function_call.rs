@@ -9,7 +9,7 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor) {
-        Ok((cursor, _)) => match parse_parenthesis_close(cursor) {
+        Ok((cursor, _)) => match parse_parenthesis_close(iden_cursor) {
             Ok((cursor, _)) => Ok((cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier)))),
             Err(_err) => Ok((iden_cursor, identifier)),
         },
@@ -106,15 +106,14 @@ mod special {
     use super::*;
 
     #[test]
-    fn is_expression() {
+    fn reachable_from_expression() {
         let lexemes = vec![
             identifier("faculty").into(),
             parenthesis_open(),
             literal_int(42).into(),
             parenthesis_close(),
             comma(),
-        ]
-        .into();
+        ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(function_call(variable(identifier("faculty"))), parselet);

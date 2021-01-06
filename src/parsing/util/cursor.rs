@@ -1,5 +1,7 @@
 use ::std::fmt;
 
+use ::log::trace;
+
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexeme;
 
@@ -32,9 +34,12 @@ impl<'a> ParseCursor<'a> {
 
     /// Get the requested element, or None if there are not that many lexemes.
     pub fn peek(&self) -> Result<&Lexeme, End> {
+        //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
+            trace!("peeking token END at {:?}", self.index);
             return Err(End);
         }
+        trace!("peeking token {:?} at {:?}", &self.lexemes[self.index], self.index);
         Ok(&self.lexemes[self.index])
     }
 
@@ -42,9 +47,12 @@ impl<'a> ParseCursor<'a> {
     /// This returns a borrow which can be cloned, because dealing with taking things
     /// out of the Cursor is too complex in combination with rollbacks.
     pub fn take(&mut self) -> Result<&Lexeme, End> {
+        //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
+            trace!("taking token END at {:?}", self.index);
             return Err(End);
         }
+        trace!("taking token {:?} at {:?}", &self.lexemes[self.index], self.index);
         let lexeme = &self.lexemes[self.index];
         self.index.increment();
         Ok(lexeme)
@@ -87,13 +95,13 @@ mod tests {
         let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
         let mut cursor1 = ParseCursor::new(&lexemes);
         assert_eq!(Ok(&unlexable("a")), cursor1.peek());
-        let mut cursor2 = cursor1.fork();
+        let mut cursor2 = cursor1;
         cursor1.increment();
         cursor1.increment();
         assert_eq!(Err(End), cursor1.take());
         assert_eq!(Ok(&unlexable("a")), cursor2.peek());
         cursor2.increment();
-        let mut cursor3 = cursor2.fork();
+        let mut cursor3 = cursor2;
         assert_eq!(Ok(&unlexable("b")), cursor3.take());
         assert_eq!(Err(End), cursor3.take());
         assert_eq!(Ok(&unlexable("b")), cursor2.take());
