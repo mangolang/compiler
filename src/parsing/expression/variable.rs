@@ -16,7 +16,7 @@ pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> 
 #[cfg(test)]
 mod var {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::variable;
+    use crate::parselet::short::{variable, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
@@ -54,6 +54,15 @@ mod var {
         let parselet = parse_variable(cursor);
         assert!(parselet.is_err());
         assert_eq!(Ok(&comma()), cursor.peek());
+    }
+
+    //TODO @mark: I need this test for every parse function that has an alternative at the end
+    #[test]
+    fn try_literal_on_mismatch() {
+        let lexemes = vec![literal_bool(true).into(), identifier("no_match").into()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_variable(cursor).unwrap();
+        assert_eq!(literal(literal_bool(true)), parselet);
     }
 
     #[test]
