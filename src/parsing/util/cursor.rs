@@ -35,10 +35,10 @@ impl<'a> ParseCursor<'a> {
     pub fn peek(&self) -> Result<&Lexeme, End> {
         //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
-            dbg_log!("peeking token END at {:?}", self.index);
+            dbg_log!("parser at {:?} peeking token END", self.index);
             return Err(End);
         }
-        dbg_log!("peeking token {:?} at {:?}", &self.lexemes[self.index], self.index);
+        dbg_log!("parser at {:?} peeking token {:?}", self.index, &self.lexemes[self.index]);
         Ok(&self.lexemes[self.index])
     }
 
@@ -48,10 +48,10 @@ impl<'a> ParseCursor<'a> {
     pub fn take(&mut self) -> Result<&Lexeme, End> {
         //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
-            dbg_log!("taking token END at {:?}", self.index);
+            dbg_log!("parser at {:?} taking token END", self.index);
             return Err(End);
         }
-        dbg_log!("taking token {:?} at {:?}", &self.lexemes[self.index], self.index);
+        dbg_log!("parser at {:?} taking token {:?}", self.index, &self.lexemes[self.index]);
         let lexeme = &self.lexemes[self.index];
         self.index.increment();
         Ok(lexeme)

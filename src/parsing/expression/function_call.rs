@@ -4,14 +4,35 @@ use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::parsing::expression::parse_expression;
 
+/// Parse a function invocation, which looks like
+///
+/// * fun_name()
+/// * fun_name(x,y)
+/// * fun_name(x,y,)
+///
+//TODO: support for newlines instead of commas may follow later
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor) {
-        Ok((cursor, _)) => match parse_parenthesis_close(iden_cursor) {
-            Ok((cursor, _)) => Ok((cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier)))),
-            Err(_err) => Ok((iden_cursor, identifier)),
+        Ok((open_cursor, _)) => {
+            let mut arguments = vec![];
+            loop {
+                let mut current_cursor = open_cursor;
+                match parse_expression(arg_cursor) {
+                    Ok((arg_cursor, arg)) => {
+                        current_cursor = arg_cursor;
+                        arguments.push(arg);
+                    },
+                    Err(_err) => return if let Ok((close_cursor, _)) = parse_parenthesis_close(open_cursor) {
+                        Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier))))
+                    } else {
+                        Ok((iden_cursor, identifier))
+                    },
+                }
+            }
         },
         Err(_err) => Ok((iden_cursor, identifier)),
     }
@@ -93,6 +114,21 @@ mod by_name {
                 operator(Symbol::Asterisk),
                 binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
             )),
+        );
+    }
+
+    #[test]
+    fn double_argument() {
+        check(
+            vec![
+                identifier("f").into(),
+                parenthesis_open(),
+                identifier("x").into(),
+                comma(),
+                identifier("y").into(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("f"))),
         );
     }
 }
