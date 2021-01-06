@@ -1,7 +1,6 @@
 use ::std::fmt;
 
-use ::log::trace;
-
+use crate::dbg_log;
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexeme;
 
@@ -36,10 +35,10 @@ impl<'a> ParseCursor<'a> {
     pub fn peek(&self) -> Result<&Lexeme, End> {
         //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
-            trace!("peeking token END at {:?}", self.index);
+            dbg_log!("peeking token END at {:?}", self.index);
             return Err(End);
         }
-        trace!("peeking token {:?} at {:?}", &self.lexemes[self.index], self.index);
+        dbg_log!("peeking token {:?} at {:?}", &self.lexemes[self.index], self.index);
         Ok(&self.lexemes[self.index])
     }
 
@@ -49,10 +48,10 @@ impl<'a> ParseCursor<'a> {
     pub fn take(&mut self) -> Result<&Lexeme, End> {
         //TODO @mark: trace logging lines
         if self.index >= self.lexemes.len() {
-            trace!("taking token END at {:?}", self.index);
+            dbg_log!("taking token END at {:?}", self.index);
             return Err(End);
         }
-        trace!("taking token {:?} at {:?}", &self.lexemes[self.index], self.index);
+        dbg_log!("taking token {:?} at {:?}", &self.lexemes[self.index], self.index);
         let lexeme = &self.lexemes[self.index];
         self.index.increment();
         Ok(lexeme)
