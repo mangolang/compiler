@@ -11,7 +11,7 @@ pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
         let literal = literal_lexeme.clone();
         return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
     }
-    parse_parenthesised_group(cursor)
+    parse_parenthesised_group(literal_cursor)
 }
 
 #[cfg(test)]

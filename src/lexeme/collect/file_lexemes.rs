@@ -1,6 +1,8 @@
-use std::ops::Index;
+use ::std::fmt;
+use ::std::ops::Index;
 
 use crate::lexeme::Lexeme;
+use std::fmt::Formatter;
 
 #[derive(Debug)]
 pub struct FileLexemes {
@@ -45,7 +47,7 @@ impl PartialEq for FileLexemes {
 #[cfg(test)]
 impl Eq for FileLexemes {}
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct LexemeIndex {
     value: usize,
 }
@@ -57,6 +59,12 @@ impl LexemeIndex {
 
     pub fn increment(&mut self) {
         self.value += 1
+    }
+}
+
+impl fmt::Debug for LexemeIndex {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.value)
     }
 }
 

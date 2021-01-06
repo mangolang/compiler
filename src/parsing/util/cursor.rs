@@ -1,3 +1,5 @@
+use ::std::fmt;
+
 use crate::lexeme::collect::{FileLexemes, LexemeIndex};
 use crate::lexeme::Lexeme;
 
@@ -10,7 +12,7 @@ pub struct End;
 ///
 /// To achieve this, the type is Copy, so that reverts are automatic, but updates must be communicated.
 //TODO @mark: not very happy about the above, must be an easier way
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct ParseCursor<'a> {
     index: LexemeIndex,
     lexemes: &'a FileLexemes,
@@ -55,6 +57,12 @@ impl<'a> ParseCursor<'a> {
             index: self.index,
             lexemes: self.lexemes,
         }
+    }
+}
+
+impl <'a> fmt::Debug for ParseCursor<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Cursor({:?})", self.index)
     }
 }
 

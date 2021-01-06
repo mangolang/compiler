@@ -5,11 +5,12 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
 pub fn parse_variable(mut cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+    let variable_cursor = cursor; // copy
     if let Lexeme::Identifier(lexeme) = cursor.take()? {
         let identifier = lexeme.clone();
         return Ok((cursor, ExpressionParselets::Variable(VariableParselet::new(identifier))));
     }
-    parse_literal(cursor)
+    parse_literal(variable_cursor)
 }
 
 #[cfg(test)]
