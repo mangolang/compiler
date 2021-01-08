@@ -35,7 +35,7 @@ derive-new = "0.5.8"
 #cargo-wasm = "0.4.*"
 #wasm-bindgen = "^0.2.63"
 #itertools = "^0.8.2"  # TODO @mark: unused?
-#smallvec = { version = "^0.6.13", features = ["union"] }
+smallvec = { version = "1.6.0", features = ["union"] }
 #indoc = "^0.3.5"
 #parity-wasm = "^0.41.0"
 

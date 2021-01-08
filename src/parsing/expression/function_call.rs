@@ -1,17 +1,19 @@
-use crate::parselet::function_call::FunctionCallParselet;
 use crate::parselet::ExpressionParselets;
+use crate::parselet::function_call::FunctionCallParselet;
+use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::expression::parse_expression;
 
 /// Parse a function invocation, which looks like
 ///
 /// * fun_name()
 /// * fun_name(x,y)
 /// * fun_name(x,y,)
+/// * ...
 ///
+//TODO: support for keyword arguments
 //TODO: support for newlines instead of commas may follow later
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
@@ -40,6 +42,8 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod by_name {
+    use ::smallvec::smallvec;
+
     use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
@@ -73,7 +77,7 @@ mod by_name {
                 literal_int(42).into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("faculty"))),
+            function_call(variable(identifier("faculty")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -86,7 +90,21 @@ mod by_name {
                 identifier("x").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f"))),
+            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
+        );
+    }
+
+    #[test]
+    fn single_identifier_positional_arg_trailing_comma() {
+        check(
+            vec![
+                identifier("f").into(),
+                parenthesis_open(),
+                identifier("x").into(),
+                comma(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -109,11 +127,14 @@ mod by_name {
                 parenthesis_close(),
                 parenthesis_close(),
             ],
-            function_call(binary(
-                binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
-                operator(Symbol::Asterisk),
-                binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
-            )),
+            function_call(
+                variable(identifier("f")),
+                smallvec![binary(
+                    binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
+                    operator(Symbol::Asterisk),
+                    binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
+                )]
+            ),
         );
     }
 
@@ -128,7 +149,23 @@ mod by_name {
                 identifier("y").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f"))),
+            function_call(variable(identifier("f")), smallvec![variable(identifier("x")), variable(identifier("y"))]),
+        );
+    }
+
+    #[test]
+    fn double_argument_trailing_comma() {
+        check(
+            vec![
+                identifier("f").into(),
+                parenthesis_open(),
+                identifier("x").into(),
+                comma(),
+                identifier("y").into(),
+                comma(),
+                parenthesis_close(),
+            ],
+            function_call(variable(identifier("f")), smallvec![variable(identifier("x")), variable(identifier("y"))]),
         );
     }
 }

@@ -1,11 +1,13 @@
+use smallvec::SmallVec;
+
 // use crate::common::error::{ErrMsg, MsgResult};
 // use crate::util::codeparts::Keyword;
 // use crate::util::numtype::f64eq;
 // use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
 use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
-use crate::parselet::node::binary_operation::BinaryOperationParselet;
-use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
+use crate::parselet::node::binary_operation::BinaryOperationParselet;
+use crate::parselet::node::function_call::{ArgsType, FunctionCallParselet};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -40,8 +42,8 @@ pub fn binary(left: ExpressionParselets, operator: OperatorLexeme, right: Expres
     ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right))
 }
 
-pub fn function_call(function: ExpressionParselets) -> ExpressionParselets {
-    ExpressionParselets::Call(FunctionCallParselet::new(function))
+pub fn function_call(function: ExpressionParselets, args: ArgsType) -> ExpressionParselets {
+    ExpressionParselets::Call(FunctionCallParselet::new(function, args))
 }
 
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {
