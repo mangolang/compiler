@@ -18,25 +18,12 @@ use crate::parsing::util::ParseRes;
 pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_variable(cursor)?;
-    match parse_parenthesis_open(iden_cursor) {
-        Ok((open_cursor, _)) => {
-            let mut arguments = vec![];
-            loop {
-                let mut current_cursor = open_cursor;
-                match parse_expression(arg_cursor) {
-                    Ok((arg_cursor, arg)) => {
-                        current_cursor = arg_cursor;
-                        arguments.push(arg);
-                    },
-                    Err(_err) => return if let Ok((close_cursor, _)) = parse_parenthesis_close(open_cursor) {
-                        Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier))))
-                    } else {
-                        Ok((iden_cursor, identifier))
-                    },
-                }
-            }
-        },
-        Err(_err) => Ok((iden_cursor, identifier)),
+    match parse_parenthesis_open(iden_cursor)
+            .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
+            .and_then(|args_cursor, args| parse_parenthesis_close(args_cursor)
+                .map(|ok| (ok.0, args))) {
+        Ok((close_cursor, args)) => Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
+        Err(_) => Ok((iden_cursor, identifier)),
     }
 }
 
@@ -77,7 +64,7 @@ mod by_name {
                 literal_int(42).into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("faculty")), vec![variable(identifier("x"))]),
+            function_call(variable(identifier("faculty")), smallvec![variable(identifier("x"))]),
         );
     }
 
@@ -90,7 +77,7 @@ mod by_name {
                 identifier("x").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
+            function_call(variable(identifier("f")), smallvec![variable(identifier("x"))]),
         );
     }
 
@@ -104,7 +91,7 @@ mod by_name {
                 comma(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
+            function_call(variable(identifier("f")), smallvec![variable(identifier("x"))]),
         );
     }
 
