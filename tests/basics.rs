@@ -1,8 +1,9 @@
 //TODO @mark: disable unused stuff later, but currently too much in-progress
 #![allow(unused_variables, dead_code)]
 
-use ::mango::run;
 use ::std::io::Cursor;
+
+use ::mangolib::run;
 
 fn assert_source_output(source: &str, expected_output: &str) {
     let inp: Cursor<Vec<u8>> = Cursor::new(vec![]);

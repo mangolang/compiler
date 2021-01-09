@@ -1,10 +1,11 @@
+use std::fs::File;
+use std::io;
+use std::io::Write;
+
 use crate::towasm::collect::Statement;
 use crate::towasm::control::Label;
 use crate::towasm::values::Expression;
 use crate::towasm::Wasm;
-use std::fs::File;
-use std::io;
-use std::io::Write;
 
 // todo: call_indirect
 

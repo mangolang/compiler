@@ -1,0 +1,29 @@
+
+# Check that the code compiles and the code-related checks pass (tests, lints; not dependencies).
+
+name: 'Stable tests Mango CLI'
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Compile and test (stable)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        run: bash ci/pipeline/make/debug.sh
+      - name: Test
+        run: bash ci/pipeline/test/test.sh
+      - name: Test (Miri)
+        continue-on-error: true  #TODO @mark: make strict when passed
+        run: bash ci/pipeline/test/test_miri.sh
+      - name: Lint
+        run: bash ci/pipeline/test/lint.sh
+      - name: Style
+        run: bash ci/pipeline/test/style.sh
+      - name: Documentation
+        run: bash ci/pipeline/make/docs.sh

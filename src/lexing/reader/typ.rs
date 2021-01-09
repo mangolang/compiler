@@ -2,8 +2,7 @@ use ::std::fmt::Debug;
 
 use ::regex::Regex;
 
-use crate::io::source::SourceSlice;
-use std::rc::Rc;
+use crate::io::slice::SourceSlice;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum ReaderResult {
@@ -46,4 +45,8 @@ pub trait Reader {
 
     /// Number of bytes left.
     fn remaining_len(&self) -> usize;
+
+    /// Create a source locator at the current position. This is useful for when a lexeme
+    /// is the result of multiple matches, or no match. It has length 0.
+    fn source_at_current(&self) -> SourceSlice;
 }

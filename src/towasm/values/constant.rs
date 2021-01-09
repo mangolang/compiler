@@ -1,9 +1,10 @@
+use std::fs::File;
+use std::io;
+
 use crate::towasm::collect::datatype::Value;
 use crate::towasm::collect::Type;
 use crate::towasm::values::Expression;
 use crate::towasm::Wasm;
-use std::fs::File;
-use std::io;
 
 pub struct Const {
     pub typ: Type,

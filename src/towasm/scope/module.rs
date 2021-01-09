@@ -1,8 +1,9 @@
-use crate::towasm::scope::Function;
-use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+
+use crate::towasm::scope::Function;
+use crate::towasm::Wasm;
 
 pub struct Module {
     functions: Vec<Function>,

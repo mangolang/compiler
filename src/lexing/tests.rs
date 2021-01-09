@@ -1,44 +1,44 @@
-use super::lex;
-use crate::common::error::ErrMsg;
 use crate::io::source::SourceFile;
+use crate::lexeme::collect::for_test::*;
 use crate::lexing::lexer::CodeLexer;
 use crate::lexing::reader::source_reader::SourceReader;
-use crate::token::collect::*;
+
+use super::lex;
 
 // use ::indoc::indoc;
 
 /// Create a set of source, reader and lexer for testing purposes.
 pub fn create_lexer(txt: &str) -> (SourceFile, SourceReader, CodeLexer) {
-    let source = SourceFile::test(txt);
+    let source = SourceFile::mock(txt);
     let reader = SourceReader::new(&source);
     let lexer = CodeLexer::new(source.len());
     (source, reader, lexer)
 }
 
 #[test]
-fn lex_01() -> Result<(), ErrMsg> {
+fn lex_01() {
     let input = "(x * x + y * y)";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
         vec![
             parenthesis_open(),
-            identifier("x")?,
-            operator("*")?,
-            identifier("x")?,
-            operator("+")?,
-            identifier("y")?,
-            operator("*")?,
-            identifier("y")?,
+            identifier("x").into(),
+            operator("*").into(),
+            identifier("x").into(),
+            operator("+").into(),
+            identifier("y").into(),
+            operator("*").into(),
+            identifier("y").into(),
             parenthesis_close(),
         ]
+        .into()
     );
-    Ok(())
 }
 
 #[test]
-fn lex_02() -> Result<(), ErrMsg> {
+fn lex_02() {
     // let input = indoc!("(
     //     x * x + ...
     //     y * y
@@ -47,7 +47,7 @@ fn lex_02() -> Result<(), ErrMsg> {
     x * x + ...
     y * y
 )";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
@@ -55,123 +55,123 @@ fn lex_02() -> Result<(), ErrMsg> {
             parenthesis_open(),
             newline(),
             start_block(),
-            identifier("x")?,
-            operator("*")?,
-            identifier("x")?,
-            operator("+")?,
+            identifier("x").into(),
+            operator("*").into(),
+            identifier("x").into(),
+            operator("+").into(),
             ellipsis(),
             newline(),
-            identifier("y")?,
-            operator("*")?,
-            identifier("y")?,
+            identifier("y").into(),
+            operator("*").into(),
+            identifier("y").into(),
             newline(),
             end_block(),
             parenthesis_close(),
         ]
+        .into()
     );
-    Ok(())
 }
 
 #[test]
-fn lex_03() -> Result<(), ErrMsg> {
+fn lex_03() {
     let input = "(3*3 + 5.0 * 5.0)";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
         vec![
             parenthesis_open(),
-            literal_int(3),
-            operator("*")?,
-            literal_int(3),
-            operator("+")?,
-            literal_real(5.0),
-            operator("*")?,
-            literal_real(5.0),
+            literal_int(3).into(),
+            operator("*").into(),
+            literal_int(3).into(),
+            operator("+").into(),
+            literal_real(5.0).into(),
+            operator("*").into(),
+            literal_real(5.0).into(),
             parenthesis_close(),
         ]
+        .into()
     );
-    Ok(())
 }
 
 #[test]
-fn lex_04() -> Result<(), ErrMsg> {
+fn lex_04() {
     let input = "((3*3 + 5.0 * 5.0) == 25.0) == true";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
         vec![
             parenthesis_open(),
             parenthesis_open(),
-            literal_int(3),
-            operator("*")?,
-            literal_int(3),
-            operator("+")?,
-            literal_real(5.0),
-            operator("*")?,
-            literal_real(5.0),
+            literal_int(3).into(),
+            operator("*").into(),
+            literal_int(3).into(),
+            operator("+").into(),
+            literal_real(5.0).into(),
+            operator("*").into(),
+            literal_real(5.0).into(),
             parenthesis_close(),
-            operator("==")?,
-            literal_real(25.0),
+            operator("==").into(),
+            literal_real(25.0).into(),
             parenthesis_close(),
-            operator("==")?,
-            literal_bool(true),
+            operator("==").into(),
+            literal_bool(true).into(),
         ]
+        .into()
     );
-    Ok(())
 }
 
 #[test]
-fn lex_05() -> Result<(), ErrMsg> {
+fn lex_05() {
     let input = "let mut x = [3, 5]\nprint(sqrt(x[0] * x[0] + x[1] * x[1]))";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
         vec![
-            keyword_supported("let")?,
-            keyword_supported("mut")?,
-            identifier("x")?,
-            association("=")?,
+            keyword_supported("let"),
+            keyword_supported("mut"),
+            identifier("x").into(),
+            association("=").into(),
             bracket_open(),
-            literal_int(3),
+            literal_int(3).into(),
             comma(),
-            literal_int(5),
+            literal_int(5).into(),
             bracket_close(),
             newline(),
-            identifier("print")?,
+            identifier("print").into(),
             parenthesis_open(),
-            identifier("sqrt")?,
+            identifier("sqrt").into(),
             parenthesis_open(),
-            identifier("x")?,
+            identifier("x").into(),
             bracket_open(),
-            literal_int(0),
+            literal_int(0).into(),
             bracket_close(),
-            operator("*")?,
-            identifier("x")?,
+            operator("*").into(),
+            identifier("x").into(),
             bracket_open(),
-            literal_int(0),
+            literal_int(0).into(),
             bracket_close(),
-            operator("+")?,
-            identifier("x")?,
+            operator("+").into(),
+            identifier("x").into(),
             bracket_open(),
-            literal_int(1),
+            literal_int(1).into(),
             bracket_close(),
-            operator("*")?,
-            identifier("x")?,
+            operator("*").into(),
+            identifier("x").into(),
             bracket_open(),
-            literal_int(1),
+            literal_int(1).into(),
             bracket_close(),
             parenthesis_close(),
             parenthesis_close(),
         ]
+        .into()
     );
-    Ok(())
 }
 
 #[test]
-fn lex_06() -> Result<(), ErrMsg> {
+fn lex_06() {
     let input = "
 let mut seq = [1, 4, 5, 2, 3,]
 let mut changed = true
@@ -183,130 +183,130 @@ while changed:
             changed = true
 assert seq == [1, 2, 3, 4, 5]
 ";
-    let src = SourceFile::test(input);
+    let src = SourceFile::mock(input);
     let res = lex(&src);
     assert_eq!(
         res,
         vec![
             newline(),
             // let mut seq = [1, 4, 5, 2, 3,]
-            keyword_supported("let")?,
-            keyword_supported("mut")?,
-            identifier("seq")?,
-            association("=")?,
+            keyword_supported("let"),
+            keyword_supported("mut"),
+            identifier("seq").into(),
+            association("=").into(),
             bracket_open(),
-            literal_int(1),
+            literal_int(1).into(),
             comma(),
-            literal_int(4),
+            literal_int(4).into(),
             comma(),
-            literal_int(5),
+            literal_int(5).into(),
             comma(),
-            literal_int(2),
+            literal_int(2).into(),
             comma(),
-            literal_int(3),
+            literal_int(3).into(),
             comma(),
             bracket_close(),
             newline(),
             // let mut changed = true
-            keyword_supported("let")?,
-            keyword_supported("mut")?,
-            identifier("changed")?,
-            association("=")?,
-            literal_bool(true),
+            keyword_supported("let"),
+            keyword_supported("mut"),
+            identifier("changed").into(),
+            association("=").into(),
+            literal_bool(true).into(),
             newline(),
             // while changed:
-            keyword_supported("while")?,
-            identifier("changed")?,
+            keyword_supported("while"),
+            identifier("changed").into(),
             colon(),
             newline(),
             // changed = false
             start_block(),
-            identifier("changed")?,
-            association("=")?,
-            literal_bool(false),
+            identifier("changed").into(),
+            association("=").into(),
+            literal_bool(false).into(),
             newline(),
             // for i in seq.indices().skip_last():
-            keyword_supported("for")?,
-            identifier("i")?,
-            keyword_supported("in")?,
-            identifier("seq")?,
+            keyword_supported("for"),
+            identifier("i").into(),
+            keyword_supported("in"),
+            identifier("seq").into(),
             period(),
-            identifier("indices")?,
+            identifier("indices").into(),
             parenthesis_open(),
             parenthesis_close(),
             period(),
-            identifier("skip_last")?,
+            identifier("skip_last").into(),
             parenthesis_open(),
             parenthesis_close(),
             colon(),
             newline(),
             // if seq[i] > seq[i+1]:
             start_block(),
-            keyword_supported("if")?,
-            identifier("seq")?,
+            keyword_supported("if"),
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
+            identifier("i").into(),
             bracket_close(),
-            operator(">")?,
-            identifier("seq")?,
+            operator(">").into(),
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
-            operator("+")?,
-            literal_int(1),
+            identifier("i").into(),
+            operator("+").into(),
+            literal_int(1).into(),
             bracket_close(),
             colon(),
             newline(),
             // seq[i], seq[i+1] = seq[i+1], seq[i]
             start_block(),
-            identifier("seq")?,
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
+            identifier("i").into(),
             bracket_close(),
             comma(),
-            identifier("seq")?,
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
-            operator("+")?,
-            literal_int(1),
+            identifier("i").into(),
+            operator("+").into(),
+            literal_int(1).into(),
             bracket_close(),
-            association("=")?,
-            identifier("seq")?,
+            association("=").into(),
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
-            operator("+")?,
-            literal_int(1),
+            identifier("i").into(),
+            operator("+").into(),
+            literal_int(1).into(),
             bracket_close(),
             comma(),
-            identifier("seq")?,
+            identifier("seq").into(),
             bracket_open(),
-            identifier("i")?,
+            identifier("i").into(),
             bracket_close(),
             newline(),
             // changed = true
-            identifier("changed")?,
-            association("=")?,
-            literal_bool(true),
+            identifier("changed").into(),
+            association("=").into(),
+            literal_bool(true).into(),
             newline(),
             // assert seq == [1, 2, 3, 4, 5]
             end_block(),
             end_block(),
             end_block(),
-            keyword_supported("assert")?,
-            identifier("seq")?,
-            operator("==")?,
+            keyword_supported("assert"),
+            identifier("seq").into(),
+            operator("==").into(),
             bracket_open(),
-            literal_int(1),
+            literal_int(1).into(),
             comma(),
-            literal_int(2),
+            literal_int(2).into(),
             comma(),
-            literal_int(3),
+            literal_int(3).into(),
             comma(),
-            literal_int(4),
+            literal_int(4).into(),
             comma(),
-            literal_int(5),
+            literal_int(5).into(),
             bracket_close(),
             newline(),
         ]
+        .into()
     );
-    Ok(())
 }

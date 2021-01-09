@@ -6,6 +6,7 @@ Run a shell command on the staged changes only.
 """
 
 from sys import stderr, argv
+
 from util_cmd import git, run
 
 

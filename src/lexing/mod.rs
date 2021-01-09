@@ -1,3 +1,5 @@
+pub use self::lex::lex;
+
 mod lex;
 mod lexer;
 mod reader;
@@ -13,5 +15,3 @@ mod special;
 
 #[cfg(test)]
 mod tests;
-
-pub use self::lex::lex;

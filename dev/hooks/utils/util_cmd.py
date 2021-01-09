@@ -1,7 +1,7 @@
+from os.path import isdir
 from subprocess import Popen, PIPE
 # noinspection PyUnresolvedReferences
 from sys import stdout, stderr
-from os.path import isdir
 
 
 class CmdError(Exception): pass
