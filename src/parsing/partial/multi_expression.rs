@@ -20,14 +20,12 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
                 // No separator, so this is the end of the multi-expression - or a syntax
                 // error, but that's for the next parser to find out. Revert eating separator.
                 _not_a_separator => return {
-                    println!("A");  //TODO @mark: TEMPORARY! REMOVE THIS!
                     Ok((expr_cursor, expressions))
                 },
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,
                 // but that is up to the outer parser (which knows what the opening is).
-                println!("B");  //TODO @mark: TEMPORARY! REMOVE THIS!
                 return Ok((expr_cursor, expressions));
             }
         }
@@ -35,7 +33,6 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
     }
     // Did not find another expression; apparently the last expression had a
     // comma/newline, and we are done.
-    println!("C len = {} and cursor = {:?}", expressions.len(), cursor);  //TODO @mark: TEMPORARY! REMOVE THIS!
     Ok((cursor, expressions))
 }
 
@@ -332,7 +329,7 @@ mod ending {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), newline(), comma()],
             vec![literal(literal_bool(true)), variable(identifier("q"))],
-            Err(End),
+            Ok(&comma()),
         );
     }
 

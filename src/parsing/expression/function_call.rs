@@ -16,7 +16,7 @@ use crate::parsing::util::ParseRes;
 ///
 //TODO: support for keyword arguments
 //TODO: support for newlines instead of commas may follow later
-pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor)
@@ -43,7 +43,7 @@ mod by_name {
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_call(cursor).unwrap();
+        let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -65,7 +65,7 @@ mod by_name {
                 literal_int(42).into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("faculty")), vec![variable(identifier("x"))]),
+            function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
         );
     }
 
@@ -177,7 +177,7 @@ mod special {
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(function_call(variable(identifier("faculty")), vec![]), parselet);
+        assert_eq!(function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
