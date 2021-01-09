@@ -19,7 +19,7 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
                 }
                 // No separator, so this is the end of the multi-expression - or a syntax
                 // error, but that's for the next parser to find out. Revert eating separator.
-                _not_a_separator => return { Ok((expr_cursor, expressions)) },
+                _not_a_separator => return Ok((expr_cursor, expressions)),
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,

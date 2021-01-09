@@ -3,7 +3,12 @@
 # The purpose of this image is not distribution; the CLI package contains the distributable image.
 # This image is mostly to run tests in a reproducible environment.
 
-FROM rust:1.44
+FROM ekidd/rust-musl-builder:nightly-2020-11-19 AS build
+
+ENV RUST_BACKTRACE=1
+ENV CARGO_HOME=/home/rust/.cargo
+ENV RUSTUP_HOME=/home/rust/.rustup
+USER root
 
 RUN rustup component add rustfmt
 RUN rustup component add clippy
