@@ -16,21 +16,26 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
                 // There is a separator, continue for another expression.
                 Lexeme::Comma(_) | Lexeme::Newline(_) => {
                     separator_cursor.skip_while(|lexeme| lexeme.is_newline());
-                    cursor = separator_cursor
                 },
                 // No separator, so this is the end of the multi-expression - or a syntax
                 // error, but that's for the next parser to find out. Revert eating separator.
-                _not_a_separator => return Ok((expr_cursor, expressions)),
+                _not_a_separator => return {
+                    println!("A");  //TODO @mark: TEMPORARY! REMOVE THIS!
+                    Ok((expr_cursor, expressions))
+                },
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,
                 // but that is up to the outer parser (which knows what the opening is).
+                println!("B");  //TODO @mark: TEMPORARY! REMOVE THIS!
                 return Ok((expr_cursor, expressions));
             }
         }
+        cursor = separator_cursor
     }
     // Did not find another expression; apparently the last expression had a
     // comma/newline, and we are done.
+    println!("C len = {} and cursor = {:?}", expressions.len(), cursor);  //TODO @mark: TEMPORARY! REMOVE THIS!
     Ok((cursor, expressions))
 }
 
@@ -389,9 +394,8 @@ mod errors {
     fn syntax_err_first_expr() {
         let lexemes = vec![identifier("q").into(), operator("+").into(), parenthesis_close()].into();
         let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor);
-        assert!(result.is_ok());
-        assert_eq!(Vec::<ExpressionParselets>::new(), result.unwrap().1);
+        let (cursor, result) = parse_multi_expression(cursor).unwrap();
+        assert_eq!(Vec::<ExpressionParselets>::new(), result);
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 
@@ -406,9 +410,8 @@ mod errors {
         ]
         .into();
         let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor);
-        assert!(result.is_ok());
-        assert_eq!(vec![literal(literal_bool(true))], result.unwrap().1);
+        let (cursor, result) = parse_multi_expression(cursor).unwrap();
+        assert_eq!(vec![literal(literal_bool(true))], result);
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 
@@ -426,18 +429,16 @@ mod errors {
             parenthesis_close(),
             newline(),
             literal_int(-1).into(),
-        ]
-        .into();
+        ].into();
         let cursor = ParseCursor::new(&lexemes);
-        let result = parse_multi_expression(cursor);
-        assert!(result.is_ok());
+        let (cursor, result) = parse_multi_expression(cursor).unwrap();
         assert_eq!(vec![
             literal(literal_bool(true)),
             binary(
-                literal(literal_real(10.)),
+                literal(literal_int(1)),
                 operator(Symbol::Plus),
-                literal(literal_real(5.))
-            ),], result.unwrap().1);
+                literal(literal_int(2))
+            ),], result);
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 }
