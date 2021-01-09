@@ -9,7 +9,6 @@ use crate::parsing::util::ParseRes;
 pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
     let mut expressions = vec![];
     while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
-        println!("pushing {:?}", &expr);  //TODO @mark: TEMPORARY! REMOVE THIS!
         expressions.push(expr);
         let mut separator_cursor = expr_cursor; // copy
         match separator_cursor.take() {
@@ -46,7 +45,6 @@ mod test_util {
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselets) = parse_multi_expression(cursor).unwrap();
         assert_eq!(expected, parselets);
-        assert_eq!(Err(End), cursor.peek());
         assert_eq!(lexeme_at_cursor, cursor.peek());
     }
 
@@ -207,7 +205,7 @@ mod separators {
     use super::test_util::check;
 
     #[test]
-    fn two_separate_newline() {
+    fn signle_newline() {
         check(
             vec![literal_text("hello").into(), comma(), identifier("hello").into()],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
@@ -216,7 +214,7 @@ mod separators {
     }
 
     #[test]
-    fn two_separate_comma() {
+    fn single_comma() {
         check(
             vec![literal_text("hello").into(), comma(), identifier("hello").into()],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
@@ -225,7 +223,7 @@ mod separators {
     }
 
     #[test]
-    fn two_separate_comma_newline() {
+    fn comma_newline() {
         check(
             vec![literal_text("hello").into(), comma(), newline(), identifier("hello").into()],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
@@ -234,9 +232,27 @@ mod separators {
     }
 
     #[test]
-    fn two_separate_newline_comma() {
+    fn newline_comma_err() {
         check(
             vec![literal_text("hello").into(), newline(), comma(), identifier("hello").into()],
+            vec![literal(literal_text("hello")),],
+            Ok(&comma()),
+        );
+    }
+
+    #[test]
+    fn multi_newline_comma() {
+        check(
+            vec![literal_text("hello").into(), newline(), newline(), identifier("hello").into()],
+            vec![literal(literal_text("hello")), variable(identifier("hello"))],
+            Err(End),
+        );
+    }
+
+    #[test]
+    fn comma_multi_newline_comma() {
+        check(
+            vec![literal_text("hello").into(), comma(), newline(), newline(), identifier("hello").into()],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
