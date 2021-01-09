@@ -5,6 +5,7 @@ use crate::parselet::node::unary_operation::UnaryOperationParselet;
 use crate::parselet::Parselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;
+use crate::parselet::node::array_indexing::ArrayIndexingParselet;
 
 /// Collection of all possible nodes in the full abstract syntax tree.
 #[derive(PartialEq, Eq, Hash, Debug)]
@@ -14,7 +15,7 @@ pub enum ExpressionParselets {
     BinaryOperation(BinaryOperationParselet),
     Variable(VariableParselet),
     Call(FunctionCallParselet),
-    Index(todo),
+    Index(ArrayIndexingParselet),
     Assignment(AssignmentParselet),
 }
 

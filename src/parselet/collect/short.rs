@@ -46,8 +46,8 @@ pub fn function_call(function: ExpressionParselets, args: ExprGroup) -> Expressi
     ExpressionParselets::Call(FunctionCallParselet::new(function, args))
 }
 
-pub fn array_index(array: ExpressionParselets, args: ExprGroup) -> ExpressionParselets {
-    ExpressionParselets::Call(FunctionCallParselet::new(function, args))
+pub fn array_index(array: ExpressionParselets, indices: ExprGroup) -> ExpressionParselets {
+    ExpressionParselets::Call(FunctionCallParselet::new(array, indices))
 }
 
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {
