@@ -30,7 +30,6 @@ pub struct Name {
 impl Name {
     pub fn value(self) -> &'static str {
         // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
-        // todo: I want this to return &str but that'd need the interner to be borrowed longer
         self.name.as_str()
     }
 }

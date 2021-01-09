@@ -205,7 +205,7 @@ mod separators {
     use super::test_util::check;
 
     #[test]
-    fn signle_newline() {
+    fn single_newline() {
         check(
             vec![literal_text("hello").into(), comma(), identifier("hello").into()],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
@@ -346,10 +346,12 @@ mod ending {
 #[cfg(test)]
 mod errors {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{literal, variable};
+    use crate::parselet::Parselets;
+    use crate::parselet::short::{binary, literal, variable};
+    use crate::util::codeparts::Symbol;
 
-    use super::test_util::check;
     use super::*;
+    use super::test_util::check;
 
     #[test]
     fn ellipsis_err() {
@@ -388,7 +390,8 @@ mod errors {
         let lexemes = vec![identifier("q").into(), operator("+").into(), parenthesis_close()].into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_multi_expression(cursor);
-        assert!(result.is_err());
+        assert!(result.is_ok());
+        assert_eq!(Vec::<ExpressionParselets>::new(), result.unwrap().1);
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 
@@ -404,7 +407,37 @@ mod errors {
         .into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_multi_expression(cursor);
-        assert!(result.is_err());
-        assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
+        assert!(result.is_ok());
+        assert_eq!(vec![literal(literal_bool(true))], result.unwrap().1);
+        assert_eq!(Ok(&identifier("q").into()), cursor.peek());
+    }
+
+    #[test]
+    fn syntax_err_third_expr() {
+        let lexemes = vec![
+            literal_bool(true).into(),
+            comma(),
+            literal_int(1).into(),
+            operator("+").into(),
+            literal_int(2).into(),
+            newline(),
+            identifier("q").into(),
+            operator("+").into(),
+            parenthesis_close(),
+            newline(),
+            literal_int(-1).into(),
+        ]
+        .into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_multi_expression(cursor);
+        assert!(result.is_ok());
+        assert_eq!(vec![
+            literal(literal_bool(true)),
+            binary(
+                literal(literal_real(10.)),
+                operator(Symbol::Plus),
+                literal(literal_real(5.))
+            ),], result.unwrap().1);
+        assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 }
