@@ -9,15 +9,19 @@ use crate::parsing::util::ParseRes;
 pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
     let mut expressions = vec![];
     while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
+        println!("pushing {:?}", &expr);  //TODO @mark: TEMPORARY! REMOVE THIS!
         expressions.push(expr);
         let mut separator_cursor = expr_cursor; // copy
         match separator_cursor.take() {
             Ok(token) => match token {
                 // There is a separator, continue for another expression.
-                Lexeme::Comma(_) | Lexeme::Newline(_) => cursor = expr_cursor,
-                // No separator, so this is the end of the multi-expression (or a syntax
-                // error, but that's for the next parser to find out). Revert eating separator.
-                _other => return Ok((expr_cursor, expressions)),
+                Lexeme::Comma(_) | Lexeme::Newline(_) => {
+                    separator_cursor.skip_while(|lexeme| lexeme.is_newline());
+                    cursor = separator_cursor
+                },
+                // No separator, so this is the end of the multi-expression - or a syntax
+                // error, but that's for the next parser to find out. Revert eating separator.
+                _not_a_separator => return Ok((expr_cursor, expressions)),
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,
@@ -77,6 +81,22 @@ mod basic {
     #[test]
     fn single_variable() {
         check(vec![identifier("hello").into()], vec![variable(identifier("hello"))], Err(End));
+    }
+
+    #[test]
+    fn two_args() {
+        check(
+            vec![
+                literal_int(0).into(),
+                comma(),
+                identifier("x").into(),
+            ],
+            vec![
+                literal(literal_int(0)),
+                variable(identifier("x")),
+            ],
+            Err(End),
+        );
     }
 }
 
