@@ -44,11 +44,7 @@ pub enum Lexeme {
 impl Lexeme {
     // Note: if one day there are many is_* and as_* methods, find or write a macro.
     pub fn is_newline(&self) -> bool {
-        if let Lexeme::Newline(_) = self {
-            true
-        } else {
-            false
-        }
+        matches!(self, Lexeme::Newline(_))
     }
 }
 

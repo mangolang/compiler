@@ -19,18 +19,15 @@ use crate::parsing::util::ParseRes;
 ///
 pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_variable(cursor)?;
-    match parse_bracket_open(iden_cursor)
+    if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor)
             .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
             .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor)
                 .map(|ok| (ok.0, args))) {
-        Ok((close_cursor, args)) => {
-            if ! args.is_empty() {
-                return Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args))))
-            } else {
-                dbg_log!("rejected array indexing parsing with nothing between [ and ]");
-            }
-        },
-        Err(_) => {},
+        if !args.is_empty() {
+            return Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args))))
+        } else {
+            dbg_log!("rejected array indexing parsing with nothing between [ and ]");
+        }
     }
     Ok((iden_cursor, identifier))
 }
@@ -171,7 +168,7 @@ mod special {
         let lexemes = vec![identifier("fun").into(), bracket_open(), bracket_close()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(cursor.peek(), Ok(&bracket_open()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -180,7 +177,7 @@ mod special {
         let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(), literal_int(1).into(), bracket_close()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(cursor.peek(), Ok(&bracket_open()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -189,7 +186,7 @@ mod special {
         let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(),].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(cursor.peek(), Ok(&bracket_open()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 

@@ -42,17 +42,8 @@ pub enum Value {
 impl Value {
     pub fn is_type(&self, typ: Type) -> bool {
         match self {
-            Value::Int(_) => {
-                match typ {
-                    Type::Bool => false,
-                    _ => true, // int value can be stored in int or float
-                }
-            }
-            Value::Float(_) => match typ {
-                Type::Float32 => true,
-                Type::Float64 => true,
-                _ => false,
-            },
+            Value::Int(_) => !matches!(typ, Type::Bool),
+            Value::Float(_) => matches!(typ, Type::Float32 | Type::Float64),
         }
     }
 }

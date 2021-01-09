@@ -10,7 +10,7 @@ pub trait StrType: Sized + fmt::Display + hash::Hash + PartialEq<Self> + Eq {
     fn validate(value: &str) -> MsgResult<()>;
 
     /// Constructor that creates an instance if valid, or a validation message if invalid.
-    fn new<'a>(txt: impl AsRef<str>) -> MsgResult<Self>;
+    fn new(txt: impl AsRef<str>) -> MsgResult<Self>;
 
     /// Alternative constructor that panics on invalid input.
     fn from_valid(txt: &str) -> Self {

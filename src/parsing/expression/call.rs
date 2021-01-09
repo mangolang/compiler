@@ -172,7 +172,7 @@ mod special {
         let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(), literal_int(1).into(), parenthesis_close()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&parenthesis_open().into()));
+        assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -181,7 +181,7 @@ mod special {
         let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(),].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&parenthesis_open().into()));
+        assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
