@@ -2,6 +2,7 @@ use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::variable::parse_variable;
+use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
@@ -20,9 +21,10 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor)
             .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
-            .and_then(|args_cursor, args| parse_parenthesis_close(args_cursor)
+            .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor)
                 .map(|ok| (ok.0, args))) {
-        Ok((close_cursor, args)) => Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
+        Ok((close_cursor, args)) =>
+            Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
         Err(_) => Ok((iden_cursor, identifier)),
     }
 }
@@ -51,7 +53,7 @@ mod by_name {
     fn no_args() {
         check(
             vec![identifier("f").into(), parenthesis_open(), parenthesis_close()],
-            function_call(variable(identifier("f"))),
+            function_call(variable(identifier("f")), smallvec![]),
         );
     }
 
@@ -163,6 +165,8 @@ mod special {
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
 
+    use ::smallvec::smallvec;
+
     use super::*;
 
     #[test]
@@ -176,7 +180,7 @@ mod special {
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(function_call(variable(identifier("faculty"))), parselet);
+        assert_eq!(function_call(variable(identifier("faculty")), smallvec![]), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
