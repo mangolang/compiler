@@ -5,14 +5,14 @@ use crate::lexeme::Lexeme;
 use crate::util::encdec::ToText;
 use crate::util::numtype::f64eq;
 
-// LATER: it is likely that this will be refactored when the type system is in place.
+use ::ustr::Ustr;
 
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.
 #[derive(Debug, Eq, Clone)]
 pub enum LiteralLexeme {
     //TODO @mark: to Ustr for cheaper clone:
-    Text(String, SourceSlice),
+    Text(Ustr, SourceSlice),
     Int(i64, SourceSlice),
     Real(f64eq, SourceSlice),
     Boolean(bool, SourceSlice),

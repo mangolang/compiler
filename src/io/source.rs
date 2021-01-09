@@ -2,6 +2,9 @@ use ::std::fmt;
 use ::std::rc::Rc;
 use std::hash;
 
+use ::ustr::Ustr;
+use ::ustr::ustr;
+
 use crate::io::slice::SourceSlice;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
@@ -17,7 +20,7 @@ pub struct SourceFile {
 #[derive(Eq)]
 pub struct SourceFileContent {
     /// Any string that identifies the source in a unique and understandable way.
-    source_identifier: String,
+    source_identifier: Ustr,
     /// The content in the source 'file'.
     pub(super) data: String,
 }
@@ -29,9 +32,9 @@ impl From<SourceFileContent> for SourceFile {
 }
 
 impl SourceFile {
-    pub fn new(source_identifier: impl Into<String>, text: impl Into<String>) -> Self {
+    pub fn new(source_identifier: impl AsRef<str>, text: impl Into<String>) -> Self {
         SourceFileContent {
-            source_identifier: source_identifier.into(),
+            source_identifier: ustr(source_identifier.as_ref()),
             data: text.into(),
         }
         .into()
@@ -41,7 +44,7 @@ impl SourceFile {
     pub fn mock(text: impl Into<String>) -> Self {
         let text = text.into();
         SourceFileContent {
-            source_identifier: format!("mock-file:{}", &text),
+            source_identifier: ustr(&format!("mock-file:{}", &text)),
             data: text,
         }
         .into()

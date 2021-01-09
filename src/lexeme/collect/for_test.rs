@@ -1,14 +1,16 @@
 use ::std::fmt;
 use ::std::str::FromStr;
 
+use ::ustr::ustr;
+
 use crate::io::slice::SourceSlice;
-use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
 use crate::util::codeparts::{Keyword, Symbol};
 use crate::util::numtype::f64eq;
 
@@ -50,8 +52,8 @@ pub fn keyword_supported(kw: impl IntoKeyword) -> Lexeme {
     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
 }
 
-pub fn literal_text(txt: impl Into<String>) -> LiteralLexeme {
-    LiteralLexeme::Text(txt.into(), SourceSlice::mock())
+pub fn literal_text(txt: impl AsRef<str>) -> LiteralLexeme {
+    LiteralLexeme::Text(ustr(txt.as_ref()), SourceSlice::mock())
 }
 
 pub fn literal_int(nr: i64) -> LiteralLexeme {

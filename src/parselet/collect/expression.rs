@@ -40,7 +40,7 @@ mod statical {
         println!("VariableParselet: {}", mem::size_of::<VariableParselet>());
         println!("FunctionCallParselet: {}", mem::size_of::<FunctionCallParselet>());
         println!("AssignmentParselet: {}", mem::size_of::<AssignmentParselet>());
-        assert!(expression_size <= 4 * word_size, format!("size is {} bytes or {} words",
+        assert!(expression_size <= 6 * 8, format!("size is {} bytes or {} words",
             expression_size, (expression_size + word_size - 1) / word_size));
     }
 }

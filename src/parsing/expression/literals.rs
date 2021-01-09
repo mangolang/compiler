@@ -22,6 +22,8 @@ mod literal {
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
 
+    use ::ustr::ustr;
+
     use super::*;
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
@@ -36,7 +38,7 @@ mod literal {
     fn text() {
         check(
             literal_text("hello42").into(),
-            literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())),
+            literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())),
         );
     }
 
@@ -111,6 +113,8 @@ mod special {
     use crate::parselet::short::literal;
     use crate::parsing::expression::parse_expression;
 
+    use ::ustr::ustr;
+
     use super::*;
 
     #[test]
@@ -118,7 +122,7 @@ mod special {
         let lexemes = vec![literal_text("hello42").into(), comma()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(literal(LiteralLexeme::Text("hello42".to_owned(), SourceSlice::mock())), parselet);
+        assert_eq!(literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
