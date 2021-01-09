@@ -4,10 +4,11 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
 mod arithmetic;
-mod function_call;
+mod call;
 mod grouping;
 mod literals;
 mod variable;
+mod index;
 
 pub fn parse_expression(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     parse_addition(cursor)

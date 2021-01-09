@@ -10,14 +10,13 @@ use crate::parsing::util::ParseRes;
 /// Parse a function invocation, which looks like
 ///
 /// * fun_name()
-/// * fun_name(x,y)
-/// * fun_name(x,y,)
+/// * fun_name(x + y)
+/// * fun_name(x, y)
+/// * fun_name(x, y,)
 /// * ...
 ///
 //TODO: support for keyword arguments
-//TODO: support for newlines instead of commas may follow later
 pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    //TODO @mark: change to parse_indexing later
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     match parse_parenthesis_open(iden_cursor)
             .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
@@ -27,6 +26,7 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
         Err(_) => Ok((iden_cursor, identifier)),
     }
 }
+//TODO @mark: test if this works for dynamic functions, e.g. `get_fun()()` or `(compose(f, g))(x)`
 
 #[cfg(test)]
 mod by_name {

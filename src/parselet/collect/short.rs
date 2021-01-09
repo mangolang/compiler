@@ -46,6 +46,10 @@ pub fn function_call(function: ExpressionParselets, args: ExprGroup) -> Expressi
     ExpressionParselets::Call(FunctionCallParselet::new(function, args))
 }
 
+pub fn array_index(array: ExpressionParselets, args: ExprGroup) -> ExpressionParselets {
+    ExpressionParselets::Call(FunctionCallParselet::new(function, args))
+}
+
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Operator(OperatorParselet::from_str(&txt)?))
 // }

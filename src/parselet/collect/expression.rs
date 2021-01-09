@@ -14,6 +14,7 @@ pub enum ExpressionParselets {
     BinaryOperation(BinaryOperationParselet),
     Variable(VariableParselet),
     Call(FunctionCallParselet),
+    Index(todo),
     Assignment(AssignmentParselet),
 }
 
