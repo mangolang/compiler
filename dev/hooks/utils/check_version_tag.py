@@ -9,9 +9,9 @@ This version works with version for `Cargo.toml`, `setup.py` and `settings.gradl
 https://gist.github.com/mverleg/9988b44d57b63b0eef40dd9ce7b48e45
 """
 import traceback
+from os.path import join
 from re import findall
 from sys import stdout
-from os.path import join
 
 from util_cmd import git, get_root
 

@@ -7,8 +7,7 @@ use ::std::str::FromStr;
 
 use ::lazy_static::lazy_static;
 
-use crate::common::error::{ErrMsg, MangoErr, MangoResult, MsgResult};
-use crate::token::Token;
+use crate::common::error::{ErrMsg, MsgResult};
 use crate::util::strtype::StrType;
 
 /// The different operator codeparts that are recognized.
@@ -214,8 +213,6 @@ impl FromStr for Keyword {
 
 impl Display for Keyword {
     fn fmt(&self, f: &mut Formatter) -> fResult {
-        use self::Keyword::*;
-        let temp_for_lifetime: String;
         f.write_str(self.to_str().as_ref())
     }
 }

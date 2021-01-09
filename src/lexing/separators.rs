@@ -1,33 +1,36 @@
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::lexeme::collect::short::colon;
+use crate::lexeme::collect::short::comma;
+use crate::lexeme::collect::short::ellipsis;
+use crate::lexeme::collect::short::newline;
+use crate::lexeme::collect::short::period;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::token::collect::{colon, comma, ellipsis, newline, parenthesis_close, parenthesis_open, period, unlexable};
-use crate::token::{ParenthesisCloseToken, ParenthesisOpenToken, Tokens};
 
 lazy_static! {
     static ref SEPARATOR_RE: Regex = Regex::new("^(\\.\\.\\.|…|\\.|,|:|\r\n|\n|\r)").unwrap();
 }
 
-/// Lex any number of parentheses, braces and brackets, and add the tokens to the Lexer.
+/// Lex any number of parentheses, braces and brackets, and add the lexemes to the Lexer.
 pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     let mut found_newline = false;
-    while let ReaderResult::Match(sym) = reader.strip_match(&*SEPARATOR_RE) {
-        let token = match sym.as_str() {
-            r"..." | r"…" => ellipsis(),
-            r"." => period(),
-            r"," => comma(),
-            r":" => colon(),
+    while let ReaderResult::Match(source) = reader.strip_match(&*SEPARATOR_RE) {
+        let lexeme = match source.as_str() {
+            r"..." | r"…" => ellipsis(source),
+            r"." => period(source),
+            r"," => comma(source),
+            r":" => colon(source),
             "\r\n" | "\n" | "\r" => {
                 // Indentation should be parsed after a newline, so stop.
                 found_newline = true;
                 lexer.set_at_indentable(true);
-                newline()
+                newline(source)
             }
             _ => unreachable!(),
         };
-        lexer.add(token);
+        lexer.add(lexeme);
         if found_newline {
             break;
         }
@@ -36,21 +39,19 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod grouping {
-    use crate::io::source::SourceFile;
-    use crate::lexing::lexer::{CodeLexer, Lexer};
-    use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexing::lexer::lexeme_collector::LexemeCollector;
+    use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::token::collect::token_list::TokenList;
-    use crate::token::collect::{colon, comma, ellipsis, newline, period, unlexable};
-    use crate::token::{EndBlockToken, StartBlockToken, Tokens};
 
     use super::lex_separators;
 
-    fn check(input: &str, expected: &[Tokens]) {
-        let expected: TokenList = expected.into();
-        let (source, mut reader, mut lexer) = create_lexer(input);
+    fn check(input: &str, expected: &[Lexeme]) {
+        let expected: LexemeCollector = expected.into();
+        let (_source, mut reader, mut lexer) = create_lexer(input);
         lex_separators(&mut reader, &mut lexer);
-        assert_eq!(lexer.tokens(), &expected);
+        assert_eq!(lexer.lexemes(), &expected);
     }
 
     #[test]

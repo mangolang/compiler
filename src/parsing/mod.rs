@@ -1,12 +1,12 @@
-use crate::lexing::util::lex_list::LexList;
-use crate::parsing::arithmetic::parse_addition;
+//use crate::lexing::util::lex_list::LexList;
+//use crate::parsing::arithmetic::parse_addition;
 
-pub mod grouping;
+pub use self::parse::parse;
 
-pub mod arithmetic;
+pub mod expression;
+mod parse;
+pub mod partial;
+pub mod util;
 
-pub mod literals;
-
-pub fn parse_expression(lex: LexList) {
-    parse_addition(lex);
-}
+#[cfg(test)]
+mod tests;

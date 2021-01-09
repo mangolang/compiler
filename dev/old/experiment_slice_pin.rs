@@ -1,7 +1,8 @@
 #![allow(unused)]
+
+use std::marker::PhantomPinned;
 use std::mem;
 use std::pin::Pin;
-use std::marker::PhantomPinned;
 
 // Inspired by https://stackoverflow.com/a/49916546/
 

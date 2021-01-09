@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+#TODO @mark: remove?
+
 # Make sure to fail if any check fails
 set -e
 set -o pipefail

@@ -1,22 +1,28 @@
 use ::std::fmt;
-use std::rc::Rc;
+use ::std::rc::Rc;
+use std::hash;
+
+use ::ustr::ustr;
+use ::ustr::Ustr;
+
+use crate::io::slice::SourceSlice;
 
 /// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because
-/// so that all further tokens can refer to slices of the source, without allocating strings.
+/// so that all further lexemes can refer to slices of the source, without allocating strings.
 // Feel free to clone this when needed, it's just a wrapper for an Rc version.
-#[derive(PartialEq, Eq, Clone)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct SourceFile {
     // This wrapper class is used to handle Rc internally instead of exposing it.
-    content: Rc<SourceFileContent>,
+    pub(super) content: Rc<SourceFileContent>,
 }
 
 #[derive(Eq)]
 pub struct SourceFileContent {
     /// Any string that identifies the source in a unique and understandable way.
-    source_identifier: String,
+    source_identifier: Ustr,
     /// The content in the source 'file'.
-    data: String,
+    pub(super) data: String,
 }
 
 impl From<SourceFileContent> for SourceFile {
@@ -26,19 +32,20 @@ impl From<SourceFileContent> for SourceFile {
 }
 
 impl SourceFile {
-    pub fn new(source_identifier: impl Into<String>, text: impl Into<String>) -> Self {
+    pub fn new(source_identifier: impl AsRef<str>, text: impl Into<String>) -> Self {
         SourceFileContent {
-            source_identifier: source_identifier.into(),
+            source_identifier: ustr(source_identifier.as_ref()),
             data: text.into(),
         }
         .into()
     }
 
     #[cfg(test)]
-    pub fn test(text: impl Into<String>) -> Self {
+    pub fn mock(text: impl Into<String>) -> Self {
+        let text = text.into();
         SourceFileContent {
-            source_identifier: "for_test".to_owned(),
-            data: text.into(),
+            source_identifier: ustr(&format!("mock-file:{}", &text)),
+            data: text,
         }
         .into()
     }
@@ -83,107 +90,11 @@ impl PartialEq for SourceFileContent {
     }
 }
 
-/// A piece of the source, that can be shown together with it's context.
-// Note: There was quite some investigation into avoiding Rc here:
-// * Using lifetimes is a problem because it indirectly needs to be in the same struct
-//   as SourceFile, for example as part of parse errors. Which makes the parent immutable,
-//   because it can't be changed while borrowed (which is always). RefCell works,
-//   but I did not think that was better than Rc.
-// * Using Pin and pointers didn't work because that only makes SourceFile immovable,
-//   it does not guarantee it will stay alive; it's applicable for self-referential types,
-//   which this is not.
-// Therefore Rc is used for the foreseeable future. Don't leak slices or create cycles,
-// otherwise the file won't drop.
-#[derive(Clone, PartialEq, Eq)]
-pub struct SourceSlice {
-    file: SourceFile,
-    start: usize,
-    end: usize,
-}
-
-impl SourceSlice {
-    pub fn new(file: &SourceFile, start: usize, end: usize) -> Self {
-        debug_assert!(end >= start);
-        debug_assert!(end <= file.content.data.len());
-        SourceSlice {
-            file: file.clone(),
-            start,
-            end,
-        }
-    }
-
-    pub fn len(&self) -> usize {
-        self.end - self.start
-    }
-
-    pub fn as_str(&self) -> &str {
-        &self.file.text()[self.start..self.end]
-    }
-}
-
-impl fmt::Debug for SourceSlice {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "SourceSlice{{ of '{:?}' [{}..{}]: {}}}",
-            self.file.identifier(),
-            self.start,
-            self.end,
-            self.as_str()
-        )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_slice_str() {
-        let f = SourceFile::test("hello world!");
-        assert_eq!(f.slice(3, 7).as_str(), "lo w");
-    }
-
-    #[test]
-    fn test_slice_from_str() {
-        let f = SourceFile::test("hello world!");
-        assert_eq!(f.slice_from(6).as_str(), "world!");
-    }
-
-    #[test]
-    fn test_slice_empty() {
-        let f = SourceFile::test("hello world!");
-        assert_eq!(f.slice(3, 3).as_str(), "");
-    }
-
-    #[test]
-    fn test_slice_all() {
-        let f = SourceFile::test("hello world!");
-        assert_eq!(f.slice(0, 12).as_str(), "hello world!");
-    }
-
-    #[test]
-    fn test_slice_eq() {
-        let f = SourceFile::test("hello world!");
-        assert_eq!(SourceSlice::new(&f, 3, 7), f.slice(3, 7));
-    }
-
-    #[test]
-    fn test_slice_neq_file() {
-        let f1 = SourceFile::new("a.txt", "hello world!");
-        let f2 = SourceFile::new("b.txt", "hello world!");
-        assert_ne!(f2.slice(3, 7), f1.slice(3, 7));
-    }
-
-    #[test]
-    fn test_slice_neq_start() {
-        let f = SourceFile::new("a.txt", "hello world!");
-        assert_ne!(f.slice(3, 7), f.slice(2, 7));
-    }
-
-    #[test]
-    fn test_slice_neq_end() {
-        let f = SourceFile::new("a.txt", "hello world!");
-        assert_ne!(f.slice(3, 6), f.slice(3, 7));
+impl hash::Hash for SourceFileContent {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) {
+        // The same note as PartialEq, about only checking filename, applies here.
+        // Note that for Hash, it's not strictly incorrect to ignore content,
+        // even if they are different, but it might be slow.
+        self.source_identifier.hash(state)
     }
 }

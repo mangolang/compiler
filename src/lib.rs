@@ -6,6 +6,7 @@
 //use crate::lexing::util::lex_all::lex_all;
 //use crate::parsing::parse_expression;
 use std::io::{Read, Write};
+
 //use crate::lexing::combi_lexer::CombiLexer;
 //use crate::lexing::util::lex_all::lex_all;
 //use crate::parsing::parse_expression;
@@ -16,13 +17,13 @@ pub(crate) mod io;
 pub(crate) mod util;
 
 // Types
-pub(crate) mod ast;
 pub(crate) mod ir;
+pub(crate) mod parselet;
 pub(crate) mod sem;
 
+pub(crate) mod lexeme;
 pub(crate) mod lexing;
-pub(crate) mod token;
-// pub(crate) mod parsing;
+pub(crate) mod parsing;
 
 // Operations
 pub(crate) mod optimizing;
@@ -32,7 +33,7 @@ pub(crate) mod typing;
 
 pub(crate) mod towasm;
 
-pub fn run<R: Read, O: Write, E: Write>(source: &str, inp: &R, out: &O, err: &E) {
+pub fn run<R: Read, O: Write, E: Write>(_source: &str, _inp: &R, _out: &O, _err: &E) {
     //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
     //
     //    //TODO @mark: use result

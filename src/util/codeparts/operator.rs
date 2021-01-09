@@ -5,8 +5,6 @@ use ::std::fmt::Result as fResult;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::common::error::MangoErr;
-use crate::common::error::MangoResult;
 use crate::util::strtype::StrType;
 
 lazy_static! {
