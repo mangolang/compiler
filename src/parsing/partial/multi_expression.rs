@@ -1,15 +1,13 @@
-use ::smallvec::SmallVec;
-
 use crate::lexeme::Lexeme;
-use crate::parselet::{ExpressionParselets, GroupType};
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
 /// Parse a series of expression, separated by commas and/or newlines.
 /// Occurs as part of e.g. function calls, or array literals.
-pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<GroupType> {
-    let mut expressions = SmallVec::new();
+pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
+    let mut expressions = vec![];
     while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
         expressions.push(expr);
         let mut separator_cursor = expr_cursor; // copy
@@ -39,11 +37,11 @@ mod test_util {
 
     use super::*;
 
-    pub fn check(lexeme: Vec<Lexeme>, expected: GroupType, lexeme_at_cursor: Result<&Lexeme, End>) {
+    pub fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let lexemes = lexeme.into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselets) = parse_multi_expression(cursor).unwrap();
-        assert_eq!(parselets, expected);
+        assert_eq!(expected, parselets);
         assert_eq!(Err(End), cursor.peek());
         assert_eq!(lexeme_at_cursor, cursor.peek());
     }
@@ -64,23 +62,21 @@ mod basic {
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
-    use ::smallvec::smallvec;
-
     use super::test_util::check;
 
     #[test]
     fn empty() {
-        check(vec![], smallvec![], Err(End));
+        check(vec![], vec![], Err(End));
     }
 
     #[test]
     fn single_literal() {
-        check(vec![literal_text("hello").into()], smallvec![literal(literal_text("hello"))], Err(End));
+        check(vec![literal_text("hello").into()], vec![literal(literal_text("hello"))], Err(End));
     }
 
     #[test]
     fn single_variable() {
-        check(vec![identifier("hello").into()], smallvec![variable(identifier("hello"))], Err(End));
+        check(vec![identifier("hello").into()], vec![variable(identifier("hello"))], Err(End));
     }
 }
 
@@ -90,8 +86,6 @@ mod complex_expr {
     use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
-
-    use ::smallvec::smallvec;
 
     use super::test_util::check;
 
@@ -111,7 +105,7 @@ mod complex_expr {
                 literal_int(10).into(),
                 parenthesis_close(),
             ],
-            smallvec![binary(
+            vec![binary(
                 binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                 operator(Symbol::Asterisk),
                 binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
@@ -132,7 +126,7 @@ mod complex_expr {
                 operator("+").into(),
                 literal_int(10).into(),
             ],
-            smallvec![
+            vec![
                 binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                 binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
             ],
@@ -166,7 +160,7 @@ mod complex_expr {
                 comma(),
                 identifier("x").into(),
             ],
-            smallvec![
+            vec![
                 literal(literal_int(0)),
                 literal(literal_int(1)),
                 literal(literal_int(2)),
@@ -190,15 +184,13 @@ mod separators {
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
-    use ::smallvec::smallvec;
-
     use super::test_util::check;
 
     #[test]
     fn two_separate_newline() {
         check(
             vec![literal_text("hello").into(), comma(), identifier("hello").into()],
-            smallvec![literal(literal_text("hello")), variable(identifier("hello"))],
+            vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
     }
@@ -207,7 +199,7 @@ mod separators {
     fn two_separate_comma() {
         check(
             vec![literal_text("hello").into(), comma(), identifier("hello").into()],
-            smallvec![literal(literal_text("hello")), variable(identifier("hello"))],
+            vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
     }
@@ -216,7 +208,7 @@ mod separators {
     fn two_separate_comma_newline() {
         check(
             vec![literal_text("hello").into(), comma(), newline(), identifier("hello").into()],
-            smallvec![literal(literal_text("hello")), variable(identifier("hello"))],
+            vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
     }
@@ -225,7 +217,7 @@ mod separators {
     fn two_separate_newline_comma() {
         check(
             vec![literal_text("hello").into(), newline(), comma(), identifier("hello").into()],
-            smallvec![literal(literal_text("hello")), variable(identifier("hello"))],
+            vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
     }
@@ -234,7 +226,7 @@ mod separators {
     fn double_comma_err() {
         check(
             vec![literal_text("hello").into(), comma(), comma(), identifier("hello").into()],
-            smallvec![literal(literal_text("hello"))],
+            vec![literal(literal_text("hello"))],
             Ok(&comma()),
         );
     }
@@ -249,7 +241,7 @@ mod separators {
                 newline(),
                 literal_bool(true).into(),
             ],
-            smallvec![
+            vec![
                 literal(literal_text("hello")),
                 variable(identifier("hello")),
                 literal(literal_bool(true)),
@@ -265,15 +257,13 @@ mod ending {
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
-    use ::smallvec::smallvec;
-
     use super::test_util::check;
 
     #[test]
     fn two_no_tail() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
     }
@@ -282,7 +272,7 @@ mod ending {
     fn two_tail_comma() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), comma()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
     }
@@ -291,7 +281,7 @@ mod ending {
     fn two_tail_newline() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), newline()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
     }
@@ -300,7 +290,7 @@ mod ending {
     fn two_tail_newline_comma() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), newline(), comma()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
     }
@@ -309,7 +299,7 @@ mod ending {
     fn two_tail_comma_newline() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), newline(), newline()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
     }
@@ -322,30 +312,28 @@ mod errors {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{literal, variable};
 
-    use ::smallvec::smallvec;
-
-    use super::*;
     use super::test_util::check;
+    use super::*;
 
     #[test]
     fn ellipsis_err() {
         check(
             vec![literal_text("hello").into(), comma(), ellipsis()],
-            smallvec![literal(literal_text("hello"))],
+            vec![literal(literal_text("hello"))],
             Ok(&ellipsis()),
         );
     }
 
     #[test]
     fn just_comma() {
-        check(vec![comma()], smallvec![], Ok(&comma()));
+        check(vec![comma()], vec![], Ok(&comma()));
     }
 
     #[test]
     fn close_parenthesis() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), parenthesis_close()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&parenthesis_close()),
         );
     }
@@ -354,7 +342,7 @@ mod errors {
     fn close_bracket() {
         check(
             vec![literal_bool(true).into(), comma(), identifier("q").into(), bracket_close()],
-            smallvec![literal(literal_bool(true)), variable(identifier("q"))],
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&bracket_close()),
         );
     }

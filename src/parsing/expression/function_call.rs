@@ -23,8 +23,7 @@ pub fn parse_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
             .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
             .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor)
                 .map(|ok| (ok.0, args))) {
-        Ok((close_cursor, args)) =>
-            Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
+        Ok((close_cursor, args)) => Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
         Err(_) => Ok((iden_cursor, identifier)),
     }
 }
@@ -53,7 +52,7 @@ mod by_name {
     fn no_args() {
         check(
             vec![identifier("f").into(), parenthesis_open(), parenthesis_close()],
-            function_call(variable(identifier("f")), smallvec![]),
+            function_call(variable(identifier("f")), vec![]),
         );
     }
 
@@ -66,7 +65,7 @@ mod by_name {
                 literal_int(42).into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("faculty")), smallvec![variable(identifier("x"))]),
+            function_call(variable(identifier("faculty")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -79,7 +78,7 @@ mod by_name {
                 identifier("x").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), smallvec![variable(identifier("x"))]),
+            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -93,7 +92,7 @@ mod by_name {
                 comma(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), smallvec![variable(identifier("x"))]),
+            function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -118,7 +117,7 @@ mod by_name {
             ],
             function_call(
                 variable(identifier("f")),
-                smallvec![binary(
+                vec![binary(
                     binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                     operator(Symbol::Asterisk),
                     binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
@@ -138,7 +137,7 @@ mod by_name {
                 identifier("y").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), smallvec![variable(identifier("x")), variable(identifier("y"))]),
+            function_call(variable(identifier("f")), vec![variable(identifier("x")), variable(identifier("y"))]),
         );
     }
 
@@ -154,7 +153,7 @@ mod by_name {
                 comma(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), smallvec![variable(identifier("x")), variable(identifier("y"))]),
+            function_call(variable(identifier("f")), vec![variable(identifier("x")), variable(identifier("y"))]),
         );
     }
 }
@@ -164,8 +163,6 @@ mod special {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
-
-    use ::smallvec::smallvec;
 
     use super::*;
 
@@ -180,7 +177,7 @@ mod special {
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(function_call(variable(identifier("faculty")), smallvec![]), parselet);
+        assert_eq!(function_call(variable(identifier("faculty")), vec![]), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

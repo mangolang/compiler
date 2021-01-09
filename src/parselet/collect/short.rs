@@ -5,9 +5,9 @@ use smallvec::SmallVec;
 // use crate::util::numtype::f64eq;
 // use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
 use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
-use crate::parselet::{ExpressionParselets, GroupType, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
+use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
-use crate::parselet::node::function_call::FunctionCallParselet;
+use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -42,7 +42,7 @@ pub fn binary(left: ExpressionParselets, operator: OperatorLexeme, right: Expres
     ExpressionParselets::BinaryOperation(BinaryOperationParselet::new(left, operator, right))
 }
 
-pub fn function_call(function: ExpressionParselets, args: GroupType) -> ExpressionParselets {
+pub fn function_call(function: ExpressionParselets, args: ExprGroup) -> ExpressionParselets {
     ExpressionParselets::Call(FunctionCallParselet::new(function, args))
 }
 

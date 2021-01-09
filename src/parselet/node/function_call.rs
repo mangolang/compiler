@@ -1,15 +1,17 @@
 use ::smallvec::SmallVec;
 
-use crate::parselet::{ExpressionParselets, GroupType, Parselet};
+use crate::parselet::{ExpressionParselets, Parselet};
+
+pub type ExprGroup = Vec<ExpressionParselets>;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct FunctionCallParselet {
     function: Box<ExpressionParselets>,
-    args: GroupType,
+    args: ExprGroup,
 }
 
 impl FunctionCallParselet {
-    pub fn new(function: ExpressionParselets, args: GroupType) -> Self {
+    pub fn new(function: ExpressionParselets, args: ExprGroup) -> Self {
         FunctionCallParselet {
             function: Box::new(function),
             args,
