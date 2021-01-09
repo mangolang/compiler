@@ -1,9 +1,10 @@
-use crate::towasm::collect::Type;
-use crate::towasm::values::Expression;
-use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
 use std::io::Write;
+
+use crate::towasm::collect::Type;
+use crate::towasm::values::Expression;
+use crate::towasm::Wasm;
 
 pub struct Gt {
     left: Box<dyn Expression>,

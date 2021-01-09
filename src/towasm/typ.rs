@@ -12,7 +12,8 @@ pub trait Wasm {
 
 impl Wasm for Name {
     fn as_wat(&self) -> String {
-        self.value()
+        unimplemented!();
+        //self.value()
     }
 
     fn write_wasm(&self, file: &mut File) -> io::Result<()> {

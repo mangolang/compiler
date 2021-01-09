@@ -1,3 +1,7 @@
+use std::fs::File;
+use std::io;
+use std::io::Write;
+
 use crate::towasm::collect::Statement;
 use crate::towasm::collect::Type;
 use crate::towasm::control::Group;
@@ -6,9 +10,6 @@ use crate::towasm::values::DeclareLocal;
 use crate::towasm::values::Local;
 use crate::towasm::Wasm;
 use crate::util::strtype::Name;
-use std::fs::File;
-use std::io;
-use std::io::Write;
 
 pub struct Parameter {
     // Don't box here, it's just to reference those fields

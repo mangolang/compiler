@@ -3,6 +3,7 @@ use ::std::fmt::Debug;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
+use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 
@@ -84,6 +85,10 @@ impl Reader for SourceReader {
     fn remaining_len(&self) -> usize {
         self.source.len() - self.pos
     }
+
+    fn source_at_current(&self) -> SourceSlice {
+        self.source.slice(self.pos, self.pos)
+    }
 }
 
 #[cfg(test)]
@@ -99,7 +104,7 @@ mod tests {
     }
 
     fn check(txt: &str, t: fn(r: SourceReader)) {
-        let source = SourceFile::test(txt);
+        let source = SourceFile::mock(txt);
         let reader = SourceReader::new(&source);
         t(reader);
     }
@@ -299,11 +304,8 @@ mod tests {
 
     mod remaining_len {
         use crate::lexing::reader::source_reader::tests::check;
-        use crate::lexing::reader::source_reader::SourceReader;
-        use crate::lexing::reader::typ::Reader;
-        use crate::lexing::reader::typ::ReaderResult::*;
-
         use crate::lexing::reader::source_reader::tests::TEST_RE;
+        use crate::lexing::reader::typ::Reader;
 
         #[test]
         fn at_start() {

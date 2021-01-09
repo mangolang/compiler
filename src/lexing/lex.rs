@@ -1,7 +1,5 @@
-use ::lazy_static::lazy_static;
-use ::regex::Regex;
-
 use crate::io::source::SourceFile;
+use crate::lexeme::collect::FileLexemes;
 use crate::lexing::grouping::lex_grouping;
 use crate::lexing::identifier::lex_keyword_identifier;
 use crate::lexing::indent::lex_indents;
@@ -10,10 +8,8 @@ use crate::lexing::literals::lex_literal;
 use crate::lexing::operator::lex_association;
 use crate::lexing::operator::lex_operator;
 use crate::lexing::reader::source_reader::SourceReader;
-use crate::lexing::reader::typ::{Reader, ReaderResult};
 use crate::lexing::separators::lex_separators;
 use crate::lexing::special::{lex_eof, lex_unlexable};
-use crate::token::{Tokens, UnlexableToken};
 
 //TODO performance: one day maybe use arena allocation
 
@@ -33,8 +29,8 @@ macro_rules! try_lex (
     };
 );
 
-/// Lexes a whole source file and returns the tokens.
-pub fn lex(source: &SourceFile) -> Vec<Tokens> {
+/// Lexes a whole source file and returns the lexemes.
+pub fn lex(source: &SourceFile) -> FileLexemes {
     //TODO performance: does this initial capacity make sense?
     let mut reader = SourceReader::new(source);
     let mut lexer = CodeLexer::new(source.len());
@@ -52,29 +48,27 @@ pub fn lex(source: &SourceFile) -> Vec<Tokens> {
         }
         try_lex!(lex_unlexable, reader, lexer);
     }
-    lexer.into_tokens()
+    lexer.into_lexemes()
 }
 
 #[cfg(test)]
 mod try_lex {
-    use crate::io::source::SourceFile;
-    use crate::lexing::reader::source_reader::SourceReader;
+    use crate::lexeme::collect::for_test::unlexable;
     use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
-    use crate::token::UnlexableToken;
 
     use super::*;
 
-    fn lex_fn_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {
-        lexer.add(Tokens::Unlexable(UnlexableToken::new("hi".to_owned())))
+    fn lex_fn_match(_reader: &mut impl Reader, lexer: &mut impl Lexer) {
+        lexer.add(unlexable("hi"))
     }
 
-    fn lex_fn_no_match(reader: &mut impl Reader, lexer: &mut impl Lexer) {}
+    fn lex_fn_no_match(_reader: &mut impl Reader, _lexer: &mut impl Lexer) {}
 
     #[test]
     fn test_match() {
-        let (source, mut reader, mut lexer) = create_lexer("");
-        for i in 0..3 {
+        let (_source, mut reader, mut lexer) = create_lexer("");
+        for _i in 0..3 {
             try_lex!(lex_fn_match, reader, lexer);
             panic!("Execution should not have reached here, because every iteration matches and should do 'continue'");
         }
@@ -82,9 +76,9 @@ mod try_lex {
 
     #[test]
     fn test_no_match() {
-        let (source, mut reader, mut lexer) = create_lexer("");
+        let (_source, mut reader, mut lexer) = create_lexer("");
         let mut end_of_loop_count = 0;
-        for i in 0..3 {
+        for _i in 0..3 {
             try_lex!(lex_fn_no_match, reader, lexer);
             end_of_loop_count += 1;
         }

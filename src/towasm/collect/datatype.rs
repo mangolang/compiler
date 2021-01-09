@@ -3,9 +3,10 @@
 // The reason they're not included though, is that I don't expect to use them.
 // If I do use them, I should probably add them here and break wasm 1-1.
 
-use crate::towasm::Wasm;
 use std::fs::File;
 use std::io;
+
+use crate::towasm::Wasm;
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub enum Type {
@@ -41,17 +42,8 @@ pub enum Value {
 impl Value {
     pub fn is_type(&self, typ: Type) -> bool {
         match self {
-            Value::Int(_) => {
-                match typ {
-                    Type::Bool => false,
-                    _ => true, // int value can be stored in int or float
-                }
-            }
-            Value::Float(_) => match typ {
-                Type::Float32 => true,
-                Type::Float64 => true,
-                _ => false,
-            },
+            Value::Int(_) => !matches!(typ, Type::Bool),
+            Value::Float(_) => matches!(typ, Type::Float32 | Type::Float64),
         }
     }
 }
