@@ -16,27 +16,36 @@ use super::source::SourceFile;
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct SourceSlice {
     file: SourceFile,
-    start: usize,
-    end: usize,
+    start: u32,
+    end: u32,
 }
 
 impl SourceSlice {
     pub fn new(file: &SourceFile, start: usize, end: usize) -> Self {
         debug_assert!(end >= start);
         debug_assert!(end <= file.content.data.len());
+        assert!(end <= ::std::u32::MAX as usize);
         SourceSlice {
             file: file.clone(),
-            start,
-            end,
+            start: start as u32,
+            end: end as u32,
         }
     }
 
+    fn start(&self) -> usize {
+        self.start as usize
+    }
+
+    fn end(&self) -> usize {
+        self.end as usize
+    }
+
     pub fn len(&self) -> usize {
-        self.end - self.start
+        (self.end - self.start) as usize
     }
 
     pub fn as_str(&self) -> &str {
-        &self.file.text()[self.start..self.end]
+        &self.file.text()[self.start()..self.end()]
     }
 
     /// If the first slice (`self`) is right before the second (`other`), they are combined
