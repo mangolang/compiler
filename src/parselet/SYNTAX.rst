@@ -31,13 +31,13 @@ TODO: right hand sides should go back up to Expression?
 
     UnaryOperation:
         | "-" UnaryOperation
-        | FunctionCall
+        | Call
 
-    IdentifierCall:
-        | IndexedVariable "(" CommaSeparatedExpressions ")"
-        | IndexedVariable
+    Call:
+        | Index "(" CommaSeparatedExpressions ")"
+        | Index
 
-    IdentifierIndex:
+    Index:
         | Variable "[" Expression "]"
         | Variable
 

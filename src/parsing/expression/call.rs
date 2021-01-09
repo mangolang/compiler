@@ -6,6 +6,7 @@ use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::parsing::expression::index::parse_array_indexing;
 
 /// Parse a function invocation, which looks like
 ///
@@ -17,7 +18,7 @@ use crate::parsing::util::ParseRes;
 ///
 //TODO: support for keyword arguments
 pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (iden_cursor, identifier) = parse_variable(cursor)?;
+    let (iden_cursor, identifier) = parse_array_indexing(cursor)?;
     match parse_parenthesis_open(iden_cursor)
             .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
             .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor)
