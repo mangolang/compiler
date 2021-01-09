@@ -57,19 +57,19 @@ impl<'a> ParseCursor<'a> {
         Ok(lexeme)
     }
 
-    /// Skip lexemes until the index is at the first lexeme for which the predicate is false, then returns that.
-    pub fn skip_while(&mut self, predicate: impl Fn(&Lexeme) -> bool) -> Result<&Lexeme, End> {
+    /// Skip lexemes until the index is at the first lexeme for which the predicate is false.
+    pub fn skip_while(&mut self, predicate: impl Fn(&Lexeme) -> bool) {
         while self.index < self.lexemes.len() && predicate(&self.lexemes[self.index]) {
             self.index.increment();
         }
-        self.peek()
     }
 
     /// Take lexemes only if the predicate is true, then returns it.
     pub fn take_if(&mut self, predicate: impl Fn(&Lexeme) -> bool) -> Option<&Lexeme> {
-        if predicate(&self.lexemes[self.index]) {
+        if self.index < self.lexemes.len() && predicate(&self.lexemes[self.index]) {
+            let lexeme = &self.lexemes[self.index];
             self.index.increment();
-            return self.peek().ok()
+            return Some(lexeme)
         }
         None
     }
@@ -112,20 +112,36 @@ mod tests {
         let mut cursor = ParseCursor::new(&lexemes);
 
         assert_eq!(Ok(&identifier("x").into()), cursor.peek());
-        let lexeme = cursor.skip_while(|lexeme| lexeme.is_newline());
-        assert_eq!(Ok(&identifier("x").into()), lexeme, "should do not skip when false");
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("x").into()), cursor.peek(), "should do not skip when false");
 
         cursor.take().unwrap();
-        let lexeme = cursor.skip_while(|lexeme| lexeme.is_newline());
-        assert_eq!(Ok(&identifier("y").into()), lexeme, "should skip to next non-newline");
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("y").into()), cursor.peek(), "should skip to next non-newline");
 
         cursor.take().unwrap();
-        let lexeme = cursor.skip_while(|lexeme| lexeme.is_newline());
-        assert_eq!(Ok(&identifier("z").into()), lexeme, "should do not skip when false");
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("z").into()), cursor.peek(), "should do not skip when false");
 
         cursor.take().unwrap();
-        let lexeme = cursor.skip_while(|lexeme| lexeme.is_newline());
-        assert_eq!(Err(End), lexeme, "should skip to end");
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Err(End), cursor.peek(), "should skip to end");
+    }
+
+    #[test]
+    fn conditional_take() {
+        let lexemes: FileLexemes = vec![identifier("x").into(), newline(), newline(), identifier("y").into(), identifier("z").into(), newline(),].into();
+        let mut cursor = ParseCursor::new(&lexemes);
+
+        assert_eq!(Some(&identifier("x").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
+        assert_eq!(Ok(&newline()), cursor.peek());
+        assert_eq!(Some(&newline()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Some(&newline()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Ok(&identifier("y").into()), cursor.peek());
+        assert_eq!(Some(&identifier("y").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
+        assert_eq!(Some(&identifier("z").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
+        assert_eq!(Ok(&newline()), cursor.take());
+        assert_eq!(Err(End), cursor.take());
     }
 
     #[test]
