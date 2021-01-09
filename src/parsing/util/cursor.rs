@@ -57,6 +57,14 @@ impl<'a> ParseCursor<'a> {
         Ok(lexeme)
     }
 
+    /// Skip lexemes until the index is at the first lexeme for which the predicate is false.
+    pub fn skip_while(&mut self, predicate: impl Fn(&Lexeme) -> bool) {
+        //TODO @mark: test
+        while predicate(&self.lexemes[self.index]) {
+            self.index.increment();
+        }
+    }
+
     /// Fork the cursor, to try to parse something.
     /// Just drop one of the versions and use the other to backtrack.
     pub fn fork(&self) -> Self {
@@ -75,7 +83,7 @@ impl <'a> fmt::Debug for ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::lexeme::collect::for_test::unlexable;
+    use crate::lexeme::collect::for_test::{unlexable, identifier, newline};
 
     use super::*;
 
@@ -87,6 +95,28 @@ mod tests {
         cursor.increment();
         assert_eq!(Ok(&unlexable("b")), cursor.take());
         assert_eq!(Err(End), cursor.take());
+    }
+
+    #[test]
+    fn skip() {
+        let lexemes: FileLexemes = vec![identifier("x").into(), newline(), newline(), identifier("y").into(), identifier("z").into(), newline(),].into();
+        let mut cursor = ParseCursor::new(&lexemes);
+
+        assert_eq!(Ok(&identifier("x").into()), cursor.peek());
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("x").into()), cursor.peek(), "should do not skip when false");
+
+        cursor.take().unwrap();
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("y").into()), cursor.peek(), "should skip to next non-newline");
+
+        cursor.take().unwrap();
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Ok(&identifier("z").into()), cursor.peek(), "should do not skip when false");
+
+        cursor.take().unwrap();
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        assert_eq!(Err(End), cursor.peek(), "should skip to end");
     }
 
     #[test]
