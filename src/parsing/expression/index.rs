@@ -1,6 +1,6 @@
 use crate::dbg_log;
-use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
@@ -20,11 +20,11 @@ use crate::parsing::util::ParseRes;
 pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor)
-            .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
-            .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor)
-                .map(|ok| (ok.0, args))) {
+        .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
+        .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor).map(|ok| (ok.0, args)))
+    {
         if !args.is_empty() {
-            return Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args))))
+            return Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args))));
         } else {
             dbg_log!("rejected array indexing parsing with nothing between [ and ]");
         }
@@ -56,12 +56,7 @@ mod by_name {
     #[test]
     fn single_literal_positional_arg() {
         check(
-            vec![
-                identifier("data").into(),
-                bracket_open(),
-                literal_int(42).into(),
-                bracket_close(),
-            ],
+            vec![identifier("data").into(), bracket_open(), literal_int(42).into(), bracket_close()],
             array_index(variable(identifier("data")), vec![literal(literal_int(42))]),
         );
     }
@@ -69,12 +64,7 @@ mod by_name {
     #[test]
     fn single_identifier_positional_arg() {
         check(
-            vec![
-                identifier("arr").into(),
-                bracket_open(),
-                identifier("x").into(),
-                bracket_close(),
-            ],
+            vec![identifier("arr").into(), bracket_open(), identifier("x").into(), bracket_close()],
             array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
@@ -118,7 +108,7 @@ mod by_name {
                     binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                     operator(Symbol::Asterisk),
                     binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
-                )]
+                )],
             ),
         );
     }
@@ -134,7 +124,10 @@ mod by_name {
                 identifier("y").into(),
                 bracket_close(),
             ],
-            array_index(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            array_index(
+                variable(identifier("arr")),
+                vec![variable(identifier("x")), variable(identifier("y"))],
+            ),
         );
     }
 
@@ -150,7 +143,10 @@ mod by_name {
                 comma(),
                 bracket_close(),
             ],
-            array_index(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            array_index(
+                variable(identifier("arr")),
+                vec![variable(identifier("x")), variable(identifier("y"))],
+            ),
         );
     }
 }
@@ -174,7 +170,14 @@ mod special {
 
     #[test]
     fn unseparated() {
-        let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(), literal_int(1).into(), bracket_close()].into();
+        let lexemes = vec![
+            identifier("fun").into(),
+            bracket_open(),
+            identifier("x").into(),
+            literal_int(1).into(),
+            bracket_close(),
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&bracket_open()));
@@ -183,7 +186,7 @@ mod special {
 
     #[test]
     fn unclosed() {
-        let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(),].into();
+        let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&bracket_open()));
@@ -198,7 +201,8 @@ mod special {
             literal_int(42).into(),
             bracket_close(),
             comma(),
-        ].into();
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(array_index(variable(identifier("data")), vec![literal(literal_int(42))]), parselet);

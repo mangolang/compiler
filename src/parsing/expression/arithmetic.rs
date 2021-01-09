@@ -1,10 +1,10 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::binary_operation::BinaryOperationParselet;
 use crate::parselet::ExpressionParselets;
+use crate::parsing::expression::call::parse_function_call;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::expression::call::parse_function_call;
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;

@@ -79,7 +79,13 @@ mod literal {
 
     #[test]
     fn try_group_on_mismatch() {
-        let lexemes = vec![parenthesis_open(), literal_int(1).into(), parenthesis_close(), literal_bool(true).into()].into();
+        let lexemes = vec![
+            parenthesis_open(),
+            literal_int(1).into(),
+            parenthesis_close(),
+            literal_bool(true).into(),
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(1)), parselet);

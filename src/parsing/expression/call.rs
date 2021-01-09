@@ -1,12 +1,12 @@
-use crate::parselet::ExpressionParselets;
 use crate::parselet::function_call::FunctionCallParselet;
+use crate::parselet::ExpressionParselets;
+use crate::parsing::expression::index::parse_array_indexing;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::expression::index::parse_array_indexing;
 
 /// Parse a function invocation, which looks like
 ///
@@ -20,9 +20,9 @@ use crate::parsing::expression::index::parse_array_indexing;
 pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_array_indexing(cursor)?;
     match parse_parenthesis_open(iden_cursor)
-            .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
-            .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor)
-                .map(|ok| (ok.0, args))) {
+        .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
+        .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor).map(|ok| (ok.0, args)))
+    {
         Ok((close_cursor, args)) => Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args)))),
         Err(_) => Ok((iden_cursor, identifier)),
     }
@@ -122,7 +122,7 @@ mod by_name {
                     binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                     operator(Symbol::Asterisk),
                     binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
-                )]
+                )],
             ),
         );
     }
@@ -138,7 +138,10 @@ mod by_name {
                 identifier("y").into(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            function_call(
+                variable(identifier("f")),
+                vec![variable(identifier("x")), variable(identifier("y"))],
+            ),
         );
     }
 
@@ -154,7 +157,10 @@ mod by_name {
                 comma(),
                 parenthesis_close(),
             ],
-            function_call(variable(identifier("f")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            function_call(
+                variable(identifier("f")),
+                vec![variable(identifier("x")), variable(identifier("y"))],
+            ),
         );
     }
 }
@@ -169,7 +175,14 @@ mod special {
 
     #[test]
     fn unseparated() {
-        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(), literal_int(1).into(), parenthesis_close()].into();
+        let lexemes = vec![
+            identifier("fun").into(),
+            parenthesis_open(),
+            identifier("x").into(),
+            literal_int(1).into(),
+            parenthesis_close(),
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
@@ -178,7 +191,7 @@ mod special {
 
     #[test]
     fn unclosed() {
-        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(),].into();
+        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
@@ -193,10 +206,14 @@ mod special {
             literal_int(42).into(),
             parenthesis_close(),
             comma(),
-        ].into();
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]), parselet);
+        assert_eq!(
+            function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
+            parselet
+        );
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }

@@ -86,9 +86,7 @@ impl StrType for Name {
     fn new<'a>(name: impl AsRef<str>) -> MsgResult<Self> {
         let name = name.as_ref();
         match Name::validate(name) {
-            Ok(_) => {
-                Ok(Name { name: ustr(name) })
-            }
+            Ok(_) => Ok(Name { name: ustr(name) }),
             Err(msg) => Err(msg),
         }
     }

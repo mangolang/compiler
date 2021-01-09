@@ -69,7 +69,7 @@ impl<'a> ParseCursor<'a> {
         if self.index < self.lexemes.len() && predicate(&self.lexemes[self.index]) {
             let lexeme = &self.lexemes[self.index];
             self.index.increment();
-            return Some(lexeme)
+            return Some(lexeme);
         }
         None
     }
@@ -84,7 +84,7 @@ impl<'a> ParseCursor<'a> {
     }
 }
 
-impl <'a> fmt::Debug for ParseCursor<'a> {
+impl<'a> fmt::Debug for ParseCursor<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Cursor({:?})", self.index)
     }
@@ -92,7 +92,7 @@ impl <'a> fmt::Debug for ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::lexeme::collect::for_test::{unlexable, identifier, newline};
+    use crate::lexeme::collect::for_test::{identifier, newline, unlexable};
 
     use super::*;
 
@@ -108,7 +108,15 @@ mod tests {
 
     #[test]
     fn skip() {
-        let lexemes: FileLexemes = vec![identifier("x").into(), newline(), newline(), identifier("y").into(), identifier("z").into(), newline(),].into();
+        let lexemes: FileLexemes = vec![
+            identifier("x").into(),
+            newline(),
+            newline(),
+            identifier("y").into(),
+            identifier("z").into(),
+            newline(),
+        ]
+        .into();
         let mut cursor = ParseCursor::new(&lexemes);
 
         assert_eq!(Ok(&identifier("x").into()), cursor.peek());
@@ -130,7 +138,15 @@ mod tests {
 
     #[test]
     fn conditional_take() {
-        let lexemes: FileLexemes = vec![identifier("x").into(), newline(), newline(), identifier("y").into(), identifier("z").into(), newline(),].into();
+        let lexemes: FileLexemes = vec![
+            identifier("x").into(),
+            newline(),
+            newline(),
+            identifier("y").into(),
+            identifier("z").into(),
+            newline(),
+        ]
+        .into();
         let mut cursor = ParseCursor::new(&lexemes);
 
         assert_eq!(Some(&identifier("x").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));

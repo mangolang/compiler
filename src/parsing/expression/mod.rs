@@ -6,9 +6,9 @@ use crate::parsing::util::ParseRes;
 mod arithmetic;
 mod call;
 mod grouping;
+mod index;
 mod literals;
 mod variable;
-mod index;
 
 pub fn parse_expression(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     parse_addition(cursor)

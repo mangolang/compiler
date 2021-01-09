@@ -2,8 +2,8 @@ use ::std::fmt;
 use ::std::rc::Rc;
 use std::hash;
 
-use ::ustr::Ustr;
 use ::ustr::ustr;
+use ::ustr::Ustr;
 
 use crate::io::slice::SourceSlice;
 

@@ -16,7 +16,7 @@ pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 #[cfg(test)]
 mod var {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{variable, literal};
+    use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;

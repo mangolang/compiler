@@ -13,8 +13,8 @@ pub enum EndStatementLexeme {
 
 impl PartialEq for EndStatementLexeme {
     fn eq(&self, other: &Self) -> bool {
-        matches!((self, other), (EndStatementLexeme::EndLine(_), EndStatementLexeme::EndLine(_))) ||
-            matches!((self, other), (EndStatementLexeme::Semicolon(_), EndStatementLexeme::Semicolon(_)))
+        matches!((self, other), (EndStatementLexeme::EndLine(_), EndStatementLexeme::EndLine(_)))
+            || matches!((self, other), (EndStatementLexeme::Semicolon(_), EndStatementLexeme::Semicolon(_)))
     }
 }
 

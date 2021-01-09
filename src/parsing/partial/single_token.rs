@@ -1,7 +1,7 @@
+use crate::lexeme::lexemes::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::{Lexeme, ParenthesisCloseLexeme, ParenthesisOpenLexeme};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::lexeme::lexemes::brackets::{BracketOpenLexeme, BracketCloseLexeme};
 
 pub fn parse_parenthesis_open(mut cursor: ParseCursor) -> ParseRes<ParenthesisOpenLexeme> {
     if let Lexeme::ParenthesisOpen(parenthesis_lexeme) = cursor.take()? {

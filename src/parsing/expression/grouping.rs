@@ -43,11 +43,7 @@ mod parenthese {
     #[test]
     fn parenthesized_literal() {
         check(
-            vec![
-                parenthesis_open(),
-                literal_int(7).into(),
-                parenthesis_close(),
-            ],
+            vec![parenthesis_open(), literal_int(7).into(), parenthesis_close()],
             literal(literal_int(7)),
         );
     }

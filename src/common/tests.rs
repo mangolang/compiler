@@ -29,5 +29,5 @@ macro_rules! dbg_log {
 #[macro_export]
 #[cfg(not(test))]
 macro_rules! dbg_log {
-    ($($arg:tt)*) => {}
+    ($($arg:tt)*) => {};
 }

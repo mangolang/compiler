@@ -7,7 +7,7 @@ pub type ExprGroup = Vec<ExpressionParselets>;
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct ArrayIndexingParselet {
     array: Box<ExpressionParselets>,
-    indices: ExprGroup,  // at least 1 index
+    indices: ExprGroup, // at least 1 index
 }
 
 impl ArrayIndexingParselet {

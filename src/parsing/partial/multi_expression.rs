@@ -16,12 +16,10 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
                 // There is a separator, continue for another expression.
                 Lexeme::Comma(_) | Lexeme::Newline(_) => {
                     separator_cursor.skip_while(|lexeme| lexeme.is_newline());
-                },
+                }
                 // No separator, so this is the end of the multi-expression - or a syntax
                 // error, but that's for the next parser to find out. Revert eating separator.
-                _not_a_separator => return {
-                    Ok((expr_cursor, expressions))
-                },
+                _not_a_separator => return { Ok((expr_cursor, expressions)) },
             },
             Err(_) => {
                 // Reached the end of input. There should probably be a closing symbol,
@@ -86,15 +84,8 @@ mod basic {
     #[test]
     fn two_args() {
         check(
-            vec![
-                literal_int(0).into(),
-                comma(),
-                identifier("x").into(),
-            ],
-            vec![
-                literal(literal_int(0)),
-                variable(identifier("x")),
-            ],
+            vec![literal_int(0).into(), comma(), identifier("x").into()],
+            vec![literal(literal_int(0)), variable(identifier("x"))],
             Err(End),
         );
     }
@@ -237,7 +228,7 @@ mod separators {
     fn newline_comma_err() {
         check(
             vec![literal_text("hello").into(), newline(), comma(), identifier("hello").into()],
-            vec![literal(literal_text("hello")),],
+            vec![literal(literal_text("hello"))],
             Ok(&comma()),
         );
     }
@@ -254,7 +245,13 @@ mod separators {
     #[test]
     fn comma_multi_newline_comma() {
         check(
-            vec![literal_text("hello").into(), comma(), newline(), newline(), identifier("hello").into()],
+            vec![
+                literal_text("hello").into(),
+                comma(),
+                newline(),
+                newline(),
+                identifier("hello").into(),
+            ],
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -348,12 +345,12 @@ mod ending {
 #[cfg(test)]
 mod errors {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::Parselets;
     use crate::parselet::short::{binary, literal, variable};
+    use crate::parselet::Parselets;
     use crate::util::codeparts::Symbol;
 
-    use super::*;
     use super::test_util::check;
+    use super::*;
 
     #[test]
     fn ellipsis_err() {
@@ -426,16 +423,17 @@ mod errors {
             parenthesis_close(),
             newline(),
             literal_int(-1).into(),
-        ].into();
+        ]
+        .into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, result) = parse_multi_expression(cursor).unwrap();
-        assert_eq!(vec![
-            literal(literal_bool(true)),
-            binary(
-                literal(literal_int(1)),
-                operator(Symbol::Plus),
-                literal(literal_int(2))
-            ),], result);
+        assert_eq!(
+            vec![
+                literal(literal_bool(true)),
+                binary(literal(literal_int(1)), operator(Symbol::Plus), literal(literal_int(2))),
+            ],
+            result
+        );
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 }
