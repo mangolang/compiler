@@ -167,6 +167,24 @@ mod special {
     use super::*;
 
     #[test]
+    fn unseparated() {
+        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(), literal_int(1).into(), parenthesis_close()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_function_call(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&parenthesis_open().into()));
+        assert_eq!(parselet, variable(identifier("fun")));
+    }
+
+    #[test]
+    fn unclosed() {
+        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into(),].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_function_call(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&parenthesis_open().into()));
+        assert_eq!(parselet, variable(identifier("fun")));
+    }
+
+    #[test]
     fn reachable_from_expression() {
         let lexemes = vec![
             identifier("faculty").into(),

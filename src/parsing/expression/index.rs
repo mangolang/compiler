@@ -4,9 +4,9 @@ use crate::parselet::function_call::FunctionCallParselet;
 use crate::parsing::expression::parse_expression;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
+use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::partial::single_token::{parse_bracket_open, parse_bracket_close};
 
 /// Parse indexing, which looks like
 ///
@@ -42,7 +42,7 @@ mod by_name {
 
     use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{array_index, binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
     use crate::util::codeparts::Symbol;
 
@@ -57,23 +57,15 @@ mod by_name {
     }
 
     #[test]
-    fn no_args() {
-        check(
-            vec![identifier("arr").into(), bracket_open(), bracket_close()],
-            function_call(variable(identifier("arr")), vec![]),
-        );
-    }
-
-    #[test]
     fn single_literal_positional_arg() {
         check(
             vec![
-                identifier("faculty").into(),
+                identifier("data").into(),
                 bracket_open(),
                 literal_int(42).into(),
                 bracket_close(),
             ],
-            function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
+            array_index(variable(identifier("data")), vec![literal(literal_int(42))]),
         );
     }
 
@@ -86,7 +78,7 @@ mod by_name {
                 identifier("x").into(),
                 bracket_close(),
             ],
-            function_call(variable(identifier("arr")), vec![variable(identifier("x"))]),
+            array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -100,7 +92,7 @@ mod by_name {
                 comma(),
                 bracket_close(),
             ],
-            function_call(variable(identifier("arr")), vec![variable(identifier("x"))]),
+            array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
 
@@ -123,7 +115,7 @@ mod by_name {
                 bracket_close(),
                 bracket_close(),
             ],
-            function_call(
+            array_index(
                 variable(identifier("arr")),
                 vec![binary(
                     binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
@@ -145,7 +137,7 @@ mod by_name {
                 identifier("y").into(),
                 bracket_close(),
             ],
-            function_call(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            array_index(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
         );
     }
 
@@ -161,7 +153,7 @@ mod by_name {
                 comma(),
                 bracket_close(),
             ],
-            function_call(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
+            array_index(variable(identifier("arr")), vec![variable(identifier("x")), variable(identifier("y"))]),
         );
     }
 }
@@ -169,15 +161,42 @@ mod by_name {
 #[cfg(test)]
 mod special {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{array_index, binary, function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
 
     use super::*;
 
     #[test]
+    fn no_args() {
+        let lexemes = vec![identifier("fun").into(), bracket_open(), bracket_close()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(parselet, variable(identifier("fun")));
+    }
+
+    #[test]
+    fn unseparated() {
+        let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(), literal_int(1).into(), bracket_close()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(parselet, variable(identifier("fun")));
+    }
+
+    #[test]
+    fn unclosed() {
+        let lexemes = vec![identifier("fun").into(), bracket_open(), identifier("x").into(),].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&bracket_open().into()));
+        assert_eq!(parselet, variable(identifier("fun")));
+    }
+
+    #[test]
     fn reachable_from_expression() {
         let lexemes = vec![
-            identifier("faculty").into(),
+            identifier("data").into(),
             bracket_open(),
             literal_int(42).into(),
             bracket_close(),
@@ -185,7 +204,7 @@ mod special {
         ].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]), parselet);
+        assert_eq!(array_index(variable(identifier("data")), vec![literal(literal_int(42))]), parselet);
         assert_eq!(Ok(&comma()), cursor.peek());
     }
 }
