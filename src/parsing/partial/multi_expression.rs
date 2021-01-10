@@ -346,7 +346,7 @@ mod ending {
 mod errors {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal, variable};
-    use crate::parselet::Parselets;
+    
     use crate::common::codeparts::Symbol;
 
     use super::test_util::check;

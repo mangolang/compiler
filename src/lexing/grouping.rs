@@ -30,7 +30,7 @@ pub fn lex_grouping(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod test_util {
-    use crate::lexeme::{EndBlockLexeme, Lexeme, StartBlockLexeme};
+    use crate::lexeme::Lexeme;
     use crate::lexing::grouping::lex_grouping;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;

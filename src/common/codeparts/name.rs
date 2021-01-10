@@ -1,8 +1,6 @@
-use ::std::borrow::Cow;
-use ::std::collections::hash_map::RandomState;
 use ::std::fmt;
 use ::std::fmt::Formatter;
-use ::std::sync::Mutex;
+
 
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
@@ -46,7 +44,7 @@ impl fmt::Display for Name {
 }
 
 impl Name {
-    pub fn new<'a>(name: impl AsRef<str>) -> MsgResult<Self> {
+    pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
         let name = name.as_ref();
         match Name::validate(name) {
             Ok(_) => Ok(Name { name: ustr(name) }),

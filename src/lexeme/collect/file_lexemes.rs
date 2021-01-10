@@ -2,7 +2,7 @@ use ::std::fmt;
 use ::std::ops::Index;
 
 use crate::lexeme::Lexeme;
-use std::fmt::Formatter;
+
 
 #[derive(Debug)]
 pub struct FileLexemes {

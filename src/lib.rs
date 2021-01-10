@@ -1,37 +1,19 @@
 //TODO @mark: disable unused stuff later, but currently too much in-progress
-#![allow(unused_variables, dead_code, unused_imports)]
-
-//use crate::io::fortest::stringreader::StringReader;
-//use crate::lexing::combi_lexer::CombiLexer;
-//use crate::lexing::util::lex_all::lex_all;
-//use crate::parsing::parse_expression;
-use std::io::{Read, Write};
-
-//use crate::lexing::combi_lexer::CombiLexer;
-//use crate::lexing::util::lex_all::lex_all;
-//use crate::parsing::parse_expression;
+#![allow(dead_code)]
 
 // Utilities
 pub(crate) mod common;
 pub(crate) mod io;
 
 // Types
-pub(crate) mod ir;
+pub(crate) mod lexeme;
 pub(crate) mod parselet;
 pub(crate) mod sem;
-
-pub(crate) mod lexeme;
-pub(crate) mod lexing;
-pub(crate) mod parsing;
+pub(crate) mod ir;
 
 // Operations
-pub(crate) mod optimizing;
+pub(crate) mod lexing;
+pub(crate) mod parsing;
 pub(crate) mod semanticating;
 pub(crate) mod typing;
 
-pub fn run<R: Read, O: Write, E: Write>(_source: &str, _inp: &R, _out: &O, _err: &E) {
-    //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
-    //
-    //    //TODO @mark: use result
-    //    parse_expression(lex);
-}

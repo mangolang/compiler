@@ -1,8 +1,8 @@
 use crate::parselet::function_call::FunctionCallParselet;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::index::parse_array_indexing;
-use crate::parsing::expression::parse_expression;
-use crate::parsing::expression::variable::parse_variable;
+
+
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
@@ -31,7 +31,7 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 
 #[cfg(test)]
 mod by_name {
-    use ::smallvec::smallvec;
+    
 
     use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
@@ -168,7 +168,7 @@ mod by_name {
 #[cfg(test)]
 mod special {
     use crate::lexeme::collect::for_test::*;
-    use crate::parselet::short::{binary, function_call, literal, variable};
+    use crate::parselet::short::{function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
 
     use super::*;
