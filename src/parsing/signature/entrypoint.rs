@@ -1,7 +1,7 @@
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{ParseRes, NoMatch};
 use crate::lexeme::Lexeme;
-use crate::parselet::signature::entry_point::EntryPointParselet;
+use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::common::codeparts::Keyword;
 
 //TODO @mark: tests
