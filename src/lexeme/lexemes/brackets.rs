@@ -1,7 +1,7 @@
 use ::std::hash;
 
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::util::encdec::ToText;
+use crate::common::debug::ToText;
 
 /// Open and close parentheses: (, )
 #[derive(Debug, Eq, Clone)]

@@ -8,7 +8,6 @@ use ::std::str::FromStr;
 use ::lazy_static::lazy_static;
 
 use crate::common::error::{ErrMsg, MsgResult};
-use crate::util::strtype::StrType;
 
 /// The different operator codeparts that are recognized.
 // TODO: reserve a lot of keywords; easier to remove than add (compatibility)

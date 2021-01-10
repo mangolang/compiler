@@ -96,7 +96,7 @@ mod complex_expr {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::test_util::check;
 
@@ -347,7 +347,7 @@ mod errors {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal, variable};
     use crate::parselet::Parselets;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::test_util::check;
     use super::*;

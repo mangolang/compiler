@@ -3,8 +3,8 @@ use ::std::str::FromStr;
 
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::util::codeparts::Keyword;
-use crate::util::encdec::ToText;
+use crate::common::codeparts::Keyword;
+use crate::common::debug::ToText;
 
 /// A built-in language keyword.
 #[derive(Debug, Eq, Clone)]

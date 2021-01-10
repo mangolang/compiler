@@ -10,7 +10,6 @@ use ::ustr::ustr;
 use ::ustr::Ustr;
 
 use crate::common::error::MsgResult;
-use crate::util::strtype::StrType;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
@@ -25,13 +24,6 @@ lazy_static! {
 #[derive(Hash, PartialEq, Eq, Clone, Copy)]
 pub struct Name {
     name: Ustr,
-}
-
-impl Name {
-    pub fn value(self) -> &'static str {
-        // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
-        self.name.as_str()
-    }
 }
 
 impl PartialEq<str> for Name {
@@ -53,8 +45,21 @@ impl fmt::Display for Name {
     }
 }
 
-impl StrType for Name {
-    fn validate(name: &str) -> MsgResult<()> {
+impl Name {
+    pub fn new<'a>(name: impl AsRef<str>) -> MsgResult<Self> {
+        let name = name.as_ref();
+        match Name::validate(name) {
+            Ok(_) => Ok(Name { name: ustr(name) }),
+            Err(msg) => Err(msg),
+        }
+    }
+
+    pub fn value(self) -> &'static str {
+        // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
+        self.name.as_str()
+    }
+
+    pub fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
                 if chr.is_digit(10) {
@@ -81,14 +86,6 @@ impl StrType for Name {
             .into());
         }
         Ok(())
-    }
-
-    fn new<'a>(name: impl AsRef<str>) -> MsgResult<Self> {
-        let name = name.as_ref();
-        match Name::validate(name) {
-            Ok(_) => Ok(Name { name: ustr(name) }),
-            Err(msg) => Err(msg),
-        }
     }
 }
 
@@ -119,8 +116,6 @@ mod technical {
 
 #[cfg(test)]
 mod validation {
-    use crate::util::strtype::typ::StrType;
-
     use super::Name;
 
     fn assert_validity(is_valid: bool, input: &[&str]) {

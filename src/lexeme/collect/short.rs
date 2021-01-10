@@ -11,8 +11,8 @@ use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
-use crate::util::codeparts::Keyword;
-use crate::util::numtype::f64eq;
+use crate::common::codeparts::Keyword;
+use crate::common::codeparts::eqfloat::f64eq;
 
 //TODO @mark: replace more lexeme usages by short versions
 

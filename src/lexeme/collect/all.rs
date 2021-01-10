@@ -14,7 +14,7 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::special::EndBlockLexeme;
 use crate::lexeme::special::StartBlockLexeme;
 use crate::lexeme::special::UnlexableLexeme;
-use crate::util::encdec::ToText;
+use crate::common::debug::ToText;
 
 //TODO @mark: pass code slice along with lexeme
 

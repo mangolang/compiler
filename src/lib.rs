@@ -14,7 +14,6 @@ use std::io::{Read, Write};
 // Utilities
 pub(crate) mod common;
 pub(crate) mod io;
-pub(crate) mod util;
 
 // Types
 pub(crate) mod ir;

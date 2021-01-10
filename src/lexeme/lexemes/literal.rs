@@ -2,10 +2,10 @@ use ::std::hash;
 
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
-use crate::util::encdec::ToText;
-use crate::util::numtype::f64eq;
 
 use ::ustr::Ustr;
+use crate::common::debug::ToText;
+use crate::common::codeparts::eqfloat::f64eq;
 
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.

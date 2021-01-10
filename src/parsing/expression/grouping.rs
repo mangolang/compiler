@@ -20,7 +20,7 @@ mod parenthese {
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::*;
 

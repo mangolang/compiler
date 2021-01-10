@@ -2,8 +2,8 @@ use crate::lexeme::collect::short::association;
 use crate::lexeme::collect::short::operator;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::codeparts::operator::ASSOCIATION_RE;
-use crate::util::codeparts::operator::SYMBOL_RE;
+use crate::common::codeparts::operator::ASSOCIATION_RE;
+use crate::common::codeparts::operator::SYMBOL_RE;
 
 /// Lex an arithmetic or boolean operator.
 pub fn lex_operator(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -26,7 +26,7 @@ mod operators {
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::lex_operator;
 
@@ -137,7 +137,7 @@ mod associations {
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::lex_association;
 

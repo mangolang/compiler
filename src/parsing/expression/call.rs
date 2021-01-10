@@ -37,7 +37,7 @@ mod by_name {
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::*;
 

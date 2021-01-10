@@ -12,6 +12,7 @@ mod literals;
 mod operator;
 mod separators;
 mod special;
+mod util;
 
 #[cfg(test)]
 mod tests;

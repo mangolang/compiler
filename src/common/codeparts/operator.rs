@@ -5,8 +5,6 @@ use ::std::fmt::Result as fResult;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::util::strtype::StrType;
-
 lazy_static! {
     static ref OPERATOR_STR: String = r"^(?:\+|-|\*|/|!|\?)".to_owned();
     pub static ref SYMBOL_RE: Regex = Regex::new(&format!("^(?:==|<=|>=|<|>|{})", &*OPERATOR_STR)).unwrap();

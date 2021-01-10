@@ -71,7 +71,7 @@ mod test_util {
 mod addition {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::test_util::check_add as check;
     use super::*;
@@ -139,7 +139,7 @@ mod addition {
 mod multiplication {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::test_util::check_mul as check;
     use super::*;
@@ -211,10 +211,10 @@ mod multiplication {
 mod mixed {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
+    use crate::common::codeparts::Symbol;
 
     use super::test_util::check_add;
+    use crate::common::codeparts::eqfloat::f64eq;
 
     #[test]
     fn multi_mixed() {
@@ -247,7 +247,7 @@ mod special {
     use crate::parselet::short::{binary, literal};
     use crate::parsing::expression::parse_expression;
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
+    use crate::common::codeparts::Symbol;
 
     use super::*;
 

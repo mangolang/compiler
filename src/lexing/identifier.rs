@@ -1,8 +1,8 @@
+use crate::common::codeparts::name::IDENTIFIER_RE;
 use crate::lexeme::collect::short::identifier;
 use crate::lexeme::collect::short::keyword_or_reserved;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::strtype::name::IDENTIFIER_RE;
 
 /// Lex an identifier or keyword.
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
@@ -17,13 +17,12 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
 
 #[cfg(test)]
 mod identifiers {
+    use crate::common::codeparts::name::Name;
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::strtype::typ::StrType;
-    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
@@ -101,11 +100,11 @@ mod identifiers {
 
 #[cfg(test)]
 mod keywords {
+    use crate::common::codeparts::Keyword;
+    use crate::common::codeparts::keyword::KEYWORDS;
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::keyword_or_reserved;
     use crate::lexeme::{KeywordLexeme, Lexeme};
-    use crate::util::codeparts::keyword::KEYWORDS;
-    use crate::util::codeparts::Keyword;
+    use crate::lexeme::collect::for_test::keyword_or_reserved;
 
     use super::mixed::check;
 
@@ -134,13 +133,12 @@ mod keywords {
 
 #[cfg(test)]
 mod mixed {
+    use crate::common::codeparts::Keyword;
+    use crate::common::codeparts::name::Name;
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::codeparts::Keyword;
-    use crate::util::strtype::typ::StrType;
-    use crate::util::strtype::Name;
 
     use super::lex_keyword_identifier;
 
