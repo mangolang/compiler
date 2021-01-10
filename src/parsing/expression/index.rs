@@ -1,5 +1,4 @@
 use crate::dbg_log;
-use crate::parselet::function_call::FunctionCallParselet;
 use crate::parselet::ExpressionParselets;
 
 use crate::parsing::expression::variable::parse_variable;
@@ -7,6 +6,7 @@ use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::parselet::node::function_call::FunctionCallParselet;
 
 /// Parse indexing, which looks like
 ///

@@ -4,6 +4,9 @@
 pub use self::parse::parse;
 
 pub mod expression;
+pub mod signature;
+pub mod body;
+pub mod file;
 pub mod parse;
 pub mod partial;
 pub mod util;

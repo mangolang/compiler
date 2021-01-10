@@ -1,4 +1,3 @@
-use crate::parselet::function_call::FunctionCallParselet;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::index::parse_array_indexing;
 
@@ -7,6 +6,7 @@ use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::parselet::node::function_call::FunctionCallParselet;
 
 /// Parse a function invocation, which looks like
 ///

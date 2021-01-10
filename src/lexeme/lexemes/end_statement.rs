@@ -3,8 +3,8 @@ use ::std::hash;
 use crate::io::slice::SourceSlice;
 use crate::common::debug::ToText;
 
-/// End of statement.
-/// Strictly, this doesn't always end a statement, e.g. if it follows a continuation.
+/// End of body.
+/// Strictly, this doesn't always end a body, e.g. if it follows a continuation.
 #[derive(Debug, Eq, Clone)]
 pub enum EndStatementLexeme {
     EndLine(SourceSlice),
