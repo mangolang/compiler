@@ -22,6 +22,7 @@ pub enum Keyword {
     Function,
     Return,
     Assert,
+    Entrypoint,
     Reserved(String),
 }
 
@@ -194,6 +195,7 @@ impl Keyword {
             Keyword::Function => Cow::from("function"),
             Keyword::Return => Cow::from("return"),
             Keyword::Assert => Cow::from("assert"),
+            Keyword::Entrypoint => Cow::from("main"),
             Keyword::Reserved(name) => Cow::from(name),
         }
     }
