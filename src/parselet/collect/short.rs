@@ -7,7 +7,9 @@
 use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
-use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
+use crate::parselet::{ExpressionParselets, Parselets};
+use crate::parselet::terminal::{VariableParselet, LiteralParselet};
+use crate::parselet::special::UnparseableParselet;
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))

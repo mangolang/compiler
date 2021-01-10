@@ -1,5 +1,5 @@
-use crate::parselet::Parselet;
-use crate::parselet::{Parselets, VariableParselet};
+use crate::parselet::{Parselet, Parselets};
+use crate::parselet::terminal::VariableParselet;
 
 /// Type for an association, e.g. assignment, parameter binding.
 #[derive(Debug, PartialEq, Eq, Hash)]
