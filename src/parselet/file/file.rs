@@ -14,3 +14,16 @@ pub struct FileParselet {
     functions: Vec<FunctionParselet>,
     tests: Vec<TestParselet>,
 }
+
+impl FileParselet {
+    pub fn new(imports: Vec<ImportParselet>, entrypoint: Option<EntryPointParselet>) -> Self {
+        FileParselet {
+            imports,
+            entrypoint,
+            records: vec![],
+            unions: vec![],
+            functions: vec![],
+            tests: vec![],
+        }
+    }
+}

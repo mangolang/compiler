@@ -1,5 +1,3 @@
-use crate::parselet::node::binary_operation::BinaryOperationParselet;
-use crate::parselet::terminal::VariableParselet;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{ParseRes, NoMatch};
 use crate::lexeme::Lexeme;
@@ -7,7 +5,6 @@ use crate::parselet::signature::entry_point::EntryPointParselet;
 use crate::common::codeparts::Keyword;
 
 //TODO @mark: tests
-//TODO @mark: use
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Entrypoint {
