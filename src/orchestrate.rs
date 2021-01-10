@@ -3,22 +3,22 @@ use ::std::path::Path;
 use crate::common::error::MangoResult;
 use crate::io::disk::read;
 use crate::io::source::SourceFile;
-use crate::ir::IR;
-use crate::parsing::parse::parse;
+use crate::ir::collect::SourceIR;
 use crate::lexing::lex;
+use crate::parsing::parse::parse;
 
-fn source_file_to_ir(source: SourceFile) -> MangoResult<IR> {
+fn source_file_to_ir(source: SourceFile) -> MangoResult<SourceIR> {
     let lexemes = lex(&source);
     let _parselets = parse(lexemes);
     unimplemented!()
 }
 
-pub fn mango_file_to_ir(pth: &Path) -> MangoResult<IR> {
+pub fn mango_file_to_ir(pth: &Path) -> MangoResult<SourceIR> {
     let source = read(pth)?;
     source_file_to_ir(source)
 }
 
-pub fn mango_str_to_ir(name: impl AsRef<str>, source: &str) -> MangoResult<IR> {
+pub fn mango_str_to_ir(name: impl AsRef<str>, source: &str) -> MangoResult<SourceIR> {
     let source = SourceFile::new(name, source);
     source_file_to_ir(source)
 }
@@ -35,6 +35,6 @@ let y = 4
 let z = x * x + y * y
 print(z)
 ").unwrap();
-        assert_eq!(IR::Tmp, ir);
+        assert_eq!(SourceIR::new(vec![]), ir);
     }
 }
