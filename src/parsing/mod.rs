@@ -4,7 +4,7 @@
 pub use self::parse::parse;
 
 pub mod expression;
-mod parse;
+pub mod parse;
 pub mod partial;
 pub mod util;
 

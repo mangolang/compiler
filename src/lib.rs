@@ -17,3 +17,7 @@ pub(crate) mod parsing;
 pub(crate) mod semanticating;
 pub(crate) mod typing;
 
+mod orchestrate;
+pub use crate::orchestrate::mango_file_to_ir;
+pub use crate::orchestrate::mango_str_to_ir;
+
