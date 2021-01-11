@@ -5,3 +5,4 @@ pub mod keyword;
 pub mod operator;
 pub mod eqfloat;
 pub mod name;
+pub mod fqn;

@@ -1,95 +1,92 @@
 use ::std::fmt;
 use ::std::fmt::Formatter;
 
-
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
 use crate::common::error::MsgResult;
+use crate::common::codeparts::name::Name;
 
 lazy_static! {
-    pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
+    pub static ref FQN_RE: Regex = Regex::new(r"^(?:*[a-zA-Z][_a-zA-Z0-9]*\.)*(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
 }
 
-/// Type for valid identifier names.
-///
-/// # Implementation
-///
-/// * Name strings are interned for fast equality checking.
-/// * Names are [Copy]; they're very small and meant to be reused (which is why they are interned).
-#[derive(Hash, PartialEq, Eq, Clone, Copy)]
-pub struct Name {
-    name: Ustr,
+/// Fully-qualified name path, e.g. 'package.module1.module2.Type'.
+#[derive(Hash, PartialEq, Eq, Clone)]
+pub struct FQN {
+    names: Vec<Ustr>,
 }
 
-impl PartialEq<str> for Name {
-    fn eq(&self, other: &str) -> bool {
-        self.value().eq(other)
-    }
-}
-
-impl fmt::Debug for Name {
+impl fmt::Debug for FQN {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Name '{}'", self.value())
+        write!(f, "FQN '{}'", self.as_string())
     }
 }
 
-impl fmt::Display for Name {
+impl fmt::Display for FQN {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.value())
+        write!(f, "{}", self.as_string())
     }
 }
 
-impl Name {
+impl FQN {
     pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
         let name = name.as_ref();
-        match Name::validate(name) {
-            Ok(_) => Ok(Name { name: ustr(name) }),
+        match FQN::validate(name) {
+            Ok(_) => {
+                let parts: Vec<Ustr> = name.split(".")
+                    .map(|word| ustr(word))
+                    .collect();
+                debug_assert!(!parts.is_empty());
+                Ok(FQN { names: parts })
+            },
             Err(msg) => Err(msg),
         }
     }
 
-    pub fn from_valid(name: Ustr) -> Self {
-        debug_assert!(Name::validate(name.as_str()).is_ok());
-        Name { name }
+    pub fn parts(&self) -> &[Ustr] {
+        &self.names
     }
 
-    pub fn from(name: Ustr) -> MsgResult<Self> {
-        match Name::validate(name.as_str()) {
-            Ok(_) => Ok(Name { name }),
-            Err(msg) => Err(msg),
+    pub fn as_string(&self) -> String {
+        self.names.iter()
+            .map(|name| name.as_str())
+            // This collect seems useless, but for now it doesn't work without.
+            .collect::<Vec<&str>>()
+            .join(".")
+    }
+
+    pub fn as_simple_name(&self) -> Option<Name> {
+        if self.names.len() == 1 {
+            return Some(Name::from_valid(self.names[0]))
         }
-    }
-
-    pub fn value(self) -> &'static str {
-        // Unwrap only fails if another thread panicked while locking, which shouldn't happen.
-        self.name.as_str()
+        None
     }
 
     pub fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
                 if chr.is_digit(10) {
-                    return Err("Identifier names may not start with a digit.".into());
+                    return Err("Fully-qualified path parts may not start with a digit.".into());
                 }
             }
             None => return Ok(()), // empty string
         }
-        if let Some(found) = IDENTIFIER_RE.find(name) {
+        if let Some(found) = FQN_RE.find(name) {
             if found.as_str().len() < name.len() {
                 // There was a match, but some trailing characters were not matched. So while
                 // the string contains an identifier, the string as a whole is not a valid identifier.
                 return Err(format!(
-                    "Identifier '{}' is invalid; names should contain only letters, numbers and underscores.",
+                    "Fully-qualified path '{}' is invalid; is should contains names separated by periods. A name should only contain letters, numbers and underscores.",
                     name
                 )
                 .into());
             }
         } else {
             return Err(format!(
-                "Identifier '{}' is invalid; names should consist of letters, numbers and underscores, and not start with a number.",
+                "Fully-qualified path '{}' is invalid; is should contains names separated by periods. A name should only contain letters, numbers and underscores.",
                 name
             )
             .into());
@@ -98,6 +95,8 @@ impl Name {
     }
 }
 
+//TODO @mark: tests
+
 #[cfg(test)]
 mod technical {
     use super::*;
@@ -105,31 +104,31 @@ mod technical {
     #[test]
     fn new_str() {
         // Twice because of interning.
-        assert_eq!(Name::new("test_name").unwrap(), *"test_name");
-        assert_eq!(Name::new("test_name").unwrap(), *"test_name");
+        assert_eq!(FQN::new("test_name").unwrap(), *"test_name");
+        assert_eq!(FQN::new("test_name").unwrap(), *"test_name");
     }
 
     #[test]
     fn new_string() {
         // Twice because of interning.
-        assert_eq!(Name::new("test_name".to_owned()).unwrap(), *"test_name");
-        assert_eq!(Name::new("test_name".to_owned()).unwrap(), *"test_name");
+        assert_eq!(FQN::new("test_name".to_owned()).unwrap(), *"test_name");
+        assert_eq!(FQN::new("test_name".to_owned()).unwrap(), *"test_name");
     }
 
     #[test]
     fn equality() {
-        assert_eq!(Name::new("Hello").unwrap(), Name::new("Hello").unwrap());
-        assert_ne!(Name::new("Hello").unwrap(), Name::new("Goodbye").unwrap());
+        assert_eq!(FQN::new("Hello").unwrap(), FQN::new("Hello").unwrap());
+        assert_ne!(FQN::new("Hello").unwrap(), FQN::new("Goodbye").unwrap());
     }
 }
 
 #[cfg(test)]
 mod validation {
-    use super::Name;
+    use super::FQN;
 
     fn assert_validity(is_valid: bool, input: &[&str]) {
         for inp in input.iter() {
-            let name = Name::new(*inp);
+            let name = FQN::new(*inp);
             if is_valid {
                 assert!(name.is_ok(), format!("'{}' should be a valid name", inp));
                 assert_eq!(name.unwrap(), **inp);

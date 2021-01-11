@@ -30,10 +30,11 @@ mod e2e {
     #[test]
     fn from_str() {
         let ir = mango_str_to_ir("e2e_from_str", "\
-let x = 3
-let y = 4
-let z = x * x + y * y
-print(z)
+entrypoint:
+    let x = 3
+    let y = 4
+    let z = x * x + y * y
+    print(z)
 ").unwrap();
         assert_eq!(SourceIR::new(vec![]), ir);
     }
