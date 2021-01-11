@@ -4,22 +4,23 @@ use crate::common::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
+use crate::common::codeparts::fqn::FQN;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, Eq, Clone)]
 pub struct IdentifierLexeme {
-    pub name: Name,
+    pub name: FQN,
     source: SourceSlice,
 }
 
 impl IdentifierLexeme {
     pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
-        let name = Name::new(text)?;
-        Ok(Self::from_name(name, source))
+        let name = FQN::new(text)?;
+        Ok(IdentifierLexeme { name, source })
     }
 
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
-        IdentifierLexeme { name, source }
+        IdentifierLexeme { name: name.into(), source }
     }
 }
 

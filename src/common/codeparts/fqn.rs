@@ -19,6 +19,12 @@ pub struct FQN {
     names: Vec<Ustr>,
 }
 
+impl PartialEq<FQN> for Name {
+    fn eq(&self, other: &FQN) -> bool {
+        other == self
+    }
+}
+
 impl fmt::Debug for FQN {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "FQN '{}'", self.as_string())
@@ -40,6 +46,10 @@ impl FQN {
         }
         debug_assert!(!parts.is_empty());
         Ok(FQN { names: parts })
+    }
+
+    pub fn from_name(name: Name) -> Self {
+        FQN { names: vec![name.as_ustr().clone()] }
     }
 
     pub fn parts(&self) -> &[Ustr] {

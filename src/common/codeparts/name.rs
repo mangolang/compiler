@@ -1,13 +1,13 @@
 use ::std::fmt;
 use ::std::fmt::Formatter;
 
-
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
 use crate::common::error::MsgResult;
+use crate::common::codeparts::fqn::FQN;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
@@ -27,6 +27,15 @@ pub struct Name {
 impl PartialEq<str> for Name {
     fn eq(&self, other: &str) -> bool {
         self.value().eq(other)
+    }
+}
+
+impl PartialEq<Name> for FQN {
+    fn eq(&self, other: &Name) -> bool {
+        match self.as_simple_name() {
+            Some(name) => &name == other,
+            None => false
+        }
     }
 }
 
@@ -68,6 +77,10 @@ impl Name {
         self.name.as_str()
     }
 
+    pub fn as_ustr(&self) -> &Ustr {
+        &self.name
+    }
+
     pub fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {
@@ -95,6 +108,12 @@ impl Name {
             .into());
         }
         Ok(())
+    }
+}
+
+impl From<Name> for FQN {
+    fn from(name: Name) -> Self {
+        FQN::from_name(name)
     }
 }
 
