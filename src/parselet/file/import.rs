@@ -1,15 +1,18 @@
 use crate::lexeme::IdentifierLexeme;
 
-//TODO @mark: lexing
 #[derive(Debug)]
 pub struct ImportParselet {
     identifier: IdentifierLexeme,
+    alias: Option<IdentifierLexeme>,
 }
 
 impl ImportParselet {
-    pub fn new(identifier: IdentifierLexeme) -> Self {
+    pub fn new(identifier: IdentifierLexeme, alias: Option<IdentifierLexeme>) -> Self {
         ImportParselet {
-            identifier
+            identifier,
+            alias
         }
     }
+
+    //TODO @mark: effective name
 }

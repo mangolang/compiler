@@ -9,24 +9,6 @@ use ::lazy_static::lazy_static;
 
 use crate::common::error::{ErrMsg, MsgResult};
 
-/// The different operator codeparts that are recognized.
-// TODO: reserve a lot of keywords; easier to remove than add (compatibility)
-#[derive(Debug, PartialEq, Eq, Hash, Clone)]
-pub enum Keyword {
-    Let,
-    Mut,
-    If,
-    For,
-    While,
-    In,
-    Function,
-    Return,
-    Assert,
-    Import,
-    Entrypoint,
-    Reserved(String),
-}
-
 lazy_static! {
     // Note: keywords must follow the same rules as identifiers, or the lexer will
     // not recognize them. For example, no multi-word keywords.
@@ -47,7 +29,7 @@ lazy_static! {
         assert!(keywords.insert("and", Keyword::Reserved("and".to_owned())).is_none());
         assert!(keywords.insert("annotation", Keyword::Reserved("annotation".to_owned())).is_none());
         assert!(keywords.insert("any", Keyword::Reserved("any".to_owned())).is_none());
-        assert!(keywords.insert("as", Keyword::Reserved("as".to_owned())).is_none());
+        assert!(keywords.insert("as", Keyword::Alias).is_none());
         assert!(keywords.insert("async", Keyword::Reserved("async".to_owned())).is_none());
         assert!(keywords.insert("auto", Keyword::Reserved("auto".to_owned())).is_none());
         assert!(keywords.insert("await", Keyword::Reserved("await".to_owned())).is_none());
@@ -164,7 +146,7 @@ lazy_static! {
         assert!(keywords.insert("unite", Keyword::Reserved("unite".to_owned())).is_none());
         assert!(keywords.insert("union", Keyword::Reserved("union".to_owned())).is_none());
         assert!(keywords.insert("until", Keyword::Reserved("until".to_owned())).is_none());
-        assert!(keywords.insert("use", Keyword::Reserved("use".to_owned())).is_none());
+        assert!(keywords.insert("use", Keyword::Import).is_none());
         assert!(keywords.insert("val", Keyword::Reserved("val".to_owned())).is_none());
         assert!(keywords.insert("var", Keyword::Reserved("var".to_owned())).is_none());
         assert!(keywords.insert("vararg", Keyword::Reserved("vararg".to_owned())).is_none());
@@ -177,6 +159,25 @@ lazy_static! {
         assert!(keywords.insert("yield", Keyword::Reserved("yield".to_owned())).is_none());
         keywords
     };
+}
+
+/// The different operator codeparts that are recognized.
+// TODO: reserve a lot of keywords; easier to remove than add (compatibility)
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub enum Keyword {
+    Let,
+    Mut,
+    If,
+    For,
+    While,
+    In,
+    Function,
+    Return,
+    Assert,
+    Import,
+    Alias,
+    Entrypoint,
+    Reserved(String),
 }
 
 impl Keyword {
@@ -197,6 +198,7 @@ impl Keyword {
             Keyword::Return => Cow::from("return"),
             Keyword::Assert => Cow::from("assert"),
             Keyword::Import => Cow::from("use"),
+            Keyword::Alias => Cow::from("as"),
             Keyword::Entrypoint => Cow::from("main"),
             Keyword::Reserved(name) => Cow::from(name),
         }

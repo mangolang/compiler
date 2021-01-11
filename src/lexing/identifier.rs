@@ -5,6 +5,8 @@ use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
 
 /// Lex an identifier or keyword.
+///
+/// Note that fully-qualified names are created at parse time (identifier + period + identifier).
 pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(source) = reader.strip_match(&*IDENTIFIER_RE) {
         let word = source.as_str();

@@ -64,6 +64,10 @@ impl FQN {
             .join(".")
     }
 
+    pub fn is_simple(&self) -> bool {
+        return self.names.len() == 1
+    }
+
     pub fn as_simple_name(&self) -> Option<Name> {
         if self.names.len() == 1 {
             return Some(Name::from_valid(self.names[0]))
