@@ -34,7 +34,7 @@ impl fmt::Display for FQN {
 impl FQN {
     pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
         let name = name.as_ref();
-        match FQN::validate(name) {
+        match Name::validate(name) {
             Ok(_) => {
                 let parts: Vec<Ustr> = name.split(".")
                     .map(|word| ustr(word))
@@ -64,142 +64,31 @@ impl FQN {
         }
         None
     }
-
-    pub fn validate(name: &str) -> MsgResult<()> {
-        match name.chars().next() {
-            Some(chr) => {
-                if chr.is_digit(10) {
-                    return Err("Fully-qualified path parts may not start with a digit.".into());
-                }
-            }
-            None => return Ok(()), // empty string
-        }
-        if let Some(found) = FQN_RE.find(name) {
-            if found.as_str().len() < name.len() {
-                // There was a match, but some trailing characters were not matched. So while
-                // the string contains an identifier, the string as a whole is not a valid identifier.
-                return Err(format!(
-                    "Fully-qualified path '{}' is invalid; is should contains names separated by periods. A name should only contain letters, numbers and underscores.",
-                    name
-                )
-                .into());
-            }
-        } else {
-            return Err(format!(
-                "Fully-qualified path '{}' is invalid; is should contains names separated by periods. A name should only contain letters, numbers and underscores.",
-                name
-            )
-            .into());
-        }
-        Ok(())
-    }
 }
-
-//TODO @mark: tests
 
 #[cfg(test)]
 mod technical {
     use super::*;
 
     #[test]
-    fn new_str() {
-        // Twice because of interning.
-        assert_eq!(FQN::new("test_name").unwrap(), *"test_name");
-        assert_eq!(FQN::new("test_name").unwrap(), *"test_name");
+    fn new_simple() {
+        let fqn = FQN::new("TheName1").unwrap();
+        assert_eq!(fqn.as_string(), "TheName1".to_owned());
+        assert_eq!(fqn.parts(), &[ustr("TheName1")]);
+        assert_eq!(fqn.as_simple_name(), Some(Name::new("TheName1").unwrap()));
     }
 
     #[test]
-    fn new_string() {
-        // Twice because of interning.
-        assert_eq!(FQN::new("test_name".to_owned()).unwrap(), *"test_name");
-        assert_eq!(FQN::new("test_name".to_owned()).unwrap(), *"test_name");
+    fn new_complex() {
+        let fqn = FQN::new("package.module1.module2.Class").unwrap();
+        assert_eq!(fqn.as_string(), "package.module1.module2.Class".to_owned());
+        assert_eq!(fqn.parts(), &[ustr("package"), ustr("module1"), ustr("module2"), ustr("Class")]);
+        assert_eq!(fqn.as_simple_name(), None);
     }
 
     #[test]
     fn equality() {
         assert_eq!(FQN::new("Hello").unwrap(), FQN::new("Hello").unwrap());
         assert_ne!(FQN::new("Hello").unwrap(), FQN::new("Goodbye").unwrap());
-    }
-}
-
-#[cfg(test)]
-mod validation {
-    use super::FQN;
-
-    fn assert_validity(is_valid: bool, input: &[&str]) {
-        for inp in input.iter() {
-            let name = FQN::new(*inp);
-            if is_valid {
-                assert!(name.is_ok(), format!("'{}' should be a valid name", inp));
-                assert_eq!(name.unwrap(), **inp);
-            } else {
-                assert!(name.is_err(), format!("'{}' should not be a valid name", inp));
-            }
-        }
-    }
-
-    #[test]
-    fn valid_names() {
-        assert_validity(
-            true,
-            &[
-                "a",
-                "z",
-                "A",
-                "Z",
-                "a0",
-                "a1234567890",
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "_",
-                "hello_world",
-                "_text",
-                "___text",
-            ],
-        );
-    }
-
-    #[test]
-    fn leading_numbers() {
-        assert_validity(
-            false,
-            &[
-                "0",
-                "9",
-                "01234567890123456789",
-                "0_", /* int */
-                "_0",
-                "_0a",
-                "__0a",
-                "0a",
-                "0ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-            ],
-        );
-    }
-
-    #[test]
-    fn contains_invalid() {
-        assert_validity(false, &["hello world", "hello-world", "hello@"]);
-    }
-
-    #[test]
-    fn forbidden_chars() {
-        assert_validity(
-            false,
-            &[
-                " ", "\t", "\n", "~", "!", "@", "#", "$", "€", "%", "^", "&", "*", "(", ")", "-", "+", "=", "}", "}", "[", "]", ":", ";",
-                "\"", "'", "\\", "|", "/", "<", ">", ",", ".", "/", "?",
-            ],
-        );
-    }
-
-    #[test]
-    fn non_ascii() {
-        assert_validity(
-            false,
-            &[
-                // Perhaps allowed in the future, but not supported yet
-                "你好", "и", "één",
-            ],
-        );
     }
 }
