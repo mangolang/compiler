@@ -33,17 +33,13 @@ impl fmt::Display for FQN {
 
 impl FQN {
     pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
-        let name = name.as_ref();
-        match Name::validate(name) {
-            Ok(_) => {
-                let parts: Vec<Ustr> = name.split(".")
-                    .map(|word| ustr(word))
-                    .collect();
-                debug_assert!(!parts.is_empty());
-                Ok(FQN { names: parts })
-            },
-            Err(msg) => Err(msg),
+        let mut parts = vec![];
+        for part in name.as_ref().split(".") {
+            Name::validate(part)?;
+            parts.push(ustr(part));
         }
+        debug_assert!(!parts.is_empty());
+        Ok(FQN { names: parts })
     }
 
     pub fn parts(&self) -> &[Ustr] {
