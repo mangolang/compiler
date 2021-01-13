@@ -95,6 +95,7 @@ lazy_static! {
         assert!(keywords.insert("local", Keyword::Reserved("local".to_owned())).is_none());
         assert!(keywords.insert("loop", Keyword::Reserved("loop".to_owned())).is_none());
         assert!(keywords.insert("macro", Keyword::Reserved("macro".to_owned())).is_none());
+        assert!(keywords.insert("main", Keyword::Entrypoint).is_none());
         assert!(keywords.insert("mango", Keyword::Reserved("mango".to_owned())).is_none());
         assert!(keywords.insert("match", Keyword::Reserved("match".to_owned())).is_none());
         assert!(keywords.insert("module", Keyword::Reserved("module".to_owned())).is_none());
