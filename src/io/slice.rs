@@ -50,7 +50,7 @@ impl SourceSlice {
 
     /// If the first slice (`self`) is right before the second (`other`), they are combined
     /// into a new slice. If they are not adjacent, an (empty) error is returned.
-    pub fn join(mut self, other: SourceSlice) -> Result<SourceSlice, ()> {
+    pub fn join(mut self, other: &SourceSlice) -> Result<SourceSlice, ()> {
         if self.end == other.start || self.end + 1 == other.start {
             self.end = other.end;
             return Ok(self);

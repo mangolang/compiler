@@ -10,7 +10,7 @@ use crate::common::codeparts::fqn::FQN;
 #[derive(Debug, Eq, Clone)]
 pub struct IdentifierLexeme {
     pub name: FQN,
-    source: SourceSlice,
+    pub source: SourceSlice,
 }
 
 impl IdentifierLexeme {

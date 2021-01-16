@@ -1,6 +1,8 @@
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::lexeme::IdentifierLexeme;
+use crate::lexeme::{IdentifierLexeme, Lexeme};
+use crate::common::codeparts::fqn::FQN;
+use crate::io::slice::SourceLocation;
 
 /// Parse a qualified name, which is (identifier + period)* + identifier
 ///
@@ -10,6 +12,21 @@ use crate::lexeme::IdentifierLexeme;
 /// * Names of imports are fully qualified (usually, but not always, containing periods)
 /// * Uses of records or functions can either use fully qualified name or simple name.
 pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexeme> {
+
+    if let Lexeme::Identifier(root_iden) = cursor.take()? {
+        let mut full_name = root_iden.clone();
+        let mut end_cursor = cursor;
+        loop {
+            if let Lexeme::Period(period) = cursor.take()? {
+                if let Lexeme::Identifier(sub_iden) = cursor.take()? {
+                    full_name = full_name.join(period, sub_iden);
+                    end_cursor = cursor;
+                    continue;
+                }
+            }
+            return Ok((end_cursor, full_name))
+        }
+    }
     unimplemented!();  //TODO @mark:
 
     // while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
