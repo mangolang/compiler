@@ -149,7 +149,7 @@ mod tests {
     #[test]
     fn join_adjacent() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 5).join(f.slice(6, 9)).unwrap();
+        let s = f.slice(1, 5).join(&f.slice(6, 9)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(9, s.end);
     }
@@ -157,7 +157,7 @@ mod tests {
     #[test]
     fn join_overlap() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 3).join(f.slice(3, 5)).unwrap();
+        let s = f.slice(1, 3).join(&f.slice(3, 5)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(5, s.end);
     }
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn join_empty() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 1).join(f.slice(1, 1)).unwrap();
+        let s = f.slice(1, 1).join(&f.slice(1, 1)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(1, s.end);
     }
@@ -173,7 +173,7 @@ mod tests {
     #[test]
     fn disjoint_join() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 3).join(f.slice(5, 5));
+        let s = f.slice(1, 3).join(&f.slice(5, 5));
         assert!(s.is_err());
     }
 }

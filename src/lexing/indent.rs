@@ -32,7 +32,7 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(more_src) = reader.direct_match(&*INDENT_RE) {
         line_indent += 1;
         //TODO @mark: need test coverage for this source slice thing
-        source = source.join(more_src).unwrap()
+        source = source.join(&more_src).unwrap()
     }
 
     // Determine the lexemes to create.

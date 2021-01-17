@@ -81,6 +81,10 @@ impl Name {
         &self.name
     }
 
+    pub fn into_ustr(self) -> Ustr {
+        self.name
+    }
+
     pub fn validate(name: &str) -> MsgResult<()> {
         match name.chars().next() {
             Some(chr) => {

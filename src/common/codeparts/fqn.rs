@@ -52,6 +52,11 @@ impl FQN {
         FQN { names: vec![name.as_ustr().clone()] }
     }
 
+    //TODO @mark: test
+    pub fn push(&mut self, addition: Name) {
+        self.names.push(addition.into_ustr());
+    }
+
     pub fn parts(&self) -> &[Ustr] {
         &self.names
     }

@@ -5,12 +5,13 @@ use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
 use crate::common::codeparts::fqn::FQN;
+use crate::lexeme::lexemes::separators::PeriodLexeme;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, Eq, Clone)]
 pub struct IdentifierLexeme {
     pub name: FQN,
-    pub source: SourceSlice,
+    source: SourceSlice,
 }
 
 impl IdentifierLexeme {
@@ -21,6 +22,16 @@ impl IdentifierLexeme {
 
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
         IdentifierLexeme { name: name.into(), source }
+    }
+
+    //TODO @mark: test
+    pub fn join(mut self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> Self {
+        let addition_name = addition.name.as_simple_name().expect("expected simple name, fot fully-qualified one");
+        self.name.push(addition_name);
+        self.source = self.source
+            .join(separator.source()).unwrap()
+            .join(addition.source()).unwrap();
+        self
     }
 }
 
