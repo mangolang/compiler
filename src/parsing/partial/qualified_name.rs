@@ -1,5 +1,5 @@
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::util::ParseRes;
+use crate::parsing::util::{ParseRes, NoMatch};
 use crate::lexeme::{IdentifierLexeme, Lexeme};
 
 /// Parse a qualified name, which is (identifier + period)* + identifier
@@ -14,7 +14,9 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
     if let Lexeme::Identifier(root_iden) = cursor.take()? {
         let mut full_name = root_iden.clone();
         let mut tail_cursor = cursor;
+
         loop {
+            //TODO @mark: do I want to change identifiers to slashes?
             if let Lexeme::Period(period) = cursor.take()? {
                 let period = period.clone();  //TODO @mark: get rid of this clone?
                 if let Lexeme::Identifier(sub_iden) = cursor.take()? {
@@ -26,32 +28,42 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
             return Ok((tail_cursor, full_name))
         }
     }
-    unimplemented!();  //TODO @mark:
 
-    // while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
-    //     expressions.push(expr);
-    //     let mut separator_cursor = expr_cursor; // copy
-    //     match separator_cursor.take() {
-    //         Ok(token) => match token {
-    //             // There is a separator, continue for another expression.
-    //             Lexeme::Comma(_) | Lexeme::Newline(_) => {
-    //                 separator_cursor.skip_while(|lexeme| lexeme.is_newline());
-    //             }
-    //             // No separator, so this is the end of the multi-expression - or a syntax
-    //             // error, but that's for the next parser to find out. Revert eating separator.
-    //             _not_a_separator => return Ok((expr_cursor, expressions)),
-    //         },
-    //         Err(_) => {
-    //             // Reached the end of input. There should probably be a closing symbol,
-    //             // but that is up to the outer parser (which knows what the opening is).
-    //             return Ok((expr_cursor, expressions));
-    //         }
-    //     }
-    //     cursor = separator_cursor
-    // }
-    // // Did not find another expression; apparently the last expression had a
-    // // comma/newline, and we are done.
-    // Ok((cursor, expressions))
+    Err(NoMatch)
 }
 
-//TODO @mark: tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::lexeme::collect::for_test::{literal_text, period, identifier, literal_int};
+    use crate::common::codeparts::fqn::FQN;
+
+    #[test]
+    fn wrong_lexeme() {
+        let lexemes = vec![literal_text("hello").into()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_qualified_name(cursor);
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), NoMatch);
+    }
+
+    #[test]
+    fn leading_period() {
+        let lexemes = vec![period(), identifier("hello").into()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let result = parse_qualified_name(cursor);
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), NoMatch);
+    }
+
+    #[test]
+    fn single() {
+        let lexemes = vec![identifier("root").into(), literal_int(7).into()].into();
+        let cursor = ParseCursor::new(&lexemes);
+        let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
+        assert_eq!(FQN::new("root").unwrap(), parselets.name);
+        let next = cursor.peek().unwrap();
+        let q: Lexeme = literal_int(7).into();
+        assert_eq!(q, *next);
+    }
+}
