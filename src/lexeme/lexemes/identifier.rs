@@ -3,9 +3,8 @@ use ::std::hash;
 use crate::common::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::Lexeme;
+use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::common::codeparts::fqn::FQN;
-use crate::lexeme::lexemes::separators::PeriodLexeme;
 
 /// An arbitrary identifier - most any properly formatted string that isn't a keyword.
 #[derive(Debug, Eq, Clone)]
@@ -25,7 +24,8 @@ impl IdentifierLexeme {
     }
 
     //TODO @mark: test
-    pub fn join(mut self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> Self {
+    pub fn join(mut self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> Self {
+        debug_assert!(separator.is_import_separator());
         let addition_name = addition.name.as_simple_name().expect("expected simple name, fot fully-qualified one");
         self.name.push(addition_name);
         self.source = self.source

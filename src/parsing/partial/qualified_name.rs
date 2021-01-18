@@ -17,12 +17,14 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 
         loop {
             //TODO @mark: do I want to change identifiers to slashes?
-            if let Lexeme::Period(period) = cursor.take()? {
-                let period = period.clone();  //TODO @mark: get rid of this clone?
-                if let Lexeme::Identifier(sub_iden) = cursor.take()? {
-                    full_name = full_name.join(&period, sub_iden);
-                    tail_cursor = cursor;
-                    continue;
+            if let Lexeme::Operator(operator) = cursor.take()? {
+                if operator.is_import_separator() {
+                    let period = operator.clone();  //TODO @mark: get rid of this clone?
+                    if let Lexeme::Identifier(sub_iden) = cursor.take()? {
+                        full_name = full_name.join(&period, sub_iden);
+                        tail_cursor = cursor;
+                        continue;
+                    }
                 }
             }
             return Ok((tail_cursor, full_name))
@@ -35,7 +37,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, period, identifier, literal_int};
+    use crate::lexeme::collect::for_test::{literal_text, period, identifier, literal_int, slash};
     use crate::common::codeparts::fqn::FQN;
 
     #[test]
@@ -49,7 +51,7 @@ mod tests {
 
     #[test]
     fn leading_period() {
-        let lexemes = vec![period(), identifier("hello").into()].into();
+        let lexemes = vec![slash(), identifier("hello").into()].into();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_qualified_name(cursor);
         assert!(result.is_err());
@@ -65,5 +67,10 @@ mod tests {
         let next = cursor.peek().unwrap();
         let q: Lexeme = literal_int(7).into();
         assert_eq!(q, *next);
+    }
+
+    #[test]
+    fn multiple() {
+        unimplemented!();
     }
 }

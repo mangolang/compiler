@@ -13,6 +13,7 @@ use crate::lexeme::{
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::collect::all::Lexeme::Operator;
 
 pub fn identifier(txt: &str) -> IdentifierLexeme {
     IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap()
@@ -138,6 +139,9 @@ pub fn ellipsis() -> Lexeme {
 }
 pub fn period() -> Lexeme {
     Lexeme::Period(PeriodLexeme::new(SourceSlice::mock()))
+}
+pub fn slash() -> Lexeme {
+    Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
 }
 pub fn newline() -> Lexeme {
     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
