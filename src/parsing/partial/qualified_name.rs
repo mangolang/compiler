@@ -37,7 +37,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, period, identifier, literal_int, slash};
+    use crate::lexeme::collect::for_test::{literal_text, identifier, literal_int, slash};
     use crate::common::codeparts::fqn::FQN;
 
     #[test]

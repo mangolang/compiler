@@ -13,7 +13,6 @@ use crate::lexeme::{
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
-use crate::lexeme::collect::all::Lexeme::Operator;
 
 pub fn identifier(txt: &str) -> IdentifierLexeme {
     IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap()
