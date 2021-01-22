@@ -1,16 +1,20 @@
 use crate::lexeme::Lexeme;
 
+pub trait Parseable {
+    fn parse(lexemes: &[Lexeme]) -> Self;
+}
+
 /// Only compile the body of a block when it's used. The signature must be parsed
 /// immediately to be able to know whether a block is used. But compiling the body
 /// can be skipped until after it is certain whether the block is used anywhere.
 #[derive(Debug)]
-pub enum LazyParselet<T> {
+pub enum LazyParselet<T: Parseable> {
     Pending(Vec<Lexeme>),
     Parsed(T),
     //TODO @mark: unsure about how to structure this one
 }
 
-impl <T> LazyParselet<T> {
+impl <T: Parseable> LazyParselet<T> {
     pub fn create(lexemes: Vec<Lexeme>) -> Self {
         LazyParselet::Pending(lexemes)
     }
@@ -19,7 +23,7 @@ impl <T> LazyParselet<T> {
         match self {
             LazyParselet::Pending(lexemes) => {
                 //TODO @mark:
-                let body = T {};
+                let body = T::parse(&lexemes);
                 *self = LazyParselet::Parsed(body);
                 if let LazyParselet::Parsed(resolved) = self {
                     return resolved
@@ -34,12 +38,28 @@ impl <T> LazyParselet<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::lexeme::collect::for_test::period;
+
+    struct TestParseable(u32);
+
+    impl Parseable for TestParseable {
+        fn parse(lexemes: &[Lexeme]) -> Self {
+            TestParseable(lexemes.len() as u32)
+        }
+    }
 
     #[test]
-    fn resolve_once() {
-        //TODO @mark: maybe I should not need mutability?
-        let mut func = LazyParselet::Pending(vec![]);
+    fn resolve_1() {
+        let mut func: LazyParselet<TestParseable> = LazyParselet::create(vec![]);
         let body = func.parsed();
-        unimplemented!()
+        assert_eq!(body.0, 0);
+    }
+
+    #[test]
+    fn resolve_2() {
+        //TODO @mark: maybe I should not need mutability?
+        let mut func: LazyParselet<TestParseable> = LazyParselet::create(vec![period()]);
+        let body = func.parsed();
+        assert_eq!(body.0, 1);
     }
 }
