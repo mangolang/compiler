@@ -28,14 +28,14 @@ path = "src/lib.rs"
 mango_ir = "0.1.0"
 scoped_name = "0.2.0"
 #nom = "^6.0.0-alpha1"
-regex = "1.4.2"
+regex = "1.4.3"
 ustr = "0.7.0"
 lazy_static = "1.4.0"
 derive-new = "0.5.8"
 #cargo-wasm = "0.4.*"
 #wasm-bindgen = "^0.2.63"
 #itertools = "^0.8.2"  # TODO @mark: unused?
-smallvec = { version = "1.6.0", features = ["union"] }
+smallvec = { version = "1.6.1", features = ["union"] }
 #indoc = "^0.3.5"
 #parity-wasm = "^0.41.0"
 
