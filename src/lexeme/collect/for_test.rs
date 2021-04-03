@@ -13,6 +13,7 @@ use crate::lexeme::{
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
+use crate::parselet::file::import::ImportParselet;
 
 pub fn identifier(txt: &str) -> IdentifierLexeme {
     IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap()
@@ -144,6 +145,12 @@ pub fn slash() -> Lexeme {
 }
 pub fn newline() -> Lexeme {
     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
+}
+
+pub fn import(fqn: &str) -> ImportParselet {
+    //TODO @mark: more general return type?
+    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
+    ImportParselet::new(identifier, None)
 }
 
 pub fn unlexable(text: impl Into<String>) -> Lexeme {

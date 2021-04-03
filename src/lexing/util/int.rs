@@ -37,11 +37,11 @@ pub fn parse_int(text: &str) -> Result<i64, IntParseFailReason> {
                     if let Some(base) = captures.name("base") {
                         if let Some(value) = captures.name("reb_val") {
                             // TODO: implement
-                            panic!(format!(
+                            panic!(
                                 "Do not yet know how to deal with {} in base {}",
                                 value.as_str().without_char('_'),
                                 base.as_str()
-                            ))
+                            )
                         } else {
                             panic!("Expected 'reb_val' match in regex")
                         }

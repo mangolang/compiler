@@ -19,3 +19,13 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
         Some(entrypoint.1),
     )))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hello_world_file() {
+        unimplemented!()
+    }
+}

@@ -1,6 +1,6 @@
 use crate::lexeme::IdentifierLexeme;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct ImportParselet {
     identifier: IdentifierLexeme,
     alias: Option<IdentifierLexeme>,
