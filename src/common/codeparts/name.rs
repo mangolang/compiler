@@ -60,11 +60,6 @@ impl Name {
         }
     }
 
-    pub fn from_valid(name: Ustr) -> Self {
-        debug_assert!(Name::validate(name.as_str()).is_ok());
-        Name { name }
-    }
-
     pub fn from(name: Ustr) -> MsgResult<Self> {
         match Name::validate(name.as_str()) {
             Ok(_) => Ok(Name { name }),
@@ -79,6 +74,10 @@ impl Name {
 
     pub fn as_ustr(&self) -> &Ustr {
         &self.name
+    }
+
+    pub fn as_str(&self) -> &str {
+        self.name.as_str()
     }
 
     pub fn into_ustr(self) -> Ustr {
@@ -122,6 +121,11 @@ impl From<Name> for FQN {
 }
 
 #[cfg(test)]
+pub fn name(txt: impl AsRef<str>) -> Name {
+    Name::new(txt).unwrap()
+}
+
+#[cfg(test)]
 mod technical {
     use super::*;
 
@@ -149,6 +153,7 @@ mod technical {
 #[cfg(test)]
 mod validation {
     use super::Name;
+    use ::std::mem::size_of;
 
     fn assert_validity(is_valid: bool, input: &[&str]) {
         for inp in input.iter() {
@@ -225,5 +230,10 @@ mod validation {
                 "你好", "и", "één",
             ],
         );
+    }
+
+    #[test]
+    fn test_add() {
+        assert!(size_of::<Name>() <= 8);
     }
 }
