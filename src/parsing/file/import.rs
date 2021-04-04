@@ -15,8 +15,12 @@ pub fn parse_import(mut cursor: ParseCursor) -> ParseRes<ImportParselet> {
             if let Lexeme::Keyword(keyword) = alias_cursor.take()? {
                 if keyword.word == Keyword::Alias {
                     if let Lexeme::Identifier(identifier) = alias_cursor.take()? {
-                        let import = ImportParselet::new(identifier.clone(), Some(identifier.clone()));
-                        return Ok((alias_cursor, import))
+                        if let Some(simple) = identifier.to_simple() {
+                            let import = ImportParselet::new(identifier.clone(), Some(simple));
+                            return Ok((alias_cursor, import))
+                        } else {
+                            //TODO @mark: report as error
+                        }
                     }
                 }
             }

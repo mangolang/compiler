@@ -62,11 +62,9 @@ impl SimpleIdentifierLexeme {
     }
 
     //TODO @mark: test
-    pub fn join(mut self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
-        //TODO @mark: can be made faster
-        let mut fqn = self.to_fully_qualified_type();
-        fqn.join(separator, addition);
-        fqn
+    pub fn join(self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
+        let fqn = self.into_non_simple();
+        fqn.join(separator, addition)
     }
 
     /// Convert the type to `IdentifierLexeme` (does not actually add qualifiers to the name).
@@ -86,6 +84,24 @@ impl PartialEq for IdentifierLexeme {
     }
 }
 
+impl PartialEq for SimpleIdentifierLexeme {
+    fn eq(&self, other: &Self) -> bool {
+        self.name == other.name
+    }
+}
+
+impl PartialEq<IdentifierLexeme> for SimpleIdentifierLexeme {
+    fn eq(&self, other: &IdentifierLexeme) -> bool {
+        other.name.len() == 1 && &self.name == other.name.leaf()
+    }
+}
+
+impl PartialEq<SimpleIdentifierLexeme> for IdentifierLexeme {
+    fn eq(&self, other: &SimpleIdentifierLexeme) -> bool {
+        self.name.len() == 1 && self.name.leaf() == &other.name
+    }
+}
+
 impl hash::Hash for IdentifierLexeme {
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
         self.name.hash(state)
@@ -97,12 +113,6 @@ impl SourceLocation for IdentifierLexeme {
         &self.source
     }
 }
-
-// impl ToText for IdentifierLexeme {
-//     fn to_text(&self) -> String {
-//         self.name.to_string()
-//     }
-// }
 
 impl From<IdentifierLexeme> for Lexeme {
     fn from(identifier: IdentifierLexeme) -> Self {

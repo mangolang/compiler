@@ -11,6 +11,7 @@ use crate::lexeme::{
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
 use crate::parselet::file::import::ImportParselet;
@@ -155,7 +156,7 @@ pub fn import(fqn: &str) -> ImportParselet {
 
 pub fn import_alias(fqn: &str, alias: &str) -> ImportParselet {
     let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    let alias_identifier = IdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
+    let alias_identifier = SimpleIdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
     ImportParselet::new(identifier, Some(alias_identifier))
 }
 

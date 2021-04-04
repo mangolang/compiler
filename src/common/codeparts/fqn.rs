@@ -56,6 +56,10 @@ impl FQN {
         self.names.push(addition);
     }
 
+    pub fn len(&self) -> usize {
+        self.names.len()
+    }
+
     pub fn parts(&self) -> &[Name] {
         &self.names
     }
