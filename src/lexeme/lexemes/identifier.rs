@@ -6,10 +6,20 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::common::codeparts::fqn::FQN;
 
-/// An arbitrary identifier - most any properly formatted string that isn't a keyword.
+/// An arbitrary identifier, i.e. 'Hello' or 'std.text.regex'.
 #[derive(Debug, Eq, Clone)]
 pub struct IdentifierLexeme {
     pub name: FQN,
+    source: SourceSlice,
+}
+
+/// A simple name for something, i.e. like an Identifier but the name can have
+/// only one part (not fully-qualified). Every `SimpleIdentifierLexeme` is also
+/// convertible to a valid `IdentifierLexeme` (with same name).
+#[derive(Debug, Eq, Clone)]
+//TODO @mark: implement
+pub struct SimpleIdentifierLexeme {
+    pub name: Name,
     source: SourceSlice,
 }
 
@@ -33,7 +43,42 @@ impl IdentifierLexeme {
             .join(addition.source()).unwrap();
         self
     }
+
+    //TODO @mark: test
+    pub fn to_simple(&self) -> Option<SimpleIdentifierLexeme> {
+        unimplemented!()  //TODO @mark:
+    }
 }
+
+//TODO @mark: test
+impl SimpleIdentifierLexeme {
+    pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
+        let name = Name::new(text)?;
+        Ok(SimpleIdentifierLexeme { name, source })
+    }
+
+    pub fn from_name(name: Name, source: SourceSlice) -> Self {
+        SimpleIdentifierLexeme { name, source }
+    }
+
+    //TODO @mark: test
+    pub fn join(mut self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
+        //TODO @mark: can be made faster
+        let mut fqn = self.to_fully_qualified_type();
+        fqn.join(separator, addition);
+        fqn
+    }
+
+    /// Convert the type to `IdentifierLexeme` (does not actually add qualifiers to the name).
+    pub fn into_non_simple(self) -> IdentifierLexeme {
+        IdentifierLexeme {
+            name: FQN::from_name(self.name),
+            source: self.source,
+        }
+    }
+}
+
+//TODO @mark: Simple into FQN Into<>
 
 impl PartialEq for IdentifierLexeme {
     fn eq(&self, other: &Self) -> bool {
