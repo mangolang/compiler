@@ -44,11 +44,9 @@ mod statical {
         println!("AssignmentParselet: {}", mem::size_of::<AssignmentParselet>());
         assert!(
             expression_size <= 6 * 8,
-            format!(
-                "size is {} bytes or {} words",
-                expression_size,
-                (expression_size + word_size - 1) / word_size
-            )
+            "size is {} bytes or {} words",
+            expression_size,
+            (expression_size + word_size - 1) / word_size,
         );
     }
 }

@@ -109,6 +109,6 @@ mod tests {
     #[test]
     fn test_lexemes_size() {
         //TODO @mark: is this limit too high?
-        assert!(size_of::<Lexeme>() <= 8 * LONG_SIZE, size_of::<Lexeme>());
+        assert!(size_of::<Lexeme>() <= 8 * LONG_SIZE, "{}", size_of::<Lexeme>());
     }
 }

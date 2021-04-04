@@ -153,6 +153,12 @@ pub fn import(fqn: &str) -> ImportParselet {
     ImportParselet::new(identifier, None)
 }
 
+pub fn import_alias(fqn: &str, alias: &str) -> ImportParselet {
+    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
+    let alias_identifier = IdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
+    ImportParselet::new(identifier, Some(alias))
+}
+
 pub fn unlexable(text: impl Into<String>) -> Lexeme {
     Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))
 }

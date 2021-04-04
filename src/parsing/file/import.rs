@@ -45,7 +45,7 @@ mod importing {
     #[test]
     fn single_word_import() {
         check(
-            vec![keyword_supported("import").into(), identifier("pit").into()],
+            vec![keyword_supported("use").into(), identifier("pit").into()],
             import("pit"),
         );
     }
@@ -53,10 +53,26 @@ mod importing {
     #[test]
     fn multipart_import() {
         check(
-            vec![keyword_supported("import").into(), identifier("pit.text").into()],
+            vec![keyword_supported("use").into(), identifier("pit.text").into()],
             import("pit.text"),
         );
     }
 
-    //TODO @mark: aliasses
+    #[test]
+    fn aliassed_import() {
+        check(
+            vec![keyword_supported("use").into(), identifier("pit.text").into(), keyword_supported("as").into(), identifier("txt").into()],
+            import("pit"),
+        );
+    }
+
+    #[test]
+    fn disallow_fqn_alias() {
+        unimplemented!()
+    }
+
+    #[test]
+    fn do_not_move_when_failed() {
+        unimplemented!()
+    }
 }

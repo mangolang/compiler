@@ -21,7 +21,7 @@ pub struct FQN {
 
 impl PartialEq<FQN> for Name {
     fn eq(&self, other: &FQN) -> bool {
-        other == self
+        other.names.len() == 1 && &other.names[0] == self.as_ustr()
     }
 }
 

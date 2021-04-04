@@ -10,7 +10,7 @@ use crate::parsing::parse::parse;
 fn source_file_to_ir(source: SourceFile) -> MangoResult<SourceIR> {
     let lexemes = lex(&source);
     let _parselets = parse(lexemes);
-    dbg!(_parselets);  //TODO @mark: TEMPORARY! REMOVE THIS!
+    dbg!(_parselets.unwrap());  //TODO @mark: TEMPORARY! REMOVE THIS!
     unimplemented!()
 }
 

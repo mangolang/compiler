@@ -154,10 +154,10 @@ mod validation {
         for inp in input.iter() {
             let name = Name::new(*inp);
             if is_valid {
-                assert!(name.is_ok(), format!("'{}' should be a valid name", inp));
+                assert!(name.is_ok(), "'{}' should be a valid name", inp);
                 assert_eq!(name.unwrap(), **inp);
             } else {
-                assert!(name.is_err(), format!("'{}' should not be a valid name", inp));
+                assert!(name.is_err(), "'{}' should not be a valid name", inp);
             }
         }
     }
