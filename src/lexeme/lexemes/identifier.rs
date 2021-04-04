@@ -46,7 +46,14 @@ impl IdentifierLexeme {
 
     //TODO @mark: test
     pub fn to_simple(&self) -> Option<SimpleIdentifierLexeme> {
-        unimplemented!()  //TODO @mark:
+        if self.name.len() != 1 {
+            return None
+        }
+        Some(SimpleIdentifierLexeme {
+            //TODO @mark: clones needed? change to `into`?
+            name: self.name.leaf().clone(),
+            source: self.source.clone(),
+        })
     }
 }
 
