@@ -39,6 +39,7 @@ impl OperatorLexeme {
     }
 
     pub fn is_import_separator(&self) -> bool {
+        //TODO @mark: change back to period
         self.symbol == Symbol::Slash
     }
 }
