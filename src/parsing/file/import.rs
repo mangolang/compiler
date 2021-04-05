@@ -18,7 +18,7 @@ pub fn parse_import(mut cursor: ParseCursor) -> ParseRes<ImportParselet> {
                             let import = ImportParselet::new(identifier.clone(), Some(simple));
                             return Ok((alias_cursor, import))
                         } else {
-                            //TODO @mark: report as error
+                            panic!("alias must be simple name, not fully-qualified path");  //TODO @mark: better error report
                         }
                     }
                 }
@@ -40,48 +40,45 @@ mod importing {
     use super::*;
     use crate::parselet::Parselet;
 
-    fn check(lexemes: &FileLexemes, expected: ImportParselet, next: Result<&Lexeme, End>) {
+    #[test]
+    fn single_word_import() {
+        let lexemes = &builder()
+            .keyword("use")
+            .identifier("pit")
+            .build();
+        let expected = import("pit");
+        let next = Err(End);
         let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(next, cursor.peek());
     }
 
     #[test]
-    fn single_word_import() {
-        check(
-            &builder()
-                .keyword("use")
-                .identifier("pit")
-                .build(),
-            import("pit"),
-            Err(End)
-        );
-    }
-
-    #[test]
     fn multipart_import() {
-        check(
-            &builder()
-                .keyword("use")
-                .identifier("pit.text")
-                .build(),
-            import("pit.text"),
-            Err(End)
-        );
+        let lexemes = &builder()
+            .keyword("use")
+            .identifier("pit.text")
+            .build();
+        let expected = import("pit.text");
+        let next = Err(End);
+        let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(next, cursor.peek());
     }
 
     #[test]
     fn aliassed_import() {
-        check(
-            &builder()
-                .keyword("use")
-                .identifier("pit.text")
-                .keyword("as")
-                .identifier("txt")
-                .build(),
-            import_alias("pit.text", "txt"),
-            Err(End)
-        );
+        let lexemes = &builder()
+            .keyword("use")
+            .identifier("pit.text")
+            .keyword("as")
+            .identifier("txt")
+            .build();
+        let expected = import_alias("pit.text", "txt");
+        let next = Err(End);
+        let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(next, cursor.peek());
     }
 
     #[test]
@@ -93,20 +90,40 @@ mod importing {
             .identifier("txt")
             .literal_int(3)
             .build();
-        check(
-            &lexemes,
-            import_alias("pit.text", "txt"),
-            Ok(lexemes.last())
-        );
+        let lexemes_argument = &lexemes;
+        let expected = import_alias("pit.text", "txt");
+        let next = Ok(lexemes.last());
+        let (cursor, parselet) = parse_import(lexemes_argument.cursor()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(next, cursor.peek());
     }
 
     #[test]
+    #[should_panic]
     fn disallow_fqn_alias() {
-        unimplemented!()  //TODO @mark:
+        let lexemes = builder()
+            .keyword("use")
+            .identifier("pit.text")
+            .keyword("as")
+            .identifier("std.txt")
+            .literal_int(3)
+            .build();
+        let lexemes_argument = &lexemes;
+        let expected = import_alias("pit.text", "txt");
+        let next = Ok(lexemes.last());
+        let (cursor, parselet) = parse_import(lexemes_argument.cursor()).unwrap();
+        assert_eq!(expected, parselet);
+        assert_eq!(next, cursor.peek());
     }
 
     #[test]
-    fn do_not_move_when_failed() {
-        unimplemented!()  //TODO @mark:
+    fn missing_keyword() {
+        let lexemes = builder()
+            .identifier("pit.text")
+            .keyword("as")
+            .identifier("std.txt")
+            .literal_int(3)
+            .build();
+        assert!(parse_import(lexemes.cursor()).is_err());
     }
 }
