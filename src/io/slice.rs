@@ -63,7 +63,7 @@ impl SourceSlice {
         SourceSlice {
             file: SourceFile::mock("[mock]"),
             start: 0,
-            end: 6,
+            end: 1,
         }
     }
 }
