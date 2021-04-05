@@ -2,6 +2,7 @@ use ::std::fmt;
 use ::std::ops::Index;
 
 use crate::lexeme::Lexeme;
+use crate::parsing::util::cursor::ParseCursor;
 
 
 #[derive(Debug)]
@@ -28,6 +29,11 @@ impl FileLexemes {
 
     pub fn len(&self) -> LexemeIndex {
         LexemeIndex { value: self.lexemes.len() }
+    }
+
+    #[cfg(test)]  // for now only needed in tests
+    pub fn cursor(&self) -> ParseCursor {
+        ParseCursor::new(&self)
     }
 }
 

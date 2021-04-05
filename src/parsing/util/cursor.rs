@@ -20,6 +20,7 @@ pub struct ParseCursor<'a> {
 }
 
 impl<'a> ParseCursor<'a> {
+    //TODO @mark: replace all test uses with FileLexeme.cursor()
     pub fn new(lexemes: &'a FileLexemes) -> Self {
         ParseCursor {
             index: lexemes.index_at_start(),

@@ -49,35 +49,39 @@ mod tests {
         let lexemes = builder()
             .literal_text("hello")
             .build();
-        let cursor = ParseCursor::new(&lexemes);
-        let result = parse_qualified_name(cursor);
+        let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
     }
 
     #[test]
     fn leading_separator() {
-        let lexemes = vec![period(), identifier("hello").into()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let result = parse_qualified_name(cursor);
+        let lexemes = builder()
+            .period()
+            .identifier("hello")
+            .build();
+        let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
     }
 
     #[test]
     fn trailing_separator() {
-        let lexemes = vec![identifier("hello").into(), period()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let result = parse_qualified_name(cursor);
+        let lexemes = builder()
+            .identifier("hello")
+            .period()
+            .build();
+        let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
     }
 
     #[test]
     fn eof_after_name() {
-        let lexemes = vec![identifier("hello").into()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
+        let lexemes = builder()
+            .identifier("hello")
+            .build();
+        let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("hello").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         let q: Lexeme = period().into();
@@ -86,10 +90,12 @@ mod tests {
 
     #[test]
     fn single() {
-        let lexemes = vec![identifier("root").into(), literal_int(7).into()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
-        assert_eq!(FQN::new("root").unwrap(), parselets.name);
+        let lexemes = builder()
+            .identifier("hello")
+            .literal_int(7)
+            .build();
+        let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
+        assert_eq!(FQN::new("hello").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         let q: Lexeme = literal_int(7).into();
         assert_eq!(q, *next);
@@ -97,9 +103,12 @@ mod tests {
 
     #[test]
     fn two() {
-        let lexemes = vec![identifier("my_lib").into(), period(), identifier("MyClass").into()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
+        let lexemes = builder()
+            .identifier("my_lib")
+            .period()
+            .identifier("MyClass")
+            .build();
+        let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("my_lib.MyClass").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         let q: Lexeme = literal_int(7).into();
@@ -108,9 +117,14 @@ mod tests {
 
     #[test]
     fn three() {
-        let lexemes = vec![identifier("std").into(), period(), identifier("text").into(), period(), identifier("regex").into()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
+        let lexemes = builder()
+            .identifier("std")
+            .period()
+            .identifier("text")
+            .period()
+            .identifier("regex")
+            .build();
+        let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("std.text.regex").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         let q: Lexeme = literal_int(7).into();

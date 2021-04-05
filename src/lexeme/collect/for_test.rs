@@ -17,6 +17,7 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::parselet::file::import::ImportParselet;
 use crate::lexeme::collect::FileLexemes;
 use crate::io::source::SourceFile;
+use crate::parsing::util::cursor::ParseCursor;
 
 pub struct TestLexemeBuilder {
     source: String,
@@ -37,7 +38,7 @@ impl TestLexemeBuilder {
         let mut lexs = Vec::with_capacity(self.lexemes.len());
         let mut last = 0;
         for lex in self.lexemes {
-            let slice = SourceSlice::new(&file, last, lex.0);
+            let slice = SourceSlice::new(&file, last, lex.0 - 1);
             last = lex.0;
             lexs.push(lex.1(slice))
         }
@@ -161,10 +162,14 @@ impl TestLexemeBuilder {
     // pub fn ellipsis(mut self) {
     //     Lexeme::Ellipsis(EllipsisLexeme::new(SourceSlice::mock()))
     // }
-    // //TODO @mark:
-    // pub fn period(mut self) {
-    //     Lexeme::Period(PeriodLexeme::new(SourceSlice::mock()))
-    // }
+
+    pub fn period(mut self) -> Self {
+        let end = self.add_src(".");
+        let lex = move |src| Lexeme::Period(PeriodLexeme::new(src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
     // //TODO @mark:
     // pub fn slash(mut self) {
     //     Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
