@@ -47,60 +47,72 @@ impl TestLexemeBuilder {
     /// Return end index of source slice.
     fn add_src(&mut self, txt: impl AsRef<str>) -> usize {
         self.source.push_str(txt.as_ref());
+        self.source.push(' ');
         return self.source.len()
     }
 
-    pub fn identifier(&mut self, txt: impl Into<String>) {
+    pub fn identifier(mut self, txt: impl Into<String>) -> Self {
         let txt = txt.into();
         let end = self.add_src(&txt);
         let lex = move |src| Lexeme::Identifier(IdentifierLexeme::from_str(&txt, src).unwrap());
-        self.lexemes.push((end, Box::new(lex)))
+        self.lexemes.push((end, Box::new(lex)));
+        self
     }
 
     // /// Parse a keyword, including reserved keywords for future use.
     // //TODO @mark:
-    // pub fn keyword_or_reserved(&mut self, kw: impl IntoKeyword) {
+    // pub fn keyword_or_reserved(mut self, kw: impl IntoKeyword) {
     //     let kw = kw.keyword().unwrap();
     //     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
     // }
     //
     // /// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
     // //TODO @mark:
-    // pub fn keyword_supported(&mut self, kw: impl IntoKeyword) {
+    // pub fn keyword_supported(mut self, kw: impl IntoKeyword) {
     //     let kw = kw.keyword().unwrap();
     //     if let Keyword::Reserved(word) = kw {
     //         panic!("Keyword '{}' is reserved but not implemented", word);
     //     }
     //     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
     // }
-    //
+
+    pub fn literal_text(mut self, txt: impl Into<String>) -> Self {
+        let txt = txt.into();
+        let end = self.add_src(format!("\"{}\"", &txt));
+        let lex = move |src| Lexeme::Literal(LiteralLexeme::Text(ustr(txt.as_ref()), src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    pub fn literal_int(mut self, nr: i64) -> Self {
+        let end = self.add_src(format!("\"{}\"", nr));
+        let lex = move |src| Lexeme::Literal(LiteralLexeme::Int(nr, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    pub fn literal_real(mut self, nr: impl Into<f64eq>) -> Self {
+        let nr = nr.into();
+        let end = self.add_src(format!("\"{}\"", nr));
+        let lex = move |src| Lexeme::Literal(LiteralLexeme::Real(nr, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    pub fn literal_bool(mut self, truthy: bool) -> Self {
+        let end = self.add_src(if truthy { "true" } else { "false" });
+        let lex = move |src| Lexeme::Literal(LiteralLexeme::Boolean(truthy, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
     // //TODO @mark:
-    // pub fn literal_text(&mut self, txt: impl AsRef<str>) {
-    //     LiteralLexeme::Text(ustr(txt.as_ref()), SourceSlice::mock())
-    // }
-    //
-    // //TODO @mark:
-    // pub fn literal_int(&mut self, nr: i64) {
-    //     LiteralLexeme::Int(nr, SourceSlice::mock())
-    // }
-    //
-    // //TODO @mark:
-    // pub fn literal_real(&mut self, nr: impl Into<f64eq>) {
-    //     LiteralLexeme::Real(nr.into(), SourceSlice::mock())
-    // }
-    //
-    // //TODO @mark:
-    // pub fn literal_bool(&mut self, b: bool) {
-    //     LiteralLexeme::Boolean(b, SourceSlice::mock())
-    // }
-    //
-    // //TODO @mark:
-    // pub fn operator(&mut self, txt: impl IntoSymbol) {
+    // pub fn operator(mut self, txt: impl IntoSymbol) {
     //     OperatorLexeme::from_symbol(txt.symbol(false).unwrap().unwrap(), SourceSlice::mock())
     // }
     //
     // //TODO @mark:
-    // pub fn association(&mut self, txt: impl IntoSymbol) {
+    // pub fn association(mut self, txt: impl IntoSymbol) {
     //     txt.symbol(true)
     //         .unwrap()
     //         .map(|sym| AssociationLexeme::from_symbol(sym, SourceSlice::mock()).unwrap())
@@ -108,76 +120,76 @@ impl TestLexemeBuilder {
     // }
     //
     // //TODO @mark:
-    // pub fn parenthesis_open(&mut self) {
+    // pub fn parenthesis_open(mut self) {
     //     Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn parenthesis_close(&mut self) {
+    // pub fn parenthesis_close(mut self) {
     //     Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn bracket_open(&mut self) {
+    // pub fn bracket_open(mut self) {
     //     Lexeme::BracketOpen(BracketOpenLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn bracket_close(&mut self) {
+    // pub fn bracket_close(mut self) {
     //     Lexeme::BracketClose(BracketCloseLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn start_block(&mut self) {
+    // pub fn start_block(mut self) {
     //     Lexeme::StartBlock(StartBlockLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn end_block(&mut self) {
+    // pub fn end_block(mut self) {
     //     Lexeme::EndBlock(EndBlockLexeme::new2(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn colon(&mut self) {
+    // pub fn colon(mut self) {
     //     Lexeme::Colon(ColonLexeme::new(SourceSlice::mock()))
     // }
     // //TODO @mark:
-    // pub fn comma(&mut self) {
+    // pub fn comma(mut self) {
     //     Lexeme::Comma(CommaLexeme::new(SourceSlice::mock()))
     // }
     // //TODO @mark:
-    // pub fn ellipsis(&mut self) {
+    // pub fn ellipsis(mut self) {
     //     Lexeme::Ellipsis(EllipsisLexeme::new(SourceSlice::mock()))
     // }
     // //TODO @mark:
-    // pub fn period(&mut self) {
+    // pub fn period(mut self) {
     //     Lexeme::Period(PeriodLexeme::new(SourceSlice::mock()))
     // }
     // //TODO @mark:
-    // pub fn slash(&mut self) {
+    // pub fn slash(mut self) {
     //     Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
     // }
     // //TODO @mark:
-    // pub fn newline(&mut self) {
+    // pub fn newline(mut self) {
     //     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
     // }
     //
     // //TODO @mark:
-    // pub fn import(&mut self, fqn: &str) {
+    // pub fn import(mut self, fqn: &str) {
     //     //TODO @mark: more general return type?
     //     let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
     //     ImportParselet::new(identifier, None)
     // }
     //
     // //TODO @mark:
-    // pub fn import_alias(&mut self, fqn: &str, alias: &str) {
+    // pub fn import_alias(mut self, fqn: &str, alias: &str) {
     //     let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
     //     let alias_identifier = SimpleIdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
     //     ImportParselet::new(identifier, Some(alias_identifier))
     // }
     //
     // //TODO @mark:
-    // pub fn unlexable(&mut self, text: impl Into<String>) {
+    // pub fn unlexable(mut self, text: impl Into<String>) {
     //     Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))
     // }
 }

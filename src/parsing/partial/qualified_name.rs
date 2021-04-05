@@ -41,12 +41,14 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, identifier, literal_int, period};
+    use crate::lexeme::collect::for_test::{literal_text, identifier, literal_int, period, builder};
     use crate::common::codeparts::fqn::FQN;
 
     #[test]
     fn wrong_lexeme() {
-        let lexemes = vec![literal_text("hello").into()].into();
+        let lexemes = builder()
+            .literal_text("hello")
+            .build();
         let cursor = ParseCursor::new(&lexemes);
         let result = parse_qualified_name(cursor);
         assert!(result.is_err());
