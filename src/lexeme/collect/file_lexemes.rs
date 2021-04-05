@@ -35,6 +35,11 @@ impl FileLexemes {
     pub fn cursor(&self) -> ParseCursor {
         ParseCursor::new(&self)
     }
+
+    #[cfg(test)]
+    pub fn last(&self) -> &Lexeme {
+        self.lexemes.last().unwrap()
+    }
 }
 
 impl From<Vec<Lexeme>> for FileLexemes {

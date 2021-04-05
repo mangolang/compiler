@@ -33,40 +33,71 @@ pub fn parse_import(mut cursor: ParseCursor) -> ParseRes<ImportParselet> {
 
 #[cfg(test)]
 mod importing {
-    use crate::lexeme::collect::for_test::{identifier, import, keyword_supported};
+    use crate::lexeme::collect::FileLexemes;
+    use crate::lexeme::collect::for_test::builder;
+    use crate::parselet::short::{import, import_alias};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::parselet::Parselet;
 
-    fn check(lexeme: Vec<Lexeme>, expected: ImportParselet) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_import(cursor).unwrap();
+    fn check(lexemes: &FileLexemes, expected: ImportParselet, next: Result<&Lexeme, End>) {
+        let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
         assert_eq!(expected, parselet);
-        assert_eq!(Err(End), cursor.peek());
+        assert_eq!(next, cursor.peek());
     }
 
     #[test]
     fn single_word_import() {
         check(
-            vec![keyword_supported("use").into(), identifier("pit").into()],
+            &builder()
+                .keyword("use")
+                .identifier("pit")
+                .build(),
             import("pit"),
+            Err(End)
         );
     }
 
     #[test]
     fn multipart_import() {
         check(
-            vec![keyword_supported("use").into(), identifier("pit.text").into()],
+            &builder()
+                .keyword("use")
+                .identifier("pit.text")
+                .build(),
             import("pit.text"),
+            Err(End)
         );
     }
 
     #[test]
     fn aliassed_import() {
         check(
-            vec![keyword_supported("use").into(), identifier("pit.text").into(), keyword_supported("as").into(), identifier("txt").into()],
-            import("pit"),
+            &builder()
+                .keyword("use")
+                .identifier("pit.text")
+                .keyword("as")
+                .identifier("txt")
+                .build(),
+            import_alias("pit.text", "txt"),
+            Err(End)
+        );
+    }
+
+    #[test]
+    fn next_lexeme() {
+        let lexemes = builder()
+            .keyword("use")
+            .identifier("pit.text")
+            .keyword("as")
+            .identifier("txt")
+            .literal_int(3)
+            .build();
+        check(
+            &lexemes,
+            import_alias("pit.text", "txt"),
+            Ok(lexemes.last())
         );
     }
 

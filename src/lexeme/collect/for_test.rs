@@ -60,22 +60,27 @@ impl TestLexemeBuilder {
         self
     }
 
-    // /// Parse a keyword, including reserved keywords for future use.
-    // //TODO @mark:
-    // pub fn keyword_or_reserved(mut self, kw: impl IntoKeyword) {
-    //     let kw = kw.keyword().unwrap();
-    //     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
-    // }
-    //
-    // /// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
-    // //TODO @mark:
-    // pub fn keyword_supported(mut self, kw: impl IntoKeyword) {
-    //     let kw = kw.keyword().unwrap();
-    //     if let Keyword::Reserved(word) = kw {
-    //         panic!("Keyword '{}' is reserved but not implemented", word);
-    //     }
-    //     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
-    // }
+    fn add_keyword(mut self, kw: Keyword) -> Self {
+        let end = self.add_src(kw.to_str());
+        let lex = move |src| Lexeme::Keyword(KeywordLexeme::from_keyword(kw, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    /// Parse a keyword, including reserved keywords for future use.
+    pub fn keyword_or_reserved(mut self, kw: impl IntoKeyword) -> Self {
+        let kw = kw.keyword().unwrap();
+        self.add_keyword(kw)
+    }
+
+    /// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
+    pub fn keyword(mut self, kw: impl IntoKeyword) -> Self {
+        let kw = kw.keyword().unwrap();
+        if let Keyword::Reserved(word) = kw {
+            panic!("Keyword '{}' is reserved but not implemented", word);
+        }
+        self.add_keyword(kw)
+    }
 
     pub fn literal_text(mut self, txt: impl Into<String>) -> Self {
         let txt = txt.into();
@@ -177,20 +182,6 @@ impl TestLexemeBuilder {
     // //TODO @mark:
     // pub fn newline(mut self) {
     //     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn import(mut self, fqn: &str) {
-    //     //TODO @mark: more general return type?
-    //     let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    //     ImportParselet::new(identifier, None)
-    // }
-    //
-    // //TODO @mark:
-    // pub fn import_alias(mut self, fqn: &str, alias: &str) {
-    //     let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    //     let alias_identifier = SimpleIdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
-    //     ImportParselet::new(identifier, Some(alias_identifier))
     // }
     //
     // //TODO @mark:
@@ -350,20 +341,6 @@ pub fn slash() -> Lexeme {
 #[deprecated(note="please use `TestLexemeBuilder` instead")]
 pub fn newline() -> Lexeme {
     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
-}
-
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
-pub fn import(fqn: &str) -> ImportParselet {
-    //TODO @mark: more general return type?
-    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    ImportParselet::new(identifier, None)
-}
-
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
-pub fn import_alias(fqn: &str, alias: &str) -> ImportParselet {
-    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    let alias_identifier = SimpleIdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
-    ImportParselet::new(identifier, Some(alias_identifier))
 }
 
 #[deprecated(note="please use `TestLexemeBuilder` instead")]
