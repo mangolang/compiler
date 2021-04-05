@@ -83,6 +83,15 @@ impl Index<LexemeIndex> for FileLexemes {
 }
 
 #[cfg(test)]
+impl Index<usize> for FileLexemes {
+    type Output = Lexeme;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.lexemes[index]
+    }
+}
+
+#[cfg(test)]
 mod tests {
     use crate::lexeme::collect::for_test::*;
 

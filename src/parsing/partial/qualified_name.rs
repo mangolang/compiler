@@ -41,7 +41,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, identifier, literal_int, period, builder};
+    use crate::lexeme::collect::for_test::builder;
     use crate::common::codeparts::fqn::FQN;
 
     #[test]
@@ -83,9 +83,7 @@ mod tests {
             .build();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("hello").unwrap(), parselets.name);
-        let next = cursor.peek().unwrap();
-        let q: Lexeme = period().into();
-        assert_eq!(q, *next);
+        assert!(cursor.peek().is_err());
     }
 
     #[test]
@@ -97,8 +95,7 @@ mod tests {
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("hello").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
-        let q: Lexeme = literal_int(7).into();
-        assert_eq!(q, *next);
+        assert_eq!(&lexemes[1], next);
     }
 
     #[test]
@@ -110,9 +107,7 @@ mod tests {
             .build();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("my_lib.MyClass").unwrap(), parselets.name);
-        let next = cursor.peek().unwrap();
-        let q: Lexeme = literal_int(7).into();
-        assert_eq!(q, *next);
+        assert!(cursor.peek().is_err());
     }
 
     #[test]
@@ -123,11 +118,11 @@ mod tests {
             .identifier("text")
             .period()
             .identifier("regex")
+            .literal_int(7)
             .build();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("std.text.regex").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
-        let q: Lexeme = literal_int(7).into();
-        assert_eq!(q, *next);
+        assert_eq!(&lexemes[5], next);
     }
 }
