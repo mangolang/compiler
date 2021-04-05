@@ -18,16 +18,14 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
         let mut tail_cursor = cursor;
 
         loop {
-            //TODO @mark: do I want to change identifiers to slashes? nice for imports, but inconsistent with in-code use
             match cursor.take() {
-                Ok(Lexeme::Operator(operator)) => {
-                    if operator.is_import_separator() {
-                        let period = operator.clone();  //TODO @mark: get rid of this clone?
-                        if let Lexeme::Identifier(sub_iden) = cursor.take()? {
-                            full_name = full_name.join(&period, sub_iden);
-                            tail_cursor = cursor;
-                            continue;
-                        }
+                Ok(Lexeme::Period(separator)) => {
+                    let separator_copy = separator.clone();
+                    if let Lexeme::Identifier(sub_iden) = cursor.take()? {
+                        debug_assert!(sub_iden.is_simple());
+                        full_name = full_name.join(&separator_copy, sub_iden);
+                        tail_cursor = cursor;
+                        continue;
                     }
                 },
                 Ok(_) | Err(End) => {},
@@ -100,7 +98,7 @@ mod tests {
         let lexemes = vec![identifier("my_lib").into(), period(), identifier("MyClass").into()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselets) = parse_qualified_name(cursor).unwrap();
-        assert_eq!(FQN::new("std.text.regex").unwrap(), parselets.name);
+        assert_eq!(FQN::new("my_lib.MyClass").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         let q: Lexeme = literal_int(7).into();
         assert_eq!(q, *next);

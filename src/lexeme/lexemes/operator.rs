@@ -37,11 +37,6 @@ impl OperatorLexeme {
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
     }
-
-    pub fn is_import_separator(&self) -> bool {
-        //TODO @mark: change back to period
-        self.symbol == Symbol::Slash
-    }
 }
 
 impl PartialEq for OperatorLexeme {

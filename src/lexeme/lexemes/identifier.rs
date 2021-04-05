@@ -3,8 +3,9 @@ use ::std::hash;
 use crate::common::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::{Lexeme, OperatorLexeme};
+use crate::lexeme::Lexeme;
 use crate::common::codeparts::fqn::FQN;
+use crate::lexeme::lexemes::separators::PeriodLexeme;
 
 /// An arbitrary identifier, i.e. 'Hello' or 'std.text.regex'.
 #[derive(Debug, Eq, Clone)]
@@ -34,14 +35,18 @@ impl IdentifierLexeme {
     }
 
     //TODO @mark: test
-    pub fn join(mut self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> Self {
-        debug_assert!(separator.is_import_separator());
+    /// Join two identifiers into one, i.e. 'a.b' & 'c' to 'a.b.c'
+    pub fn join(mut self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> Self {
         let addition_name = addition.name.as_simple_name().expect("expected simple name, fot fully-qualified one");
         self.name.push(addition_name);
         self.source = self.source
             .join(separator.source()).unwrap()
             .join(addition.source()).unwrap();
         self
+    }
+
+    pub fn is_simple(&self) -> bool {
+        self.name.len() == 1
     }
 
     //TODO @mark: test
@@ -69,7 +74,7 @@ impl SimpleIdentifierLexeme {
     }
 
     //TODO @mark: test
-    pub fn join(self, separator: &OperatorLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
+    pub fn join(self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
         let fqn = self.into_non_simple();
         fqn.join(separator, addition)
     }

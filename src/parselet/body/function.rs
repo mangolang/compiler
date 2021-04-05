@@ -7,7 +7,7 @@ pub struct ResolvedFunctionBodyParselet {
 }
 
 impl Parseable for ResolvedFunctionBodyParselet {
-    fn parse(lexemes: &[Lexeme]) -> Self {
+    fn parse(_lexemes: &[Lexeme]) -> Self {
         unimplemented!()
     }
 }
