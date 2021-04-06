@@ -5,7 +5,7 @@ use ::ustr::ustr;
 
 use crate::common::codeparts::{Keyword, Symbol};
 use crate::common::codeparts::eqfloat::f64eq;
-use crate::io::slice::SourceSlice;
+use crate::io::slice::{SourceSlice, SourceLocation};
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
@@ -50,6 +50,12 @@ impl TestLexemeBuilder {
         self.source.push_str(txt.as_ref());
         self.source.push(' ');
         return self.source.len()
+    }
+
+    fn add_simple(mut self, txt: impl AsRef<str>, lexeme_gen: fn(SourceSlice) -> Lexeme) -> Self {
+        let end = self.add_src(&txt);
+        self.lexemes.push((end, Box::new(lexeme_gen)));
+        self
     }
 
     pub fn identifier(mut self, txt: impl Into<String>) -> Self {
@@ -112,61 +118,60 @@ impl TestLexemeBuilder {
         self
     }
 
-    // //TODO @mark:
-    // pub fn operator(mut self, txt: impl IntoSymbol) {
-    //     OperatorLexeme::from_symbol(txt.symbol(false).unwrap().unwrap(), SourceSlice::mock())
-    // }
-    //
-    // //TODO @mark:
-    // pub fn association(mut self, txt: impl IntoSymbol) {
-    //     txt.symbol(true)
-    //         .unwrap()
-    //         .map(|sym| AssociationLexeme::from_symbol(sym, SourceSlice::mock()).unwrap())
-    //         .unwrap_or_else(|| AssociationLexeme::from_unprefixed(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn parenthesis_open(mut self) {
-    //     Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn parenthesis_close(mut self) {
-    //     Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn bracket_open(mut self) {
-    //     Lexeme::BracketOpen(BracketOpenLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn bracket_close(mut self) {
-    //     Lexeme::BracketClose(BracketCloseLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn start_block(mut self) {
-    //     Lexeme::StartBlock(StartBlockLexeme::new(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn end_block(mut self) {
-    //     Lexeme::EndBlock(EndBlockLexeme::new2(SourceSlice::mock()))
-    // }
-    //
-    // //TODO @mark:
-    // pub fn colon(mut self) {
-    //     Lexeme::Colon(ColonLexeme::new(SourceSlice::mock()))
-    // }
-    // //TODO @mark:
-    // pub fn comma(mut self) {
-    //     Lexeme::Comma(CommaLexeme::new(SourceSlice::mock()))
-    // }
-    // //TODO @mark:
-    // pub fn ellipsis(mut self) {
-    //     Lexeme::Ellipsis(EllipsisLexeme::new(SourceSlice::mock()))
-    // }
+    pub fn operator(mut self, txt: impl IntoSymbol) -> Self {
+        let sym = txt.symbol(false).unwrap().expect("not a valid operator");
+        let end = self.add_src(format!("{}", sym));
+        let lex = move |src| Lexeme::Operator(OperatorLexeme::from_symbol(sym, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    pub fn association(mut self, txt: impl IntoSymbol) -> Self {
+        let sym = txt.symbol(true).unwrap();
+        let end = self.add_src(if let Some(s) = &sym { format!("{}=", s) } else { "".to_owned() });
+        let lex = |src: SourceSlice| Lexeme::Association(match sym {
+            Some(s) => AssociationLexeme::from_symbol(s, src.clone()).unwrap(),
+            None => AssociationLexeme::from_unprefixed(src),
+        });
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
+    pub fn parenthesis_open(mut self) ->Self {
+        self.add_simple("(", |src| Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(src)))
+    }
+
+    pub fn parenthesis_close(mut self) ->Self {
+        self.add_simple(")", |src| Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(src)))
+    }
+
+    pub fn bracket_open(mut self) ->Self {
+        self.add_simple("[", |src| Lexeme::BracketOpen(BracketOpenLexeme::new(src)))
+    }
+
+    pub fn bracket_close(mut self) ->Self {
+        self.add_simple("]", |src| Lexeme::BracketClose(BracketCloseLexeme::new(src)))
+    }
+
+    pub fn start_block(mut self) ->Self {
+        self.add_simple("{\n", |src| Lexeme::StartBlock(StartBlockLexeme::new(src)))
+    }
+
+    pub fn end_block(mut self) ->Self {
+        self.add_simple("}\n", |src| Lexeme::EndBlock(EndBlockLexeme::new2(src)))
+    }
+
+    pub fn colon(mut self) ->Self {
+        self.add_simple(": ", |src| Lexeme::Colon(ColonLexeme::new(src)))
+    }
+
+    pub fn comma(mut self) ->Self {
+        self.add_simple(",", |src| Lexeme::Comma(CommaLexeme::new(src)))
+    }
+
+    pub fn ellipsis(mut self) ->Self {
+        self.add_simple("...", |src| Lexeme::Ellipsis(EllipsisLexeme::new(src)))
+    }
 
     pub fn period(mut self) -> Self {
         let end = self.add_src(".");
@@ -175,11 +180,6 @@ impl TestLexemeBuilder {
         self
     }
 
-    // //TODO @mark:
-    // pub fn slash(mut self) {
-    //     Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
-    // }
-
     pub fn newline(mut self) -> Self {
         let end = self.add_src(";\n");
         let lex = move |src| Lexeme::Newline(NewlineLexeme::new(src));
@@ -187,10 +187,13 @@ impl TestLexemeBuilder {
         self
     }
 
-    // //TODO @mark:
-    // pub fn unlexable(mut self, text: impl Into<String>) {
-    //     Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))
-    // }
+    pub fn unlexable(mut self, txt: impl Into<String>) -> Self {
+        let txt = txt.into();
+        let end = self.add_src(";\n");
+        let lex = move |src| Lexeme::Unlexable(UnlexableLexeme::new(txt, src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
 }
 
 #[deprecated(note="please use `TestLexemeBuilder` instead")]

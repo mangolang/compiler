@@ -3,7 +3,8 @@ use crate::parselet::file::file::FileParselet;
 use crate::parsing::file::import::parse_import;
 use crate::parsing::signature::entrypoint::parse_entrypoint;
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::util::ParseRes;
+use crate::parsing::util::{ParseRes, NoMatch};
+use crate::parselet::signature::entrypoint::EntryPointParselet;
 
 pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut imports = vec![];
@@ -13,10 +14,13 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
         cursor = import_cursor;
         cursor.skip_while(|lexeme| matches!(lexeme, Lexeme::Newline(_)));
     }
-    let entrypoint = parse_entrypoint(cursor)?;
-    Ok((entrypoint.0, FileParselet::new(
+    let (end_cursor, entrypoint)  = match parse_entrypoint(cursor) {
+        Ok(entry) => (entry.0, Some(entry.1)),
+        Err(_) => (cursor, None),
+    };
+    Ok((end_cursor, FileParselet::new(
         imports,
-        Some(entrypoint.1),
+        entrypoint,
     )))
 }
 
@@ -29,6 +33,17 @@ mod tests {
 
     #[test]
     fn hello_world_file() {
+        let lexemes = builder()
+            .newline()
+            .build();
+        let expected = FileParselet::new(
+            vec![import_alias("pit.ext", "txt")],
+            None,
+        );
+        let parselet = parse_file(lexemes.cursor()).unwrap().1;
+        //let next = Ok(lexemes.last());
+        assert_eq!(expected, parselet);
+        //assert_eq!(next, cursor.peek());
         unimplemented!()
     }
 
