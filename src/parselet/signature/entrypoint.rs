@@ -9,8 +9,6 @@ pub struct EntryPointParselet {
 
 impl EntryPointParselet {
     pub fn new(name: Option<IdentifierLexeme>) -> Self {
-        EntryPointParselet {
-            name
-        }
+        EntryPointParselet { name }
     }
 }

@@ -4,16 +4,17 @@ use ::std::fmt::Formatter;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
 
-use crate::common::error::MsgResult;
 use crate::common::codeparts::name::Name;
+use crate::common::error::MsgResult;
 
 lazy_static! {
-    pub static ref FQN_RE: Regex = Regex::new(r"^(?:*[a-zA-Z][_a-zA-Z0-9]*\.)*(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
+    pub static ref FQN_RE: Regex = Regex::new(r"^(?:[a-zA-Z][_a-zA-Z0-9]*\.)*(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
 }
 
 //TODO @mark: maybe cache hashcode and make comparisons (and hash) faster
 /// Fully-qualified name path, e.g. 'package.module1.module2.Type'.
 #[derive(Hash, PartialEq, Eq, Clone)]
+#[allow(clippy::upper_case_acronyms)]
 pub struct FQN {
     names: Vec<Name>,
 }
@@ -39,7 +40,7 @@ impl fmt::Display for FQN {
 impl FQN {
     pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
         let mut parts = vec![];
-        for part in name.as_ref().split(".") {
+        for part in name.as_ref().split('.') {
             let name = Name::new(part)?;
             parts.push(name);
         }
@@ -65,7 +66,8 @@ impl FQN {
     }
 
     pub fn as_string(&self) -> String {
-        self.names.iter()
+        self.names
+            .iter()
             .map(|name| name.as_str())
             // This collect seems useless, but for now it doesn't work without.
             .collect::<Vec<&str>>()
@@ -73,12 +75,12 @@ impl FQN {
     }
 
     pub fn is_simple(&self) -> bool {
-        return self.names.len() == 1
+        self.names.len() == 1
     }
 
     pub fn as_simple_name(&self) -> Option<Name> {
         if self.names.len() == 1 {
-            return Some(self.names[0])
+            return Some(self.names[0]);
         }
         None
     }

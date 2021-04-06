@@ -1,9 +1,9 @@
 use crate::lexeme::Lexeme;
+use crate::parselet::terminal::VariableParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::literals::parse_literal;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parselet::terminal::VariableParselet;
-use crate::parselet::ExpressionParselets;
 
 pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let mut variable_cursor = cursor; // copy

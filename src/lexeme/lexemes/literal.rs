@@ -3,9 +3,9 @@ use ::std::hash;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
 
-use ::ustr::Ustr;
-use crate::common::debug::ToText;
 use crate::common::codeparts::eqfloat::f64eq;
+use crate::common::debug::ToText;
+use ::ustr::Ustr;
 
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.

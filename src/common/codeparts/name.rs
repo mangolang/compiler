@@ -6,8 +6,8 @@ use ::regex::Regex;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
-use crate::common::error::MsgResult;
 use crate::common::codeparts::fqn::FQN;
+use crate::common::error::MsgResult;
 
 lazy_static! {
     pub static ref IDENTIFIER_RE: Regex = Regex::new(r"^(?:_*[a-zA-Z][_a-zA-Z0-9]*|_\b)").unwrap();
@@ -34,7 +34,7 @@ impl PartialEq<Name> for FQN {
     fn eq(&self, other: &Name) -> bool {
         match self.as_simple_name() {
             Some(name) => &name == other,
-            None => false
+            None => false,
         }
     }
 }

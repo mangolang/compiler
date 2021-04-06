@@ -1,10 +1,10 @@
 use ::std::hash;
 use ::std::str::FromStr;
 
-use crate::common::error::MsgResult;
-use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::common::codeparts::Keyword;
 use crate::common::debug::ToText;
+use crate::common::error::MsgResult;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// A built-in language keyword.
 #[derive(Debug, Eq, Clone)]

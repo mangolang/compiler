@@ -1,5 +1,6 @@
 use ::std::fmt;
 
+use crate::common::debug::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
@@ -14,8 +15,6 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::special::EndBlockLexeme;
 use crate::lexeme::special::StartBlockLexeme;
 use crate::lexeme::special::UnlexableLexeme;
-use crate::common::debug::ToText;
-use crate::lexeme::EndStatementLexeme;
 
 //TODO @mark: pass code slice along with lexeme
 

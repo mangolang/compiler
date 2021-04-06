@@ -1,11 +1,11 @@
 use ::std::hash;
 
+use crate::common::codeparts::fqn::FQN;
 use crate::common::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::Lexeme;
-use crate::common::codeparts::fqn::FQN;
 use crate::lexeme::lexemes::separators::PeriodLexeme;
+use crate::lexeme::Lexeme;
 
 /// An arbitrary identifier, i.e. 'Hello' or 'std.text.regex'.
 #[derive(Debug, Eq, Clone)]
@@ -37,11 +37,12 @@ impl IdentifierLexeme {
     //TODO @mark: test
     /// Join two identifiers into one, i.e. 'a.b' & 'c' to 'a.b.c'
     pub fn join(mut self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> Self {
-        let addition_name = addition.name.as_simple_name().expect("expected simple name, fot fully-qualified one");
+        let addition_name = addition
+            .name
+            .as_simple_name()
+            .expect("expected simple name, fot fully-qualified one");
         self.name.push(addition_name);
-        self.source = self.source
-            .join(separator.source()).unwrap()
-            .join(addition.source()).unwrap();
+        self.source = self.source.join(separator.source()).unwrap().join(addition.source()).unwrap();
         self
     }
 
@@ -52,11 +53,11 @@ impl IdentifierLexeme {
     //TODO @mark: test
     pub fn to_simple(&self) -> Option<SimpleIdentifierLexeme> {
         if self.name.len() != 1 {
-            return None
+            return None;
         }
         Some(SimpleIdentifierLexeme {
             //TODO @mark: clones needed? change to `into`?
-            name: self.name.leaf().clone(),
+            name: *self.name.leaf(),
             source: self.source.clone(),
         })
     }

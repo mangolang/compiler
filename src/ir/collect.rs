@@ -7,8 +7,6 @@ pub struct SourceIR {
 
 impl SourceIR {
     pub fn new(irs: Vec<IRNode>) -> Self {
-        SourceIR {
-            irs
-        }
+        SourceIR { irs }
     }
 }

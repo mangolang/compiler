@@ -1,7 +1,7 @@
 use ::std::hash;
 
-use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::common::debug::ToText;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// Represents an unlexable string.
 #[derive(Debug, Eq, Clone)]

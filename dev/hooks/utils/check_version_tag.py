@@ -61,7 +61,7 @@ def get_cargo_toml_version():
 
 def get_current_version():
 	"""
-	Get the current version of the project, according to package file.
+	Get the current version of the project, according to package files.
 	"""
 	return get_cargo_toml_version() or get_setup_py_version() or get_settings_gradle_version() or None
 

@@ -29,7 +29,7 @@ macro_rules! try_lex (
     };
 );
 
-/// Lexes a whole source file and returns the lexemes.
+/// Lexes a whole source files and returns the lexemes.
 pub fn lex(source: &SourceFile) -> FileLexemes {
     //TODO performance: does this initial capacity make sense?
     let mut reader = SourceReader::new(source);

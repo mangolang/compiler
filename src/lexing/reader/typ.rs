@@ -21,7 +21,7 @@ impl ReaderResult {
     }
 }
 
-/// A reader represents a source 'file', which may be a file, web page, string, ...
+/// A reader represents a source 'files', which may be a files, web page, string, ...
 ///
 /// Checks whether the code from the current position matches a regex pattern.
 ///

@@ -3,26 +3,25 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::{Keyword, Symbol};
 use crate::common::codeparts::eqfloat::f64eq;
-use crate::io::slice::{SourceSlice, SourceLocation};
+use crate::common::codeparts::{Keyword, Symbol};
+use crate::io::slice::SourceSlice;
+use crate::io::source::SourceFile;
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::collect::FileLexemes;
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
-use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::identifier::SimpleIdentifierLexeme;
-use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::separators::ColonLexeme;
-use crate::parselet::file::import::ImportParselet;
-use crate::lexeme::collect::FileLexemes;
-use crate::io::source::SourceFile;
-use crate::parsing::util::cursor::ParseCursor;
+
+pub type LexemeGenerator = Box<dyn FnOnce(SourceSlice) -> Lexeme>;
 
 pub struct TestLexemeBuilder {
     source: String,
     /// End position of source slice, and lexeme
-    lexemes: Vec<(usize, Box<dyn FnOnce(SourceSlice) -> Lexeme>)>,
+    lexemes: Vec<(usize, LexemeGenerator)>,
 }
 
 pub fn builder() -> TestLexemeBuilder {
@@ -49,7 +48,7 @@ impl TestLexemeBuilder {
     fn add_src(&mut self, txt: impl AsRef<str>) -> usize {
         self.source.push_str(txt.as_ref());
         self.source.push(' ');
-        return self.source.len()
+        self.source.len()
     }
 
     fn add_simple(mut self, txt: impl AsRef<str>, lexeme_gen: fn(SourceSlice) -> Lexeme) -> Self {
@@ -74,13 +73,13 @@ impl TestLexemeBuilder {
     }
 
     /// Parse a keyword, including reserved keywords for future use.
-    pub fn keyword_or_reserved(mut self, kw: impl IntoKeyword) -> Self {
+    pub fn keyword_or_reserved(self, kw: impl IntoKeyword) -> Self {
         let kw = kw.keyword().unwrap();
         self.add_keyword(kw)
     }
 
     /// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
-    pub fn keyword(mut self, kw: impl IntoKeyword) -> Self {
+    pub fn keyword(self, kw: impl IntoKeyword) -> Self {
         let kw = kw.keyword().unwrap();
         if let Keyword::Reserved(word) = kw {
             panic!("Keyword '{}' is reserved but not implemented", word);
@@ -129,47 +128,49 @@ impl TestLexemeBuilder {
     pub fn association(mut self, txt: impl IntoSymbol) -> Self {
         let sym = txt.symbol(true).unwrap();
         let end = self.add_src(if let Some(s) = &sym { format!("{}=", s) } else { "".to_owned() });
-        let lex = |src: SourceSlice| Lexeme::Association(match sym {
-            Some(s) => AssociationLexeme::from_symbol(s, src.clone()).unwrap(),
-            None => AssociationLexeme::from_unprefixed(src),
-        });
+        let lex = |src: SourceSlice| {
+            Lexeme::Association(match sym {
+                Some(s) => AssociationLexeme::from_symbol(s, src).unwrap(),
+                None => AssociationLexeme::from_unprefixed(src),
+            })
+        };
         self.lexemes.push((end, Box::new(lex)));
         self
     }
 
-    pub fn parenthesis_open(mut self) ->Self {
+    pub fn parenthesis_open(self) -> Self {
         self.add_simple("(", |src| Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(src)))
     }
 
-    pub fn parenthesis_close(mut self) ->Self {
+    pub fn parenthesis_close(self) -> Self {
         self.add_simple(")", |src| Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(src)))
     }
 
-    pub fn bracket_open(mut self) ->Self {
+    pub fn bracket_open(self) -> Self {
         self.add_simple("[", |src| Lexeme::BracketOpen(BracketOpenLexeme::new(src)))
     }
 
-    pub fn bracket_close(mut self) ->Self {
+    pub fn bracket_close(self) -> Self {
         self.add_simple("]", |src| Lexeme::BracketClose(BracketCloseLexeme::new(src)))
     }
 
-    pub fn start_block(mut self) ->Self {
+    pub fn start_block(self) -> Self {
         self.add_simple("{\n", |src| Lexeme::StartBlock(StartBlockLexeme::new(src)))
     }
 
-    pub fn end_block(mut self) ->Self {
+    pub fn end_block(self) -> Self {
         self.add_simple("}\n", |src| Lexeme::EndBlock(EndBlockLexeme::new2(src)))
     }
 
-    pub fn colon(mut self) ->Self {
+    pub fn colon(self) -> Self {
         self.add_simple(": ", |src| Lexeme::Colon(ColonLexeme::new(src)))
     }
 
-    pub fn comma(mut self) ->Self {
+    pub fn comma(self) -> Self {
         self.add_simple(",", |src| Lexeme::Comma(CommaLexeme::new(src)))
     }
 
-    pub fn ellipsis(mut self) ->Self {
+    pub fn ellipsis(self) -> Self {
         self.add_simple("...", |src| Lexeme::Ellipsis(EllipsisLexeme::new(src)))
     }
 
@@ -196,7 +197,7 @@ impl TestLexemeBuilder {
     }
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn identifier(txt: &str) -> IdentifierLexeme {
     IdentifierLexeme::from_str(txt, SourceSlice::mock()).unwrap()
 }
@@ -221,14 +222,14 @@ impl IntoKeyword for Keyword {
 }
 
 /// Parse a keyword, including reserved keywords for future use.
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn keyword_or_reserved(kw: impl IntoKeyword) -> Lexeme {
     let kw = kw.keyword().unwrap();
     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
 }
 
 /// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn keyword_supported(kw: impl IntoKeyword) -> Lexeme {
     let kw = kw.keyword().unwrap();
     if let Keyword::Reserved(word) = kw {
@@ -237,22 +238,22 @@ pub fn keyword_supported(kw: impl IntoKeyword) -> Lexeme {
     Lexeme::Keyword(KeywordLexeme::from_keyword(kw, SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn literal_text(txt: impl AsRef<str>) -> LiteralLexeme {
     LiteralLexeme::Text(ustr(txt.as_ref()), SourceSlice::mock())
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn literal_int(nr: i64) -> LiteralLexeme {
     LiteralLexeme::Int(nr, SourceSlice::mock())
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn literal_real(nr: impl Into<f64eq>) -> LiteralLexeme {
     LiteralLexeme::Real(nr.into(), SourceSlice::mock())
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn literal_bool(b: bool) -> LiteralLexeme {
     LiteralLexeme::Boolean(b, SourceSlice::mock())
 }
@@ -281,12 +282,12 @@ impl IntoSymbol for Symbol {
     }
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
     OperatorLexeme::from_symbol(txt.symbol(false).unwrap().unwrap(), SourceSlice::mock())
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
     txt.symbol(true)
         .unwrap()
@@ -294,62 +295,62 @@ pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
         .unwrap_or_else(|| AssociationLexeme::from_unprefixed(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn parenthesis_open() -> Lexeme {
     Lexeme::ParenthesisOpen(ParenthesisOpenLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn parenthesis_close() -> Lexeme {
     Lexeme::ParenthesisClose(ParenthesisCloseLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn bracket_open() -> Lexeme {
     Lexeme::BracketOpen(BracketOpenLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn bracket_close() -> Lexeme {
     Lexeme::BracketClose(BracketCloseLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn start_block() -> Lexeme {
     Lexeme::StartBlock(StartBlockLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn end_block() -> Lexeme {
     Lexeme::EndBlock(EndBlockLexeme::new2(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn colon() -> Lexeme {
     Lexeme::Colon(ColonLexeme::new(SourceSlice::mock()))
 }
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn comma() -> Lexeme {
     Lexeme::Comma(CommaLexeme::new(SourceSlice::mock()))
 }
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn ellipsis() -> Lexeme {
     Lexeme::Ellipsis(EllipsisLexeme::new(SourceSlice::mock()))
 }
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn period() -> Lexeme {
     Lexeme::Period(PeriodLexeme::new(SourceSlice::mock()))
 }
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn slash() -> Lexeme {
     Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
 }
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn newline() -> Lexeme {
     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
 }
 
-#[deprecated(note="please use `TestLexemeBuilder` instead")]
+//#[deprecated(note = "please use `TestLexemeBuilder` instead")]
 pub fn unlexable(text: impl Into<String>) -> Lexeme {
     Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))
 }

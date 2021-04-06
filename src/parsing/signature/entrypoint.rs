@@ -1,8 +1,8 @@
-use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::util::{ParseRes, NoMatch};
+use crate::common::codeparts::Keyword;
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
-use crate::common::codeparts::Keyword;
+use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 //TODO @mark: tests
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
@@ -14,9 +14,9 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
                 None
             };
             let entrypoint = EntryPointParselet::new(identifier);
-            return Ok((cursor, entrypoint))
+            return Ok((cursor, entrypoint));
         }
     }
-    eprintln!("did not find entrypoint");  //TODO @mark: TEMPORARY! REMOVE THIS!
+    eprintln!("did not find entrypoint"); //TODO @mark: TEMPORARY! REMOVE THIS!
     Err(NoMatch)
 }

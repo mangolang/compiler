@@ -12,7 +12,7 @@ use super::source::SourceFile;
 //   it does not guarantee it will stay alive; it's applicable for self-referential types,
 //   which this is not.
 // Therefore Rc is used for the foreseeable future. Don't leak slices or create cycles,
-// otherwise the file won't drop.
+// otherwise the files won't drop.
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct SourceSlice {
     file: SourceFile,

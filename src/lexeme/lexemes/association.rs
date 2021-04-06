@@ -1,10 +1,10 @@
 use ::std::hash;
 
+use crate::common::codeparts::Symbol;
+use crate::common::debug::ToText;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
-use crate::common::codeparts::Symbol;
-use crate::common::debug::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.

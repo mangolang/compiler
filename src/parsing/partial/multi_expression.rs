@@ -93,10 +93,10 @@ mod basic {
 
 #[cfg(test)]
 mod complex_expr {
+    use crate::common::codeparts::Symbol;
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::common::codeparts::Symbol;
 
     use super::test_util::check;
 
@@ -346,7 +346,7 @@ mod ending {
 mod errors {
     use crate::lexeme::collect::for_test::*;
     use crate::parselet::short::{binary, literal, variable};
-    
+
     use crate::common::codeparts::Symbol;
 
     use super::test_util::check;

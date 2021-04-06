@@ -1,12 +1,11 @@
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::index::parse_array_indexing;
 
-
+use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parselet::node::function_call::FunctionCallParselet;
 
 /// Parse a function invocation, which looks like
 ///
@@ -31,13 +30,12 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 
 #[cfg(test)]
 mod by_name {
-    
 
+    use crate::common::codeparts::Symbol;
     use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
-    use crate::common::codeparts::Symbol;
 
     use super::*;
 

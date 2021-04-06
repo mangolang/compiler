@@ -2,6 +2,8 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
+use crate::common::codeparts::eqfloat::f64eq;
+use crate::common::codeparts::Keyword;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::SourceSlice;
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
@@ -11,8 +13,6 @@ use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
-use crate::common::codeparts::Keyword;
-use crate::common::codeparts::eqfloat::f64eq;
 
 //TODO @mark: replace more lexeme usages by short versions
 

@@ -1,3 +1,2 @@
-
-pub mod typ;
 pub mod collect;
+pub mod typ;

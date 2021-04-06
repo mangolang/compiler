@@ -14,7 +14,7 @@ pub enum LazyParselet<T: Parseable> {
     //TODO @mark: unsure about how to structure this one
 }
 
-impl <T: Parseable> LazyParselet<T> {
+impl<T: Parseable> LazyParselet<T> {
     pub fn create(lexemes: Vec<Lexeme>) -> Self {
         LazyParselet::Pending(lexemes)
     }
@@ -26,10 +26,10 @@ impl <T: Parseable> LazyParselet<T> {
                 let body = T::parse(&lexemes);
                 *self = LazyParselet::Parsed(body);
                 if let LazyParselet::Parsed(resolved) = self {
-                    return resolved
+                    return resolved;
                 }
                 unreachable!()
-            },
+            }
             LazyParselet::Parsed(resolved) => resolved,
         }
     }

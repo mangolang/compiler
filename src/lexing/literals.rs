@@ -7,9 +7,9 @@ use crate::lexeme::collect::short::literal_real;
 use crate::lexeme::collect::short::literal_text;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::lexing::util::int::{INT_RE, parse_int};
-use crate::lexing::util::real::{REAL_RE, parse_real};
-use crate::lexing::util::text::{SINGLE_QUOTE_RE, parse_single_quote};
+use crate::lexing::util::int::{parse_int, INT_RE};
+use crate::lexing::util::real::{parse_real, REAL_RE};
+use crate::lexing::util::text::{parse_single_quote, SINGLE_QUOTE_RE};
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day

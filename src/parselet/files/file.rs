@@ -1,9 +1,9 @@
-use crate::parselet::file::import::ImportParselet;
+use crate::parselet::files::import::ImportParselet;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
-use crate::parselet::signature::record::RecordParselet;
-use crate::parselet::signature::union::UnionParselet;
-use crate::parselet::signature::test_parselet::TestParselet;
 use crate::parselet::signature::function::FunctionParselet;
+use crate::parselet::signature::record::RecordParselet;
+use crate::parselet::signature::test_parselet::TestParselet;
+use crate::parselet::signature::union::UnionParselet;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct FileParselet {

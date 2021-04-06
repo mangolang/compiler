@@ -1,16 +1,9 @@
-use crate::io::slice::SourceSlice;
-// use crate::common::error::{ErrMsg, MsgResult};
-// use crate::util::codeparts::Keyword;
-// use crate::util::numtype::f64eq;
-// use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
 use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
-use crate::lexeme::identifier::SimpleIdentifierLexeme;
-use crate::parselet::{ExpressionParselets, Parselets};
-use crate::parselet::file::import::ImportParselet;
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
 use crate::parselet::special::UnparseableParselet;
 use crate::parselet::terminal::{LiteralParselet, VariableParselet};
+use crate::parselet::{ExpressionParselets, Parselets};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -101,18 +94,6 @@ pub fn array_index(array: ExpressionParselets, indices: ExprGroup) -> Expression
 // pub fn newline() -> Parselets {
 //     Parselets::Newline(NewlineParselet::new())
 // }
-
-pub fn import(fqn: &str) -> ImportParselet {
-    //TODO @mark: more general return type?
-    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    ImportParselet::new(identifier, None)
-}
-
-pub fn import_alias(fqn: &str, alias: &str) -> ImportParselet {
-    let identifier = IdentifierLexeme::from_str(fqn, SourceSlice::mock()).unwrap();
-    let alias_identifier = SimpleIdentifierLexeme::from_str(alias, SourceSlice::mock()).unwrap();
-    ImportParselet::new(identifier, Some(alias_identifier))
-}
 
 pub fn unparseable(lexemes: Vec<Lexeme>) -> Parselets {
     Parselets::Unparseable(UnparseableParselet::from_lexemes(lexemes))

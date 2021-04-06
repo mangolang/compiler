@@ -1,5 +1,5 @@
-use crate::lexeme::IdentifierLexeme;
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
+use crate::lexeme::IdentifierLexeme;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct ImportParselet {
@@ -9,10 +9,7 @@ pub struct ImportParselet {
 
 impl ImportParselet {
     pub fn new(identifier: IdentifierLexeme, alias: Option<SimpleIdentifierLexeme>) -> Self {
-        ImportParselet {
-            identifier,
-            alias
-        }
+        ImportParselet { identifier, alias }
     }
 
     //TODO @mark: effective name

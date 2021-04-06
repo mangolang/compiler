@@ -1,7 +1,7 @@
 use ::std::hash;
 
-use crate::io::slice::{SourceSlice, SourceLocation};
 use crate::common::debug::ToText;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
 /// End of body.
 /// Strictly, this doesn't always end a body, e.g. if it follows a continuation.

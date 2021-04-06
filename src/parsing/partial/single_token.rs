@@ -1,5 +1,4 @@
-
-use crate::lexeme::{Lexeme};
+use crate::lexeme::Lexeme;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
 

@@ -102,11 +102,11 @@ mod identifiers {
 
 #[cfg(test)]
 mod keywords {
-    use crate::common::codeparts::Keyword;
     use crate::common::codeparts::keyword::KEYWORDS;
+    use crate::common::codeparts::Keyword;
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{KeywordLexeme, Lexeme};
     use crate::lexeme::collect::for_test::keyword_or_reserved;
+    use crate::lexeme::{KeywordLexeme, Lexeme};
 
     use super::mixed::check;
 
@@ -135,8 +135,8 @@ mod keywords {
 
 #[cfg(test)]
 mod mixed {
-    use crate::common::codeparts::Keyword;
     use crate::common::codeparts::name::Name;
+    use crate::common::codeparts::Keyword;
     use crate::io::slice::SourceSlice;
     use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
     use crate::lexing::lexer::Lexer;

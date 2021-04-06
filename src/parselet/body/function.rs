@@ -1,5 +1,5 @@
-use crate::parselet::body::lazy::{LazyParselet, Parseable};
 use crate::lexeme::Lexeme;
+use crate::parselet::body::lazy::{LazyParselet, Parseable};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct ResolvedFunctionBodyParselet {
