@@ -1,6 +1,6 @@
 use ::std::hash;
 
-use crate::io::slice::SourceSlice;
+use crate::io::slice::{SourceSlice, SourceLocation};
 use crate::common::debug::ToText;
 
 /// End of body.
@@ -41,8 +41,17 @@ impl EndStatementLexeme {
 }
 
 impl ToText for EndStatementLexeme {
-    // Currently always print newlines; keeping original formatting is not a priority
+    // Currently, always print newlines; keeping original formatting is not a priority
     fn to_text(&self) -> String {
-        "\n".to_owned()
+        ";\n".to_owned()
+    }
+}
+
+impl SourceLocation for EndStatementLexeme {
+    fn source(&self) -> &SourceSlice {
+        match self {
+            EndStatementLexeme::EndLine(src) => src,
+            EndStatementLexeme::Semicolon(src) => src,
+        }
     }
 }

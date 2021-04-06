@@ -15,6 +15,7 @@ use crate::lexeme::special::EndBlockLexeme;
 use crate::lexeme::special::StartBlockLexeme;
 use crate::lexeme::special::UnlexableLexeme;
 use crate::common::debug::ToText;
+use crate::lexeme::EndStatementLexeme;
 
 //TODO @mark: pass code slice along with lexeme
 
@@ -30,7 +31,7 @@ pub enum Lexeme {
     ParenthesisClose(ParenthesisCloseLexeme),
     BracketOpen(BracketOpenLexeme),
     BracketClose(BracketCloseLexeme),
-    // EndStatement(EndStatementLexeme),
+    //EndStatement(EndStatementLexeme),
     StartBlock(StartBlockLexeme),
     EndBlock(EndBlockLexeme),
     Colon(ColonLexeme),
@@ -60,7 +61,7 @@ impl SourceLocation for Lexeme {
             Lexeme::ParenthesisClose(parenthesis_close) => parenthesis_close.source(),
             Lexeme::BracketOpen(parenthesis_open) => parenthesis_open.source(),
             Lexeme::BracketClose(parenthesis_close) => parenthesis_close.source(),
-            //Lexemes::EndStatement(end_statement) => end_statement.source(),
+            //Lexeme::EndStatement(end_statement) => end_statement.source(),
             Lexeme::StartBlock(start_block) => start_block.source(),
             Lexeme::EndBlock(end_block) => end_block.source(),
             Lexeme::Colon(colon) => colon.source(),
@@ -85,7 +86,7 @@ impl fmt::Debug for Lexeme {
             Lexeme::ParenthesisClose(_parenthesis_close) => write!(f, "')'"),
             Lexeme::BracketOpen(_parenthesis_open) => write!(f, "'['"),
             Lexeme::BracketClose(_parenthesis_close) => write!(f, "']'"),
-            //Lexemes::EndStatement(end_statement) => write!(f, "end_statement"),
+            //Lexeme::EndStatement(end_statement) => write!(f, ";"),
             Lexeme::StartBlock(_start_block) => write!(f, "start_block"),
             Lexeme::EndBlock(_end_block) => write!(f, "end_block"),
             Lexeme::Colon(_colon) => write!(f, ":"),

@@ -179,11 +179,14 @@ impl TestLexemeBuilder {
     // pub fn slash(mut self) {
     //     Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::Slash, SourceSlice::mock()))
     // }
-    // //TODO @mark:
-    // pub fn newline(mut self) {
-    //     Lexeme::Newline(NewlineLexeme::new(SourceSlice::mock()))
-    // }
-    //
+
+    pub fn newline(mut self) -> Self {
+        let end = self.add_src(";\n");
+        let lex = move |src| Lexeme::Newline(NewlineLexeme::new(src));
+        self.lexemes.push((end, Box::new(lex)));
+        self
+    }
+
     // //TODO @mark:
     // pub fn unlexable(mut self, text: impl Into<String>) {
     //     Lexeme::Unlexable(UnlexableLexeme::new(text.into(), SourceSlice::mock()))

@@ -1,6 +1,6 @@
 use crate::common::codeparts::name::Name;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct RecordParselet {
     name: Name,
     //TODO @mark:

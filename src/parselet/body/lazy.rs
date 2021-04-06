@@ -7,7 +7,7 @@ pub trait Parseable {
 /// Only compile the body of a block when it's used. The signature must be parsed
 /// immediately to be able to know whether a block is used. But compiling the body
 /// can be skipped until after it is certain whether the block is used anywhere.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum LazyParselet<T: Parseable> {
     Pending(Vec<Lexeme>),
     Parsed(T),

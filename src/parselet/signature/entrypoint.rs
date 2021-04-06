@@ -1,7 +1,7 @@
 use crate::lexeme::IdentifierLexeme;
 
 //TODO @mark: lexing
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct EntryPointParselet {
     name: Option<IdentifierLexeme>,
     //body: BodyParselet,

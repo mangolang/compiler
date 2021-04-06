@@ -5,7 +5,7 @@ use crate::parselet::signature::union::UnionParselet;
 use crate::parselet::signature::test_parselet::TestParselet;
 use crate::parselet::signature::function::FunctionParselet;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct FileParselet {
     imports: Vec<ImportParselet>,
     entrypoint: Option<EntryPointParselet>,

@@ -1,7 +1,7 @@
 use crate::common::codeparts::name::Name;
 use crate::parselet::signature::function::FunctionParselet;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct TestParselet {
     name: Name,
     body: FunctionParselet,
