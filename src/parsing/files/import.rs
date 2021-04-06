@@ -42,7 +42,7 @@ mod importing {
 
     #[test]
     fn single_word_import() {
-        let lexemes = &builder().keyword("use").identifier("pit").build();
+        let lexemes = &builder().keyword("use").identifier("pit").file();
         let expected = import("pit");
         let next = Err(End);
         let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
@@ -52,7 +52,7 @@ mod importing {
 
     #[test]
     fn multipart_import() {
-        let lexemes = &builder().keyword("use").identifier("pit.text").build();
+        let lexemes = &builder().keyword("use").identifier("pit.text").file();
         let expected = import("pit.text");
         let next = Err(End);
         let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
@@ -67,7 +67,7 @@ mod importing {
             .identifier("pit.text")
             .keyword("as")
             .identifier("txt")
-            .build();
+            .file();
         let expected = import_alias("pit.text", "txt");
         let next = Err(End);
         let (cursor, parselet) = parse_import(lexemes.cursor()).unwrap();
@@ -83,7 +83,7 @@ mod importing {
             .keyword("as")
             .identifier("txt")
             .literal_int(3)
-            .build();
+            .file();
         let lexemes_argument = &lexemes;
         let expected = import_alias("pit.text", "txt");
         let next = Ok(lexemes.last());
@@ -101,7 +101,7 @@ mod importing {
             .keyword("as")
             .identifier("std.txt")
             .literal_int(3)
-            .build();
+            .file();
         let lexemes_argument = &lexemes;
         let expected = import_alias("pit.text", "txt");
         let next = Ok(lexemes.last());
@@ -117,7 +117,7 @@ mod importing {
             .keyword("as")
             .identifier("std.txt")
             .literal_int(3)
-            .build();
+            .file();
         assert!(parse_import(lexemes.cursor()).is_err());
     }
 }

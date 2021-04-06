@@ -105,10 +105,10 @@ mod keywords {
     use crate::common::codeparts::keyword::KEYWORDS;
     use crate::common::codeparts::Keyword;
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::keyword_or_reserved;
     use crate::lexeme::{KeywordLexeme, Lexeme};
 
     use super::mixed::check;
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn all_keywords() {
@@ -124,11 +124,11 @@ mod keywords {
     fn multiple() {
         check(
             "let mut mango",
-            &[
-                keyword_or_reserved(Keyword::Let),
-                keyword_or_reserved(Keyword::Mut),
-                keyword_or_reserved(Keyword::Reserved("mango".to_owned())),
-            ],
+            &builder()
+                .keyword_or_reserved(Keyword::Let)
+                .keyword_or_reserved(Keyword::Mut)
+                .keyword_or_reserved("mango")
+                .build(),
         );
     }
 }

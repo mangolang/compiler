@@ -17,7 +17,7 @@ pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 #[cfg(test)]
 mod literal {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::*;
+
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
@@ -25,6 +25,7 @@ mod literal {
     use ::ustr::ustr;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{literal_text, literal_int, literal_real, literal_bool, builder};
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -70,51 +71,56 @@ mod literal {
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
+        let lexemes = builder().comma().file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_literal(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 
     #[test]
     fn try_group_on_mismatch() {
-        let lexemes = vec![
-            parenthesis_open(),
-            literal_int(1).into(),
-            parenthesis_close(),
-            literal_bool(true).into(),
-        ]
-        .into();
+        let lexemes = builder()
+            .parenthesis_open()
+            .literal_int(1)
+            .parenthesis_close()
+            .literal_bool(true)
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(1)), parselet);
-        assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
     fn leftover_literal() {
-        let lexemes = vec![literal_int(37).into(), literal_bool(true).into()].into();
+        let lexemes = builder()
+            .literal_int(37)
+            .literal_bool(true)
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
-        assert_eq!(Ok(&literal_bool(true).into()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
     fn leftover_other() {
-        let lexemes = vec![literal_int(37).into(), comma()].into();
+        let lexemes = builder()
+            .literal_int(37)
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
 
 #[cfg(test)]
 mod special {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::*;
+
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::expression::parse_expression;
@@ -122,13 +128,17 @@ mod special {
     use ::ustr::ustr;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, literal_text};
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![literal_text("hello42").into(), comma()].into();
+        let lexemes = builder()
+            .literal_text("hello42")
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
