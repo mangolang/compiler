@@ -29,7 +29,7 @@ mod tests {
 
     #[test]
     fn hello_world_file() {
-        let lexemes = builder().newline().build();
+        let lexemes = builder().newline().file();
         let expected = FileParselet::new(vec![import_alias("pit.ext", "txt")], None);
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
         //let next = Ok(lexemes.last());
@@ -47,7 +47,7 @@ mod tests {
             .identifier("txt")
             .literal_int(3)
             .newline()
-            .build();
+            .file();
         let expected = FileParselet::new(vec![import_alias("pit.ext", "txt")], None);
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
         //let next = Ok(lexemes.last());

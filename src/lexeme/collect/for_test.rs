@@ -69,7 +69,7 @@ impl IntoSymbol for Symbol {
 }
 
 impl TestLexemeBuilder {
-    pub fn build(self) -> FileLexemes {
+    pub fn build(self) -> Vec<Lexeme> {
         let file = SourceFile::new("[mock]", self.source);
         let mut lexs = Vec::with_capacity(self.lexemes.len());
         let mut prev = 0;
@@ -78,7 +78,11 @@ impl TestLexemeBuilder {
             prev = lex.0;
             lexs.push(lex.1(slice))
         }
-        FileLexemes::new(lexs)
+        lexs
+    }
+
+    pub fn file(self) -> FileLexemes {
+        FileLexemes::new(self.build())
     }
 
     pub fn build_only(self) -> Lexeme {
@@ -247,17 +251,6 @@ pub fn identifier(txt: &str) -> IdentifierLexeme {
     IdentifierLexeme::from_str(&txt, SourceSlice::mock()).unwrap()
 }
 
-/// Parse a keyword, including reserved keywords for future use.
-////TODO @mark: INLINE
-pub fn keyword_or_reserved(kw: impl IntoKeyword) -> Lexeme {
-    builder().keyword_or_reserved(kw).build_only()
-}
-
-/// Parse a keyword, but fail if it is a reserved keyword, rather than one that already works.
-pub fn keyword_supported(kw: impl IntoKeyword) -> Lexeme {
-    builder().keyword(kw).build_only()
-}
-
 pub fn literal_text(txt: impl AsRef<str>) -> LiteralLexeme {
     LiteralLexeme::Text(ustr(txt.as_ref()), SourceSlice::mock())
 }
@@ -282,62 +275,3 @@ pub fn association(txt: impl IntoSymbol) -> OperatorLexeme {
     OperatorLexeme::from_symbol(txt.symbol(true).unwrap(), SourceSlice::mock())
 }
 
-////TODO @mark: INLINE
-pub fn parenthesis_open() -> Lexeme {
-    builder().parenthesis_open().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn parenthesis_close() -> Lexeme {
-    builder().parenthesis_close().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn bracket_open() -> Lexeme {
-    builder().bracket_open().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn bracket_close() -> Lexeme {
-    builder().bracket_close().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn start_block() -> Lexeme {
-    builder().start_block().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn end_block() -> Lexeme {
-    builder().end_block().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn colon() -> Lexeme {
-    builder().colon().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn comma() -> Lexeme {
-    builder().comma().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn ellipsis() -> Lexeme {
-    builder().ellipsis().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn period() -> Lexeme {
-    builder().period().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn newline() -> Lexeme {
-    builder().newline().build_only()
-}
-
-////TODO @mark: INLINE
-pub fn unlexable(text: impl Into<String>) -> Lexeme {
-    builder().unlexable(text).build_only()
-}

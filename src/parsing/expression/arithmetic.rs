@@ -127,11 +127,11 @@ mod addition {
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
+        let lexemes = builder().comma().file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }
 
@@ -199,11 +199,11 @@ mod multiplication {
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
+        let lexemes = builder().comma().file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }
 
@@ -261,25 +261,35 @@ mod special {
 
     #[test]
     fn leftover() {
-        let lexemes = vec![literal_int(4).into(), operator("+").into(), literal_int(3).into(), comma()].into();
+        let lexemes = builder()
+            .literal_int(4)
+            .operator("+")
+            .literal_int(3)
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
             parselet
         );
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![literal_int(4).into(), operator("*").into(), literal_int(3).into(), comma()].into();
+        let lexemes = builder()
+            .literal_int(4)
+            .operator("*")
+            .literal_int(3)
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3)),),
             parselet
         );
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }

@@ -30,7 +30,6 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 
 #[cfg(test)]
 mod by_name {
-
     use crate::common::codeparts::Symbol;
     use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
@@ -50,7 +49,11 @@ mod by_name {
     #[test]
     fn no_args() {
         check(
-            vec![identifier("f").into(), parenthesis_open(), parenthesis_close()],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .parenthesis_close()
+                .build(),
             function_call(variable(identifier("f")), vec![]),
         );
     }
@@ -58,12 +61,12 @@ mod by_name {
     #[test]
     fn single_literal_positional_arg() {
         check(
-            vec![
-                identifier("faculty").into(),
-                parenthesis_open(),
-                literal_int(42).into(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("faculty")
+                .parenthesis_open()
+                .literal_int(42)
+                .parenthesis_close()
+                .build(),
             function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
         );
     }
@@ -71,12 +74,12 @@ mod by_name {
     #[test]
     fn single_identifier_positional_arg() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                identifier("x").into(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .identifier("x")
+                .parenthesis_close()
+                .build(),
             function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
@@ -84,13 +87,13 @@ mod by_name {
     #[test]
     fn single_identifier_positional_arg_trailing_comma() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                identifier("x").into(),
-                comma(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .identifier("x")
+                .comma()
+                .parenthesis_close()
+                .build(),
             function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
@@ -98,22 +101,22 @@ mod by_name {
     #[test]
     fn single_arithmetic_positional_arg() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                parenthesis_open(),
-                identifier("x").into(),
-                operator("-").into(),
-                literal_int(1).into(),
-                parenthesis_close(),
-                operator("*").into(),
-                parenthesis_open(),
-                identifier("y").into(),
-                operator("+").into(),
-                literal_int(10).into(),
-                parenthesis_close(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .parenthesis_open()
+                .identifier("x")
+                .operator("-")
+                .literal_int(1)
+                .parenthesis_close()
+                .operator("*")
+                .parenthesis_open()
+                .identifier("y")
+                .operator("+")
+                .literal_int(10)
+                .parenthesis_close()
+                .parenthesis_close()
+                .build(),
             function_call(
                 variable(identifier("f")),
                 vec![binary(
@@ -128,14 +131,14 @@ mod by_name {
     #[test]
     fn double_argument() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                identifier("x").into(),
-                comma(),
-                identifier("y").into(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .identifier("x")
+                .comma()
+                .identifier("y")
+                .parenthesis_close()
+                .build(),
             function_call(
                 variable(identifier("f")),
                 vec![variable(identifier("x")), variable(identifier("y"))],
@@ -146,15 +149,15 @@ mod by_name {
     #[test]
     fn double_argument_trailing_comma() {
         check(
-            vec![
-                identifier("f").into(),
-                parenthesis_open(),
-                identifier("x").into(),
-                comma(),
-                identifier("y").into(),
-                comma(),
-                parenthesis_close(),
-            ],
+            builder()
+                .identifier("f")
+                .parenthesis_open()
+                .identifier("x")
+                .comma()
+                .identifier("y")
+                .comma()
+                .parenthesis_close()
+                .build(),
             function_call(
                 variable(identifier("f")),
                 vec![variable(identifier("x")), variable(identifier("y"))],
@@ -173,45 +176,47 @@ mod special {
 
     #[test]
     fn unseparated() {
-        let lexemes = vec![
-            identifier("fun").into(),
-            parenthesis_open(),
-            identifier("x").into(),
-            literal_int(1).into(),
-            parenthesis_close(),
-        ]
-        .into();
+        let lexemes = builder()
+            .identifier("fun")
+            .parenthesis_open()
+            .identifier("x")
+            .literal_int(1)
+            .parenthesis_close()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
+        assert_eq!(cursor.peek(), Ok(&builder().parenthesis_open().build_only()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
     #[test]
     fn unclosed() {
-        let lexemes = vec![identifier("fun").into(), parenthesis_open(), identifier("x").into()].into();
+        let lexemes = builder()
+            .identifier("fun")
+            .parenthesis_open()
+            .identifier("x")
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&parenthesis_open()));
+        assert_eq!(cursor.peek(), Ok(&builder().parenthesis_open().build_only()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
     #[test]
     fn reachable_from_expression() {
-        let lexemes = vec![
-            identifier("faculty").into(),
-            parenthesis_open(),
-            literal_int(42).into(),
-            parenthesis_close(),
-            comma(),
-        ]
-        .into();
+        let lexemes = builder()
+            .identifier("faculty")
+            .parenthesis_open()
+            .literal_int(42)
+            .parenthesis_close()
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(
             function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
             parselet
         );
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }

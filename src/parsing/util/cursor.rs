@@ -93,31 +93,33 @@ impl<'a> fmt::Debug for ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::lexeme::collect::for_test::{identifier, newline, unlexable};
+    use crate::lexeme::collect::for_test::{identifier, builder};
 
     use super::*;
 
     #[test]
     fn increment() {
-        let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
+        let lexemes = builder()
+            .unlexable("a")
+            .unlexable("b")
+            .file();
         let mut cursor = ParseCursor::new(&lexemes);
-        assert_eq!(Ok(&unlexable("a")), cursor.peek());
+        assert_eq!(Ok(&builder().unlexable("a").build_only()), cursor.peek());
         cursor.increment();
-        assert_eq!(Ok(&unlexable("b")), cursor.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor.take());
         assert_eq!(Err(End), cursor.take());
     }
 
     #[test]
     fn skip() {
-        let lexemes: FileLexemes = vec![
-            identifier("x").into(),
-            newline(),
-            newline(),
-            identifier("y").into(),
-            identifier("z").into(),
-            newline(),
-        ]
-        .into();
+        let lexemes = builder()
+            .identifier("x")
+            .newline()
+            .newline()
+            .identifier("y")
+            .identifier("z")
+            .newline()
+            .file();
         let mut cursor = ParseCursor::new(&lexemes);
 
         assert_eq!(Ok(&identifier("x").into()), cursor.peek());
@@ -139,42 +141,45 @@ mod tests {
 
     #[test]
     fn conditional_take() {
-        let lexemes: FileLexemes = vec![
-            identifier("x").into(),
-            newline(),
-            newline(),
-            identifier("y").into(),
-            identifier("z").into(),
-            newline(),
-        ]
-        .into();
+        let lexemes = builder()
+            .identifier("x")
+            .newline()
+            .newline()
+            .identifier("y")
+            .identifier("z")
+            .newline()
+            .file();
         let mut cursor = ParseCursor::new(&lexemes);
 
         assert_eq!(Some(&identifier("x").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
-        assert_eq!(Ok(&newline()), cursor.peek());
-        assert_eq!(Some(&newline()), cursor.take_if(|lexeme| lexeme.is_newline()));
-        assert_eq!(Some(&newline()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Ok(&builder().newline().build_only()), cursor.peek());
+        assert_eq!(Some(&builder().newline().build_only()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Some(&builder().newline().build_only()), cursor.take_if(|lexeme| lexeme.is_newline()));
         assert_eq!(Ok(&identifier("y").into()), cursor.peek());
         assert_eq!(Some(&identifier("y").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
         assert_eq!(Some(&identifier("z").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
-        assert_eq!(Ok(&newline()), cursor.take());
+        assert_eq!(Ok(&builder().newline().build_only()), cursor.take());
         assert_eq!(Err(End), cursor.take());
     }
 
     #[test]
     fn backtrack() {
-        let lexemes: FileLexemes = vec![unlexable("a"), unlexable("b")].into();
+        let lexemes: FileLexemes = builder()
+            .unlexable("a")
+            .unlexable("b")
+            .file();
         let mut cursor1 = ParseCursor::new(&lexemes);
-        assert_eq!(Ok(&unlexable("a")), cursor1.peek());
+        let text = "a";
+        assert_eq!(Ok(&builder().unlexable(text).build_only()), cursor1.peek());
         let mut cursor2 = cursor1;
         cursor1.increment();
         cursor1.increment();
         assert_eq!(Err(End), cursor1.take());
-        assert_eq!(Ok(&unlexable("a")), cursor2.peek());
+        assert_eq!(Ok(&builder().unlexable("a").build_only()), cursor2.peek());
         cursor2.increment();
         let mut cursor3 = cursor2;
-        assert_eq!(Ok(&unlexable("b")), cursor3.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor3.take());
         assert_eq!(Err(End), cursor3.take());
-        assert_eq!(Ok(&unlexable("b")), cursor2.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor2.take());
     }
 }

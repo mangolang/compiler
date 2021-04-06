@@ -98,20 +98,22 @@ impl Index<usize> for FileLexemes {
 
 #[cfg(test)]
 mod tests {
-    use crate::lexeme::collect::for_test::*;
-
-    use super::*;
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn indexing() {
-        let lexemes = FileLexemes::new(vec![unlexable("a"), unlexable("b"), unlexable("c")]);
+        let lexemes = builder()
+            .unlexable("a")
+            .unlexable("a")
+            .unlexable("a")
+            .file();
         let mut index = lexemes.index_at_start();
         assert!(index < lexemes.len());
-        assert_eq!(&unlexable("a"), &lexemes[index]);
+        assert_eq!(&builder().unlexable("a").build_only(), &lexemes[index]);
         index.increment();
-        assert_eq!(&unlexable("b"), &lexemes[index]);
+        assert_eq!(&builder().unlexable("b").build_only(), &lexemes[index]);
         index.increment();
-        assert_eq!(Some(&unlexable("c")), lexemes.peek(index));
+        assert_eq!(Some(&builder().unlexable("c").build_only()), lexemes.peek(index));
         index.increment();
         assert_eq!(None, lexemes.peek(index));
     }

@@ -77,30 +77,45 @@ mod parenthese {
 
     #[test]
     fn open() {
-        check(" ( ", &[parenthesis_open()]);
+        check(" ( ",
+              &builder()
+                  .parenthesis_open()
+                  .build());
     }
 
     #[test]
     fn close() {
-        check(" ) ", &[parenthesis_close()]);
+        check(" ) ",
+              &builder()
+                  .parenthesis_close()
+                  .build());
     }
 
     #[test]
     fn paired() {
         check(
             "(( ))",
-            &[parenthesis_open(), parenthesis_open(), parenthesis_close(), parenthesis_close()],
+            &builder()
+                .parenthesis_open()
+                .parenthesis_open()
+                .parenthesis_close()
+                .parenthesis_close()
+                .build(),
         );
     }
 
     #[test]
     fn unbalanced() {
-        check("(( )", &[parenthesis_open(), parenthesis_open(), parenthesis_close()]);
+        check("(( )", &builder()
+            .parenthesis_open()
+            .parenthesis_open()
+            .parenthesis_close()
+            .build());
     }
 
     #[test]
     fn and_words() {
-        check("(hello)", &[parenthesis_open()]);
+        check("(hello)", &builder().parenthesis_open().build());
     }
 }
 
@@ -112,27 +127,45 @@ mod brackets {
 
     #[test]
     fn open() {
-        check(" [ ", &[bracket_open()]);
+        check(" [ ",
+              &builder().bracket_open().build());
     }
 
     #[test]
     fn close() {
-        check(" ] ", &[bracket_close()]);
+        check(" ] ",
+              &builder()
+                  .bracket_close()
+                  .build());
     }
 
     #[test]
     fn paired() {
-        check("[[ ]]", &[bracket_open(), bracket_open(), bracket_close(), bracket_close()]);
+        check("[[ ]]",
+              &builder()
+                  .bracket_open()
+                  .bracket_open()
+                  .bracket_close()
+                  .bracket_close()
+                  .build());
     }
 
     #[test]
     fn unbalanced() {
-        check("[[ ]", &[bracket_open(), bracket_open(), bracket_close()]);
+        check("[[ ]",
+              &builder()
+                  .bracket_open()
+                  .bracket_open()
+                  .bracket_close()
+                  .build());
     }
 
     #[test]
     fn and_words() {
-        check("[hello]", &[bracket_open()]);
+        check("[hello]",
+              &builder()
+                  .bracket_open()
+                  .build());
     }
 }
 
@@ -146,12 +179,21 @@ mod mixed {
     fn parenthese_inside_brackets() {
         check(
             "[ ( ) ]",
-            &[bracket_open(), parenthesis_open(), parenthesis_close(), bracket_close()],
-        );
+            &builder()
+                .bracket_open()
+                .parenthesis_open()
+                .parenthesis_close()
+                .bracket_close()
+                .build(),
+        )
     }
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)", &[bracket_open(), parenthesis_close()]);
+        check("[)",
+              &builder()
+                  .bracket_open()
+                  .parenthesis_close()
+                  .build())
     }
 }
