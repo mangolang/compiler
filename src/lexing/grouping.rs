@@ -71,9 +71,10 @@ mod mismatch {
 
 #[cfg(test)]
 mod parenthese {
-    use crate::lexeme::collect::for_test::*;
+
 
     use super::test_util::check;
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn open() {
@@ -121,9 +122,10 @@ mod parenthese {
 
 #[cfg(test)]
 mod brackets {
-    use crate::lexeme::collect::for_test::*;
+
 
     use super::test_util::check;
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn open() {
@@ -171,9 +173,10 @@ mod brackets {
 
 #[cfg(test)]
 mod mixed {
-    use crate::lexeme::collect::for_test::*;
+
 
     use super::test_util::check;
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn parenthese_inside_brackets() {

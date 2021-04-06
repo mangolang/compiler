@@ -17,12 +17,13 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 #[cfg(test)]
 mod parenthese {
     use crate::common::codeparts::Symbol;
-    use crate::lexeme::collect::for_test::*;
+
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, literal_text, literal_int, operator};
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -35,7 +36,11 @@ mod parenthese {
     #[test]
     fn text() {
         check(
-            vec![parenthesis_open(), literal_text("hello world").into(), parenthesis_close()],
+            builder()
+                .parenthesis_open()
+                .literal_text("hello world")
+                .parenthesis_close()
+                .build(),
             literal(literal_text("hello world")),
         );
     }
@@ -43,7 +48,11 @@ mod parenthese {
     #[test]
     fn parenthesized_literal() {
         check(
-            vec![parenthesis_open(), literal_int(7).into(), parenthesis_close()],
+            builder()
+                .parenthesis_open()
+                .literal_int(7)
+                .parenthesis_close()
+                .build(),
             literal(literal_int(7)),
         );
     }
@@ -51,13 +60,14 @@ mod parenthese {
     #[test]
     fn addition() {
         check(
-            vec![
-                parenthesis_open(),
-                literal_int(4).into(),
-                operator("+").into(),
-                literal_int(3).into(),
-                parenthesis_close(),
-            ],
+            builder()
+                .parenthesis_open()
+                .literal_int(4)
+                .operator("+")
+                .literal_int(3)
+                .parenthesis_close()
+                .build()
+            ,
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -65,17 +75,17 @@ mod parenthese {
     #[test]
     fn nested() {
         check(
-            vec![
-                parenthesis_open(),
-                parenthesis_open(),
-                literal_int(4).into(),
-                parenthesis_close(),
-                operator("+").into(),
-                parenthesis_open(),
-                literal_int(3).into(),
-                parenthesis_close(),
-                parenthesis_close(),
-            ],
+            builder()
+                .parenthesis_open()
+                .parenthesis_open()
+                .literal_int(4)
+                .parenthesis_close()
+                .operator("+")
+                .parenthesis_open()
+                .literal_int(3)
+                .parenthesis_close()
+                .parenthesis_close()
+                .build(),
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -83,31 +93,30 @@ mod parenthese {
     #[test]
     fn repeated() {
         check(
-            vec![
-                parenthesis_open(),
-                parenthesis_open(),
-                parenthesis_open(),
-                literal_text("hello world").into(),
-                parenthesis_close(),
-                parenthesis_close(),
-                parenthesis_close(),
-            ],
+            builder()
+                .parenthesis_open()
+                .parenthesis_open()
+                .parenthesis_open()
+                .literal_text("hello world")
+                .parenthesis_close()
+                .parenthesis_close()
+                .parenthesis_close()
+                .build(),
             literal(literal_text("hello world")),
         );
     }
 
     #[test]
     fn change_affinity() {
-        let lexemes = vec![
-            literal_int(4).into(),
-            operator("*").into(),
-            parenthesis_open(),
-            literal_int(3).into(),
-            operator("-").into(),
-            literal_int(2).into(),
-            parenthesis_close(),
-        ]
-        .into();
+        let lexemes = builder()
+            .literal_int(4)
+            .operator("*")
+            .parenthesis_open()
+            .literal_int(3)
+            .operator("-")
+            .literal_int(2)
+            .parenthesis_close()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         // Since the '(' is not at the start, use parse_expression as entry point.
         let parselet = parse_expression(cursor).unwrap().1;
@@ -123,7 +132,7 @@ mod parenthese {
 
     #[test]
     fn empty() {
-        let lexemes = vec![].into();
+        let lexemes = builder().file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -132,16 +141,25 @@ mod parenthese {
 
     #[test]
     fn leftover() {
-        let lexemes = vec![parenthesis_open(), literal_text("hello world").into(), parenthesis_close(), comma()].into();
+        let lexemes = builder()
+            .parenthesis_open()
+            .literal_text("hello world")
+            .parenthesis_close()
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
         assert_eq!(literal(literal_text("hello world")), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 
     #[test]
     fn ungrouped_fail() {
-        let lexemes = vec![literal_int(4).into(), operator("+").into(), literal_int(3).into()].into();
+        let lexemes = builder()
+            .literal_int(4)
+            .operator("+")
+            .literal_int(3)
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -150,45 +168,61 @@ mod parenthese {
 
     #[test]
     fn only_open() {
-        let lexemes = vec![parenthesis_open(), literal_int(1).into()].into();
+        let lexemes = builder()
+            .parenthesis_open()
+            .literal_int(1)
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&parenthesis_open()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_only()), cursor.peek());
     }
 
     #[test]
     fn unbalanced() {
-        let lexemes = vec![parenthesis_open(), literal_int(1).into(), parenthesis_open()].into();
+        let lexemes = builder()
+            .parenthesis_open()
+            .literal_int(1)
+            .parenthesis_open()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&parenthesis_open()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_only()), cursor.peek());
     }
 
     #[test]
     fn only_close() {
-        let lexemes = vec![parenthesis_close(), literal_int(1).into()].into();
+        let lexemes = builder()
+            .parenthesis_close()
+            .literal_int(1)
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&parenthesis_close()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_close().build_only()), cursor.peek());
     }
 }
 
 #[cfg(test)]
 mod special {
-    use crate::lexeme::collect::for_test::*;
+
     use crate::parselet::short::literal;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, literal_text};
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![parenthesis_open(), literal_text("hello world").into(), parenthesis_close(), comma()].into();
+        let lexemes = builder()
+            .parenthesis_open()
+            .literal_text("hello world")
+            .parenthesis_close()
+            .comma()
+            .file();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(literal_text("hello world")), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }

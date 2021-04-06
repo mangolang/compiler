@@ -31,12 +31,13 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 #[cfg(test)]
 mod by_name {
     use crate::common::codeparts::Symbol;
-    use crate::lexeme::collect::for_test::*;
+
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -168,11 +169,12 @@ mod by_name {
 
 #[cfg(test)]
 mod special {
-    use crate::lexeme::collect::for_test::*;
+
     use crate::parselet::short::{function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
 
     #[test]
     fn unseparated() {

@@ -3,8 +3,8 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::eqfloat::f64eq;
 use crate::common::codeparts::{Keyword, Symbol};
+use crate::common::codeparts::eqfloat::f64eq;
 use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
 use crate::lexeme::{

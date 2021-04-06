@@ -93,8 +93,9 @@ impl FQN {
 
 #[cfg(test)]
 mod technical {
-    use super::*;
     use crate::common::codeparts::name::name;
+
+    use super::*;
 
     #[test]
     fn new_simple() {
