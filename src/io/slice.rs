@@ -2,7 +2,7 @@ use ::std::fmt;
 
 use super::source::SourceFile;
 
-/// A piece of the source, that can be shown together with it's context.
+/// A piece of the source, that can be shown together with its context.
 // Note: There was quite some investigation into avoiding Rc here:
 // * Using lifetimes is a problem because it indirectly needs to be in the same struct
 //   as SourceFile, for example as part of parse errors. Which makes the parent immutable,

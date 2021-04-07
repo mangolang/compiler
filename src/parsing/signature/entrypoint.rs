@@ -12,7 +12,8 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
             } else {
                 None
             };
-            let entrypoint = EntryPointParselet::new(identifier);
+            unimplemented!();
+            let entrypoint = EntryPointParselet::new(identifier, vec![]);
             return Ok((cursor, entrypoint));
         }
     }

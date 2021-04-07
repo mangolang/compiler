@@ -1,2 +1,2 @@
-pub mod function;
+pub mod code_body;
 pub mod lazy;

@@ -1,5 +1,4 @@
 use ::smallvec::SmallVec;
-use ::smallvec::smallvec;
 
 use crate::parselet::files::import::ImportParselet;
 use crate::parselet::signature::entrypoint::EntryPointParselet;

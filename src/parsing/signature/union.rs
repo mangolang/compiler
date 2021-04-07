@@ -1,9 +1,8 @@
-use crate::parselet::signature::record::RecordParselet;
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::util::ParseRes;
-use crate::parselet::signature::function::FunctionParselet;
+use crate::parsing::util::{ParseRes, NoMatch};
 use crate::parselet::signature::union::UnionParselet;
 
 pub fn parse_union(mut cursor: ParseCursor) -> ParseRes<UnionParselet> {
-    unimplemented!()  //TODO @mark:
+    eprintln!("union not implemented");  //TODO @mark:
+    Err(NoMatch)  //TODO @mark: TEMPORARY! REMOVE THIS!
 }

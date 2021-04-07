@@ -88,7 +88,12 @@ mod tests {
             .file();
         let expected = FileParselet::new(
             vec![],
-            Some(EntryPointParselet::anonymous()),
+            Some(EntryPointParselet::anonymous(builder()
+                .identifier("print")
+                .parenthesis_open()
+                .literal_text("hello world")
+                .parenthesis_close()
+                .build())),
             smallvec![],
             smallvec![],
             smallvec![],

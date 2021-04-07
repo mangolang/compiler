@@ -15,8 +15,8 @@ pub enum LazyParselet<T: Parseable> {
 }
 
 impl<T: Parseable> LazyParselet<T> {
-    pub fn create(lexemes: Vec<Lexeme>) -> Self {
-        LazyParselet::Pending(lexemes)
+    pub fn create(lexemes: impl Into<Vec<Lexeme>>) -> Self {
+        LazyParselet::Pending(lexemes.into())
     }
 
     pub fn parsed(&mut self) -> &T {
