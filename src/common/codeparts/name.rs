@@ -152,8 +152,9 @@ mod technical {
 
 #[cfg(test)]
 mod validation {
-    use super::Name;
     use ::std::mem::size_of;
+
+    use super::Name;
 
     fn assert_validity(is_valid: bool, input: &[&str]) {
         for inp in input.iter() {

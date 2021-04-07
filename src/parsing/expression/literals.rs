@@ -128,7 +128,7 @@ mod special {
     use ::ustr::ustr;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, literal_text};
+    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn is_expression() {

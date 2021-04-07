@@ -16,11 +16,12 @@ pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod var {
-    use crate::lexeme::collect::for_test::*;
+
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{identifier, builder, literal_bool};
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -50,11 +51,11 @@ mod var {
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
+        let lexemes = vec![builder().comma().build_only()].into();
         let cursor = ParseCursor::new(&lexemes);
         let parselet = parse_variable(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 
     #[test]
@@ -77,28 +78,29 @@ mod var {
 
     #[test]
     fn leftover_other() {
-        let lexemes = vec![identifier("hello").into(), comma()].into();
+        let lexemes = vec![identifier("hello").into(), builder().comma().build_only()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }
 
 #[cfg(test)]
 mod special {
-    use crate::lexeme::collect::for_test::*;
+
     use crate::parselet::short::variable;
     use crate::parsing::expression::parse_expression;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{identifier, builder};
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![identifier("hello").into(), comma()].into();
+        let lexemes = vec![identifier("hello").into(), builder().comma().build_only()].into();
         let cursor = ParseCursor::new(&lexemes);
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
     }
 }

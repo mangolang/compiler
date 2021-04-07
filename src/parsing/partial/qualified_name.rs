@@ -45,7 +45,7 @@ mod tests {
 
     #[test]
     fn wrong_lexeme() {
-        let lexemes = builder().literal_text("hello").build();
+        let lexemes = builder().literal_text("hello").file();
         let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
@@ -53,7 +53,7 @@ mod tests {
 
     #[test]
     fn leading_separator() {
-        let lexemes = builder().period().identifier("hello").build();
+        let lexemes = builder().period().identifier("hello").file();
         let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     fn trailing_separator() {
-        let lexemes = builder().identifier("hello").period().build();
+        let lexemes = builder().identifier("hello").period().file();
         let result = parse_qualified_name(lexemes.cursor());
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), NoMatch);
@@ -69,7 +69,7 @@ mod tests {
 
     #[test]
     fn eof_after_name() {
-        let lexemes = builder().identifier("hello").build();
+        let lexemes = builder().identifier("hello").file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("hello").unwrap(), parselets.name);
         assert!(cursor.peek().is_err());
@@ -77,7 +77,7 @@ mod tests {
 
     #[test]
     fn single() {
-        let lexemes = builder().identifier("hello").literal_int(7).build();
+        let lexemes = builder().identifier("hello").literal_int(7).file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("hello").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
@@ -86,7 +86,7 @@ mod tests {
 
     #[test]
     fn two() {
-        let lexemes = builder().identifier("my_lib").period().identifier("MyClass").build();
+        let lexemes = builder().identifier("my_lib").period().identifier("MyClass").file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("my_lib.MyClass").unwrap(), parselets.name);
         assert!(cursor.peek().is_err());
@@ -101,7 +101,7 @@ mod tests {
             .period()
             .identifier("regex")
             .literal_int(7)
-            .build();
+            .file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
         assert_eq!(FQN::new("std.text.regex").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();

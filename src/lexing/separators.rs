@@ -39,13 +39,13 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod grouping {
-    use crate::lexeme::collect::for_test::*;
     use crate::lexeme::Lexeme;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_separators;
+    use crate::lexeme::collect::for_test::builder;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -69,71 +69,71 @@ mod grouping {
 
     #[test]
     fn single_ellipsis() {
-        check(r"...", &[ellipsis()]);
-        check(r"…", &[ellipsis()]);
+        check(r"...", &builder().ellipsis().build());
+        check(r"…", &builder().ellipsis().build());
     }
 
     #[test]
     fn multiple_ellipsis() {
-        check(r"...…", &[ellipsis(), ellipsis()]);
-        check(r"…...", &[ellipsis(), ellipsis()]);
-        check(r"……", &[ellipsis(), ellipsis()]);
-        check(r"......", &[ellipsis(), ellipsis()]);
+        check(r"...…", &builder().ellipsis().ellipsis().build());
+        check(r"…...", &builder().ellipsis().ellipsis().build());
+        check(r"……", &builder().ellipsis().ellipsis().build());
+        check(r"......", &builder().ellipsis().ellipsis().build());
     }
 
     #[test]
     fn single_period() {
-        check(r".", &[period()]);
+        check(r".", &builder().period().build());
     }
 
     #[test]
     fn multiple_period() {
-        check(r"..", &[period(), period()]);
-        check(r".. .", &[period(), period(), period()]);
+        check(r"..", &builder().period().period().build());
+        check(r".. .", &builder().period().period().period().build());
     }
 
     #[test]
     fn single_comma() {
-        check(r",", &[comma()]);
+        check(r",", &builder().comma().build());
     }
 
     #[test]
     fn multiple_comma() {
         // Probably a syntax error later on, but that's the parser's problem.
-        check(r",,", &[comma(), comma()]);
+        check(r",,", &builder().comma().comma().build());
     }
 
     #[test]
     fn single_colon() {
-        check(r":", &[colon()]);
+        check(r":", &builder().colon().build());
     }
 
     #[test]
     fn multiple_colon() {
         // Probably a syntax error later on, but that's the parser's problem.
-        check(r"::", &[colon(), colon()]);
+        check(r"::", &builder().colon().colon().build());
     }
 
     #[test]
     fn single_newline() {
-        check("\r\n", &[newline()]);
-        check("\n", &[newline()]);
-        check("\r", &[newline()]);
+        check("\r\n", &builder().newline().build());
+        check("\n", &builder().newline().build());
+        check("\r", &builder().newline().build());
     }
 
     #[test]
     fn stop_after_newline() {
-        check("\r\n:", &[newline()]);
-        check("\n...", &[newline()]);
-        check("\r,", &[newline()]);
+        check("\r\n:", &builder().newline().build());
+        check("\n...", &builder().newline().build());
+        check("\r,", &builder().newline().build());
     }
 
     #[test]
     fn multiple_newline() {
         // Only one newline should be matched
-        check("\n\n", &[newline()]);
-        check("\r\r", &[newline()]);
-        check("\r\n \r\n", &[newline()]);
+        check("\n\n", &builder().newline().build());
+        check("\r\r", &builder().newline().build());
+        check("\r\n \r\n", &builder().newline().build());
     }
 
     #[test]
@@ -146,34 +146,45 @@ mod grouping {
 
     #[test]
     fn combined_1() {
-        check(",....\r\n", &[comma(), ellipsis(), period(), newline()]);
+        check(",....\r\n", &builder()
+            .comma()
+            .ellipsis()
+            .period()
+            .newline()
+            .build());
     }
 
     #[test]
     fn combined_2() {
-        check("...….,\n,", &[ellipsis(), ellipsis(), period(), comma(), newline()]);
+        check("...….,\n,", &builder()
+            .ellipsis()
+            .ellipsis()
+            .period()
+            .comma()
+            .newline()
+            .build());
     }
 
     #[test]
     fn combined_3() {
         check(
             "...:,\n:",
-            &[
-                ellipsis(),
-                colon(),
-                comma(),
-                newline(),
-                // stop after newline
-            ],
+            &builder()
+                .ellipsis()
+                .colon()
+                .comma()
+                .newline()
+                .build(),
+            // stop after newline
         );
     }
 
     #[test]
     fn and_words() {
-        check(r"...abc", &[ellipsis()]);
-        check(r".abc", &[period()]);
-        check(r",abc", &[comma()]);
-        check(":abc", &[colon()]);
-        check("\nabc", &[newline()]);
+        check(r"...abc", &builder().ellipsis().build());
+        check(r".abc", &builder().period().build());
+        check(r",abc", &builder().comma().build());
+        check(":abc", &builder().colon().build());
+        check("\nabc", &builder().newline().build());
     }
 }
