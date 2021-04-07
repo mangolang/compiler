@@ -23,6 +23,7 @@ lazy_static! {
         assert!(keywords.insert("fun", Keyword::Function).is_none());
         assert!(keywords.insert("return", Keyword::Return).is_none());
         assert!(keywords.insert("assert", Keyword::Assert).is_none());
+        assert!(keywords.insert("test", Keyword::Test).is_none());
         assert!(keywords.insert("abstract", Keyword::Reserved("abstract".to_owned())).is_none());
         assert!(keywords.insert("alias", Keyword::Reserved("alias".to_owned())).is_none());
         assert!(keywords.insert("all", Keyword::Reserved("all".to_owned())).is_none());
@@ -178,6 +179,7 @@ pub enum Keyword {
     Import,
     Alias,
     Entrypoint,
+    Test,
     Reserved(String),
 }
 
@@ -189,18 +191,20 @@ impl Keyword {
 
     pub fn to_str(&self) -> Cow<str> {
         match self {
+            //TODO @mark: forgot why I used Cow here
             Keyword::Let => Cow::from("let"),
             Keyword::Mut => Cow::from("mut"),
             Keyword::If => Cow::from("if"),
             Keyword::For => Cow::from("for"),
             Keyword::While => Cow::from("while"),
             Keyword::In => Cow::from("in"),
-            Keyword::Function => Cow::from("function"),
+            Keyword::Function => Cow::from("fun"),
             Keyword::Return => Cow::from("return"),
             Keyword::Assert => Cow::from("assert"),
             Keyword::Import => Cow::from("use"),
             Keyword::Alias => Cow::from("as"),
             Keyword::Entrypoint => Cow::from("main"),
+            Keyword::Test => Cow::from("test"),
             Keyword::Reserved(name) => Cow::from(name),
         }
     }

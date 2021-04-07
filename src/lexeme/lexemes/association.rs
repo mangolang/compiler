@@ -38,6 +38,7 @@ impl AssociationLexeme {
             Symbol::Dash => true,
             Symbol::Asterisk => true,
             Symbol::Slash => true,
+            Symbol::Percent => true,
             Symbol::Exclamation => unimplemented!(),
             Symbol::Question => unimplemented!(),
             // Binary boolean operators are not allowed before '='

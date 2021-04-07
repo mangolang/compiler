@@ -70,6 +70,8 @@ mod tests {
     use crate::parselet::signature::entrypoint::EntryPointParselet;
 
     use super::*;
+    use crate::lexeme::collect::short::keyword_supported;
+    use crate::common::codeparts::operator::Symbol::{GT, Plus, Percent};
 
     #[test]
     fn hello_world_file() {
@@ -77,6 +79,7 @@ mod tests {
             .newline()
             .keyword("main")
             .colon()
+            .newline()
             .start_block()
             .identifier("print")
             .parenthesis_open()
@@ -93,27 +96,101 @@ mod tests {
                 .parenthesis_open()
                 .literal_text("hello world")
                 .parenthesis_close()
+                .newline()
                 .build())),
             smallvec![],
             smallvec![],
             smallvec![],
             smallvec![],
         );
-        let parselet = parse_file(lexemes.cursor()).unwrap().1;
+        let (end_cursor, parselet) = parse_file(lexemes.cursor()).unwrap();
         assert_eq!(expected, parselet);
-        //assert_eq!(next, cursor.peek());
-        unimplemented!()
+        assert_eq!(Ok(&builder().newline().build_single()), end_cursor.peek());
     }
 
     #[test]
-    fn simple_file() {
+    fn simple_tested_gdc_function() {
         let lexemes = builder()
             .keyword("use")
-            .identifier("pit.text")
+            .identifier("pit.text.println")
             .keyword("as")
-            .identifier("txt")
-            .literal_int(3)
+            .identifier("print")
             .newline()
+            .newline()
+            .keyword("fun")
+            .identifier("gcd")
+            .parenthesis_open()
+            .identifier("x")
+            .colon()
+            .identifier("int")
+            .comma()
+            .identifier("y")
+            .colon()
+            .identifier("int")
+            .parenthesis_close()
+            .colon()
+            .newline()
+            .start_block()
+            .keyword("while")
+            .identifier("y")
+            .operator(GT)
+            .literal_int(0)
+            .colon()
+            .newline()
+            .start_block()
+            .keyword("let")
+            .identifier("z")
+            .assignment()
+            .identifier("x")
+            .operator(Percent)
+            .identifier("y")
+            .newline()
+            .identifier("x")
+            .assignment()
+            .identifier("y")
+            .newline()
+            .identifier("y")
+            .assignment()
+            .identifier("z")
+            .newline()
+            .end_block()
+            .keyword("return")
+            .identifier("x")
+            .newline()
+            .end_block()
+            .newline()
+            .keyword("main")
+            .colon()
+            .newline()
+            .start_block()
+            .identifier("print")
+            .parenthesis_open()
+            .identifier("gcd")
+            .parenthesis_open()
+            .literal_int(45)
+            .comma()
+            .literal_int(30)
+            .parenthesis_close()
+            .parenthesis_close()
+            .newline()
+            .end_block()
+            .newline()
+            .keyword("test")
+            .identifier("gcd_100_60")
+            .colon()
+            .newline()
+            .start_block()
+            .identifier("assert")
+            .identifier("gcd")
+            .parenthesis_open()
+            .literal_int(100)
+            .comma()
+            .literal_int(60)
+            .parenthesis_close()
+            .operator("==")
+            .literal_int(20)
+            .newline()
+            .end_block()
             .file();
         let expected = FileParselet::new(
             vec![import_alias("pit.text", "txt")],
