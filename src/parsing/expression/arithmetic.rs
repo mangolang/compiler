@@ -47,11 +47,11 @@ mod test_util {
     use crate::lexeme::Lexeme;
     use crate::parselet::ExpressionParselets;
     use crate::parsing::expression::arithmetic::parse_addition;
-    use crate::parsing::util::cursor::{End, ParseCursor};
+    use crate::parsing::util::cursor::End;
 
     pub fn check_add(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -59,7 +59,7 @@ mod test_util {
 
     pub fn check_mul(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -127,10 +127,10 @@ mod addition {
     #[test]
     fn not_recognized() {
         let lexemes = builder().comma().file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
 
@@ -199,10 +199,10 @@ mod multiplication {
     #[test]
     fn not_recognized() {
         let lexemes = builder().comma().file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_addition(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
 
@@ -253,7 +253,7 @@ mod special {
     #[test]
     fn empty() {
         let lexemes = vec![].into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let _parselet = parse_addition(cursor);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -266,13 +266,12 @@ mod special {
             .literal_int(3)
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor).unwrap();
+        let (cursor, parselet) = parse_addition(lexemes.cursor()).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
             parselet
         );
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
@@ -283,12 +282,11 @@ mod special {
             .literal_int(3)
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        let (cursor, parselet) = parse_expression(lexemes.cursor()).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3)),),
             parselet
         );
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }

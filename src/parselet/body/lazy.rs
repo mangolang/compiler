@@ -59,7 +59,8 @@ mod tests {
     #[test]
     fn resolve_2() {
         //TODO @mark: maybe I should not need mutability?
-        let mut func: LazyParselet<TestParseable> = LazyParselet::create(vec![builder().period().build_only()]);
+        let mut func: LazyParselet<TestParseable> = LazyParselet::create(
+            vec![builder().period().build_single()]);
         let body = func.parsed();
         assert_eq!(body.0, 1);
     }

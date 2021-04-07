@@ -29,7 +29,7 @@ mod literal {
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -64,7 +64,7 @@ mod literal {
     #[test]
     fn empty() {
         let lexemes = vec![].into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let _parselet = parse_literal(cursor);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -72,10 +72,10 @@ mod literal {
     #[test]
     fn not_recognized() {
         let lexemes = builder().comma().file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_literal(cursor);
         assert!(parselet.is_err());
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
@@ -86,7 +86,7 @@ mod literal {
             .parenthesis_close()
             .literal_bool(true)
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(1)), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
@@ -98,7 +98,7 @@ mod literal {
             .literal_int(37)
             .literal_bool(true)
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
@@ -110,7 +110,7 @@ mod literal {
             .literal_int(37)
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
@@ -136,7 +136,7 @@ mod special {
             .literal_text("hello42")
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());

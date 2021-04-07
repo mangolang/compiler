@@ -27,7 +27,7 @@ mod parenthese {
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -117,7 +117,7 @@ mod parenthese {
             .literal_int(2)
             .parenthesis_close()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         // Since the '(' is not at the start, use parse_expression as entry point.
         let parselet = parse_expression(cursor).unwrap().1;
         assert_eq!(
@@ -133,7 +133,7 @@ mod parenthese {
     #[test]
     fn empty() {
         let lexemes = builder().file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Err(End), cursor.peek());
@@ -147,10 +147,10 @@ mod parenthese {
             .parenthesis_close()
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
         assert_eq!(literal(literal_text("hello world")), parselet);
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
@@ -160,7 +160,7 @@ mod parenthese {
             .operator("+")
             .literal_int(3)
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&literal_int(4).into()), cursor.peek());
@@ -172,10 +172,10 @@ mod parenthese {
             .parenthesis_open()
             .literal_int(1)
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&builder().parenthesis_open().build_only()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
     }
 
     #[test]
@@ -185,10 +185,10 @@ mod parenthese {
             .literal_int(1)
             .parenthesis_open()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&builder().parenthesis_open().build_only()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
     }
 
     #[test]
@@ -197,10 +197,10 @@ mod parenthese {
             .parenthesis_close()
             .literal_int(1)
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
-        assert_eq!(Ok(&builder().parenthesis_close().build_only()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_close().build_single()), cursor.peek());
     }
 }
 
@@ -220,9 +220,9 @@ mod special {
             .parenthesis_close()
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(literal_text("hello world")), parselet);
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }

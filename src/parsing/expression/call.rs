@@ -41,7 +41,7 @@ mod by_name {
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -185,9 +185,9 @@ mod special {
             .literal_int(1)
             .parenthesis_close()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&builder().parenthesis_open().build_only()));
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -198,9 +198,9 @@ mod special {
             .parenthesis_open()
             .identifier("x")
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(cursor.peek(), Ok(&builder().parenthesis_open().build_only()));
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -213,12 +213,12 @@ mod special {
             .parenthesis_close()
             .comma()
             .file();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(
             function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
             parselet
         );
-        assert_eq!(Ok(&builder().comma().build_only()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }

@@ -60,7 +60,7 @@ mod try_lex {
     use crate::lexeme::collect::for_test::builder;
 
     fn lex_fn_match(_reader: &mut impl Reader, lexer: &mut impl Lexer) {
-        lexer.add(builder().unlexable("hi").build_only())
+        lexer.add(builder().unlexable("hi").build_single())
     }
 
     fn lex_fn_no_match(_reader: &mut impl Reader, _lexer: &mut impl Lexer) {}

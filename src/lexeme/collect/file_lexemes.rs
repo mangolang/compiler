@@ -109,11 +109,11 @@ mod tests {
             .file();
         let mut index = lexemes.index_at_start();
         assert!(index < lexemes.len());
-        assert_eq!(&builder().unlexable("a").build_only(), &lexemes[index]);
+        assert_eq!(&builder().unlexable("a").build_single(), &lexemes[index]);
         index.increment();
-        assert_eq!(&builder().unlexable("b").build_only(), &lexemes[index]);
+        assert_eq!(&builder().unlexable("b").build_single(), &lexemes[index]);
         index.increment();
-        assert_eq!(Some(&builder().unlexable("c").build_only()), lexemes.peek(index));
+        assert_eq!(Some(&builder().unlexable("c").build_single()), lexemes.peek(index));
         index.increment();
         assert_eq!(None, lexemes.peek(index));
     }

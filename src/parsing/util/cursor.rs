@@ -103,10 +103,10 @@ mod tests {
             .unlexable("a")
             .unlexable("b")
             .file();
-        let mut cursor = ParseCursor::new(&lexemes);
-        assert_eq!(Ok(&builder().unlexable("a").build_only()), cursor.peek());
+        let mut cursor = lexemes.cursor();
+        assert_eq!(Ok(&builder().unlexable("a").build_single()), cursor.peek());
         cursor.increment();
-        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_single()), cursor.take());
         assert_eq!(Err(End), cursor.take());
     }
 
@@ -120,7 +120,7 @@ mod tests {
             .identifier("z")
             .newline()
             .file();
-        let mut cursor = ParseCursor::new(&lexemes);
+        let mut cursor = lexemes.cursor();
 
         assert_eq!(Ok(&identifier("x").into()), cursor.peek());
         cursor.skip_while(|lexeme| lexeme.is_newline());
@@ -149,16 +149,16 @@ mod tests {
             .identifier("z")
             .newline()
             .file();
-        let mut cursor = ParseCursor::new(&lexemes);
+        let mut cursor = lexemes.cursor();
 
         assert_eq!(Some(&identifier("x").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
-        assert_eq!(Ok(&builder().newline().build_only()), cursor.peek());
-        assert_eq!(Some(&builder().newline().build_only()), cursor.take_if(|lexeme| lexeme.is_newline()));
-        assert_eq!(Some(&builder().newline().build_only()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Ok(&builder().newline().build_single()), cursor.peek());
+        assert_eq!(Some(&builder().newline().build_single()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(Some(&builder().newline().build_single()), cursor.take_if(|lexeme| lexeme.is_newline()));
         assert_eq!(Ok(&identifier("y").into()), cursor.peek());
         assert_eq!(Some(&identifier("y").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
         assert_eq!(Some(&identifier("z").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
-        assert_eq!(Ok(&builder().newline().build_only()), cursor.take());
+        assert_eq!(Ok(&builder().newline().build_single()), cursor.take());
         assert_eq!(Err(End), cursor.take());
     }
 
@@ -168,18 +168,18 @@ mod tests {
             .unlexable("a")
             .unlexable("b")
             .file();
-        let mut cursor1 = ParseCursor::new(&lexemes);
+        let mut cursor1 = lexemes.cursor();
         let text = "a";
-        assert_eq!(Ok(&builder().unlexable(text).build_only()), cursor1.peek());
+        assert_eq!(Ok(&builder().unlexable(text).build_single()), cursor1.peek());
         let mut cursor2 = cursor1;
         cursor1.increment();
         cursor1.increment();
         assert_eq!(Err(End), cursor1.take());
-        assert_eq!(Ok(&builder().unlexable("a").build_only()), cursor2.peek());
+        assert_eq!(Ok(&builder().unlexable("a").build_single()), cursor2.peek());
         cursor2.increment();
         let mut cursor3 = cursor2;
-        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor3.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_single()), cursor3.take());
         assert_eq!(Err(End), cursor3.take());
-        assert_eq!(Ok(&builder().unlexable("b").build_only()), cursor2.take());
+        assert_eq!(Ok(&builder().unlexable("b").build_single()), cursor2.take());
     }
 }

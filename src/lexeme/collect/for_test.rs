@@ -85,7 +85,7 @@ impl TestLexemeBuilder {
         FileLexemes::new(self.build())
     }
 
-    pub fn build_only(self) -> Lexeme {
+    pub fn build_single(self) -> Lexeme {
         assert_eq!(self.lexemes.len(), 1);
         let TestLexemeBuilder { source, mut lexemes} = self;
         let file = SourceFile::new("[mock]", source);

@@ -42,7 +42,7 @@ mod test_util {
 
     pub fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+        let cursor = lexemes.cursor();
         let (cursor, parselets) = parse_multi_expression(cursor).unwrap();
         assert_eq!(expected, parselets);
         assert_eq!(lexeme_at_cursor, cursor.peek());
@@ -51,7 +51,7 @@ mod test_util {
     //TODO @mark: remove?
     // pub fn check_fail(lexeme: Vec<Lexeme>, lexeme_at_cursor: Result<&Lexeme, End>) {
     //     let lexemes = lexeme.into();
-    //     let cursor = ParseCursor::new(&lexemes);
+    //     let cursor = lexemes.cursor();
     //     let result = parse_multi_expression(cursor.clone());
     //     assert!(result.is_err());
     //     assert_eq!(lexeme_at_cursor, cursor.peek());
@@ -252,7 +252,7 @@ mod separators {
                 .identifier("hello")
                 .build(),
             vec![literal(literal_text("hello"))],
-            Ok(&builder().comma().build_only()),
+            Ok(&builder().comma().build_single()),
         );
     }
 
@@ -294,8 +294,8 @@ mod separators {
                 .comma()
                 .identifier("hello")
                 .build(),
-        vec![literal(literal_text("hello"))],
-        Ok(&builder().comma().build_only()),
+            vec![literal(literal_text("hello"))],
+            Ok(&builder().comma().build_single()),
         );
     }
 
@@ -378,8 +378,8 @@ mod ending {
                 .newline()
                 .comma()
                 .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Ok(&builder().comma().build_only()),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Ok(&builder().comma().build_single()),
         );
     }
 
@@ -419,8 +419,8 @@ mod errors {
                 .comma()
                 .ellipsis()
                 .build(),
-        vec![literal(literal_text("hello"))],
-        Ok(&builder().ellipsis().build_only()),
+            vec![literal(literal_text("hello"))],
+            Ok(&builder().ellipsis().build_single()),
         );
     }
 
@@ -429,7 +429,7 @@ mod errors {
         check(
             builder().comma().build(),
             vec![],
-            Ok(&builder().comma().build_only()));
+            Ok(&builder().comma().build_single()));
     }
 
     #[test]
@@ -441,8 +441,8 @@ mod errors {
                 .identifier("q")
                 .parenthesis_close()
                 .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Ok(&builder().parenthesis_close().build_only()),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Ok(&builder().parenthesis_close().build_single()),
         );
     }
 
@@ -455,8 +455,8 @@ mod errors {
                 .identifier("q")
                 .bracket_close()
                 .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Ok(&builder().bracket_close().build_only()),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Ok(&builder().bracket_close().build_single()),
         );
     }
 
