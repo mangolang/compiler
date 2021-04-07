@@ -40,7 +40,7 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{Dash, Plus, GE, EQ};
+    use crate::common::codeparts::operator::Symbol::{Dash, GE, EQ};
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;

@@ -65,6 +65,6 @@ impl SourceLocation for OperatorLexeme {
 
 impl ToText for OperatorLexeme {
     fn to_text(&self) -> String {
-        format!(" {} ", self.symbol)
+        format!("{}", self.symbol)
     }
 }

@@ -123,9 +123,7 @@ mod tests {
             smallvec![],
             smallvec![], );
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
-        //let next = Ok(lexemes.last());
         assert_eq!(expected, parselet);
-        //assert_eq!(next, cursor.peek());
         unimplemented!()
     }
 }

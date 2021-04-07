@@ -14,6 +14,8 @@ use crate::lexeme::{
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::collect::FileLexemes;
+#[cfg(test)]
+use crate::lexeme::collect::print::print_lexemes;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
 
@@ -80,7 +82,7 @@ impl TestLexemeBuilder {
             lexs.push(lex.1(slice))
         }
         //TODO @mark: better formatting
-        dbg_log!("building lexeme input:\n{:?}", &lexs.iter().map(|e| format!("{:?}", e)).collect::<Vec<_>>().join(" "));
+        dbg_log!("<lexeme-input>\n{}\n</lexeme-input>", print_lexemes(&lexs));
         lexs
     }
 
@@ -178,7 +180,7 @@ impl TestLexemeBuilder {
         self
     }
 
-    pub fn assignment(mut self) -> Self {
+    pub fn assignment(self) -> Self {
         self.add_simple("=", |src| Lexeme::Association(AssociationLexeme::from_unprefixed(src)))
     }
 

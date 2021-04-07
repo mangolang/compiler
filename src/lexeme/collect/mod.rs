@@ -8,3 +8,5 @@ mod file_lexemes;
 #[cfg(test)]
 pub mod for_test;
 pub mod short;
+#[cfg(test)]
+pub mod print;
