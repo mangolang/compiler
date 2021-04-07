@@ -93,16 +93,13 @@ impl<'a> fmt::Debug for ParseCursor<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::lexeme::collect::for_test::{identifier, builder};
+    use crate::lexeme::collect::for_test::{builder, identifier};
 
     use super::*;
 
     #[test]
     fn increment() {
-        let lexemes = builder()
-            .unlexable("a")
-            .unlexable("b")
-            .file();
+        let lexemes = builder().unlexable("a").unlexable("b").file();
         let mut cursor = lexemes.cursor();
         assert_eq!(Ok(&builder().unlexable("a").build_single()), cursor.peek());
         cursor.increment();
@@ -153,8 +150,14 @@ mod tests {
 
         assert_eq!(Some(&identifier("x").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
         assert_eq!(Ok(&builder().newline().build_single()), cursor.peek());
-        assert_eq!(Some(&builder().newline().build_single()), cursor.take_if(|lexeme| lexeme.is_newline()));
-        assert_eq!(Some(&builder().newline().build_single()), cursor.take_if(|lexeme| lexeme.is_newline()));
+        assert_eq!(
+            Some(&builder().newline().build_single()),
+            cursor.take_if(|lexeme| lexeme.is_newline())
+        );
+        assert_eq!(
+            Some(&builder().newline().build_single()),
+            cursor.take_if(|lexeme| lexeme.is_newline())
+        );
         assert_eq!(Ok(&identifier("y").into()), cursor.peek());
         assert_eq!(Some(&identifier("y").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
         assert_eq!(Some(&identifier("z").into()), cursor.take_if(|lexeme| !lexeme.is_newline()));
@@ -164,10 +167,7 @@ mod tests {
 
     #[test]
     fn backtrack() {
-        let lexemes: FileLexemes = builder()
-            .unlexable("a")
-            .unlexable("b")
-            .file();
+        let lexemes: FileLexemes = builder().unlexable("a").unlexable("b").file();
         let mut cursor1 = lexemes.cursor();
         let text = "a";
         assert_eq!(Ok(&builder().unlexable(text).build_single()), cursor1.peek());

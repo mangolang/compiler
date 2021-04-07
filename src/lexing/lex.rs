@@ -53,11 +53,11 @@ pub fn lex(source: &SourceFile) -> FileLexemes {
 
 #[cfg(test)]
 mod try_lex {
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
 
     use super::*;
-    use crate::lexeme::collect::for_test::builder;
 
     fn lex_fn_match(_reader: &mut impl Reader, lexer: &mut impl Lexer) {
         lexer.add(builder().unlexable("hi").build_single())

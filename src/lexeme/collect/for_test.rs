@@ -3,18 +3,18 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::{Keyword, Symbol};
 use crate::common::codeparts::eqfloat::f64eq;
+use crate::common::codeparts::{Keyword, Symbol};
 use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
-use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
-    ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
-};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::collect::FileLexemes;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::{
+    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
+    ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
+};
 
 pub type LexemeGenerator = Box<dyn FnOnce(SourceSlice) -> Lexeme>;
 
@@ -87,7 +87,7 @@ impl TestLexemeBuilder {
 
     pub fn build_single(self) -> Lexeme {
         assert_eq!(self.lexemes.len(), 1);
-        let TestLexemeBuilder { source, mut lexemes} = self;
+        let TestLexemeBuilder { source, mut lexemes } = self;
         let file = SourceFile::new("[mock]", source);
         let lex = lexemes.drain(..).next().unwrap();
         let slice = SourceSlice::new(&file, 0, lex.0 - 1);
@@ -274,4 +274,3 @@ pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
 pub fn association(txt: impl IntoSymbol) -> OperatorLexeme {
     OperatorLexeme::from_symbol(txt.symbol(true).unwrap(), SourceSlice::mock())
 }
-

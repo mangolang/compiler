@@ -1,9 +1,9 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
-use crate::parselet::ExpressionParselets;
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::call::parse_function_call;
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
@@ -72,8 +72,8 @@ mod addition {
     use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
 
-    use super::*;
     use super::test_util::check_add as check;
+    use super::*;
 
     #[test]
     fn single_addition() {
@@ -140,8 +140,8 @@ mod multiplication {
     use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
 
-    use super::*;
     use super::test_util::check_mul as check;
+    use super::*;
 
     #[test]
     fn single_multiplication() {
@@ -260,12 +260,7 @@ mod special {
 
     #[test]
     fn leftover() {
-        let lexemes = builder()
-            .literal_int(4)
-            .operator("+")
-            .literal_int(3)
-            .comma()
-            .file();
+        let lexemes = builder().literal_int(4).operator("+").literal_int(3).comma().file();
         let (cursor, parselet) = parse_addition(lexemes.cursor()).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
@@ -276,12 +271,7 @@ mod special {
 
     #[test]
     fn is_expression() {
-        let lexemes = builder()
-            .literal_int(4)
-            .operator("*")
-            .literal_int(3)
-            .comma()
-            .file();
+        let lexemes = builder().literal_int(4).operator("*").literal_int(3).comma().file();
         let (cursor, parselet) = parse_expression(lexemes.cursor()).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3)),),

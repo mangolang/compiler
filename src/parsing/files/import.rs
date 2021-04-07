@@ -34,11 +34,10 @@ pub fn parse_import(mut cursor: ParseCursor) -> ParseRes<ImportParselet> {
 #[cfg(test)]
 mod importing {
     use crate::lexeme::collect::for_test::builder;
-
+    use crate::parselet::collect::for_test::{import, import_alias};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::parselet::collect::for_test::{import, import_alias};
 
     #[test]
     fn single_word_import() {

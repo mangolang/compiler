@@ -16,11 +16,11 @@ pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod var {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool};
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{identifier, builder, literal_bool};
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -59,10 +59,7 @@ mod var {
 
     #[test]
     fn try_literal_on_mismatch() {
-        let lexemes = builder()
-            .literal_bool(true)
-            .identifier("no_match")
-            .file();
+        let lexemes = builder().literal_bool(true).identifier("no_match").file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(literal(literal_bool(true)), parselet);
@@ -71,10 +68,7 @@ mod var {
 
     #[test]
     fn leftover_variable() {
-        let lexemes = builder()
-            .identifier("hello")
-            .identifier("world")
-            .file();
+        let lexemes = builder().identifier("hello").identifier("world").file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
@@ -83,10 +77,7 @@ mod var {
 
     #[test]
     fn leftover_other() {
-        let lexemes = builder()
-            .identifier("hello")
-            .comma()
-            .build();
+        let lexemes = builder().identifier("hello").comma().build();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
@@ -96,18 +87,15 @@ mod var {
 
 #[cfg(test)]
 mod special {
+    use crate::lexeme::collect::for_test::{builder, identifier};
     use crate::parselet::short::variable;
     use crate::parsing::expression::parse_expression;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{identifier, builder};
 
     #[test]
     fn is_expression() {
-        let lexemes = builder()
-            .identifier("hello")
-            .comma()
-            .build();
+        let lexemes = builder().identifier("hello").comma().build();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);

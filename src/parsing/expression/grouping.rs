@@ -17,13 +17,12 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 #[cfg(test)]
 mod parenthese {
     use crate::common::codeparts::Symbol;
-
+    use crate::lexeme::collect::for_test::{builder, literal_int, literal_text, operator};
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, literal_text, literal_int, operator};
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -36,11 +35,7 @@ mod parenthese {
     #[test]
     fn text() {
         check(
-            builder()
-                .parenthesis_open()
-                .literal_text("hello world")
-                .parenthesis_close()
-                .build(),
+            builder().parenthesis_open().literal_text("hello world").parenthesis_close().build(),
             literal(literal_text("hello world")),
         );
     }
@@ -48,11 +43,7 @@ mod parenthese {
     #[test]
     fn parenthesized_literal() {
         check(
-            builder()
-                .parenthesis_open()
-                .literal_int(7)
-                .parenthesis_close()
-                .build(),
+            builder().parenthesis_open().literal_int(7).parenthesis_close().build(),
             literal(literal_int(7)),
         );
     }
@@ -66,8 +57,7 @@ mod parenthese {
                 .operator("+")
                 .literal_int(3)
                 .parenthesis_close()
-                .build()
-            ,
+                .build(),
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -155,11 +145,7 @@ mod parenthese {
 
     #[test]
     fn ungrouped_fail() {
-        let lexemes = builder()
-            .literal_int(4)
-            .operator("+")
-            .literal_int(3)
-            .file();
+        let lexemes = builder().literal_int(4).operator("+").literal_int(3).file();
         let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -168,10 +154,7 @@ mod parenthese {
 
     #[test]
     fn only_open() {
-        let lexemes = builder()
-            .parenthesis_open()
-            .literal_int(1)
-            .file();
+        let lexemes = builder().parenthesis_open().literal_int(1).file();
         let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -180,11 +163,7 @@ mod parenthese {
 
     #[test]
     fn unbalanced() {
-        let lexemes = builder()
-            .parenthesis_open()
-            .literal_int(1)
-            .parenthesis_open()
-            .file();
+        let lexemes = builder().parenthesis_open().literal_int(1).parenthesis_open().file();
         let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -193,10 +172,7 @@ mod parenthese {
 
     #[test]
     fn only_close() {
-        let lexemes = builder()
-            .parenthesis_close()
-            .literal_int(1)
-            .file();
+        let lexemes = builder().parenthesis_close().literal_int(1).file();
         let cursor = lexemes.cursor();
         let parselet = parse_parenthesised_group(cursor);
         assert_eq!(NoMatch, parselet.unwrap_err());
@@ -206,11 +182,10 @@ mod parenthese {
 
 #[cfg(test)]
 mod special {
-
+    use crate::lexeme::collect::for_test::{builder, literal_text};
     use crate::parselet::short::literal;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, literal_text};
 
     #[test]
     fn is_expression() {

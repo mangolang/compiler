@@ -39,13 +39,13 @@ pub fn lex_separators(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod grouping {
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::Lexeme;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_separators;
-    use crate::lexeme::collect::for_test::builder;
 
     fn check(input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -146,35 +146,19 @@ mod grouping {
 
     #[test]
     fn combined_1() {
-        check(",....\r\n", &builder()
-            .comma()
-            .ellipsis()
-            .period()
-            .newline()
-            .build());
+        check(",....\r\n", &builder().comma().ellipsis().period().newline().build());
     }
 
     #[test]
     fn combined_2() {
-        check("...….,\n,", &builder()
-            .ellipsis()
-            .ellipsis()
-            .period()
-            .comma()
-            .newline()
-            .build());
+        check("...….,\n,", &builder().ellipsis().ellipsis().period().comma().newline().build());
     }
 
     #[test]
     fn combined_3() {
         check(
             "...:,\n:",
-            &builder()
-                .ellipsis()
-                .colon()
-                .comma()
-                .newline()
-                .build(),
+            &builder().ellipsis().colon().comma().newline().build(),
             // stop after newline
         );
     }

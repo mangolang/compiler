@@ -74,10 +74,9 @@ mod test_util {
 
 #[cfg(test)]
 mod constants {
-
+    use crate::lexeme::collect::for_test::literal_bool;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::literal_bool;
 
     #[test]
     fn empty() {
@@ -121,10 +120,9 @@ mod constants {
 
 #[cfg(test)]
 mod int {
-
+    use crate::lexeme::collect::for_test::literal_int;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::literal_int;
 
     #[test]
     fn empty() {
@@ -200,10 +198,9 @@ mod int {
 
 #[cfg(test)]
 mod real {
-
+    use crate::lexeme::collect::for_test::literal_real;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::literal_real;
 
     #[test]
     fn empty() {
@@ -260,10 +257,9 @@ mod real {
 
 #[cfg(test)]
 mod text {
-
+    use crate::lexeme::collect::for_test::literal_text;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::literal_text;
 
     #[test]
     fn empty() {
@@ -330,10 +326,9 @@ mod text {
 
 #[cfg(test)]
 mod exhaustion {
-
+    use crate::lexeme::collect::for_test::{literal_bool, literal_int, literal_real, literal_text};
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::{literal_bool, literal_int, literal_real, literal_text};
 
     //TODO @mark: TEMPORARY! REMOVE THIS!
     // // Constants.

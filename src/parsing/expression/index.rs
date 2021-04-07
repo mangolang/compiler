@@ -1,7 +1,6 @@
 use crate::dbg_log;
-use crate::parselet::ExpressionParselets;
-
 use crate::parselet::node::function_call::FunctionCallParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_open};
@@ -36,13 +35,12 @@ pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 #[cfg(test)]
 mod by_name {
     use crate::common::codeparts::Symbol;
-
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{array_index, binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{identifier, builder, literal_int, operator};
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -55,12 +53,7 @@ mod by_name {
     #[test]
     fn single_literal_positional_arg() {
         check(
-            builder()
-                .identifier("data")
-                .bracket_open()
-                .literal_int(42)
-                .bracket_close()
-                .build(),
+            builder().identifier("data").bracket_open().literal_int(42).bracket_close().build(),
             array_index(variable(identifier("data")), vec![literal(literal_int(42))]),
         );
     }
@@ -68,12 +61,7 @@ mod by_name {
     #[test]
     fn single_identifier_positional_arg() {
         check(
-            builder()
-                .identifier("arr")
-                .bracket_open()
-                .identifier("x")
-                .bracket_close()
-                .build(),
+            builder().identifier("arr").bracket_open().identifier("x").bracket_close().build(),
             array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
@@ -162,19 +150,15 @@ mod by_name {
 
 #[cfg(test)]
 mod special {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
     use crate::parselet::short::{array_index, literal, variable};
     use crate::parsing::expression::parse_expression;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
 
     #[test]
     fn no_args() {
-        let lexemes = builder()
-            .identifier("fun")
-            .bracket_open()
-            .bracket_close()
-            .file();
+        let lexemes = builder().identifier("fun").bracket_open().bracket_close().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
@@ -198,11 +182,7 @@ mod special {
 
     #[test]
     fn unclosed() {
-        let lexemes = builder()
-            .identifier("fun")
-            .bracket_open()
-            .identifier("x")
-            .file();
+        let lexemes = builder().identifier("fun").bracket_open().identifier("x").file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));

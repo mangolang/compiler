@@ -105,10 +105,10 @@ mod keywords {
     use crate::common::codeparts::keyword::KEYWORDS;
     use crate::common::codeparts::Keyword;
     use crate::io::slice::SourceSlice;
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::{KeywordLexeme, Lexeme};
 
     use super::mixed::check;
-    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn all_keywords() {

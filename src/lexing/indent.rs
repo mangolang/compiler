@@ -51,14 +51,13 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod indents {
     use crate::io::slice::SourceSlice;
-
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::{EndBlockLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_indents;
-    use crate::lexeme::collect::for_test::builder;
 
     fn check(initial_indent: u32, input: &str, expected: &[Lexeme]) {
         let expected: LexemeCollector = expected.into();
@@ -70,10 +69,7 @@ mod indents {
 
     #[test]
     fn increase() {
-        check(0, "\t    hello", &builder()
-            .start_block()
-            .start_block()
-            .build());
+        check(0, "\t    hello", &builder().start_block().start_block().build());
     }
 
     #[test]

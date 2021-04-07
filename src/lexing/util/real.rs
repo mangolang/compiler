@@ -1,6 +1,7 @@
-use crate::lexing::util::char_ops::CharOps;
 use ::lazy_static::lazy_static;
 use ::regex::Regex;
+
+use crate::lexing::util::char_ops::CharOps;
 
 #[derive(Debug)]
 pub enum RealParseFailReason {

@@ -39,9 +39,10 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexem
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::common::codeparts::fqn::FQN;
     use crate::lexeme::collect::for_test::builder;
+
+    use super::*;
 
     #[test]
     fn wrong_lexeme() {

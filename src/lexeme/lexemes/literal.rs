@@ -1,11 +1,11 @@
 use ::std::hash;
 
-use crate::io::slice::{SourceLocation, SourceSlice};
-use crate::lexeme::Lexeme;
+use ::ustr::Ustr;
 
 use crate::common::codeparts::eqfloat::f64eq;
 use crate::common::debug::ToText;
-use ::ustr::Ustr;
+use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::lexeme::Lexeme;
 
 /// A literal, like 9 or "hello".
 /// Note that null does not exist.

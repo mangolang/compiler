@@ -102,11 +102,7 @@ mod tests {
 
     #[test]
     fn indexing() {
-        let lexemes = builder()
-            .unlexable("a")
-            .unlexable("a")
-            .unlexable("a")
-            .file();
+        let lexemes = builder().unlexable("a").unlexable("a").unlexable("a").file();
         let mut index = lexemes.index_at_start();
         assert!(index < lexemes.len());
         assert_eq!(&builder().unlexable("a").build_single(), &lexemes[index]);

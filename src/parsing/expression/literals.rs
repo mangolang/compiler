@@ -16,16 +16,15 @@ pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 #[cfg(test)]
 mod literal {
-    use crate::io::slice::SourceSlice;
+    use ::ustr::ustr;
 
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text};
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
 
-    use ::ustr::ustr;
-
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, literal_int, literal_real, literal_bool, builder};
 
     fn check(lexeme: Lexeme, expected: ExpressionParselets) {
         let lexemes = vec![lexeme].into();
@@ -94,10 +93,7 @@ mod literal {
 
     #[test]
     fn leftover_literal() {
-        let lexemes = builder()
-            .literal_int(37)
-            .literal_bool(true)
-            .file();
+        let lexemes = builder().literal_int(37).literal_bool(true).file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
@@ -106,10 +102,7 @@ mod literal {
 
     #[test]
     fn leftover_other() {
-        let lexemes = builder()
-            .literal_int(37)
-            .comma()
-            .file();
+        let lexemes = builder().literal_int(37).comma().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(literal(literal_int(37)), parselet);
@@ -119,23 +112,17 @@ mod literal {
 
 #[cfg(test)]
 mod special {
-    use crate::io::slice::SourceSlice;
+    use ::ustr::ustr;
 
+    use crate::io::slice::SourceSlice;
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::expression::parse_expression;
 
-    use ::ustr::ustr;
-
-    use super::*;
-    use crate::lexeme::collect::for_test::builder;
-
     #[test]
     fn is_expression() {
-        let lexemes = builder()
-            .literal_text("hello42")
-            .comma()
-            .file();
+        let lexemes = builder().literal_text("hello42").comma().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())), parselet);

@@ -1,10 +1,9 @@
 use crate::io::source::SourceFile;
-
+use crate::lexeme::collect::for_test::builder;
 use crate::lexing::lexer::CodeLexer;
 use crate::lexing::reader::source_reader::SourceReader;
 
 use super::lex;
-use crate::lexeme::collect::for_test::builder;
 
 // use ::indoc::indoc;
 

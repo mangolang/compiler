@@ -71,25 +71,18 @@ mod mismatch {
 
 #[cfg(test)]
 mod parenthese {
-
+    use crate::lexeme::collect::for_test::builder;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn open() {
-        check(" ( ",
-              &builder()
-                  .parenthesis_open()
-                  .build());
+        check(" ( ", &builder().parenthesis_open().build());
     }
 
     #[test]
     fn close() {
-        check(" ) ",
-              &builder()
-                  .parenthesis_close()
-                  .build());
+        check(" ) ", &builder().parenthesis_close().build());
     }
 
     #[test]
@@ -107,11 +100,7 @@ mod parenthese {
 
     #[test]
     fn unbalanced() {
-        check("(( )", &builder()
-            .parenthesis_open()
-            .parenthesis_open()
-            .parenthesis_close()
-            .build());
+        check("(( )", &builder().parenthesis_open().parenthesis_open().parenthesis_close().build());
     }
 
     #[test]
@@ -122,61 +111,44 @@ mod parenthese {
 
 #[cfg(test)]
 mod brackets {
-
+    use crate::lexeme::collect::for_test::builder;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn open() {
-        check(" [ ",
-              &builder().bracket_open().build());
+        check(" [ ", &builder().bracket_open().build());
     }
 
     #[test]
     fn close() {
-        check(" ] ",
-              &builder()
-                  .bracket_close()
-                  .build());
+        check(" ] ", &builder().bracket_close().build());
     }
 
     #[test]
     fn paired() {
-        check("[[ ]]",
-              &builder()
-                  .bracket_open()
-                  .bracket_open()
-                  .bracket_close()
-                  .bracket_close()
-                  .build());
+        check(
+            "[[ ]]",
+            &builder().bracket_open().bracket_open().bracket_close().bracket_close().build(),
+        );
     }
 
     #[test]
     fn unbalanced() {
-        check("[[ ]",
-              &builder()
-                  .bracket_open()
-                  .bracket_open()
-                  .bracket_close()
-                  .build());
+        check("[[ ]", &builder().bracket_open().bracket_open().bracket_close().build());
     }
 
     #[test]
     fn and_words() {
-        check("[hello]",
-              &builder()
-                  .bracket_open()
-                  .build());
+        check("[hello]", &builder().bracket_open().build());
     }
 }
 
 #[cfg(test)]
 mod mixed {
-
+    use crate::lexeme::collect::for_test::builder;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::builder;
 
     #[test]
     fn parenthese_inside_brackets() {
@@ -193,10 +165,6 @@ mod mixed {
 
     #[test]
     fn unbalanced_bracket_and_parenthese() {
-        check("[)",
-              &builder()
-                  .bracket_open()
-                  .parenthesis_close()
-                  .build())
+        check("[)", &builder().bracket_open().parenthesis_close().build())
     }
 }

@@ -1,7 +1,6 @@
+use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::index::parse_array_indexing;
-
-use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_parenthesis_close, parse_parenthesis_open};
 use crate::parsing::util::cursor::ParseCursor;
@@ -31,13 +30,12 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 #[cfg(test)]
 mod by_name {
     use crate::common::codeparts::Symbol;
-
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
 
     fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
         let lexemes = lexeme.into();
@@ -50,11 +48,7 @@ mod by_name {
     #[test]
     fn no_args() {
         check(
-            builder()
-                .identifier("f")
-                .parenthesis_open()
-                .parenthesis_close()
-                .build(),
+            builder().identifier("f").parenthesis_open().parenthesis_close().build(),
             function_call(variable(identifier("f")), vec![]),
         );
     }
@@ -169,12 +163,11 @@ mod by_name {
 
 #[cfg(test)]
 mod special {
-
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
     use crate::parselet::short::{function_call, literal, variable};
     use crate::parsing::expression::parse_expression;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
 
     #[test]
     fn unseparated() {
@@ -193,11 +186,7 @@ mod special {
 
     #[test]
     fn unclosed() {
-        let lexemes = builder()
-            .identifier("fun")
-            .parenthesis_open()
-            .identifier("x")
-            .file();
+        let lexemes = builder().identifier("fun").parenthesis_open().identifier("x").file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(Ok(lexemes.last()), cursor.peek());

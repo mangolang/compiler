@@ -60,11 +60,11 @@ mod test_util {
 
 #[cfg(test)]
 mod basic {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, literal_text};
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::{literal_text, identifier, literal_int, builder};
 
     #[test]
     fn empty() {
@@ -84,11 +84,7 @@ mod basic {
     #[test]
     fn two_args() {
         check(
-            builder()
-                .literal_int(0)
-                .comma()
-                .identifier("x")
-                .build(),
+            builder().literal_int(0).comma().identifier("x").build(),
             vec![literal(literal_int(0)), variable(identifier("x"))],
             Err(End),
         );
@@ -98,12 +94,11 @@ mod basic {
 #[cfg(test)]
 mod complex_expr {
     use crate::common::codeparts::Symbol;
-
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::{builder, identifier, operator, literal_int};
 
     #[test]
     fn single_arithmetic() {
@@ -196,20 +191,16 @@ mod complex_expr {
 
 #[cfg(test)]
 mod separators {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool, literal_text};
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::{literal_text, builder, identifier, literal_bool};
 
     #[test]
     fn single_newline() {
         check(
-            builder()
-                .literal_text("hello")
-                .comma()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").comma().identifier("hello").build(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -218,11 +209,7 @@ mod separators {
     #[test]
     fn single_comma() {
         check(
-            builder()
-                .literal_text("hello")
-                .comma()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").comma().identifier("hello").build(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -231,12 +218,7 @@ mod separators {
     #[test]
     fn comma_newline() {
         check(
-            builder()
-                .literal_text("hello")
-                .comma()
-                .newline()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").comma().newline().identifier("hello").build(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -245,12 +227,7 @@ mod separators {
     #[test]
     fn newline_comma_err() {
         check(
-            builder()
-                .literal_text("hello")
-                .newline()
-                .comma()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").newline().comma().identifier("hello").build(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().comma().build_single()),
         );
@@ -259,12 +236,7 @@ mod separators {
     #[test]
     fn multi_newline_comma() {
         check(
-            builder()
-                .literal_text("hello")
-                .newline()
-                .newline()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").newline().newline().identifier("hello").build(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -288,12 +260,7 @@ mod separators {
     #[test]
     fn double_comma_err() {
         check(
-            builder()
-                .literal_text("hello")
-                .comma()
-                .comma()
-                .identifier("hello")
-                .build(),
+            builder().literal_text("hello").comma().comma().identifier("hello").build(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().comma().build_single()),
         );
@@ -309,60 +276,46 @@ mod separators {
                 .newline()
                 .literal_bool(true)
                 .build(),
-        vec![
-            literal(literal_text("hello")),
-            variable(identifier("hello")),
-            literal(literal_bool(true)),
-        ],
-        Err(End),
+            vec![
+                literal(literal_text("hello")),
+                variable(identifier("hello")),
+                literal(literal_bool(true)),
+            ],
+            Err(End),
         );
     }
 }
 
 #[cfg(test)]
 mod ending {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool};
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::test_util::check;
-    use crate::lexeme::collect::for_test::{literal_bool, builder, identifier};
 
     #[test]
     fn two_no_tail() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Err(End),
+            builder().literal_bool(true).comma().identifier("q").build(),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
         );
     }
 
     #[test]
     fn two_tail_comma() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .comma()
-                .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Err(End),
+            builder().literal_bool(true).comma().identifier("q").comma().build(),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
         );
     }
 
     #[test]
     fn two_tail_newline() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .newline()
-                .build(),
+            builder().literal_bool(true).comma().identifier("q").newline().build(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
@@ -371,13 +324,7 @@ mod ending {
     #[test]
     fn two_tail_newline_comma() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .newline()
-                .comma()
-                .build(),
+            builder().literal_bool(true).comma().identifier("q").newline().comma().build(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().comma().build_single()),
         );
@@ -386,15 +333,9 @@ mod ending {
     #[test]
     fn two_tail_comma_newline() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .newline()
-                .newline()
-                .build(),
-        vec![literal(literal_bool(true)), variable(identifier("q"))],
-        Err(End),
+            builder().literal_bool(true).comma().identifier("q").newline().newline().build(),
+            vec![literal(literal_bool(true)), variable(identifier("q"))],
+            Err(End),
         );
     }
 }
@@ -403,22 +344,17 @@ mod ending {
 /// is ended, and it's up to the caller to determine whether what comes after is ok.
 #[cfg(test)]
 mod errors {
-    use crate::parselet::short::{binary, literal, variable};
-
     use crate::common::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool, literal_int, literal_text, operator};
+    use crate::parselet::short::{binary, literal, variable};
 
     use super::test_util::check;
     use super::*;
-    use crate::lexeme::collect::for_test::{literal_text, builder, identifier, literal_bool, operator, literal_int};
 
     #[test]
     fn ellipsis_err() {
         check(
-            builder()
-                .literal_text("hello")
-                .comma()
-                .ellipsis()
-                .build(),
+            builder().literal_text("hello").comma().ellipsis().build(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().ellipsis().build_single()),
         );
@@ -426,21 +362,13 @@ mod errors {
 
     #[test]
     fn just_comma() {
-        check(
-            builder().comma().build(),
-            vec![],
-            Ok(&builder().comma().build_single()));
+        check(builder().comma().build(), vec![], Ok(&builder().comma().build_single()));
     }
 
     #[test]
     fn close_parenthesis() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .parenthesis_close()
-                .build(),
+            builder().literal_bool(true).comma().identifier("q").parenthesis_close().build(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().parenthesis_close().build_single()),
         );
@@ -449,12 +377,7 @@ mod errors {
     #[test]
     fn close_bracket() {
         check(
-            builder()
-                .literal_bool(true)
-                .comma()
-                .identifier("q")
-                .bracket_close()
-                .build(),
+            builder().literal_bool(true).comma().identifier("q").bracket_close().build(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().bracket_close().build_single()),
         );
@@ -462,11 +385,7 @@ mod errors {
 
     #[test]
     fn syntax_err_first_expr() {
-        let lexemes = builder()
-            .identifier("q")
-            .operator("+")
-            .parenthesis_close()
-            .file();
+        let lexemes = builder().identifier("q").operator("+").parenthesis_close().file();
         let (cursor, result) = parse_multi_expression(lexemes.cursor()).unwrap();
         assert_eq!(Vec::<ExpressionParselets>::new(), result);
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
