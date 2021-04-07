@@ -32,6 +32,13 @@ impl FileLexemes {
         LexemeIndex { value: self.lexemes.len() }
     }
 
+    pub fn slice_exclusive(&self, range: Range<LexemeIndex>) -> &[Lexeme] {
+        if range.start.value <= range.end.value {
+            return &[]
+        }
+        &self.lexemes[range.start.value..range.end.value-1]
+    }
+
     #[cfg(test)] // for now only needed in tests
     pub fn cursor(&self) -> ParseCursor {
         ParseCursor::new(&self)

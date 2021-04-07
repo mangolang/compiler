@@ -85,9 +85,9 @@ impl<'a> ParseCursor<'a> {
         }
     }
 
-    pub fn slice_to(&self, other: &Self) -> &[Lexeme] {
+    pub fn slice_upto(&self, other: &Self) -> &[Lexeme] {
         assert!(self.index <= other.index);
-        &self.lexemes[self.index..other.index]
+        self.lexemes.slice_exclusive(self.index..other.index)
     }
 }
 
