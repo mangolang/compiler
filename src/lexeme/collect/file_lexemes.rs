@@ -4,6 +4,7 @@ use ::std::ops::Index;
 use crate::lexeme::Lexeme;
 #[cfg(test)]
 use crate::parsing::util::cursor::ParseCursor;
+use std::ops::Range;
 
 #[derive(Debug)]
 pub struct FileLexemes {
@@ -78,6 +79,14 @@ impl Index<LexemeIndex> for FileLexemes {
 
     fn index(&self, index: LexemeIndex) -> &Self::Output {
         &self.lexemes[index.value]
+    }
+}
+
+impl Index<Range<LexemeIndex>> for FileLexemes {
+    type Output = [Lexeme];
+
+    fn index(&self, range: Range<LexemeIndex>) -> &Self::Output {
+        &self.lexemes[range.start.value..range.end.value]
     }
 }
 

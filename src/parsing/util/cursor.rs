@@ -77,11 +77,17 @@ impl<'a> ParseCursor<'a> {
 
     /// Fork the cursor, to try to parse something.
     /// Just drop one of the versions and use the other to backtrack.
+    //TODO @mark: unused? maybe make this explicit by dropping Copy?
     pub fn fork(&self) -> Self {
         ParseCursor {
             index: self.index,
             lexemes: self.lexemes,
         }
+    }
+
+    pub fn slice_to(&self, other: &Self) -> &[Lexeme] {
+        assert!(self.index <= other.index);
+        &self.lexemes[self.index..other.index]
     }
 }
 
