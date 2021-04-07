@@ -3,18 +3,19 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::eqfloat::f64eq;
 use crate::common::codeparts::{Keyword, Symbol};
+use crate::common::codeparts::eqfloat::f64eq;
+use crate::dbg_log;
 use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
-use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::collect::FileLexemes;
-use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::collect::FileLexemes;
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
 
 pub type LexemeGenerator = Box<dyn FnOnce(SourceSlice) -> Lexeme>;
 
@@ -78,6 +79,8 @@ impl TestLexemeBuilder {
             prev = lex.0;
             lexs.push(lex.1(slice))
         }
+        //TODO @mark: better formatting
+        dbg_log!("building lexeme input:\n{:?}", &lexs.iter().map(|e| format!("{:?}", e)).collect::<Vec<_>>().join(" "));
         lexs
     }
 
@@ -173,6 +176,10 @@ impl TestLexemeBuilder {
         let lex = move |src| Lexeme::Operator(OperatorLexeme::from_symbol(sym, src));
         self.lexemes.push((end, Box::new(lex)));
         self
+    }
+
+    pub fn assignment(mut self) -> Self {
+        self.add_simple("=", |src| Lexeme::Association(AssociationLexeme::from_unprefixed(src)))
     }
 
     pub fn association(mut self, txt: impl IntoSymbol) -> Self {
