@@ -19,15 +19,15 @@ mod literal {
     use ::ustr::ustr;
 
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text};
+    use crate::lexeme::collect::for_test::{builder, literal_int, literal_real};
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::FileLexemes;
 
-    fn check(lexeme: Lexeme, expected: ExpressionParselets) {
-        let lexemes = vec![lexeme].into();
+    fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_literal(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -37,32 +37,35 @@ mod literal {
     #[test]
     fn text() {
         check(
-            literal_text("hello42").into(),
+            builder().literal_text("hello42").file(),
             literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())),
         );
     }
 
     #[test]
     fn integer() {
-        check(literal_int(37).into(), literal(LiteralLexeme::Int(37, SourceSlice::mock())));
+        check(
+            builder().literal_int(37).file(),
+            literal(LiteralLexeme::Int(37, SourceSlice::mock())),
+        );
     }
 
     #[test]
     fn real() {
-        check(literal_real(1.234).into(), literal(literal_real(1.234)));
+        check(builder().literal_real(1.234).file(), literal(literal_real(1.234)));
     }
 
     #[test]
     fn boolean() {
         check(
-            literal_bool(true).into(),
+            builder().literal_bool(true).file(),
             literal(LiteralLexeme::Boolean(true, SourceSlice::mock())),
         );
     }
 
     #[test]
     fn empty() {
-        let lexemes = vec![].into();
+        let lexemes = builder().file();
         let cursor = lexemes.cursor();
         let _parselet = parse_literal(cursor);
         assert_eq!(Err(End), cursor.peek());

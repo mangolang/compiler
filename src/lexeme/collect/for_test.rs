@@ -271,6 +271,8 @@ pub fn operator(txt: impl IntoSymbol) -> OperatorLexeme {
     OperatorLexeme::from_symbol(txt.symbol(false).unwrap(), SourceSlice::mock())
 }
 
-pub fn association(txt: impl IntoSymbol) -> OperatorLexeme {
-    OperatorLexeme::from_symbol(txt.symbol(true).unwrap(), SourceSlice::mock())
+pub fn association(txt: impl IntoSymbol) -> AssociationLexeme {
+    txt.symbol(true)
+        .map(|sym| AssociationLexeme::from_symbol(sym, SourceSlice::mock()).unwrap())
+        .unwrap_or_else(|| AssociationLexeme::from_unprefixed(SourceSlice::mock()))
 }

@@ -21,9 +21,9 @@ mod var {
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::FileLexemes;
 
-    fn check(lexeme: Lexeme, expected: ExpressionParselets) {
-        let lexemes = vec![lexeme].into();
+    fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -32,12 +32,12 @@ mod var {
 
     #[test]
     fn alpha() {
-        check(identifier("hello").into(), variable(identifier("hello")));
+        check(builder().identifier("hello").file(), variable(identifier("hello")));
     }
 
     #[test]
     fn alphanumeric() {
-        check(identifier("_h42_").into(), variable(identifier("_h42_")));
+        check(builder().identifier("_h42_").file(), variable(identifier("_h42_")));
     }
 
     #[test]
@@ -50,7 +50,7 @@ mod var {
 
     #[test]
     fn not_recognized() {
-        let lexemes = builder().comma().build();
+        let lexemes = builder().comma().file();
         let cursor = lexemes.cursor();
         let parselet = parse_variable(cursor);
         assert!(parselet.is_err());
@@ -77,7 +77,7 @@ mod var {
 
     #[test]
     fn leftover_other() {
-        let lexemes = builder().identifier("hello").comma().build();
+        let lexemes = builder().identifier("hello").comma().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_variable(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);
@@ -91,11 +91,9 @@ mod special {
     use crate::parselet::short::variable;
     use crate::parsing::expression::parse_expression;
 
-    use super::*;
-
     #[test]
     fn is_expression() {
-        let lexemes = builder().identifier("hello").comma().build();
+        let lexemes = builder().identifier("hello").comma().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(variable(identifier("hello")), parselet);

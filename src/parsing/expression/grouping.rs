@@ -18,14 +18,13 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 mod parenthese {
     use crate::common::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_text, operator};
-    use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::FileLexemes;
 
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
+    fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_parenthesised_group(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -35,7 +34,7 @@ mod parenthese {
     #[test]
     fn text() {
         check(
-            builder().parenthesis_open().literal_text("hello world").parenthesis_close().build(),
+            builder().parenthesis_open().literal_text("hello world").parenthesis_close().file(),
             literal(literal_text("hello world")),
         );
     }
@@ -43,7 +42,7 @@ mod parenthese {
     #[test]
     fn parenthesized_literal() {
         check(
-            builder().parenthesis_open().literal_int(7).parenthesis_close().build(),
+            builder().parenthesis_open().literal_int(7).parenthesis_close().file(),
             literal(literal_int(7)),
         );
     }
@@ -57,7 +56,7 @@ mod parenthese {
                 .operator("+")
                 .literal_int(3)
                 .parenthesis_close()
-                .build(),
+                .file(),
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -75,7 +74,7 @@ mod parenthese {
                 .literal_int(3)
                 .parenthesis_close()
                 .parenthesis_close()
-                .build(),
+                .file(),
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -91,7 +90,7 @@ mod parenthese {
                 .parenthesis_close()
                 .parenthesis_close()
                 .parenthesis_close()
-                .build(),
+                .file(),
             literal(literal_text("hello world")),
         );
     }

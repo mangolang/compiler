@@ -31,14 +31,13 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 mod by_name {
     use crate::common::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
-    use crate::lexeme::Lexeme;
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::FileLexemes;
 
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
+    fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -48,7 +47,7 @@ mod by_name {
     #[test]
     fn no_args() {
         check(
-            builder().identifier("f").parenthesis_open().parenthesis_close().build(),
+            builder().identifier("f").parenthesis_open().parenthesis_close().file(),
             function_call(variable(identifier("f")), vec![]),
         );
     }
@@ -61,7 +60,7 @@ mod by_name {
                 .parenthesis_open()
                 .literal_int(42)
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(variable(identifier("faculty")), vec![literal(literal_int(42))]),
         );
     }
@@ -74,7 +73,7 @@ mod by_name {
                 .parenthesis_open()
                 .identifier("x")
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
@@ -88,7 +87,7 @@ mod by_name {
                 .identifier("x")
                 .comma()
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(variable(identifier("f")), vec![variable(identifier("x"))]),
         );
     }
@@ -111,7 +110,7 @@ mod by_name {
                 .literal_int(10)
                 .parenthesis_close()
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(
                 variable(identifier("f")),
                 vec![binary(
@@ -133,7 +132,7 @@ mod by_name {
                 .comma()
                 .identifier("y")
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(
                 variable(identifier("f")),
                 vec![variable(identifier("x")), variable(identifier("y"))],
@@ -152,7 +151,7 @@ mod by_name {
                 .identifier("y")
                 .comma()
                 .parenthesis_close()
-                .build(),
+                .file(),
             function_call(
                 variable(identifier("f")),
                 vec![variable(identifier("x")), variable(identifier("y"))],

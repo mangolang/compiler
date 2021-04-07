@@ -39,9 +39,9 @@ mod test_util {
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::FileLexemes;
 
-    pub fn check(lexeme: Vec<Lexeme>, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
-        let lexemes = lexeme.into();
+    pub fn check(lexemes: FileLexemes, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let cursor = lexemes.cursor();
         let (cursor, parselets) = parse_multi_expression(cursor).unwrap();
         assert_eq!(expected, parselets);
@@ -68,23 +68,27 @@ mod basic {
 
     #[test]
     fn empty() {
-        check(vec![], vec![], Err(End));
+        check(builder().file(), vec![], Err(End));
     }
 
     #[test]
     fn single_literal() {
-        check(vec![literal_text("hello").into()], vec![literal(literal_text("hello"))], Err(End));
+        check(
+            builder().literal_text("hello").file(),
+            vec![literal(literal_text("hello"))],
+            Err(End),
+        );
     }
 
     #[test]
     fn single_variable() {
-        check(vec![identifier("hello").into()], vec![variable(identifier("hello"))], Err(End));
+        check(builder().identifier("hello").file(), vec![variable(identifier("hello"))], Err(End));
     }
 
     #[test]
     fn two_args() {
         check(
-            builder().literal_int(0).comma().identifier("x").build(),
+            builder().literal_int(0).comma().identifier("x").file(),
             vec![literal(literal_int(0)), variable(identifier("x"))],
             Err(End),
         );
@@ -115,7 +119,7 @@ mod complex_expr {
                 .operator("+")
                 .literal_int(10)
                 .parenthesis_close()
-                .build(),
+                .file(),
             vec![binary(
                 binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                 operator(Symbol::Asterisk),
@@ -136,7 +140,7 @@ mod complex_expr {
                 .identifier("y")
                 .operator("+")
                 .literal_int(10)
-                .build(),
+                .file(),
             vec![
                 binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
                 binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
@@ -170,7 +174,7 @@ mod complex_expr {
                 .literal_int(9)
                 .comma()
                 .identifier("x")
-                .build(),
+                .file(),
             vec![
                 literal(literal_int(0)),
                 literal(literal_int(1)),
@@ -200,7 +204,7 @@ mod separators {
     #[test]
     fn single_newline() {
         check(
-            builder().literal_text("hello").comma().identifier("hello").build(),
+            builder().literal_text("hello").comma().identifier("hello").file(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -209,7 +213,7 @@ mod separators {
     #[test]
     fn single_comma() {
         check(
-            builder().literal_text("hello").comma().identifier("hello").build(),
+            builder().literal_text("hello").comma().identifier("hello").file(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -218,7 +222,7 @@ mod separators {
     #[test]
     fn comma_newline() {
         check(
-            builder().literal_text("hello").comma().newline().identifier("hello").build(),
+            builder().literal_text("hello").comma().newline().identifier("hello").file(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -227,7 +231,7 @@ mod separators {
     #[test]
     fn newline_comma_err() {
         check(
-            builder().literal_text("hello").newline().comma().identifier("hello").build(),
+            builder().literal_text("hello").newline().comma().identifier("hello").file(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().comma().build_single()),
         );
@@ -236,7 +240,7 @@ mod separators {
     #[test]
     fn multi_newline_comma() {
         check(
-            builder().literal_text("hello").newline().newline().identifier("hello").build(),
+            builder().literal_text("hello").newline().newline().identifier("hello").file(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -251,7 +255,7 @@ mod separators {
                 .newline()
                 .newline()
                 .identifier("hello")
-                .build(),
+                .file(),
             vec![literal(literal_text("hello")), variable(identifier("hello"))],
             Err(End),
         );
@@ -260,7 +264,7 @@ mod separators {
     #[test]
     fn double_comma_err() {
         check(
-            builder().literal_text("hello").comma().comma().identifier("hello").build(),
+            builder().literal_text("hello").comma().comma().identifier("hello").file(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().comma().build_single()),
         );
@@ -275,7 +279,7 @@ mod separators {
                 .identifier("hello")
                 .newline()
                 .literal_bool(true)
-                .build(),
+                .file(),
             vec![
                 literal(literal_text("hello")),
                 variable(identifier("hello")),
@@ -297,7 +301,7 @@ mod ending {
     #[test]
     fn two_no_tail() {
         check(
-            builder().literal_bool(true).comma().identifier("q").build(),
+            builder().literal_bool(true).comma().identifier("q").file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
@@ -306,7 +310,7 @@ mod ending {
     #[test]
     fn two_tail_comma() {
         check(
-            builder().literal_bool(true).comma().identifier("q").comma().build(),
+            builder().literal_bool(true).comma().identifier("q").comma().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
@@ -315,7 +319,7 @@ mod ending {
     #[test]
     fn two_tail_newline() {
         check(
-            builder().literal_bool(true).comma().identifier("q").newline().build(),
+            builder().literal_bool(true).comma().identifier("q").newline().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
@@ -324,7 +328,7 @@ mod ending {
     #[test]
     fn two_tail_newline_comma() {
         check(
-            builder().literal_bool(true).comma().identifier("q").newline().comma().build(),
+            builder().literal_bool(true).comma().identifier("q").newline().comma().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().comma().build_single()),
         );
@@ -333,7 +337,7 @@ mod ending {
     #[test]
     fn two_tail_comma_newline() {
         check(
-            builder().literal_bool(true).comma().identifier("q").newline().newline().build(),
+            builder().literal_bool(true).comma().identifier("q").newline().newline().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Err(End),
         );
@@ -354,7 +358,7 @@ mod errors {
     #[test]
     fn ellipsis_err() {
         check(
-            builder().literal_text("hello").comma().ellipsis().build(),
+            builder().literal_text("hello").comma().ellipsis().file(),
             vec![literal(literal_text("hello"))],
             Ok(&builder().ellipsis().build_single()),
         );
@@ -362,13 +366,13 @@ mod errors {
 
     #[test]
     fn just_comma() {
-        check(builder().comma().build(), vec![], Ok(&builder().comma().build_single()));
+        check(builder().comma().file(), vec![], Ok(&builder().comma().build_single()));
     }
 
     #[test]
     fn close_parenthesis() {
         check(
-            builder().literal_bool(true).comma().identifier("q").parenthesis_close().build(),
+            builder().literal_bool(true).comma().identifier("q").parenthesis_close().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().parenthesis_close().build_single()),
         );
@@ -377,7 +381,7 @@ mod errors {
     #[test]
     fn close_bracket() {
         check(
-            builder().literal_bool(true).comma().identifier("q").bracket_close().build(),
+            builder().literal_bool(true).comma().identifier("q").bracket_close().file(),
             vec![literal(literal_bool(true)), variable(identifier("q"))],
             Ok(&builder().bracket_close().build_single()),
         );

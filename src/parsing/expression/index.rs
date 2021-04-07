@@ -35,15 +35,14 @@ pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 #[cfg(test)]
 mod by_name {
     use crate::common::codeparts::Symbol;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
-    use crate::lexeme::Lexeme;
+    use crate::lexeme::collect::FileLexemes;
     use crate::parselet::short::{array_index, binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
 
-    fn check(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
+    fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -53,7 +52,7 @@ mod by_name {
     #[test]
     fn single_literal_positional_arg() {
         check(
-            builder().identifier("data").bracket_open().literal_int(42).bracket_close().build(),
+            builder().identifier("data").bracket_open().literal_int(42).bracket_close().file(),
             array_index(variable(identifier("data")), vec![literal(literal_int(42))]),
         );
     }
@@ -61,7 +60,7 @@ mod by_name {
     #[test]
     fn single_identifier_positional_arg() {
         check(
-            builder().identifier("arr").bracket_open().identifier("x").bracket_close().build(),
+            builder().identifier("arr").bracket_open().identifier("x").bracket_close().file(),
             array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
@@ -75,7 +74,7 @@ mod by_name {
                 .identifier("x")
                 .comma()
                 .bracket_close()
-                .build(),
+                .file(),
             array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
         );
     }
@@ -98,7 +97,7 @@ mod by_name {
                 .literal_int(10)
                 .parenthesis_close()
                 .bracket_close()
-                .build(),
+                .file(),
             array_index(
                 variable(identifier("arr")),
                 vec![binary(
@@ -120,7 +119,7 @@ mod by_name {
                 .comma()
                 .identifier("y")
                 .bracket_close()
-                .build(),
+                .file(),
             array_index(
                 variable(identifier("arr")),
                 vec![variable(identifier("x")), variable(identifier("y"))],
@@ -139,7 +138,7 @@ mod by_name {
                 .identifier("y")
                 .comma()
                 .bracket_close()
-                .build(),
+                .file(),
             array_index(
                 variable(identifier("arr")),
                 vec![variable(identifier("x")), variable(identifier("y"))],
