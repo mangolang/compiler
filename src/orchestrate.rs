@@ -39,8 +39,7 @@ main:
     let y = 4
     let z = x * x + y * y
     print(z)
-",
-        )
+")
         .unwrap();
         assert_eq!(SourceIR::new(vec![]), ir);
     }

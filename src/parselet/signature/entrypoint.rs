@@ -11,4 +11,12 @@ impl EntryPointParselet {
     pub fn new(name: Option<IdentifierLexeme>) -> Self {
         EntryPointParselet { name }
     }
+
+    pub fn named(name: IdentifierLexeme) -> Self {
+        EntryPointParselet { name: Some(name) }
+    }
+
+    pub fn anonymous() -> Self {
+        EntryPointParselet { name: None }
+    }
 }

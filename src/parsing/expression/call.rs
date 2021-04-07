@@ -179,7 +179,7 @@ mod special {
             .file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(Ok(lexemes.last()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
         assert_eq!(parselet, variable(identifier("fun")));
     }
 
@@ -188,7 +188,7 @@ mod special {
         let lexemes = builder().identifier("fun").parenthesis_open().identifier("x").file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_function_call(cursor).unwrap();
-        assert_eq!(Ok(lexemes.last()), cursor.peek());
+        assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
         assert_eq!(parselet, variable(identifier("fun")));
     }
 

@@ -4,7 +4,6 @@ use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
 
-//TODO @mark: tests
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Entrypoint {
@@ -20,3 +19,6 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
     eprintln!("did not find entrypoint"); //TODO @mark: TEMPORARY! REMOVE THIS!
     Err(NoMatch)
 }
+
+//TODO @mark: tests
+

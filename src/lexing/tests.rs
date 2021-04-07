@@ -183,6 +183,7 @@ assert seq == [1, 2, 3, 4, 5]
     assert_eq!(
         res,
         builder()
+            .newline()
             // let mut seq = [1, 4, 5, 2, 3,]
             .keyword("let")
             .keyword("mut")
