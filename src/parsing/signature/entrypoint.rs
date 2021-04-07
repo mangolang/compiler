@@ -28,7 +28,10 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
                             Err(_) => break,
                         }
                     }
-                    let lexemes = start_cursor.slice_upto(&cursor);
+                    let mut lexemes = start_cursor.slice_upto(&cursor);
+                    if !lexemes.is_empty() {
+                        lexemes = &lexemes[0..lexemes.len() - 1];
+                    }
                     let entrypoint = EntryPointParselet::new(identifier, lexemes);
                     return Ok((cursor, entrypoint));
                 }
@@ -46,7 +49,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn nl_endblock() {
+    fn anonymous_nl_endblock() {
         let lexemes = builder()
             .keyword("main")
             .colon()
@@ -61,7 +64,27 @@ mod tests {
     }
 
     #[test]
-    fn nl_eof() {
+    fn named_nl_endblock() {
+        let lexemes = builder()
+            .keyword("main")
+            .identifier("my_main_name")
+            .colon()
+            .newline()
+            .start_block()
+            .end_block()
+            .file();
+        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
+            EntryPointParselet::named(name.clone(), vec![])
+        } else {
+            panic!("identifier not at expected position");
+        };
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn anonymous_nl_eof() {
         let lexemes = builder()
             .keyword("main")
             .colon()
@@ -75,6 +98,26 @@ mod tests {
     }
 
     #[test]
+    fn named_nl_eof() {
+        let lexemes = builder()
+            .keyword("main")
+            .identifier("my_main_name")
+            .colon()
+            .newline()
+            .start_block()
+            .file();
+        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
+            EntryPointParselet::named(name.clone(), vec![])
+        } else {
+            panic!("identifier not at expected position");
+        };
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    #[should_panic]
     fn no_nl_after_colon() {
         let lexemes = builder()
             .keyword("main")
@@ -129,10 +172,11 @@ mod tests {
     }
 
     #[test]
-    fn simple_body() {
+    fn anonymous_simple_body() {
         let lexemes = builder()
             .keyword("main")
             .colon()
+            .newline()
             .start_block()
             .keyword("let")
             .identifier("x")
@@ -162,10 +206,44 @@ mod tests {
     }
 
     #[test]
+    fn  named_simple_body() {
+        let lexemes = builder()
+            .keyword("main")
+            .identifier("my_main_name")
+            .colon()
+            .newline()
+            .start_block()
+            .identifier("f")
+            .parenthesis_open()
+            .literal_int(42)
+            .parenthesis_close()
+            .newline()
+            .newline()
+            .end_block()
+            .file();
+        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
+            EntryPointParselet::named(name.clone(), builder()
+                .identifier("f")
+                .parenthesis_open()
+                .literal_int(42)
+                .parenthesis_close()
+                .newline()
+                .newline()
+                .build())
+        } else {
+            panic!("identifier not at expected position");
+        };
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
     fn nested_body() {
         let lexemes = builder()
             .keyword("main")
             .colon()
+            .newline()
             .start_block()
             .keyword("if")
             .literal_int(2)
@@ -192,25 +270,50 @@ mod tests {
             .identifier("x")
             .assignment()
             .literal_int(42)
+            .newline()
             .end_block()
             .end_block()
             .keyword("let")
             .identifier("y")
             .assignment()
             .literal_int(37)
+            .newline()
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = EntryPointParselet::anonymous(builder()
+            .keyword("if")
+            .literal_int(2)
+            .operator(GE)
+            .literal_int(1)
+            .colon()
+            .newline()
+            .start_block()
+            .start_block()
+            .keyword("while")
+            .literal_int(0)
+            .operator(EQ)
+            .literal_int(0)
+            .colon()
+            .newline()
+            .start_block()
+            .keyword("if")
+            .literal_text("hi")
+            .operator(EQ)
+            .literal_text("hi")
+            .colon()
+            .newline()
             .keyword("let")
             .identifier("x")
             .assignment()
             .literal_int(42)
             .newline()
-            .start_block()
-            .identifier("x")
-            .association(Dash)
-            .literal_int(5)
+            .end_block()
+            .end_block()
+            .keyword("let")
+            .identifier("y")
+            .assignment()
+            .literal_int(37)
             .newline()
             .build());
         assert_eq!(expected, entry);
@@ -222,6 +325,7 @@ mod tests {
         let lexemes = builder()
             .keyword("main")
             .colon()
+            .newline()
             .start_block()
             .keyword("let")
             .identifier("x")
@@ -243,10 +347,4 @@ mod tests {
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
     }
-
-    //TODO @mark: test non-anonymous
-    //TODO @mark: test final cursor position
 }
-
-
-

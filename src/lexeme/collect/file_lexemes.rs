@@ -32,12 +32,13 @@ impl FileLexemes {
         LexemeIndex { value: self.lexemes.len() }
     }
 
-    pub fn slice_exclusive(&self, range: Range<LexemeIndex>) -> &[Lexeme] {
-        if range.start.value <= range.end.value {
-            return &[]
-        }
-        &self.lexemes[range.start.value..range.end.value-1]
-    }
+    //TODO @mark: TEMPORARY! REMOVE THIS!
+    // pub fn slice_exclusive(&self, range: Range<LexemeIndex>) -> &[Lexeme] {
+    //     if range.end.value <= range.start.value {
+    //         return &[]
+    //     }
+    //     &self.lexemes[range.start.value..range.end.value-1]
+    // }
 
     #[cfg(test)] // for now only needed in tests
     pub fn cursor(&self) -> ParseCursor {
@@ -123,4 +124,28 @@ mod tests {
         index.increment();
         assert_eq!(None, lexemes.peek(index));
     }
+
+    #[test]
+    fn slice() {
+        let lexemes = builder().literal_text("a").literal_text("b").literal_text("c").literal_text("d").file();
+        let mut start = lexemes.index_at_start();
+        start.increment();
+        let mut end = lexemes.index_at_start();
+        end.increment();
+        end.increment();
+        let slice = &lexemes[start..end];
+        assert_eq!(slice, builder().literal_text("b").build().as_slice());
+    }
+
+    // #[test]
+    // fn slice_excl() {
+    //     let lexemes = builder().literal_text("a").literal_text("b").literal_text("c").literal_text("d").file();
+    //     let mut start = lexemes.index_at_start();
+    //     start.increment();
+    //     let mut end = lexemes.index_at_start();
+    //     end.increment();
+    //     end.increment();
+    //     let slice = lexemes.slice_exclusive(start..end);
+    //     assert_eq!(slice, builder().literal_text("b").build().as_slice());
+    // }
 }

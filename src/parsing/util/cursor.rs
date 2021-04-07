@@ -86,8 +86,9 @@ impl<'a> ParseCursor<'a> {
     }
 
     pub fn slice_upto(&self, other: &Self) -> &[Lexeme] {
+        debug_assert!(self.lexemes.len() == other.lexemes.len(), "must be same lexeme stream");
         assert!(self.index <= other.index);
-        self.lexemes.slice_exclusive(self.index..other.index)
+        &self.lexemes[self.index..other.index]
     }
 }
 
