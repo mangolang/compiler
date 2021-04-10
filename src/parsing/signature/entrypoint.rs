@@ -206,7 +206,7 @@ mod tests {
     }
 
     #[test]
-    fn  named_simple_body() {
+    fn named_simple_body() {
         let lexemes = builder()
             .keyword("main")
             .identifier("my_main_name")
@@ -236,115 +236,5 @@ mod tests {
         };
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
-    }
-
-    #[test]
-    fn nested_body() {
-        let lexemes = builder()
-            .keyword("main")
-            .colon()
-            .newline()
-            .start_block()
-            .keyword("if")
-            .literal_int(2)
-            .operator(GE)
-            .literal_int(1)
-            .colon()
-            .newline()
-            .start_block()
-            .start_block()
-            .keyword("while")
-            .literal_int(0)
-            .operator(EQ)
-            .literal_int(0)
-            .colon()
-            .newline()
-            .start_block()
-            .keyword("if")
-            .literal_text("hi")
-            .operator(EQ)
-            .literal_text("hi")
-            .colon()
-            .newline()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .end_block()
-            .end_block()
-            .keyword("let")
-            .identifier("y")
-            .assignment()
-            .literal_int(37)
-            .newline()
-            .end_block()
-            .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(builder()
-            .keyword("if")
-            .literal_int(2)
-            .operator(GE)
-            .literal_int(1)
-            .colon()
-            .newline()
-            .start_block()
-            .start_block()
-            .keyword("while")
-            .literal_int(0)
-            .operator(EQ)
-            .literal_int(0)
-            .colon()
-            .newline()
-            .start_block()
-            .keyword("if")
-            .literal_text("hi")
-            .operator(EQ)
-            .literal_text("hi")
-            .colon()
-            .newline()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .end_block()
-            .end_block()
-            .keyword("let")
-            .identifier("y")
-            .assignment()
-            .literal_int(37)
-            .newline()
-            .build());
-        assert_eq!(expected, entry);
-        assert_eq!(cursor.peek(), Err(End));
-    }
-
-    #[test]
-    fn final_cursor_position() {
-        let lexemes = builder()
-            .keyword("main")
-            .colon()
-            .newline()
-            .start_block()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .end_block()
-            .keyword("use")
-            .identifier("fake")
-            .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .build());
-        assert_eq!(expected, entry);
-        assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
     }
 }
