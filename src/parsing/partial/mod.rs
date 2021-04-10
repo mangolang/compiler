@@ -4,3 +4,4 @@ pub(in crate::parsing) mod qualified_name;
 pub(in crate::parsing) mod single_token;
 pub(in crate::parsing) mod parameters;
 pub(in crate::parsing) mod code_body;
+pub(in crate::parsing) mod typ;

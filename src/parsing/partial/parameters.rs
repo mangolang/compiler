@@ -5,6 +5,7 @@ use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParse
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use std::collections::HashSet;
+use crate::parsing::partial::typ::parse_typ;
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
@@ -20,7 +21,7 @@ pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<Param
 
 /// Parse a series of names with types, e.g. for function declarations.
 pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
-    let names_seen = HashSet::with_capacity(16);
+    let mut names_seen = HashSet::with_capacity(16);
     let mut params = smallvec![];
     loop {
         let mut iter_cursor = cursor.fork();
@@ -29,13 +30,13 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
                 let name = name.clone();
                 if let Lexeme::Colon(_) = iter_cursor.take()? {
                     //TODO @mark: parse complex types like [int, double] or Vec[int]
-                    if let Lexeme::Identifier(typ) = iter_cursor.take()? {
-                        let typ = typ.clone();
-                        if names_seen.contains(&name.name.as_string()) {
-                            panic!("duplicate parameter name: {}", &name.name.as_string());
+                    if let Ok((typ_cursor, typ)) = parse_typ(iter_cursor) {
+                        if names_seen.contains(name.name.as_ustr()) {
+                            panic!("duplicate parameter name: {}", &name.name.as_str());
                         }
+                        names_seen.insert(name.name.into_ustr());
                         params.push(TypedValueParselet::new(name, typ));
-                        cursor = iter_cursor;
+                        cursor = typ_cursor;
                         if let Some(_) = cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()) {
                             cursor.skip_while(|lexeme| lexeme.is_newline() || lexeme.is_comma());
                             continue
@@ -58,7 +59,6 @@ mod with_parentheses {
     use crate::parsing::partial::parameters::parse_parenthesised_parameters;
     use crate::parsing::util::cursor::End;
     use crate::parselet::signature::parameters::TypedValueParselet;
-    use crate::lexeme::Lexeme;
 
     #[test]
     fn empty() {

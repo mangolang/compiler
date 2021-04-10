@@ -4,3 +4,4 @@ pub mod record;
 pub mod test_parselet;
 pub mod union;
 pub mod parameters;
+pub mod typ;
