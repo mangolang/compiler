@@ -1,4 +1,4 @@
-use crate::lexeme::{IdentifierLexeme, Lexeme};
+use crate::lexeme::IdentifierLexeme;
 use crate::parselet::body::code_body::CodeBodyParselet;
 
 //TODO @mark: lexing
@@ -9,24 +9,24 @@ pub struct EntryPointParselet {
 }
 
 impl EntryPointParselet {
-    pub fn new(name: Option<IdentifierLexeme>, lexemes: impl Into<Vec<Lexeme>>) -> Self {
+    pub fn new(name: Option<IdentifierLexeme>, body: CodeBodyParselet) -> Self {
         EntryPointParselet {
             name,
-            body: CodeBodyParselet::create(lexemes),
+            body,
         }
     }
 
-    pub fn named(name: IdentifierLexeme, lexemes: impl Into<Vec<Lexeme>>) -> Self {
+    pub fn named(name: IdentifierLexeme, body: CodeBodyParselet) -> Self {
         EntryPointParselet {
             name: Some(name),
-            body: CodeBodyParselet::create(lexemes),
+            body,
         }
     }
 
-    pub fn anonymous(lexemes: impl Into<Vec<Lexeme>>) -> Self {
+    pub fn anonymous(body: CodeBodyParselet) -> Self {
         EntryPointParselet {
             name: None,
-            body: CodeBodyParselet::create(lexemes),
+            body,
         }
     }
 }

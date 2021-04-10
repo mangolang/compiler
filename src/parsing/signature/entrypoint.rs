@@ -3,6 +3,7 @@ use crate::lexeme::Lexeme;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::{End, ParseCursor};
+use crate::parsing::partial::code_body::parse_code_body;
 
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
@@ -15,27 +16,9 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
             } else {
                 None
             };
-            if let Lexeme::Colon(_) = cursor.take()? {
-                cursor.skip_while(|lexeme| lexeme.is_newline());
-                if let Lexeme::StartBlock(_) = cursor.take()? {
-                    let start_cursor = cursor;
-                    let mut level = 1;
-                    while level > 0 {
-                        match cursor.take() {
-                            Ok(Lexeme::StartBlock(_)) => level += 1,
-                            Ok(Lexeme::EndBlock(_)) => level -= 1,
-                            Ok(_) => {}
-                            Err(_) => break,
-                        }
-                    }
-                    let mut lexemes = start_cursor.slice_upto(&cursor);
-                    if !lexemes.is_empty() {
-                        lexemes = &lexemes[0..lexemes.len() - 1];
-                    }
-                    let entrypoint = EntryPointParselet::new(identifier, lexemes);
-                    return Ok((cursor, entrypoint));
-                }
-            };
+            let (body_cursor, body) = parse_code_body(cursor)?;
+            let entrypoint = EntryPointParselet::new(identifier, body);
+            return Ok((body_cursor, entrypoint));
         }
     }
     Err(NoMatch)
@@ -43,10 +26,11 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{Dash, GE, EQ};
+    use crate::common::codeparts::operator::Symbol::Dash;
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;
+    use crate::parselet::body::code_body::CodeBodyParselet;
 
     #[test]
     fn anonymous_nl_endblock() {
@@ -58,7 +42,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(vec![]);
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -75,7 +59,7 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), vec![])
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(vec![]))
         } else {
             panic!("identifier not at expected position");
         };
@@ -92,7 +76,7 @@ mod tests {
             .start_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(vec![]);
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -108,7 +92,7 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), vec![])
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(vec![]))
         } else {
             panic!("identifier not at expected position");
         };
@@ -126,7 +110,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(vec![]);
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -190,7 +174,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(builder()
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(builder()
             .keyword("let")
             .identifier("x")
             .assignment()
@@ -200,7 +184,7 @@ mod tests {
             .association(Dash)
             .literal_int(5)
             .newline()
-            .build());
+            .build()));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -223,14 +207,14 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), builder()
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(builder()
                 .identifier("f")
                 .parenthesis_open()
                 .literal_int(42)
                 .parenthesis_close()
                 .newline()
                 .newline()
-                .build())
+                .build()))
         } else {
             panic!("identifier not at expected position");
         };

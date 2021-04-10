@@ -3,39 +3,16 @@ use crate::lexeme::Lexeme;
 use crate::parselet::signature::function::FunctionParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::partial::code_body::parse_code_body;
 
 pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
-    //TODO @mark: all of this
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Entrypoint {
             let mut name_cursor = cursor.fork();
-            let identifier = if let Lexeme::Identifier(identifier) = name_cursor.take()? {
-                let name = identifier.clone();
-                cursor = name_cursor;
-                Some(name)
-            } else {
-                None
-            };
-            if let Lexeme::Colon(_) = cursor.take()? {
-                cursor.skip_while(|lexeme| lexeme.is_newline());
-                if let Lexeme::StartBlock(_) = cursor.take()? {
-                    let start_cursor = cursor;
-                    let mut level = 1;
-                    while level > 0 {
-                        match cursor.take() {
-                            Ok(Lexeme::StartBlock(_)) => level += 1,
-                            Ok(Lexeme::EndBlock(_)) => level -= 1,
-                            Ok(_) => {}
-                            Err(_) => break,
-                        }
-                    }
-                    let mut lexemes = start_cursor.slice_upto(&cursor);
-                    if !lexemes.is_empty() {
-                        lexemes = &lexemes[0..lexemes.len() - 1];
-                    }
-                    let function = FunctionParselet::new(identifier, params, returns, lexemes);
-                    return Ok((cursor, function));
-                }
+            if let Lexeme::Identifier(identifier) = name_cursor.take()? {
+                let (body_cursor, body) = parse_code_body(name_cursor)?;
+                let function = FunctionParselet::new(identifier.clone(), params, returns, body);
+                return Ok((body_cursor, function))
             };
         }
     }

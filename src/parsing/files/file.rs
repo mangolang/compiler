@@ -71,6 +71,7 @@ mod tests {
     use crate::parselet::signature::entrypoint::EntryPointParselet;
 
     use super::*;
+    use crate::parselet::body::code_body::CodeBodyParselet;
 
     #[test]
     fn hello_world_file() {
@@ -90,13 +91,13 @@ mod tests {
             .file();
         let expected = FileParselet::new(
             vec![],
-            Some(EntryPointParselet::anonymous(builder()
+            Some(EntryPointParselet::anonymous(CodeBodyParselet::create(builder()
                 .identifier("print")
                 .parenthesis_open()
                 .literal_text("hello world")
                 .parenthesis_close()
                 .newline()
-                .build())),
+                .build()))),
             smallvec![],
             smallvec![],
             smallvec![],

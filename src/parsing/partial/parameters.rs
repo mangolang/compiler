@@ -36,8 +36,6 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParse
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_add() {
         unimplemented!();  //TODO @mark

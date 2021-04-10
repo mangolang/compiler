@@ -1,12 +1,10 @@
-use crate::common::codeparts::Keyword;
 use crate::lexeme::Lexeme;
-use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parselet::body::code_body::CodeBodyParselet;
 
 /// Process from (incl) colon to end of the block, leaving body at lexeme stage.
-pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
+pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
     if let Lexeme::Colon(_) = cursor.take()? {
         cursor.skip_while(|lexeme| lexeme.is_newline());
         if let Lexeme::StartBlock(_) = cursor.take()? {
@@ -51,7 +49,7 @@ mod tests {
             .keyword("use")
             .identifier("fake")
             .file();
-        let res = parse_entrypoint(lexemes.cursor());
+        let res = parse_code_body(lexemes.cursor());
         // Not sure if this will be supported one day, but it is not supported now
         assert!(res.is_err());
     }
@@ -73,8 +71,8 @@ mod tests {
             .newline()
             .end_block()
             .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::anonymous(builder()
+        let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
+        let expected = CodeBodyParselet::create(builder()
             .keyword("let")
             .identifier("x")
             .assignment()
@@ -103,9 +101,10 @@ mod tests {
             .newline()
             .end_block()
             .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), builder()
+            assert_eq!(name.name.as_string(), "f");
+            CodeBodyParselet::create(builder()
                 .identifier("f")
                 .parenthesis_open()
                 .literal_int(42)
@@ -161,8 +160,8 @@ mod tests {
             .newline()
             .end_block()
             .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(builder()
+        let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
+        let expected = CodeBodyParselet::create(builder()
             .keyword("if")
             .literal_int(2)
             .operator(GE)
@@ -216,8 +215,8 @@ mod tests {
             .keyword("use")
             .identifier("fake")
             .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(builder()
+        let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
+        let expected = CodeBodyParselet::create(builder()
             .keyword("let")
             .identifier("x")
             .assignment()
