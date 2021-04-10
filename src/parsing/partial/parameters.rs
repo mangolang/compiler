@@ -1,9 +1,9 @@
 use ::smallvec::smallvec;
 
 use crate::lexeme::Lexeme;
+use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
-use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
@@ -21,12 +21,14 @@ pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<Param
 pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
     let mut params = smallvec![];
     loop {
-        if let Lexeme::Identifier(name) = cursor.take()? {
+        let mut iter_cursor = cursor.fork();
+        if let Lexeme::Identifier(name) = iter_cursor.take()? {
             let name = name.clone();
-            if let Lexeme::Colon(_) = cursor.take()? {
-                if let Lexeme::Identifier(typ) = cursor.take()? {
+            if let Lexeme::Colon(_) = iter_cursor.take()? {
+                if let Lexeme::Identifier(typ) = iter_cursor.take()? {
                     let typ = typ.clone();
                     params.push(TypedValueParselet::new(name, typ));
+                    cursor = iter_cursor;
                     continue;
                 }
             } else {
@@ -39,12 +41,75 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
 }
 
 #[cfg(test)]
-mod tests {
+mod with_parentheses {
+    use crate::lexeme::collect::for_test::builder;
+    use crate::parsing::partial::parameters::parse_parenthesised_parameters;
+    use crate::parsing::util::cursor::End;
+
     #[test]
-    fn test_add() {
-        unimplemented!();  //TODO @mark
+    fn empty() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 0);
+        assert_eq!(cursor.peek(), Err(End));
     }
+
+    #[test]
+    fn single() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type")
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 1);
+        //TODO @mark: test more
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn single_trailing_comma() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type")
+            .comma()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 1);
+        //TODO @mark: test more
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn single_trailing_newline() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type")
+            .newline()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 1);
+        //TODO @mark: test more
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    //TODO @mark: test multiple
+    //TODO @mark: test next lexeme
 }
+
+//TODO @mark: tests without parentheses
+
 
 //TODO @mark: all of this
 // mod test_util {

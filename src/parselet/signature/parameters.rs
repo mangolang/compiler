@@ -31,4 +31,8 @@ impl ParametersParselet {
             values
         }
     }
+
+    pub fn len(&self) -> usize {
+        return self.values.len()
+    }
 }
