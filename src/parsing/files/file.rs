@@ -65,13 +65,12 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
 
 #[cfg(test)]
 mod tests {
+    use crate::common::codeparts::operator::Symbol::{GT, Percent};
     use crate::lexeme::collect::for_test::builder;
     use crate::parselet::collect::for_test::import_alias;
     use crate::parselet::signature::entrypoint::EntryPointParselet;
 
     use super::*;
-    use crate::lexeme::collect::short::keyword_supported;
-    use crate::common::codeparts::operator::Symbol::{GT, Plus, Percent};
 
     #[test]
     fn hello_world_file() {

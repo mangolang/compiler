@@ -1,24 +1,25 @@
-use ::smallvec::smallvec;
 use ::smallvec::SmallVec;
 
-use crate::common::codeparts::name::Name;
 use crate::lexeme::IdentifierLexeme;
 use crate::parselet::body::code_body::CodeBodyParselet;
+use crate::parselet::signature::parameters::ParametersParselet;
+
+pub type ReturnLexemes = SmallVec<[IdentifierLexeme; 1]>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct FunctionParselet {
-    name: Name,
+    name: IdentifierLexeme,
     // Params are (name, type) pairs
-    params: SmallVec<[(IdentifierLexeme, IdentifierLexeme); 3]>,
-    returns: SmallVec<[IdentifierLexeme; 1]>,
+    params: ParametersParselet,
+    returns: ReturnLexemes,
     body: CodeBodyParselet,
 }
 
 impl FunctionParselet {
     pub fn new(
         name: IdentifierLexeme,
-        params: SmallVec<[(IdentifierLexeme, IdentifierLexeme); 3]>,
-        returns: SmallVec<[IdentifierLexeme; 1]>,
+        params: ParametersParselet,
+        returns: ReturnLexemes,
         body: CodeBodyParselet,
     ) -> Self {
         FunctionParselet {

@@ -1,7 +1,5 @@
 use crate::common::codeparts::Keyword;
-use crate::common::codeparts::keyword::Keyword::Function;
 use crate::lexeme::Lexeme;
-use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parselet::signature::function::FunctionParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
