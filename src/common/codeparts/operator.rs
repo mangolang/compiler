@@ -26,6 +26,7 @@ pub enum Symbol {
     GE,
     Exclamation,
     Question,
+    RightArrow,
 }
 
 impl Symbol {
@@ -44,6 +45,7 @@ impl Symbol {
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
+            "->" => Ok(Question),
             _ => Err(format!("Unknown symbol: '{}'", symbol_txt.to_owned())),
         }
     }
@@ -68,6 +70,7 @@ impl Display for Symbol {
                 GE => ">=",
                 Exclamation => "!",
                 Question => "?",
+                RightArrow => "➔",
             }
         )
     }

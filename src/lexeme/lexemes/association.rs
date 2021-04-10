@@ -47,6 +47,7 @@ impl AssociationLexeme {
             Symbol::EQ => false,
             Symbol::LE => false,
             Symbol::GE => false,
+            Symbol::RightArrow => false,
         };
         if !is_valid {
             return Err(ErrMsg::new(format!(

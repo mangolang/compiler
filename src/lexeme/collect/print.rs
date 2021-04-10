@@ -50,7 +50,7 @@ fn print_one_lexeme(mut text: &mut String, lexeme: &Lexeme, mut indent: u32) -> 
         },
         Lexeme::Colon(_) => write!(text, ":").unwrap(),
         Lexeme::Comma(_) => write!(text, ",").unwrap(),
-        Lexeme::Ellipsis(_) => write!(text, "...").unwrap(),
+        Lexeme::Ellipsis(_) => write!(text, "…").unwrap(),
         Lexeme::Period(_) => write!(text, ".").unwrap(),
         Lexeme::Newline(_) => print_indent(&mut text, indent),
         Lexeme::Unlexable(unlexable) => write!(text, "?{}?", unlexable.to_text()).unwrap(),

@@ -128,6 +128,8 @@ mod tests {
             .colon()
             .identifier("int")
             .parenthesis_close()
+            .operator("->")
+            .identifier("int")
             .colon()
             .newline()
             .start_block()
@@ -198,7 +200,8 @@ mod tests {
             smallvec![],
             smallvec![],
             smallvec![],
-            smallvec![], );
+            smallvec![],
+        );
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
         assert_eq!(expected, parselet);
         unimplemented!()
