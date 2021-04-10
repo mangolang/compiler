@@ -139,8 +139,62 @@ mod with_parentheses {
         assert_eq!(cursor.peek(), Err(End));
     }
 
+    #[test]
+    fn double() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name1")
+            .colon()
+            .identifier("type1")
+            .comma()
+            .identifier("name2")
+            .colon()
+            .identifier("type2")
+            .comma()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 2);
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name1", "type1"));
+        assert_eq!(params[1], TypedValueParselet::new_mocked("name2", "type2"));
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn quadruple() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name1")
+            .colon()
+            .identifier("type1")
+            .comma()
+            .identifier("name2")
+            .colon()
+            .identifier("type2")
+            .comma()
+            .identifier("name3")
+            .colon()
+            .identifier("type3")
+            .newline()
+            .identifier("name4")
+            .colon()
+            .identifier("type4")
+            .newline()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 4);
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name1", "type1"));
+        assert_eq!(params[1], TypedValueParselet::new_mocked("name2", "type2"));
+        assert_eq!(params[2], TypedValueParselet::new_mocked("name3", "type3"));
+        assert_eq!(params[3], TypedValueParselet::new_mocked("name4", "type4"));
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
     //TODO @mark: test multiple
     //TODO @mark: test next lexeme
+    //TODO @mark: test double names
+    //TODO @mark: implement more complex types like: (int, double)
 }
 
 //TODO @mark: tests without parentheses
