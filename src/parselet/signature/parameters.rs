@@ -1,6 +1,8 @@
 use ::smallvec::SmallVec;
 
 use crate::lexeme::IdentifierLexeme;
+use std::ops::Index;
+use crate::io::slice::SourceSlice;
 
 pub type ParamLexemes = SmallVec<[TypedValueParselet; 3]>;
 
@@ -15,6 +17,14 @@ impl TypedValueParselet {
         TypedValueParselet {
             name,
             typ,
+        }
+    }
+
+    #[cfg(test)]
+    pub fn new_mocked(name: impl AsRef<str>, typ: impl AsRef<str>) -> Self {
+        TypedValueParselet {
+            name: IdentifierLexeme::from_str(name.as_ref(), SourceSlice::mock()).unwrap(),
+            typ: IdentifierLexeme::from_str(typ.as_ref(), SourceSlice::mock()).unwrap(),
         }
     }
 }
@@ -34,5 +44,13 @@ impl ParametersParselet {
 
     pub fn len(&self) -> usize {
         return self.values.len()
+    }
+}
+
+impl Index<usize> for ParametersParselet {
+    type Output = TypedValueParselet;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.values[index]
     }
 }

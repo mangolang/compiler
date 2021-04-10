@@ -49,6 +49,7 @@ mod with_parentheses {
     use crate::lexeme::collect::for_test::builder;
     use crate::parsing::partial::parameters::parse_parenthesised_parameters;
     use crate::parsing::util::cursor::End;
+    use crate::parselet::signature::parameters::TypedValueParselet;
 
     #[test]
     fn empty() {
@@ -85,7 +86,7 @@ mod with_parentheses {
             .file();
         let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
         assert_eq!(params.len(), 1);
-        //TODO @mark: test more
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name", "type"));
         assert_eq!(cursor.peek(), Err(End));
     }
 
@@ -101,7 +102,7 @@ mod with_parentheses {
             .file();
         let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
         assert_eq!(params.len(), 1);
-        //TODO @mark: test more
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name", "type"));
         assert_eq!(cursor.peek(), Err(End));
     }
 
@@ -117,7 +118,7 @@ mod with_parentheses {
             .file();
         let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
         assert_eq!(params.len(), 1);
-        //TODO @mark: test more
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name", "type"));
         assert_eq!(cursor.peek(), Err(End));
     }
 
@@ -134,7 +135,7 @@ mod with_parentheses {
             .file();
         let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
         assert_eq!(params.len(), 1);
-        //TODO @mark: test more
+        assert_eq!(params[0], TypedValueParselet::new_mocked("name", "type"));
         assert_eq!(cursor.peek(), Err(End));
     }
 
