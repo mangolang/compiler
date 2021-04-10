@@ -29,7 +29,11 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
                     let typ = typ.clone();
                     params.push(TypedValueParselet::new(name, typ));
                     cursor = iter_cursor;
-                    continue;
+                    if let Some(_) = cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()) {
+                        cursor.skip_while(|lexeme| lexeme.is_newline() || lexeme.is_comma());
+                        continue
+                    }
+                    break
                 }
             } else {
                 panic!("parameter {} is missing a type", name.name);
@@ -50,6 +54,19 @@ mod with_parentheses {
     fn empty() {
         let lexemes = builder()
             .parenthesis_open()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 0);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    #[should_panic]
+    fn only_comma() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .comma()
             .parenthesis_close()
             .file();
         let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
@@ -95,6 +112,23 @@ mod with_parentheses {
             .identifier("name")
             .colon()
             .identifier("type")
+            .newline()
+            .parenthesis_close()
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 1);
+        //TODO @mark: test more
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn single_trailing_comma_and_newline() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type")
+            .comma()
             .newline()
             .parenthesis_close()
             .file();

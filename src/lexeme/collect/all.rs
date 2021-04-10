@@ -42,12 +42,14 @@ pub enum Lexeme {
 }
 
 impl Lexeme {
-    // Note: if one day there are many is_* and as_* methods, find or write a macro.
     pub fn is_newline(&self) -> bool {
         matches!(self, Lexeme::Newline(_))
     }
 
-    // Note: if one day there are many is_* and as_* methods, find or write a macro.
+    pub fn is_comma(&self) -> bool {
+        matches!(self, Lexeme::Comma(_))
+    }
+
     pub fn is_block_boundary(&self) -> bool {
         matches!(self, Lexeme::StartBlock(_)) || matches!(self, Lexeme::EndBlock(_))
     }
