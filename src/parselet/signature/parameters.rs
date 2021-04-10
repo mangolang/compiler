@@ -3,17 +3,18 @@ use ::smallvec::SmallVec;
 use crate::lexeme::IdentifierLexeme;
 use std::ops::Index;
 use crate::io::slice::SourceSlice;
+use crate::lexeme::identifier::SimpleIdentifierLexeme;
 
 pub type ParamLexemes = SmallVec<[TypedValueParselet; 3]>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct TypedValueParselet {
-    pub name: IdentifierLexeme,
-    pub typ: IdentifierLexeme,
+    pub name: SimpleIdentifierLexeme,
+    pub typ: SimpleIdentifierLexeme,
 }
 
 impl TypedValueParselet {
-    pub fn new(name: IdentifierLexeme, typ: IdentifierLexeme,) -> Self {
+    pub fn new(name: SimpleIdentifierLexeme, typ: SimpleIdentifierLexeme,) -> Self {
         TypedValueParselet {
             name,
             typ,
@@ -23,8 +24,8 @@ impl TypedValueParselet {
     #[cfg(test)]
     pub fn new_mocked(name: impl AsRef<str>, typ: impl AsRef<str>) -> Self {
         TypedValueParselet {
-            name: IdentifierLexeme::from_str(name.as_ref(), SourceSlice::mock()).unwrap(),
-            typ: IdentifierLexeme::from_str(typ.as_ref(), SourceSlice::mock()).unwrap(),
+            name: SimpleIdentifierLexeme::from_str(name.as_ref(), SourceSlice::mock()).unwrap(),
+            typ: SimpleIdentifierLexeme::from_str(typ.as_ref(), SourceSlice::mock()).unwrap(),
         }
     }
 }

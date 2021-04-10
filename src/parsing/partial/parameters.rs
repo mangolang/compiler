@@ -4,6 +4,7 @@ use crate::lexeme::Lexeme;
 use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use std::collections::HashSet;
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
@@ -19,24 +20,31 @@ pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<Param
 
 /// Parse a series of names with types, e.g. for function declarations.
 pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
+    let names_seen = HashSet::with_capacity(16);
     let mut params = smallvec![];
     loop {
         let mut iter_cursor = cursor.fork();
         if let Lexeme::Identifier(name) = iter_cursor.take()? {
-            let name = name.clone();
-            if let Lexeme::Colon(_) = iter_cursor.take()? {
-                if let Lexeme::Identifier(typ) = iter_cursor.take()? {
-                    let typ = typ.clone();
-                    params.push(TypedValueParselet::new(name, typ));
-                    cursor = iter_cursor;
-                    if let Some(_) = cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()) {
-                        cursor.skip_while(|lexeme| lexeme.is_newline() || lexeme.is_comma());
-                        continue
+            if let Some(name) = name.to_simple() {
+                let name = name.clone();
+                if let Lexeme::Colon(_) = iter_cursor.take()? {
+                    //TODO @mark: parse complex types like [int, double] or Vec[int]
+                    if let Lexeme::Identifier(typ) = iter_cursor.take()? {
+                        let typ = typ.clone();
+                        if names_seen.contains(&name.name.as_string()) {
+                            panic!("duplicate parameter name: {}", &name.name.as_string());
+                        }
+                        params.push(TypedValueParselet::new(name, typ));
+                        cursor = iter_cursor;
+                        if let Some(_) = cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()) {
+                            cursor.skip_while(|lexeme| lexeme.is_newline() || lexeme.is_comma());
+                            continue
+                        }
+                        break
                     }
-                    break
+                } else {
+                    panic!("parameter {} is missing a type", name.name);
                 }
-            } else {
-                panic!("parameter {} is missing a type", name.name);
             }
         }
         break
@@ -50,6 +58,7 @@ mod with_parentheses {
     use crate::parsing::partial::parameters::parse_parenthesised_parameters;
     use crate::parsing::util::cursor::End;
     use crate::parselet::signature::parameters::TypedValueParselet;
+    use crate::lexeme::Lexeme;
 
     #[test]
     fn empty() {
@@ -191,10 +200,88 @@ mod with_parentheses {
         assert_eq!(cursor.peek(), Err(End));
     }
 
-    //TODO @mark: test multiple
-    //TODO @mark: test next lexeme
-    //TODO @mark: test double names
-    //TODO @mark: implement more complex types like: (int, double)
+
+    #[test]
+    fn next_lexeme() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name1")
+            .colon()
+            .identifier("type")
+            .comma()
+            .identifier("name2")
+            .colon()
+            .identifier("type")
+            .comma()
+            .parenthesis_close()
+            .keyword("use")
+            .file();
+        let (cursor, params) = parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+        assert_eq!(params.len(), 2);
+        assert_eq!(params[1], TypedValueParselet::new_mocked("name2", "type"));
+        assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
+    }
+
+    //TODO @mark: replace should_panic by single-line catch-unwind: https://stackoverflow.com/a/42649833
+    #[test]
+    #[should_panic]
+    fn reject_double_name() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type1")
+            .comma()
+            .identifier("name")
+            .colon()
+            .identifier("type2")
+            .comma()
+            .parenthesis_close()
+            .file();
+        parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn missing_open() {
+        let lexemes = builder()
+            .identifier("name")
+            .colon()
+            .identifier("type1")
+            .comma()
+            .parenthesis_close()
+            .file();
+        parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn missing_close() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type1")
+            .comma()
+            .file();
+        parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+    }
+
+    #[test]
+    #[should_panic]
+    fn missing_separator() {
+        let lexemes = builder()
+            .parenthesis_open()
+            .identifier("name")
+            .colon()
+            .identifier("type1")
+            .identifier("name")
+            .colon()
+            .identifier("type1")
+            .parenthesis_close()
+            .file();
+        parse_parenthesised_parameters(lexemes.cursor()).unwrap();
+    }
 }
 
 //TODO @mark: tests without parentheses
