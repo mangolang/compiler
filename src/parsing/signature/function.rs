@@ -22,6 +22,17 @@ pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
     Err(NoMatch)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn implement_test() {
+        unimplemented!();  //TODO @mark
+    }
+}
+
+
 //TODO @mark: all of this
 // #[cfg(test)]
 // mod tests {
