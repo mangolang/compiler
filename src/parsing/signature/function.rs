@@ -4,13 +4,16 @@ use crate::parselet::signature::function::FunctionParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::partial::code_body::parse_code_body;
+use crate::parsing::partial::parameters::parse_parameters;
 
 pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Entrypoint {
             let mut name_cursor = cursor.fork();
             if let Lexeme::Identifier(identifier) = name_cursor.take()? {
-                let (body_cursor, body) = parse_code_body(name_cursor)?;
+                let (params_cursor, params) = parse_parameters(name_cursor)?;
+                let (body_cursor, body) = parse_code_body(params_cursor)?;
+                let returns= unimplemented!();  //TODO @mark: TEMPORARY! REMOVE THIS!
                 let function = FunctionParselet::new(identifier.clone(), params, returns, body);
                 return Ok((body_cursor, function))
             };

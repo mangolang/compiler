@@ -1,37 +1,41 @@
-use crate::lexeme::Lexeme;
-use crate::parselet::ExpressionParselets;
-use crate::parsing::expression::parse_expression;
-use crate::parsing::util::cursor::ParseCursor;
-use crate::parsing::util::ParseRes;
+use ::smallvec::smallvec;
 
-/// Parse a series of names with types, e.g. for function declarations.
-//TODO @mark: all of this
-pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
-    let mut expressions = vec![];
-    while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
-        expressions.push(expr);
-        let mut separator_cursor = expr_cursor; // copy
-        match separator_cursor.take() {
-            Ok(token) => match token {
-                // There is a separator, continue for another expression.
-                Lexeme::Comma(_) | Lexeme::Newline(_) => {
-                    separator_cursor.skip_while(|lexeme| lexeme.is_newline());
-                }
-                // No separator, so this is the end of the multi-expression - or a syntax
-                // error, but that's for the next parser to find out. Revert eating separator.
-                _not_a_separator => return Ok((expr_cursor, expressions)),
-            },
-            Err(_) => {
-                // Reached the end of input. There should probably be a closing symbol,
-                // but that is up to the outer parser (which knows what the opening is).
-                return Ok((expr_cursor, expressions));
+use crate::lexeme::Lexeme;
+use crate::parsing::util::{NoMatch, ParseRes};
+use crate::parsing::util::cursor::ParseCursor;
+use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
+
+/// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
+pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
+    if let Lexeme::ParenthesisOpen(derive_new) = cursor.take()? {
+        if let Ok((mut params_cursor, params)) = parse_parameters(cursor) {
+            if let Lexeme::ParenthesisClose(_) = params_cursor.take()? {
+                return Ok((params_cursor, params));
             }
         }
-        cursor = separator_cursor
     }
-    // Did not find another expression; apparently the last expression had a
-    // comma/newline, and we are done.
-    Ok((cursor, expressions))
+    Err(NoMatch)
+}
+
+/// Parse a series of names with types, e.g. for function declarations.
+pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
+    let mut params = smallvec![];
+    loop {
+        if let Lexeme::Identifier(name) = cursor.take()? {
+            let name = name.clone();
+            if let Lexeme::Colon(_) = cursor.take()? {
+                if let Lexeme::Identifier(typ) = cursor.take()? {
+                    let typ = typ.clone();
+                    params.push(TypedValueParselet::new(name, typ));
+                    continue;
+                }
+            } else {
+                panic!("parameter {} is missing a type", name.name);
+            }
+        }
+        break
+    }
+    Ok((cursor, ParametersParselet::new(params)))
 }
 
 #[cfg(test)]
