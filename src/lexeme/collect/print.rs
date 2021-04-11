@@ -1,7 +1,7 @@
-use std::fmt::Write;
+use ::std::fmt::Write;
 
-use crate::lexeme::Lexeme;
 use crate::common::debug::ToText;
+use crate::lexeme::Lexeme;
 
 pub fn print_lexemes(lexemes: &Vec<Lexeme>) -> String {
     if lexemes.is_empty() {
@@ -25,6 +25,12 @@ pub fn print_lexemes(lexemes: &Vec<Lexeme>) -> String {
         text.pop();
     }
     text.shrink_to_fit();
+    text
+}
+
+pub fn print_lexeme(lexeme: &Lexeme) -> String {
+    let mut text = String::new();
+    print_one_lexeme(&mut text, lexeme, 0);
     text
 }
 
@@ -68,10 +74,10 @@ fn print_indent(buffer: &mut String, indent: u32) {
 
 #[cfg(test)]
 mod tests {
+    use crate::common::codeparts::operator::Symbol::{EQ, GE};
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;
-    use crate::common::codeparts::operator::Symbol::{GE, EQ};
 
     #[test]
     fn smoke_test() {

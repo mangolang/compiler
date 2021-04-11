@@ -14,6 +14,7 @@ use crate::lexeme::{
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::collect::FileLexemes;
+use crate::lexeme::collect::print::print_lexeme;
 #[cfg(test)]
 use crate::lexeme::collect::print::print_lexemes;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
@@ -109,6 +110,14 @@ impl TestLexemeBuilder {
     fn add_simple(mut self, txt: impl AsRef<str>, lexeme_gen: fn(SourceSlice) -> Lexeme) -> Self {
         let end = self.add_src(&txt);
         self.lexemes.push((end, Box::new(lexeme_gen)));
+        self
+    }
+
+    pub fn raw(mut self, additions: impl IntoIterator<Item=Lexeme>) -> Self {
+        for lexeme in additions.into_iter() {
+            let end = self.add_src(print_lexeme(&lexeme));
+            self.lexemes.push((end, Box::new(|_| lexeme)));
+        }
         self
     }
 
