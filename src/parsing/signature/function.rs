@@ -87,6 +87,35 @@ mod empty_with_endblock {
     );
 }
 
+mod tmp {  //TODO @mark: TEMPORARY! REMOVE THIS!
+    use crate::lexeme::collect::for_test::builder;
+    use crate::parselet::collect::for_test::function;
+    use crate::parselet::collect::for_test::param;
+    use crate::parsing::util::cursor::End;
+    use super::parse_function;
+    use ::smallvec::smallvec;
+
+    #[test]
+    fn multi_param_simple_return() {
+        let lexemes = builder()
+            .keyword("fun")
+            .identifier("my_fun_name")
+            .parenthesis_open()
+            .raw((builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build()))
+            .parenthesis_close()
+            .raw((builder().identifier("int").build()))
+            .colon()
+            .newline()
+            .start_block()
+            .end_block()
+            .file();
+        let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+        let expected = function("my_fun_name", smallvec![param("x", "int"), param("y", "double")], "int", vec![]);
+        assert_eq!(expected, func);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+}
+
 #[cfg(test)]
 mod empty_with_eof {
     use ::smallvec::smallvec;
@@ -116,6 +145,72 @@ mod empty_with_eof {
                         .file();
                     let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
                     let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
+                    assert_eq!(expected, func);
+                    assert_eq!(cursor.peek(), Err(End));
+                }
+            )*
+        }
+    }
+
+    tests!(
+        no_param_no_return: builder().build(), smallvec![], vec![], "None",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
+    );
+}
+
+#[cfg(test)]
+mod simple_body {
+    use ::smallvec::smallvec;
+
+    #[cfg(test)]
+    macro_rules! tests {
+        ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
+            use crate::lexeme::collect::for_test::builder;
+            use crate::parselet::collect::for_test::function;
+            use crate::parsing::util::cursor::End;
+            use crate::parsing::signature::function::Symbol::Dash;
+
+            use super::parse_function;
+
+            $(
+                #[test]
+                fn $name() {
+                    let lexemes = builder()
+                        .keyword("fun")
+                        .identifier("my_fun_name")
+                        .parenthesis_open()
+                        .raw($param_inp)
+                        .parenthesis_close()
+                        .raw($return_inp)
+                        .colon()
+                        .newline()
+                        .start_block()
+                        .keyword("let")
+                        .identifier("x")
+                        .assignment()
+                        .literal_int(42)
+                        .newline()
+                        .start_block()
+                        .identifier("x")
+                        .association(Dash)
+                        .literal_int(5)
+                        .end_block()
+                        .file();
+                    let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+                    let expected = function("my_fun_name", $param_outp, $return_outp, builder()
+                        .keyword("let")
+                        .identifier("x")
+                        .assignment()
+                        .literal_int(42)
+                        .newline()
+                        .start_block()
+                        .identifier("x")
+                        .association(Dash)
+                        .literal_int(5)
+                        .build());
                     assert_eq!(expected, func);
                     assert_eq!(cursor.peek(), Err(End));
                 }
