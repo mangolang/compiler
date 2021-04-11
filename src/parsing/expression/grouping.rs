@@ -123,7 +123,7 @@ mod parenthese {
     fn empty() {
         let lexemes = builder().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_parenthesised_group(cursor);
+        let parselet = parse_parenthesised_group(cursor.fork());
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Err(End), cursor.peek());
     }
@@ -146,7 +146,7 @@ mod parenthese {
     fn ungrouped_fail() {
         let lexemes = builder().literal_int(4).operator("+").literal_int(3).file();
         let cursor = lexemes.cursor();
-        let parselet = parse_parenthesised_group(cursor);
+        let parselet = parse_parenthesised_group(cursor.fork());
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&literal_int(4).into()), cursor.peek());
     }
@@ -155,7 +155,7 @@ mod parenthese {
     fn only_open() {
         let lexemes = builder().parenthesis_open().literal_int(1).file();
         let cursor = lexemes.cursor();
-        let parselet = parse_parenthesised_group(cursor);
+        let parselet = parse_parenthesised_group(cursor.fork());
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
     }
@@ -164,7 +164,7 @@ mod parenthese {
     fn unbalanced() {
         let lexemes = builder().parenthesis_open().literal_int(1).parenthesis_open().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_parenthesised_group(cursor);
+        let parselet = parse_parenthesised_group(cursor.fork());
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&builder().parenthesis_open().build_single()), cursor.peek());
     }
@@ -173,7 +173,7 @@ mod parenthese {
     fn only_close() {
         let lexemes = builder().parenthesis_close().literal_int(1).file();
         let cursor = lexemes.cursor();
-        let parselet = parse_parenthesised_group(cursor);
+        let parselet = parse_parenthesised_group(cursor.fork());
         assert_eq!(NoMatch, parselet.unwrap_err());
         assert_eq!(Ok(&builder().parenthesis_close().build_single()), cursor.peek());
     }

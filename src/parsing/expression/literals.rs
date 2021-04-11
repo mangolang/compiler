@@ -6,7 +6,7 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
 pub fn parse_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let mut literal_cursor = cursor; // copy
+    let mut literal_cursor = cursor.fork();
     if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
         let literal = literal_lexeme.clone();
         return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
@@ -67,7 +67,7 @@ mod literal {
     fn empty() {
         let lexemes = builder().file();
         let cursor = lexemes.cursor();
-        let _parselet = parse_literal(cursor);
+        let _parselet = parse_literal(cursor.fork());
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -75,7 +75,7 @@ mod literal {
     fn not_recognized() {
         let lexemes = builder().comma().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_literal(cursor);
+        let parselet = parse_literal(cursor.fork());
         assert!(parselet.is_err());
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }

@@ -10,7 +10,7 @@ pub fn parse_import(mut cursor: ParseCursor) -> ParseRes<ImportParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Import {
             let (identifier_cursor, identifier) = parse_qualified_name(cursor)?;
-            let mut alias_cursor = identifier_cursor; // copy
+            let mut alias_cursor = identifier_cursor.fork();
             if let Ok(Lexeme::Keyword(keyword)) = alias_cursor.take() {
                 if keyword.word == Keyword::Alias {
                     if let Lexeme::Identifier(alias_identifier) = alias_cursor.take()? {

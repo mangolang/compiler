@@ -13,18 +13,10 @@ pub struct End;
 ///
 /// To achieve this, the type is Copy, so that reverts are automatic, but updates must be communicated.
 //TODO @mark: not very happy about the above, must be an easier way
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct ParseCursor<'a> {
     index: LexemeIndex,
     lexemes: &'a FileLexemes,
-}
-
-#[cfg(test)]
-mod to_do {
-    #[test]
-    fn implement_test() {
-        panic!("remove copy from cursor");
-    }
 }
 
 impl<'a> ParseCursor<'a> {
@@ -186,13 +178,13 @@ mod tests {
         let mut cursor1 = lexemes.cursor();
         let text = "a";
         assert_eq!(Ok(&builder().unlexable(text).build_single()), cursor1.peek());
-        let mut cursor2 = cursor1;
+        let mut cursor2 = cursor1.fork();
         cursor1.increment();
         cursor1.increment();
         assert_eq!(Err(End), cursor1.take());
         assert_eq!(Ok(&builder().unlexable("a").build_single()), cursor2.peek());
         cursor2.increment();
-        let mut cursor3 = cursor2;
+        let mut cursor3 = cursor2.fork();
         assert_eq!(Ok(&builder().unlexable("b").build_single()), cursor3.take());
         assert_eq!(Err(End), cursor3.take());
         assert_eq!(Ok(&builder().unlexable("b").build_single()), cursor2.take());

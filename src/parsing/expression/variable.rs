@@ -6,7 +6,7 @@ use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
 pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let mut variable_cursor = cursor; // copy
+    let mut variable_cursor = cursor.fork();
     if let Lexeme::Identifier(lexeme) = variable_cursor.take()? {
         let identifier = lexeme.clone();
         return Ok((variable_cursor, ExpressionParselets::Variable(VariableParselet::new(identifier))));
@@ -44,7 +44,7 @@ mod var {
     fn empty() {
         let lexemes = builder().file();
         let cursor = lexemes.cursor();
-        let _parselet = parse_variable(cursor);
+        let _parselet = parse_variable(cursor.fork());
         assert_eq!(Err(End), cursor.peek());
     }
 
@@ -52,7 +52,7 @@ mod var {
     fn not_recognized() {
         let lexemes = builder().comma().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_variable(cursor);
+        let parselet = parse_variable(cursor.fork());
         assert!(parselet.is_err());
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }

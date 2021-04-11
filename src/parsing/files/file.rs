@@ -14,7 +14,7 @@ use crate::parsing::util::ParseRes;
 pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut imports = vec![];
     cursor.skip_while(|lexeme| matches!(lexeme, Lexeme::Newline(_)));
-    while let Ok((import_cursor, import)) = parse_import(cursor) {
+    while let Ok((import_cursor, import)) = parse_import(cursor.fork()) {
         imports.push(import);
         cursor = import_cursor;
         cursor.skip_while(|lexeme| matches!(lexeme, Lexeme::Newline(_)));
@@ -25,32 +25,32 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut unions = smallvec![];
     let mut tests = smallvec![];
     loop {
-        if let Ok((entry_cursor, entry_parselet)) = parse_entrypoint(cursor) {
+        if let Ok((entry_cursor, entry_parselet)) = parse_entrypoint(cursor.fork()) {
             assert!(entrypoint.is_none());  // for now
             cursor = entry_cursor;
             entrypoint = Some(entry_parselet);
             continue;
         }
 
-        if let Ok((function_cursor, function_parselet)) = parse_function(cursor) {
+        if let Ok((function_cursor, function_parselet)) = parse_function(cursor.fork()) {
             cursor = function_cursor;
             functions.push(function_parselet);
             continue;
         }
 
-        if let Ok((record_cursor, record_parselet)) = parse_record(cursor) {
+        if let Ok((record_cursor, record_parselet)) = parse_record(cursor.fork()) {
             cursor = record_cursor;
             records.push(record_parselet);
             continue;
         }
 
-        if let Ok((union_cursor, union_parselet)) = parse_union(cursor) {
+        if let Ok((union_cursor, union_parselet)) = parse_union(cursor.fork()) {
             cursor = union_cursor;
             unions.push(union_parselet);
             continue;
         }
 
-        if let Ok((test_cursor, test_parselet)) = parse_test(cursor) {
+        if let Ok((test_cursor, test_parselet)) = parse_test(cursor.fork()) {
             cursor = test_cursor;
             tests.push(test_parselet);
             continue;

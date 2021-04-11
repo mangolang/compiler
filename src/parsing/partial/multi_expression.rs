@@ -8,9 +8,9 @@ use crate::parsing::util::ParseRes;
 /// Occurs as part of e.g. function calls, or array literals.
 pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
     let mut expressions = vec![];
-    while let Ok((expr_cursor, expr)) = parse_expression(cursor) {
+    while let Ok((expr_cursor, expr)) = parse_expression(cursor.fork()) {
         expressions.push(expr);
-        let mut separator_cursor = expr_cursor; // copy
+        let mut separator_cursor = expr_cursor.fork();
         match separator_cursor.take() {
             Ok(token) => match token {
                 // There is a separator, continue for another expression.

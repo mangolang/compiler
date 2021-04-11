@@ -7,7 +7,8 @@ use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
-    let (cursor, operator) = match parse_operator(cursor, |op| op.is_add_sub()) {
+    let (cursor, operator) = match parse_operator(
+        cursor.fork(), |op| op.is_add_sub()) {
         Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
     };
@@ -20,7 +21,7 @@ pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_function_call(cursor)?;
-    let (cursor, operator) = match parse_operator(cursor, |op| op.is_mult_div()) {
+    let (cursor, operator) = match parse_operator(cursor.fork(), |op| op.is_mult_div()) {
         Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
     };
@@ -126,7 +127,7 @@ mod addition {
     fn not_recognized() {
         let lexemes = builder().comma().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_addition(cursor);
+        let parselet = parse_addition(cursor.fork());
         assert!(parselet.is_err());
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
@@ -198,7 +199,7 @@ mod multiplication {
     fn not_recognized() {
         let lexemes = builder().comma().file();
         let cursor = lexemes.cursor();
-        let parselet = parse_addition(cursor);
+        let parselet = parse_addition(cursor.fork());
         assert!(parselet.is_err());
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
@@ -252,7 +253,7 @@ mod special {
     fn empty() {
         let lexemes = builder().file();
         let cursor = lexemes.cursor();
-        let _parselet = parse_addition(cursor);
+        let _parselet = parse_addition(cursor.fork());
         assert_eq!(Err(End), cursor.peek());
     }
 

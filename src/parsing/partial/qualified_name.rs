@@ -14,7 +14,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<FQIdentifierLex
     if let Lexeme::Identifier(root_iden) = cursor.take()? {
         //TODO @mark: is this clone needed?
         let mut full_name = root_iden.clone();
-        let mut tail_cursor = cursor;
+        let mut tail_cursor = cursor.fork();
 
         loop {
             match cursor.take() {
@@ -23,7 +23,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<FQIdentifierLex
                     if let Lexeme::Identifier(sub_iden) = cursor.take()? {
                         debug_assert!(sub_iden.is_simple());
                         full_name = full_name.join(&separator_copy, sub_iden);
-                        tail_cursor = cursor;
+                        tail_cursor = cursor.fork();
                         continue;
                     }
                 }

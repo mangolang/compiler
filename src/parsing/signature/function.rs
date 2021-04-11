@@ -2,13 +2,13 @@ use crate::common::codeparts::{Keyword, Symbol};
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::function::FunctionParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{ParseCursor, End};
 use crate::parsing::partial::code_body::parse_code_body;
-use crate::parsing::partial::parameters::{parse_parameters, parse_parenthesised_parameters};
 use crate::parsing::partial::typ::parse_type;
 use crate::io::slice::SourceLocation;
 use crate::parselet::signature::typ::TypeParselet;
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
+use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::partial::parameters::parse_parenthesised_parameters;
 
 pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {

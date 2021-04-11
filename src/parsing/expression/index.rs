@@ -18,7 +18,7 @@ use crate::parsing::util::ParseRes;
 ///
 pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_variable(cursor)?;
-    if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor)
+    if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor.fork())
         .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
         .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor).map(|ok| (ok.0, args)))
     {

@@ -8,7 +8,7 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
     if let Lexeme::Colon(_) = cursor.take()? {
         cursor.skip_while(|lexeme| lexeme.is_newline());
         if let Lexeme::StartBlock(_) = cursor.take()? {
-            let start_cursor = cursor;
+            let start_cursor = cursor.fork();
             let mut level = 1;
             while level > 0 {
                 match cursor.take() {

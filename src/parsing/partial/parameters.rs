@@ -10,7 +10,7 @@ use crate::parsing::util::cursor::ParseCursor;
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
-    if let Lexeme::ParenthesisOpen(derive_new) = cursor.take()? {
+    if let Lexeme::ParenthesisOpen(_) = cursor.take()? {
         if let Ok((mut params_cursor, params)) = parse_parameters(cursor) {
             if let Lexeme::ParenthesisClose(_) = params_cursor.take()? {
                 return Ok((params_cursor, params));
@@ -198,7 +198,6 @@ mod with_parentheses {
 #[cfg(test)]
 mod error_cases {
     use crate::lexeme::collect::for_test::builder;
-    use crate::parselet::signature::parameters::TypedValueParselet;
     use crate::parsing::partial::parameters::parse_parenthesised_parameters;
     use crate::parsing::util::cursor::End;
 

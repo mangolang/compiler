@@ -17,7 +17,7 @@ use crate::parsing::util::ParseRes;
 //TODO: support for keyword arguments
 pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_array_indexing(cursor)?;
-    match parse_parenthesis_open(iden_cursor)
+    match parse_parenthesis_open(iden_cursor.fork())
         .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
         .and_then(|(args_cursor, args)| parse_parenthesis_close(args_cursor).map(|ok| (ok.0, args)))
     {
