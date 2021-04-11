@@ -42,47 +42,93 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
 }
 
 #[cfg(test)]
-macro_rules! empty_with_endblock {
-    ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
-        use crate::lexeme::collect::for_test::builder;
-        use crate::parselet::collect::for_test::function;
-        use crate::parsing::util::cursor::End;
+mod empty_with_endblock {
+    use ::smallvec::smallvec;
 
-        use super::parse_function;
+    #[cfg(test)]
+    macro_rules! tests {
+        ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
+            use crate::lexeme::collect::for_test::builder;
+            use crate::parselet::collect::for_test::function;
+            use crate::parsing::util::cursor::End;
 
-        $(
-            #[test]
-            fn $name() {
-                let lexemes = builder()
-                    .keyword("fun")
-                    .identifier("my_fun_name")
-                    .parenthesis_open()
-                    .raw($param_inp)
-                    .parenthesis_close()
-                    .raw($return_inp)
-                    .colon()
-                    .newline()
-                    .start_block()
-                    .end_block()
-                    .file();
-                let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
-                let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
-                assert_eq!(expected, func);
-                assert_eq!(cursor.peek(), Err(End));
-            }
-        )*
+            use super::parse_function;
+
+            $(
+                #[test]
+                fn $name() {
+                    let lexemes = builder()
+                        .keyword("fun")
+                        .identifier("my_fun_name")
+                        .parenthesis_open()
+                        .raw($param_inp)
+                        .parenthesis_close()
+                        .raw($return_inp)
+                        .colon()
+                        .newline()
+                        .start_block()
+                        .end_block()
+                        .file();
+                    let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+                    let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
+                    assert_eq!(expected, func);
+                    assert_eq!(cursor.peek(), Err(End));
+                }
+            )*
+        }
     }
+
+    tests!(
+        no_param_no_return: builder().build(), smallvec![], vec![], "None",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
+    );
 }
 
 #[cfg(test)]
-mod empty_with_endblock2 {
+mod empty_with_eof {
     use ::smallvec::smallvec;
 
-    empty_with_endblock!(
-        no_param_no_return: vec![], smallvec![], vec![], "None",
-        one_param_no_return: vec![], smallvec![], vec![], "None",
-        multi_param_no_return: vec![], smallvec![], vec![], "None",
-        multi_param_simple_return: vec![], smallvec![], builder().identifier("int").build(), "int",
+    #[cfg(test)]
+    macro_rules! tests {
+        ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
+            use crate::lexeme::collect::for_test::builder;
+            use crate::parselet::collect::for_test::function;
+            use crate::parsing::util::cursor::End;
+
+            use super::parse_function;
+
+            $(
+                #[test]
+                fn $name() {
+                    let lexemes = builder()
+                        .keyword("fun")
+                        .identifier("my_fun_name")
+                        .parenthesis_open()
+                        .raw($param_inp)
+                        .parenthesis_close()
+                        .raw($return_inp)
+                        .colon()
+                        .newline()
+                        .start_block()
+                        .file();
+                    let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+                    let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
+                    assert_eq!(expected, func);
+                    assert_eq!(cursor.peek(), Err(End));
+                }
+            )*
+        }
+    }
+
+    tests!(
+        no_param_no_return: builder().build(), smallvec![], vec![], "None",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
     );
 }
 
@@ -95,42 +141,6 @@ mod no_param_no_return2 {
     use crate::parsing::util::cursor::End;
 
     use super::*;
-
-    #[test]
-    fn empty_with_eof() {
-        //TODO @mark:
-        let lexemes = builder()
-            .keyword("fun")
-            .identifier("my_fun_name")
-            .parenthesis_open()
-            .parenthesis_close()
-            .colon()
-            .newline()
-            .start_block()
-            .file();
-        let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
-        let expected = function("my_fun_name", smallvec![], "None", vec![]);
-        assert_eq!(expected, func);
-        assert_eq!(cursor.peek(), Err(End));
-    }
-
-    #[test]
-    fn nl_eof() {
-        //TODO @mark:
-        let lexemes = builder()
-            .keyword("fun")
-            .identifier("my_fun_name")
-            .parenthesis_open()
-            .parenthesis_close()
-            .colon()
-            .newline()
-            .start_block()
-            .file();
-        let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
-        let expected = function("my_fun_name", smallvec![], "None", vec![]);
-        assert_eq!(expected, func);
-        assert_eq!(cursor.peek(), Err(End));
-    }
 
     // #[test]
     // #[should_panic]
