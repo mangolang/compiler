@@ -126,9 +126,38 @@ mod empty_with_endblock {
 
     use crate::parselet::collect::for_test::param;
 
-    #[cfg(test)]
+    macro_rules! test_empty_with_endblock {
+        ($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr) => {
+            use crate::lexeme::collect::for_test::builder;
+            use crate::parselet::collect::for_test::function;
+            use crate::parsing::util::cursor::End;
+
+            use super::parse_function;
+
+            #[test]
+            fn $name() {
+                let lexemes = builder()
+                    .keyword("fun")
+                    .identifier("my_fun_name")
+                    .parenthesis_open()
+                    .raw($param_inp)
+                    .parenthesis_close()
+                    .raw($return_inp)
+                    .colon()
+                    .newline()
+                    .start_block()
+                    .end_block()
+                    .file();
+                let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+                let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
+                assert_eq!(expected, func);
+                assert_eq!(cursor.peek(), Err(End));
+            }
+        }
+    }
+
     macro_rules! tests {
-        ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
+        ($test_macro: expr, $($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
             use crate::lexeme::collect::for_test::builder;
             use crate::parselet::collect::for_test::function;
             use crate::parsing::util::cursor::End;
@@ -136,30 +165,12 @@ mod empty_with_endblock {
             use super::parse_function;
 
             $(
-                #[test]
-                fn $name() {
-                    let lexemes = builder()
-                        .keyword("fun")
-                        .identifier("my_fun_name")
-                        .parenthesis_open()
-                        .raw($param_inp)
-                        .parenthesis_close()
-                        .raw($return_inp)
-                        .colon()
-                        .newline()
-                        .start_block()
-                        .end_block()
-                        .file();
-                    let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
-                    let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
-                    assert_eq!(expected, func);
-                    assert_eq!(cursor.peek(), Err(End));
-                }
+                test_macro!($name: $param_inp, $param_outp, $return_inp, $return_outp);
             )*
         }
     }
 
-    tests!(
+    tests!(test_empty_with_endblock,
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
         one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
         multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
@@ -206,7 +217,6 @@ mod empty_with_eof {
 
     use crate::parselet::collect::for_test::param;
 
-    #[cfg(test)]
     macro_rules! tests {
         ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
             use crate::lexeme::collect::for_test::builder;
@@ -253,7 +263,6 @@ mod simple_body {
 
     use crate::parselet::collect::for_test::param;
 
-    #[cfg(test)]
     macro_rules! tests {
         ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
             use crate::lexeme::collect::for_test::builder;
