@@ -34,7 +34,7 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
         if let Symbol::RightArrow = op.symbol() {
             return match parse_type(cursor) {
                 Ok(returns) => Ok(returns),
-                Err(_) => panic!("function {} expected a return type", name.name.as_str()),
+                Err(NoMatch) => panic!("function {} expected a return type", name.name.as_str()),
             };
         }
     };

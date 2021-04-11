@@ -8,7 +8,7 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
     let (cursor, _left) = parse_parenthesis_open(cursor)?;
     let (cursor, expression) = match parse_expression(cursor) {
         Ok(ex) => ex,
-        Err(_) => return Err(NoMatch),
+        Err(NoMatch) => return Err(NoMatch),
     };
     let (cursor, _right) = parse_parenthesis_close(cursor)?;
     Ok((cursor, expression))
