@@ -1,6 +1,6 @@
 use crate::common::codeparts::Keyword;
-use crate::lexeme::Lexeme;
-use crate::parselet::signature::test_parselet::TestParselet;
+use crate::lexeme::{Lexeme, LiteralLexeme};
+use crate::parselet::signature::test_parselet::{TestName, TestParselet};
 use crate::parsing::partial::code_body::parse_code_body;
 use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
@@ -8,16 +8,21 @@ use crate::parsing::util::cursor::ParseCursor;
 pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Test {
-            let mut name_cursor = cursor.fork();
-            let identifier = if let Lexeme::Identifier(identifier) = name_cursor.take()? {
-                let name = identifier.clone();
-                cursor = name_cursor;
-                Some(name)
-            } else {
-                None
+            let name: TestName = match cursor.take() {
+                Ok(Lexeme::Identifier(identifier)) => {
+                    if let Some(simple_identifier) = identifier.to_simple() {
+                        TestName::from(simple_identifier)
+                    } else {
+                        panic!("test name can either be an identifier or a quoted string, but not a fully-qualified path");
+                    }
+                },
+                Ok(Lexeme::Literal(LiteralLexeme::Text(text))) => {
+                    TestName::from(text.clone())
+                },
+                Ok(_) | Err(_) => panic!("test name can either be an identifier or a quoted string"),
             };
             let (body_cursor, body) = parse_code_body(cursor)?;
-            let test = TestParselet::new(identifier, body);
+            let test = TestParselet::new(name, body);
             return Ok((body_cursor, test));
         }
     }
