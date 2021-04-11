@@ -178,7 +178,7 @@ mod tests {
             .end_block()
             .newline()
             .keyword("test")
-            .identifier("gcd_100_60")
+            .literal_text("gcd of 100 and 60 should be 20")
             .colon()
             .newline()
             .start_block()

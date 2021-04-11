@@ -110,7 +110,8 @@ impl SourceLocation for LiteralLexeme {
 impl ToText for LiteralLexeme {
     fn to_text(&self) -> String {
         match self {
-            LiteralLexeme::Text(tll) => tll.text.to_string(),
+            //TODO @mark: escape
+            LiteralLexeme::Text(tll) => format!("\"{}\"", tll.text),
             LiteralLexeme::Int(val, _) => format!("{}", val),
             LiteralLexeme::Real(val, _) => format!("{}", val),
             LiteralLexeme::Boolean(val, _) => format!("{}", val),

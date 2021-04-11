@@ -127,7 +127,7 @@ mod tests {
             .end_block()
             .build();
         let text = print_lexemes(&lexemes);
-        let expected = "use std.text as txt \nmain : \n\tif 2 >= 1 : \n\t\twhile 0 == 0 : \n\t\t\tif hi == hi : \n\t\t\t\ttxt ( 42 ) \n\t\tlet x = 37";
+        let expected = "use std.text as txt \nmain : \n\tif 2 >= 1 : \n\t\twhile 0 == 0 : \n\t\t\tif \"hi\" == \"hi\" : \n\t\t\t\ttxt ( 42 ) \n\t\tlet x = 37";
         assert_eq!(text, expected);
     }
 }

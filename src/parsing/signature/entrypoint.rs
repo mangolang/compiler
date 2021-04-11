@@ -77,10 +77,7 @@ mod tests {
             .newline()
             .start_block()
             .file();
-        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
-        assert_eq!(expected, entry);
-        assert_eq!(cursor.peek(), Err(End));
+        parse_entrypoint(lexemes.cursor());
     }
 
     #[test]

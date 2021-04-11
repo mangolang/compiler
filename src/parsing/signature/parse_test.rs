@@ -29,201 +29,183 @@ pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
     Err(NoMatch)
 }
 
-//#[cfg(test)]
-// mod tests {
-//     use crate::common::codeparts::operator::Symbol::Dash;
-//     use crate::lexeme::collect::for_test::builder;
-//     use crate::parselet::body::code_body::CodeBodyParselet;
-//
-//     use super::*;
-//
-//     #[test]
-//     fn anonymous_nl_endblock() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .end_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = TestParselet::new(CodeBodyParselet::new(vec![]));
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     fn named_nl_endblock() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .identifier("my_main_name")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .end_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-//             TestParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
-//         } else {
-//             panic!("identifier not at expected position");
-//         };
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     fn anonymous_nl_eof() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = TestParselet::anonymous(CodeBodyParselet::new(vec![]));
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     fn named_nl_eof() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .identifier("my_main_name")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-//             TestParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
-//         } else {
-//             panic!("identifier not at expected position");
-//         };
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     #[should_panic]
-//     fn no_nl_after_colon() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .start_block()
-//             .end_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = TestParselet::anonymous(CodeBodyParselet::new(vec![]));
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     fn code_after_colon_block() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .keyword("let")
-//             .identifier("x")
-//             .assignment()
-//             .literal_int(42)
-//             .newline()
-//             .start_block()
-//             .identifier("x")
-//             .association(Dash)
-//             .literal_int(5)
-//             .newline()
-//             .end_block()
-//             .file();
-//         let res = parse_test(lexemes.cursor());
-//         // Not sure if this will be supported one day, but it is not supported now
-//         assert!(res.is_err());
-//     }
-//
-//     #[test]
-//     fn code_after_colon_noblock() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .keyword("let")
-//             .identifier("x")
-//             .assignment()
-//             .literal_int(42)
-//             .newline()
-//             .keyword("use")
-//             .identifier("fake")
-//             .file();
-//         let res = parse_test(lexemes.cursor());
-//         // Not sure if this will be supported one day, but it is not supported now
-//         assert!(res.is_err());
-//     }
-//
-//     #[test]
-//     fn anonymous_simple_body() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .keyword("let")
-//             .identifier("x")
-//             .assignment()
-//             .literal_int(42)
-//             .newline()
-//             .identifier("x")
-//             .association(Dash)
-//             .literal_int(5)
-//             .newline()
-//             .end_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = TestParselet::anonymous(CodeBodyParselet::new(builder()
-//             .keyword("let")
-//             .identifier("x")
-//             .assignment()
-//             .literal_int(42)
-//             .newline()
-//             .identifier("x")
-//             .association(Dash)
-//             .literal_int(5)
-//             .newline()
-//             .build()));
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-//
-//     #[test]
-//     fn named_simple_body() {
-//         let lexemes = builder()
-//             .keyword("main")
-//             .identifier("my_main_name")
-//             .colon()
-//             .newline()
-//             .start_block()
-//             .identifier("f")
-//             .parenthesis_open()
-//             .literal_int(42)
-//             .parenthesis_close()
-//             .newline()
-//             .newline()
-//             .end_block()
-//             .file();
-//         let (cursor, test) = parse_test(lexemes.cursor()).unwrap();
-//         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-//             TestParselet::named(name.clone(), CodeBodyParselet::new(builder()
-//                 .identifier("f")
-//                 .parenthesis_open()
-//                 .literal_int(42)
-//                 .parenthesis_close()
-//                 .newline()
-//                 .newline()
-//                 .build()))
-//         } else {
-//             panic!("identifier not at expected position");
-//         };
-//         assert_eq!(expected, test);
-//         assert_eq!(cursor.peek(), Err(End));
-//     }
-// }
+#[cfg(test)]
+mod tests {
+    use crate::common::codeparts::operator::Symbol::Dash;
+    use crate::lexeme::collect::for_test::builder;
+
+    use super::*;
+    use crate::parselet::body::code_body::CodeBodyParselet;
+    use crate::lexeme::identifier::SimpleIdentifierLexeme;
+    use crate::io::slice::SourceSlice;
+    use crate::parsing::util::cursor::End;
+    use crate::lexeme::literal::TextLiteralLexeme;
+
+    #[test]
+    fn text_name_empty_body() {
+        let lexemes = builder()
+            .keyword("test")
+            .literal_text("my test string name")
+            .colon()
+            .newline()
+            .start_block()
+            .end_block()
+            .file();
+        let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
+        let test_name = TextLiteralLexeme::new("my test string name", SourceSlice::mock()).into();
+        let expected = TestParselet::new(test_name, CodeBodyParselet::new(vec![]));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn nl_endblock() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .newline()
+            .start_block()
+            .end_block()
+            .file();
+        let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
+        let test_name = SimpleIdentifierLexeme::from_valid("my_test_name", SourceSlice::mock()).into();
+        let expected = TestParselet::new(test_name, CodeBodyParselet::new(vec![]));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn nl_eof() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .newline()
+            .start_block()
+            .file();
+        let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
+        let test_name = SimpleIdentifierLexeme::from_valid("my_test_name", SourceSlice::mock()).into();
+        let expected = TestParselet::new(test_name, CodeBodyParselet::new(vec![]));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    #[should_panic]
+    fn no_nl_after_colon() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .start_block()
+            .file();
+        parse_test(lexemes.cursor());
+    }
+
+    #[test]
+    fn code_after_colon_block() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .identifier("x")
+            .association(Dash)
+            .literal_int(5)
+            .newline()
+            .file();
+        let res = parse_test(lexemes.cursor());
+        // Not sure if this will be supported one day, but it is not supported now
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn code_after_colon_noblock() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .keyword("use")
+            .identifier("fake")
+            .file();
+        let res = parse_test(lexemes.cursor());
+        // Not sure if this will be supported one day, but it is not supported now
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn text_literal_name() {
+        let lexemes = builder()
+            .keyword("test")
+            .literal_text("my test string name")
+            .colon()
+            .newline()
+            .start_block()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .end_block()
+            .keyword("use")
+            .identifier("fake")
+            .file();
+        let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
+        let test_name = TextLiteralLexeme::new("my test string name", SourceSlice::mock()).into();
+        let expected = TestParselet::new(test_name, CodeBodyParselet::new(builder()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .build()));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
+    }
+
+    #[test]
+    fn simple_body() {
+        let lexemes = builder()
+            .keyword("test")
+            .identifier("my_test_name")
+            .colon()
+            .newline()
+            .start_block()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .identifier("x")
+            .association(Dash)
+            .literal_int(5)
+            .newline()
+            .end_block()
+            .file();
+        let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
+        let test_name = SimpleIdentifierLexeme::from_valid("my_test_name", SourceSlice::mock()).into();
+        let expected = TestParselet::new(test_name, CodeBodyParselet::new(builder()
+            .keyword("let")
+            .identifier("x")
+            .assignment()
+            .literal_int(42)
+            .newline()
+            .identifier("x")
+            .association(Dash)
+            .literal_int(5)
+            .newline()
+            .build()));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+}
