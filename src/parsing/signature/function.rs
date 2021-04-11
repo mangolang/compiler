@@ -247,12 +247,12 @@ mod simple_body {
                         .assignment()
                         .literal_int(42)
                         .newline()
-                        .start_block()
                         .identifier("x")
                         .association(Dash)
                         .literal_int(5)
                         .newline()
                         .end_block()
+                        .keyword("use")
                         .file();
                     let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
                     let expected = function("my_fun_name", $param_outp, $return_outp, builder()
@@ -261,14 +261,13 @@ mod simple_body {
                         .assignment()
                         .literal_int(42)
                         .newline()
-                        .start_block()
                         .identifier("x")
                         .association(Dash)
                         .literal_int(5)
                         .newline()
                         .build());
                     assert_eq!(expected, func);
-                    assert_eq!(cursor.peek(), Err(End));
+                    assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
                 }
             )*
         }
@@ -282,108 +281,3 @@ mod simple_body {
         multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
-
-#[cfg(test)]
-mod no_param_no_return2 {
-    use ::smallvec::smallvec;
-
-    use crate::lexeme::collect::for_test::builder;
-    use crate::parselet::collect::for_test::function;
-    use crate::parsing::util::cursor::End;
-
-    use super::*;
-
-// #[test]
-    // #[should_panic]
-    // fn no_nl_after_colon() {
-    //     let lexemes = builder()
-    //         .keyword("fun")
-    //         .colon()
-    //         .start_block()
-    //         .end_block()
-    //         .file();
-    //     let (cursor, entry) = parse_function(lexemes.cursor()).unwrap();
-    //     let expected = FunctionParselet::new(CodeBodyParselet::new(vec![]));
-    //     assert_eq!(expected, entry);
-    //     assert_eq!(cursor.peek(), Err(End));
-    // }
-    //
-    // #[test]
-    // fn code_after_colon_block() {
-    //     let lexemes = builder()
-    //         .keyword("fun")
-    //         .colon()
-    //         .keyword("let")
-    //         .identifier("x")
-    //         .assignment()
-    //         .literal_int(42)
-    //         .newline()
-    //         .start_block()
-    //         .identifier("x")
-    //         .association(Dash)
-    //         .literal_int(5)
-    //         .newline()
-    //         .end_block()
-    //         .file();
-    //     let res = parse_function(lexemes.cursor());
-    //     // Not sure if this will be supported one day, but it is not supported now
-    //     assert!(res.is_err());
-    // }
-    //
-    // #[test]
-    // fn code_after_colon_noblock() {
-    //     let lexemes = builder()
-    //         .keyword("fun")
-    //         .colon()
-    //         .keyword("let")
-    //         .identifier("x")
-    //         .assignment()
-    //         .literal_int(42)
-    //         .newline()
-    //         .keyword("use")
-    //         .identifier("fake")
-    //         .file();
-    //     let res = parse_function(lexemes.cursor());
-    //     // Not sure if this will be supported one day, but it is not supported now
-    //     assert!(res.is_err());
-    // }
-    //
-    // #[test]
-    // fn simple_body() {
-    //     let lexemes = builder()
-    //         .keyword("fun")
-    //         .identifier("my_fun_name")
-    //         .colon()
-    //         .newline()
-    //         .start_block()
-    //         .identifier("f")
-    //         .parenthesis_open()
-    //         .literal_int(42)
-    //         .parenthesis_close()
-    //         .newline()
-    //         .newline()
-    //         .end_block()
-    //         .file();
-    //     let (cursor, entry) = parse_function(lexemes.cursor()).unwrap();
-    //     let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-    //         FunctionParselet::named(name.clone(), CodeBodyParselet::new(builder()
-    //             .identifier("f")
-    //             .parenthesis_open()
-    //             .literal_int(42)
-    //             .parenthesis_close()
-    //             .newline()
-    //             .newline()
-    //             .build()))
-    //     } else {
-    //         panic!("identifier not at expected position");
-    //     };
-    //     assert_eq!(expected, entry);
-    //     assert_eq!(cursor.peek(), Err(End));
-    // }
-
-    //TODO @mark: next token
-}
-
-//TODO @mark: multiple parameters
-//TODO @mark: return types
-
