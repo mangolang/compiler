@@ -39,7 +39,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<FQIdentifierLex
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::fqn::FQN;
+    use crate::common::codeparts::fqn::Fqn;
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;
@@ -72,7 +72,7 @@ mod tests {
     fn eof_after_name() {
         let lexemes = builder().identifier("hello").file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
-        assert_eq!(FQN::new("hello").unwrap(), parselets.name);
+        assert_eq!(Fqn::new("hello").unwrap(), parselets.name);
         assert!(cursor.peek().is_err());
     }
 
@@ -80,7 +80,7 @@ mod tests {
     fn single() {
         let lexemes = builder().identifier("hello").literal_int(7).file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
-        assert_eq!(FQN::new("hello").unwrap(), parselets.name);
+        assert_eq!(Fqn::new("hello").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         assert_eq!(&lexemes[1], next);
     }
@@ -89,7 +89,7 @@ mod tests {
     fn two() {
         let lexemes = builder().identifier("my_lib").period().identifier("MyClass").file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
-        assert_eq!(FQN::new("my_lib.MyClass").unwrap(), parselets.name);
+        assert_eq!(Fqn::new("my_lib.MyClass").unwrap(), parselets.name);
         assert!(cursor.peek().is_err());
     }
 
@@ -104,7 +104,7 @@ mod tests {
             .literal_int(7)
             .file();
         let (cursor, parselets) = parse_qualified_name(lexemes.cursor()).unwrap();
-        assert_eq!(FQN::new("std.text.regex").unwrap(), parselets.name);
+        assert_eq!(Fqn::new("std.text.regex").unwrap(), parselets.name);
         let next = cursor.peek().unwrap();
         assert_eq!(&lexemes[5], next);
     }

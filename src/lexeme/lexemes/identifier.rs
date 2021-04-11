@@ -1,6 +1,6 @@
 use ::std::hash;
 
-use crate::common::codeparts::fqn::FQN;
+use crate::common::codeparts::fqn::Fqn;
 use crate::common::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
@@ -10,13 +10,13 @@ use crate::lexeme::Lexeme;
 /// An arbitrary identifier, i.e. 'Hello' or 'std.text.regex'.
 #[derive(Debug, Eq, Clone)]
 pub struct FQIdentifierLexeme {
-    pub name: FQN,
+    pub name: Fqn,
     source: SourceSlice,
 }
 
 impl FQIdentifierLexeme {
     pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
-        let name = FQN::new(text)?;
+        let name = Fqn::new(text)?;
         Ok(FQIdentifierLexeme { name, source })
     }
 
@@ -88,7 +88,7 @@ impl SimpleIdentifierLexeme {
     /// Convert the type to `IdentifierLexeme` (does not actually add qualifiers to the name).
     pub fn into_non_simple(self) -> FQIdentifierLexeme {
         FQIdentifierLexeme {
-            name: FQN::from_name(self.name),
+            name: Fqn::from_name(self.name),
             source: self.source,
         }
     }

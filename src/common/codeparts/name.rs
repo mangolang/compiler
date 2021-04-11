@@ -6,7 +6,7 @@ use ::regex::Regex;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
-use crate::common::codeparts::fqn::FQN;
+use crate::common::codeparts::fqn::Fqn;
 use crate::common::error::MsgResult;
 
 lazy_static! {
@@ -30,7 +30,7 @@ impl PartialEq<str> for Name {
     }
 }
 
-impl PartialEq<Name> for FQN {
+impl PartialEq<Name> for Fqn {
     fn eq(&self, other: &Name) -> bool {
         match self.as_simple_name() {
             Some(name) => &name == other,
@@ -120,9 +120,9 @@ impl Name {
     }
 }
 
-impl From<Name> for FQN {
+impl From<Name> for Fqn {
     fn from(name: Name) -> Self {
-        FQN::from_name(name)
+        Fqn::from_name(name)
     }
 }
 

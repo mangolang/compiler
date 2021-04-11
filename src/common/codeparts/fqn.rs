@@ -14,30 +14,29 @@ lazy_static! {
 //TODO @mark: maybe cache hashcode and make comparisons (and hash) faster
 /// Fully-qualified name path, e.g. 'package.module1.module2.Type'.
 #[derive(Hash, PartialEq, Eq, Clone)]
-#[allow(clippy::upper_case_acronyms)]
-pub struct FQN {
+pub struct Fqn {
     names: Vec<Name>,
 }
 
-impl PartialEq<FQN> for Name {
-    fn eq(&self, other: &FQN) -> bool {
+impl PartialEq<Fqn> for Name {
+    fn eq(&self, other: &Fqn) -> bool {
         other.names.len() == 1 && &other.names[0] == self
     }
 }
 
-impl fmt::Debug for FQN {
+impl fmt::Debug for Fqn {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "FQN '{}'", self.as_string())
     }
 }
 
-impl fmt::Display for FQN {
+impl fmt::Display for Fqn {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.as_string())
     }
 }
 
-impl FQN {
+impl Fqn {
     pub fn new(name: impl AsRef<str>) -> MsgResult<Self> {
         let mut parts = vec![];
         for part in name.as_ref().split('.') {
@@ -45,11 +44,11 @@ impl FQN {
             parts.push(name);
         }
         debug_assert!(!parts.is_empty());
-        Ok(FQN { names: parts })
+        Ok(Fqn { names: parts })
     }
 
     pub fn from_name(name: Name) -> Self {
-        FQN { names: vec![name] }
+        Fqn { names: vec![name] }
     }
 
     //TODO @mark: test
@@ -99,7 +98,7 @@ mod technical {
 
     #[test]
     fn new_simple() {
-        let fqn = FQN::new("TheName1").unwrap();
+        let fqn = Fqn::new("TheName1").unwrap();
         assert_eq!(fqn.as_string(), "TheName1".to_owned());
         assert_eq!(fqn.parts(), &[name("TheName1")]);
         assert_eq!(fqn.as_simple_name(), Some(name("TheName1")));
@@ -107,7 +106,7 @@ mod technical {
 
     #[test]
     fn new_complex() {
-        let fqn = FQN::new("package.module1.module2.Class").unwrap();
+        let fqn = Fqn::new("package.module1.module2.Class").unwrap();
         assert_eq!(fqn.as_string(), "package.module1.module2.Class".to_owned());
         assert_eq!(fqn.parts(), &[name("package"), name("module1"), name("module2"), name("Class")]);
         assert_eq!(fqn.as_simple_name(), None);
@@ -115,9 +114,9 @@ mod technical {
 
     #[test]
     fn equality() {
-        assert_eq!(FQN::new("Hello").unwrap(), FQN::new("Hello").unwrap());
-        assert_eq!(FQN::new("a.b.c.Hello").unwrap(), FQN::new("a.b.c.Hello").unwrap());
-        assert_ne!(FQN::new("Hello").unwrap(), FQN::new("Goodbye").unwrap());
-        assert_ne!(FQN::new("a.b.c.Hello").unwrap(), FQN::new("a.b.d.Hello").unwrap());
+        assert_eq!(Fqn::new("Hello").unwrap(), Fqn::new("Hello").unwrap());
+        assert_eq!(Fqn::new("a.b.c.Hello").unwrap(), Fqn::new("a.b.c.Hello").unwrap());
+        assert_ne!(Fqn::new("Hello").unwrap(), Fqn::new("Goodbye").unwrap());
+        assert_ne!(Fqn::new("a.b.c.Hello").unwrap(), Fqn::new("a.b.d.Hello").unwrap());
     }
 }

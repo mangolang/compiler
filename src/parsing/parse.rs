@@ -9,6 +9,6 @@ pub fn parse(file_lex: FileLexemes) -> MangoResult<FileParselet> {
     match parse_file(cursor) {
         Ok((_, parselets)) => Ok(parselets),
         //TODO @mark: source mock files
-        Err(_) => panic!("could not parse source"),
+        Err(MangoErr) => panic!("could not parse source"),
     }
 }
