@@ -45,16 +45,16 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
 mod test_parse_return {
     use ::smallvec::smallvec;
 
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::builder;
     use crate::parselet::collect::for_test::function;
     use crate::parselet::collect::for_test::param;
+    use crate::parselet::signature::typ::TypeParselet;
     use crate::parsing::signature::function::parse_return;
-    use crate::parsing::util::cursor::End;
     use crate::parsing::signature::function::SimpleIdentifierLexeme;
+    use crate::parsing::util::cursor::End;
 
     use super::parse_function;
-    use crate::io::slice::SourceSlice;
-    use crate::parselet::signature::typ::TypeParselet;
 
     #[test]
     fn no_return() {
@@ -124,6 +124,8 @@ mod test_parse_return {
 mod empty_with_endblock {
     use ::smallvec::smallvec;
 
+    use crate::parselet::collect::for_test::param;
+
     #[cfg(test)]
     macro_rules! tests {
         ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
@@ -159,10 +161,10 @@ mod empty_with_endblock {
 
     tests!(
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
-        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
-        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
-        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
-        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().operator("->").identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
 
@@ -185,7 +187,7 @@ mod tmp {
             .parenthesis_open()
             .raw((builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build()))
             .parenthesis_close()
-            .raw((builder().identifier("int").build()))
+            .raw((builder().operator("->").identifier("int").build()))
             .colon()
             .newline()
             .start_block()
@@ -201,6 +203,8 @@ mod tmp {
 #[cfg(test)]
 mod empty_with_eof {
     use ::smallvec::smallvec;
+
+    use crate::parselet::collect::for_test::param;
 
     #[cfg(test)]
     macro_rules! tests {
@@ -236,16 +240,18 @@ mod empty_with_eof {
 
     tests!(
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
-        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
-        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
-        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
-        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().operator("->").identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
 
 #[cfg(test)]
 mod simple_body {
     use ::smallvec::smallvec;
+
+    use crate::parselet::collect::for_test::param;
 
     #[cfg(test)]
     macro_rules! tests {
@@ -302,10 +308,10 @@ mod simple_body {
 
     tests!(
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
-        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![], vec![], "None",
-        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], vec![], "None",
-        no_param_simple_return: builder().build(), smallvec![], builder().identifier("int").build(), "int",
-        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![], builder().identifier("int").build(), "int",
+        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
+        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
+        no_param_simple_return: builder().build(), smallvec![], builder().operator("->").identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
 
