@@ -1,25 +1,44 @@
-use crate::common::codeparts::Keyword;
+use crate::common::codeparts::{Keyword, Symbol};
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::function::FunctionParselet;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::cursor::{ParseCursor, End};
 use crate::parsing::partial::code_body::parse_code_body;
-use crate::parsing::partial::parameters::parse_parameters;
+use crate::parsing::partial::parameters::{parse_parameters, parse_parenthesised_parameters};
+use crate::parsing::partial::typ::parse_type;
+use crate::io::slice::SourceLocation;
+use crate::parselet::signature::typ::TypeParselet;
+use crate::lexeme::identifier::SimpleIdentifierLexeme;
 
 pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
         if keyword.word == Keyword::Entrypoint {
             let mut name_cursor = cursor.fork();
             if let Lexeme::Identifier(identifier) = name_cursor.take()? {
-                let (params_cursor, params) = parse_parameters(name_cursor)?;
-                let (body_cursor, body) = parse_code_body(params_cursor)?;
-                let returns= unimplemented!();  //TODO @mark: TEMPORARY! REMOVE THIS!
-                let function = FunctionParselet::new(identifier.clone(), params, returns, body);
-                return Ok((body_cursor, function))
+                if let Some(name) = identifier.to_simple() {
+                    let (params_cursor, params) = parse_parenthesised_parameters(name_cursor)?;
+                    let (body_cursor, body) = parse_code_body(params_cursor)?;
+                    let (return_cursor, returns) = parse_return(body_cursor, &name)?;
+                    let function = FunctionParselet::new(name, params, returns, body);
+                    return Ok((return_cursor, function))
+                }
             };
         }
     }
     Err(NoMatch)
+}
+
+fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) -> ParseRes<'a, TypeParselet> {
+    let original_cursor = cursor.fork();
+    if let Ok(Lexeme::Operator(op)) = cursor.take() {
+        if let Symbol::RightArrow = op.symbol() {
+            return match parse_type(cursor) {
+                Ok(returns) => Ok(returns),
+                Err(_) => panic!("function {} expected a return type", name.name.as_str()),
+            }
+        }
+    };
+    return Ok((original_cursor, TypeParselet::void(name.source().clone())));
 }
 
 #[cfg(test)]

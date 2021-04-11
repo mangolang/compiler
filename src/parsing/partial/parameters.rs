@@ -4,9 +4,9 @@ use ::smallvec::smallvec;
 
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
-use crate::parsing::partial::typ::parse_typ;
+use crate::parsing::partial::typ::parse_type;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{ParseCursor, End};
+use crate::parsing::util::cursor::ParseCursor;
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
@@ -32,7 +32,7 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
                     let name = name.clone();
                     if let Lexeme::Colon(_) = iter_cursor.take()? {
                         //TODO @mark: parse complex types like [int, double] or Vec[int]
-                        if let Ok((typ_cursor, typ)) = parse_typ(iter_cursor) {
+                        if let Ok((typ_cursor, typ)) = parse_type(iter_cursor) {
                             if names_seen.contains(name.name.as_ustr()) {
                                 panic!("duplicate parameter name: {}", &name.name.as_str());
                             }

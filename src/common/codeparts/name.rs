@@ -60,6 +60,12 @@ impl Name {
         }
     }
 
+    pub fn from_valid(name: impl AsRef<str>) -> Self {
+        let name = name.as_ref();
+        debug_assert!(Name::validate(name).is_ok());
+        Name { name: ustr(name) }
+    }
+
     pub fn from(name: Ustr) -> MsgResult<Self> {
         match Name::validate(name.as_str()) {
             Ok(_) => Ok(Name { name }),

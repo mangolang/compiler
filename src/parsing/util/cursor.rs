@@ -19,6 +19,14 @@ pub struct ParseCursor<'a> {
     lexemes: &'a FileLexemes,
 }
 
+#[cfg(test)]
+mod to_do {
+    #[test]
+    fn implement_test() {
+        panic!("remove copy from cursor");
+    }
+}
+
 impl<'a> ParseCursor<'a> {
     //TODO @mark: replace all test uses with FileLexeme.cursor()
     pub fn new(lexemes: &'a FileLexemes) -> Self {

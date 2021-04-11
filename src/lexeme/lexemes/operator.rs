@@ -37,6 +37,10 @@ impl OperatorLexeme {
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
     }
+
+    pub fn symbol(&self) -> &Symbol {
+        &self.symbol
+    }
 }
 
 impl PartialEq for OperatorLexeme {

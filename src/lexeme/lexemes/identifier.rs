@@ -14,14 +14,12 @@ pub struct IdentifierLexeme {
     source: SourceSlice,
 }
 
-/// A simple name for something, i.e. like an Identifier but the name can have
-/// only one part (not fully-qualified). Every `SimpleIdentifierLexeme` is also
-/// convertible to a valid `IdentifierLexeme` (with same name).
-#[derive(Debug, Eq, Clone)]
-//TODO @mark: implement
-pub struct SimpleIdentifierLexeme {
-    pub name: Name,
-    source: SourceSlice,
+#[cfg(test)]
+mod to_do {
+    #[test]
+    fn implement_test() {
+        panic!("IdentifierLexeme -> FQIdentifierLexeme");
+    }
 }
 
 impl IdentifierLexeme {
@@ -63,11 +61,26 @@ impl IdentifierLexeme {
     }
 }
 
+/// A simple name for something, i.e. like an Identifier but the name can have
+/// only one part (not fully-qualified). Every `SimpleIdentifierLexeme` is also
+/// convertible to a valid `IdentifierLexeme` (with same name).
+#[derive(Debug, Eq, Clone)]
+//TODO @mark: implement
+pub struct SimpleIdentifierLexeme {
+    pub name: Name,
+    source: SourceSlice,
+}
+
 //TODO @mark: test
 impl SimpleIdentifierLexeme {
     pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
         let name = Name::new(text)?;
         Ok(SimpleIdentifierLexeme { name, source })
+    }
+
+    pub fn from_valid(text: &str, source: SourceSlice) -> Self {
+        let name = Name::from_valid(text);
+        SimpleIdentifierLexeme { name, source }
     }
 
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
@@ -122,6 +135,12 @@ impl hash::Hash for IdentifierLexeme {
 }
 
 impl SourceLocation for IdentifierLexeme {
+    fn source(&self) -> &SourceSlice {
+        &self.source
+    }
+}
+
+impl SourceLocation for SimpleIdentifierLexeme {
     fn source(&self) -> &SourceSlice {
         &self.source
     }

@@ -5,7 +5,7 @@ use crate::parsing::util::cursor::ParseCursor;
 
 /// Parse a type, like 'int' or '[int, double]' or 'Vec[int]'.
 //TODO @mark: for now only supports single word types
-pub fn parse_typ(mut cursor: ParseCursor) -> ParseRes<TypeParselet> {
+pub fn parse_type(mut cursor: ParseCursor) -> ParseRes<TypeParselet> {
     if let Lexeme::Identifier(identifier) = cursor.take()? {
         if let Some(simple_identifier) = identifier.to_simple() {
             return Ok((cursor, TypeParselet::new(simple_identifier)))
