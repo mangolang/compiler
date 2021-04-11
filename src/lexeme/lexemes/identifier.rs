@@ -65,8 +65,8 @@ pub struct SimpleIdentifierLexeme {
 
 //TODO @mark: test
 impl SimpleIdentifierLexeme {
-    pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
-        let name = Name::new(text)?;
+    pub fn from_str(text: impl AsRef<str>, source: SourceSlice) -> MsgResult<Self> {
+        let name = Name::new(text.as_ref())?;
         Ok(SimpleIdentifierLexeme { name, source })
     }
 

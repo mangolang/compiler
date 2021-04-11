@@ -91,7 +91,7 @@ mod tests {
             .file();
         let expected = FileParselet::new(
             vec![],
-            Some(EntryPointParselet::anonymous(CodeBodyParselet::create(builder()
+            Some(EntryPointParselet::anonymous(CodeBodyParselet::new(builder()
                 .identifier("print")
                 .parenthesis_open()
                 .literal_text("hello world")

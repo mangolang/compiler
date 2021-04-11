@@ -42,7 +42,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -59,7 +59,7 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(vec![]))
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
         } else {
             panic!("identifier not at expected position");
         };
@@ -76,7 +76,7 @@ mod tests {
             .start_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -92,7 +92,7 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(vec![]))
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
         } else {
             panic!("identifier not at expected position");
         };
@@ -110,7 +110,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(vec![]));
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -174,7 +174,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::create(builder()
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(builder()
             .keyword("let")
             .identifier("x")
             .assignment()
@@ -207,7 +207,7 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::create(builder()
+            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(builder()
                 .identifier("f")
                 .parenthesis_open()
                 .literal_int(42)

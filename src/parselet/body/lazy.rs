@@ -15,7 +15,7 @@ pub enum LazyParselet<T: Parseable> {
 }
 
 impl<T: Parseable> LazyParselet<T> {
-    pub fn create(lexemes: impl Into<Vec<Lexeme>>) -> Self {
+    pub fn new(lexemes: impl Into<Vec<Lexeme>>) -> Self {
         LazyParselet::Pending(lexemes.into())
     }
 
@@ -51,7 +51,7 @@ mod tests {
 
     #[test]
     fn resolve_1() {
-        let mut func: LazyParselet<TestParseable> = LazyParselet::create(vec![]);
+        let mut func: LazyParselet<TestParseable> = LazyParselet::new(vec![]);
         let body = func.parsed();
         assert_eq!(body.0, 0);
     }
@@ -59,7 +59,7 @@ mod tests {
     #[test]
     fn resolve_2() {
         //TODO @mark: maybe I should not need mutability?
-        let mut func: LazyParselet<TestParseable> = LazyParselet::create(vec![builder().period().build_single()]);
+        let mut func: LazyParselet<TestParseable> = LazyParselet::new(vec![builder().period().build_single()]);
         let body = func.parsed();
         assert_eq!(body.0, 1);
     }

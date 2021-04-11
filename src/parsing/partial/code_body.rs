@@ -22,7 +22,7 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
             if !lexemes.is_empty() {
                 lexemes = &lexemes[0..lexemes.len() - 1];
             }
-            let entrypoint = CodeBodyParselet::create(lexemes);
+            let entrypoint = CodeBodyParselet::new(lexemes);
             return Ok((cursor, entrypoint));
         }
     };
@@ -72,7 +72,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::create(builder()
+        let expected = CodeBodyParselet::new(builder()
             .keyword("let")
             .identifier("x")
             .assignment()
@@ -102,9 +102,9 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
+        let expected = if let Lexeme::Identifier(name) = &lexemes[3] {
             assert_eq!(name.name.as_string(), "f");
-            CodeBodyParselet::create(builder()
+            CodeBodyParselet::new(builder()
                 .identifier("f")
                 .parenthesis_open()
                 .literal_int(42)
@@ -161,7 +161,7 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::create(builder()
+        let expected = CodeBodyParselet::new(builder()
             .keyword("if")
             .literal_int(2)
             .operator(GE)
@@ -216,7 +216,7 @@ mod tests {
             .identifier("fake")
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::create(builder()
+        let expected = CodeBodyParselet::new(builder()
             .keyword("let")
             .identifier("x")
             .assignment()

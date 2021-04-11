@@ -6,7 +6,7 @@ use crate::io::slice::SourceSlice;
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::parselet::signature::typ::TypeParselet;
 
-pub type ParamLexemes = SmallVec<[TypedValueParselet; 3]>;
+pub type ParamParselets = SmallVec<[TypedValueParselet; 3]>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct TypedValueParselet {
@@ -34,11 +34,11 @@ impl TypedValueParselet {
 //TODO @mark: at some point, mix positional and keyword args in fancy ways
 #[derive(Debug, PartialEq, Eq)]
 pub struct ParametersParselet {
-    values: ParamLexemes,
+    values: ParamParselets,
 }
 
 impl ParametersParselet {
-    pub fn new(values: ParamLexemes) -> Self {
+    pub fn new(values: ParamParselets) -> Self {
         ParametersParselet {
             values
         }
