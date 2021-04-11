@@ -45,7 +45,8 @@ impl Symbol {
             ">=" => Ok(GE),
             "!" => Ok(Exclamation),
             "?" => Ok(Question),
-            "->" => Ok(Question),
+            "->" => Ok(RightArrow),
+            "➔" => Ok(RightArrow),
             _ => Err(format!("Unknown symbol: '{}'", symbol_txt.to_owned())),
         }
     }

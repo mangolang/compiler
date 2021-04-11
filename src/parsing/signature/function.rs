@@ -17,10 +17,10 @@ pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
             if let Lexeme::Identifier(identifier) = name_cursor.take()? {
                 if let Some(name) = identifier.to_simple() {
                     let (params_cursor, params) = parse_parenthesised_parameters(name_cursor)?;
-                    let (body_cursor, body) = parse_code_body(params_cursor)?;
-                    let (return_cursor, returns) = parse_return(body_cursor, &name)?;
+                    let (return_cursor, returns) = parse_return(params_cursor, &name)?;
+                    let (body_cursor, body) = parse_code_body(return_cursor)?;
                     let function = FunctionParselet::new(name, params, returns, body);
-                    return Ok((return_cursor, function))
+                    return Ok((body_cursor, function))
                 }
             };
         }
@@ -40,6 +40,85 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
     };
     return Ok((original_cursor, TypeParselet::void(name.source().clone())));
 }
+
+#[cfg(test)]
+mod test_parse_return {
+    use ::smallvec::smallvec;
+
+    use crate::lexeme::collect::for_test::builder;
+    use crate::parselet::collect::for_test::function;
+    use crate::parselet::collect::for_test::param;
+    use crate::parsing::signature::function::parse_return;
+    use crate::parsing::util::cursor::End;
+    use crate::parsing::signature::function::SimpleIdentifierLexeme;
+
+    use super::parse_function;
+    use crate::io::slice::SourceSlice;
+    use crate::parselet::signature::typ::TypeParselet;
+
+    #[test]
+    fn no_return() {
+        let lexemes = builder()
+            .colon()
+            .file();
+        let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
+        let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
+        let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("None", SourceSlice::mock()));
+        assert_eq!(expected, returns);
+        assert_eq!(cursor.peek(), Ok(&builder().colon().build_single()));
+    }
+
+    #[test]
+    fn simple_return_eof() {
+        let lexemes = builder()
+            .operator("->")
+            .identifier("int")
+            .file();
+        let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
+        let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
+        let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("int", SourceSlice::mock()));
+        assert_eq!(expected, returns);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
+    #[test]
+    fn simple_return_colon_utf_arrow() {
+        let lexemes = builder()
+            .operator("➔")
+            .identifier("int")
+            .colon()
+            .file();
+        let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
+        let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
+        let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("int", SourceSlice::mock()));
+        assert_eq!(expected, returns);
+        assert_eq!(cursor.peek(), Ok(&builder().colon().build_single()));
+    }
+
+    #[test]
+    #[should_panic]
+    fn return_literal_error() {
+        let lexemes = builder()
+            .operator("->")
+            .literal_bool(true)
+            .colon()
+            .file();
+        let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
+        parse_return(lexemes.cursor(), &func_name).is_err();
+    }
+
+    #[test]
+    #[should_panic]
+    fn arrow_only_error() {
+        let lexemes = builder()
+            .operator("->")
+            .colon()
+            .file();
+        let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
+        parse_return(lexemes.cursor(), &func_name).is_err();
+    }
+}
+
 
 #[cfg(test)]
 mod empty_with_endblock {
@@ -87,13 +166,16 @@ mod empty_with_endblock {
     );
 }
 
-mod tmp {  //TODO @mark: TEMPORARY! REMOVE THIS!
-    use crate::lexeme::collect::for_test::builder;
+mod tmp {
+    use ::smallvec::smallvec;
+
+    //TODO @mark: TEMPORARY! REMOVE THIS!
+        use crate::lexeme::collect::for_test::builder;
     use crate::parselet::collect::for_test::function;
     use crate::parselet::collect::for_test::param;
     use crate::parsing::util::cursor::End;
+
     use super::parse_function;
-    use ::smallvec::smallvec;
 
     #[test]
     fn multi_param_simple_return() {
@@ -237,7 +319,7 @@ mod no_param_no_return2 {
 
     use super::*;
 
-    // #[test]
+// #[test]
     // #[should_panic]
     // fn no_nl_after_colon() {
     //     let lexemes = builder()
