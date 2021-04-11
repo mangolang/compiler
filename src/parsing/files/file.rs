@@ -67,11 +67,14 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
 mod tests {
     use crate::common::codeparts::operator::Symbol::{GT, Percent};
     use crate::lexeme::collect::for_test::builder;
+    use crate::parselet::body::code_body::CodeBodyParselet;
+    use crate::parselet::collect::for_test::{entrypoint, function};
     use crate::parselet::collect::for_test::import_alias;
+    use crate::parselet::collect::for_test::param;
+    use crate::parselet::collect::for_test::text_test;
     use crate::parselet::signature::entrypoint::EntryPointParselet;
 
     use super::*;
-    use crate::parselet::body::code_body::CodeBodyParselet;
 
     #[test]
     fn hello_world_file() {
@@ -128,7 +131,7 @@ mod tests {
             .colon()
             .identifier("int")
             .parenthesis_close()
-            .operator("->")
+            .operator("➔")
             .identifier("int")
             .colon()
             .newline()
@@ -195,15 +198,62 @@ mod tests {
             .end_block()
             .file();
         let expected = FileParselet::new(
-            vec![import_alias("pit.text", "txt")],
-            None,
+            vec![import_alias("pit.text.println", "txt")],
+            Some(entrypoint(None, builder()
+                .identifier("print")
+                .parenthesis_open()
+                .identifier("gcd")
+                .parenthesis_open()
+                .literal_int(45)
+                .comma()
+                .literal_int(30)
+                .parenthesis_close()
+                .parenthesis_close()
+                .newline()
+                .build())),
             smallvec![],
             smallvec![],
-            smallvec![],
-            smallvec![],
+            smallvec![function("", smallvec![param("x", "int"), param("y", "int")], "int", builder()
+                .keyword("while")
+                .identifier("y")
+                .operator(GT)
+                .literal_int(0)
+                .colon()
+                .newline()
+                .start_block()
+                .keyword("let")
+                .identifier("z")
+                .assignment()
+                .identifier("x")
+                .operator(Percent)
+                .identifier("y")
+                .newline()
+                .identifier("x")
+                .assignment()
+                .identifier("y")
+                .newline()
+                .identifier("y")
+                .assignment()
+                .identifier("z")
+                .newline()
+                .end_block()
+                .keyword("return")
+                .identifier("x")
+                .newline()
+                .build())],
+            smallvec![text_test("gcd of 100 and 60 should be 20", builder()
+                .identifier("assert")
+                .identifier("gcd")
+                .parenthesis_open()
+                .literal_int(100)
+                .comma()
+                .literal_int(60)
+                .parenthesis_close()
+                .operator("==")
+                .literal_int(20)
+                .build())],
         );
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
         assert_eq!(expected, parselet);
-        unimplemented!()
     }
 }

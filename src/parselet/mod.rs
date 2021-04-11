@@ -10,6 +10,3 @@ pub mod node;
 pub mod signature;
 pub mod special;
 pub mod terminal;
-
-#[cfg(test)]
-mod tests;
