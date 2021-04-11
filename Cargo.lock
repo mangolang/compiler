@@ -132,7 +132,7 @@ checksum = "3bc2bf9def26a83dc2c21245343613efbe2ff64e5daf844c8bdd01f1fab73fee"
 
 [[package]]
 name = "mangolib"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "derive-new",
  "lazy_static",

@@ -38,7 +38,7 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
             };
         }
     };
-    return Ok((original_cursor, TypeParselet::void(name.source().clone())));
+    Ok((original_cursor, TypeParselet::void(name.source().clone())))
 }
 
 #[cfg(test)]
