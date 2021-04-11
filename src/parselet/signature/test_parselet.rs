@@ -1,11 +1,11 @@
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
-use crate::parselet::body::code_body::CodeBodyParselet;
 use crate::lexeme::literal::TextLiteralLexeme;
+use crate::parselet::body::code_body::CodeBodyParselet;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum TestName {
     Identifier(SimpleIdentifierLexeme),
-    Text(TextLiteralLexeme)
+    Text(TextLiteralLexeme),
 }
 
 impl From<SimpleIdentifierLexeme> for TestName {
@@ -28,9 +28,6 @@ pub struct TestParselet {
 
 impl TestParselet {
     pub fn new(name: TestName, body: CodeBodyParselet) -> Self {
-        TestParselet {
-            name,
-            body,
-        }
+        TestParselet { name, body }
     }
 }

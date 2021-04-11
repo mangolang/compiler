@@ -127,7 +127,12 @@ mod tests {
 
     #[test]
     fn slice() {
-        let lexemes = builder().literal_text("a").literal_text("b").literal_text("c").literal_text("d").file();
+        let lexemes = builder()
+            .literal_text("a")
+            .literal_text("b")
+            .literal_text("c")
+            .literal_text("d")
+            .file();
         let mut start = lexemes.index_at_start();
         start.increment();
         let mut end = lexemes.index_at_start();

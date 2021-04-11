@@ -1,16 +1,15 @@
-
 use crate::io::slice::SourceSlice;
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::lexeme::lexemes::literal::TextLiteralLexeme;
+use crate::lexeme::{FQIdentifierLexeme, Lexeme};
 use crate::parselet::body::code_body::CodeBodyParselet;
 use crate::parselet::files::import::ImportParselet;
+use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parselet::signature::function::FunctionParselet;
-use crate::parselet::signature::parameters::{ParametersParselet, ParamParselets, TypedValueParselet};
+use crate::parselet::signature::parameters::{ParamParselets, ParametersParselet, TypedValueParselet};
+use crate::parselet::signature::test_parselet::TestName;
 use crate::parselet::signature::test_parselet::TestParselet;
 use crate::parselet::signature::typ::TypeParselet;
-use crate::parselet::signature::test_parselet::TestName;
-use crate::lexeme::{FQIdentifierLexeme, Lexeme};
-use crate::parselet::signature::entrypoint::EntryPointParselet;
 
 pub fn import(fqn: impl AsRef<str>) -> ImportParselet {
     ImportParselet::new(FQIdentifierLexeme::from_str(fqn.as_ref(), SourceSlice::mock()).unwrap(), None)
@@ -30,7 +29,12 @@ pub fn entrypoint(name: Option<&str>, body: impl Into<Vec<Lexeme>>) -> EntryPoin
     )
 }
 
-pub fn function(name: impl AsRef<str>, params: impl Into<ParamParselets>, return_name: impl AsRef<str>, body: impl Into<Vec<Lexeme>>) -> FunctionParselet {
+pub fn function(
+    name: impl AsRef<str>,
+    params: impl Into<ParamParselets>,
+    return_name: impl AsRef<str>,
+    body: impl Into<Vec<Lexeme>>,
+) -> FunctionParselet {
     FunctionParselet::new(
         SimpleIdentifierLexeme::from_str(name, SourceSlice::mock()).unwrap(),
         ParametersParselet::new(params.into()),

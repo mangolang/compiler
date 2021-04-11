@@ -1,5 +1,6 @@
 use ::smallvec::smallvec;
 
+use crate::dbg_log;
 use crate::lexeme::Lexeme;
 use crate::parselet::files::file::FileParselet;
 use crate::parsing::files::import::parse_import;
@@ -10,7 +11,6 @@ use crate::parsing::signature::record::parse_record;
 use crate::parsing::signature::union::parse_union;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::dbg_log;
 
 pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut imports = vec![];
@@ -27,10 +27,10 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut tests = smallvec![];
     loop {
         cursor.skip_while(|lexeme| lexeme.is_newline());
-        dbg_log!("token at top of parse_file: {:?}", cursor.peek());  //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg_log!("token at top of parse_file: {:?}", cursor.peek()); //TODO @mark: TEMPORARY! REMOVE THIS!
 
         if let Ok((entry_cursor, entry_parselet)) = parse_entrypoint(cursor.fork()) {
-            assert!(entrypoint.is_none());  // for now
+            assert!(entrypoint.is_none()); // for now
             cursor = entry_cursor;
             entrypoint = Some(entry_parselet);
             continue;
@@ -69,14 +69,14 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{GT, Percent};
+    use crate::common::codeparts::operator::Symbol::{Percent, GT};
     use crate::lexeme::collect::for_test::builder;
     use crate::parselet::body::code_body::CodeBodyParselet;
-    use crate::parselet::collect::for_test::{entrypoint, function};
     use crate::parselet::collect::for_test::import_alias;
     use crate::parselet::collect::for_test::param;
-    use crate::parselet::signature::entrypoint::EntryPointParselet;
     use crate::parselet::collect::for_test::text_test;
+    use crate::parselet::collect::for_test::{entrypoint, function};
+    use crate::parselet::signature::entrypoint::EntryPointParselet;
 
     use super::*;
 
@@ -98,13 +98,15 @@ mod tests {
             .file();
         let expected = FileParselet::new(
             vec![],
-            Some(EntryPointParselet::anonymous(CodeBodyParselet::new(builder()
-                .identifier("print")
-                .parenthesis_open()
-                .literal_text("hello world")
-                .parenthesis_close()
-                .newline()
-                .build()))),
+            Some(EntryPointParselet::anonymous(CodeBodyParselet::new(
+                builder()
+                    .identifier("print")
+                    .parenthesis_open()
+                    .literal_text("hello world")
+                    .parenthesis_close()
+                    .newline()
+                    .build(),
+            ))),
             smallvec![],
             smallvec![],
             smallvec![],
@@ -203,60 +205,71 @@ mod tests {
             .file();
         let expected = FileParselet::new(
             vec![import_alias("pit.text.println", "print")],
-            Some(entrypoint(None, builder()
-                .identifier("print")
-                .parenthesis_open()
-                .identifier("gcd")
-                .parenthesis_open()
-                .literal_int(45)
-                .comma()
-                .literal_int(30)
-                .parenthesis_close()
-                .parenthesis_close()
-                .newline()
-                .build())),
+            Some(entrypoint(
+                None,
+                builder()
+                    .identifier("print")
+                    .parenthesis_open()
+                    .identifier("gcd")
+                    .parenthesis_open()
+                    .literal_int(45)
+                    .comma()
+                    .literal_int(30)
+                    .parenthesis_close()
+                    .parenthesis_close()
+                    .newline()
+                    .build(),
+            )),
             smallvec![],
             smallvec![],
-            smallvec![function("gcd", smallvec![param("x", "int"), param("y", "int")], "int", builder()
-                .keyword("while")
-                .identifier("y")
-                .operator(GT)
-                .literal_int(0)
-                .colon()
-                .newline()
-                .start_block()
-                .keyword("let")
-                .identifier("z")
-                .assignment()
-                .identifier("x")
-                .operator(Percent)
-                .identifier("y")
-                .newline()
-                .identifier("x")
-                .assignment()
-                .identifier("y")
-                .newline()
-                .identifier("y")
-                .assignment()
-                .identifier("z")
-                .newline()
-                .end_block()
-                .keyword("return")
-                .identifier("x")
-                .newline()
-                .build())],
-            smallvec![text_test("gcd of 100 and 60 should be 20", builder()
-                .identifier("assert")
-                .identifier("gcd")
-                .parenthesis_open()
-                .literal_int(100)
-                .comma()
-                .literal_int(60)
-                .parenthesis_close()
-                .operator("==")
-                .literal_int(20)
-                .newline()
-                .build())],
+            smallvec![function(
+                "gcd",
+                smallvec![param("x", "int"), param("y", "int")],
+                "int",
+                builder()
+                    .keyword("while")
+                    .identifier("y")
+                    .operator(GT)
+                    .literal_int(0)
+                    .colon()
+                    .newline()
+                    .start_block()
+                    .keyword("let")
+                    .identifier("z")
+                    .assignment()
+                    .identifier("x")
+                    .operator(Percent)
+                    .identifier("y")
+                    .newline()
+                    .identifier("x")
+                    .assignment()
+                    .identifier("y")
+                    .newline()
+                    .identifier("y")
+                    .assignment()
+                    .identifier("z")
+                    .newline()
+                    .end_block()
+                    .keyword("return")
+                    .identifier("x")
+                    .newline()
+                    .build()
+            )],
+            smallvec![text_test(
+                "gcd of 100 and 60 should be 20",
+                builder()
+                    .identifier("assert")
+                    .identifier("gcd")
+                    .parenthesis_open()
+                    .literal_int(100)
+                    .comma()
+                    .literal_int(60)
+                    .parenthesis_close()
+                    .operator("==")
+                    .literal_int(20)
+                    .newline()
+                    .build()
+            )],
         );
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
         assert_eq!(expected, parselet);

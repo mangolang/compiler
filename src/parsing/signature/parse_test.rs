@@ -2,8 +2,8 @@ use crate::common::codeparts::Keyword;
 use crate::lexeme::{Lexeme, LiteralLexeme};
 use crate::parselet::signature::test_parselet::{TestName, TestParselet};
 use crate::parsing::partial::code_body::parse_code_body;
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
@@ -15,10 +15,8 @@ pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
                     } else {
                         panic!("test name can either be an identifier or a quoted string, but not a fully-qualified path");
                     }
-                },
-                Ok(Lexeme::Literal(LiteralLexeme::Text(text))) => {
-                    TestName::from(text.clone())
-                },
+                }
+                Ok(Lexeme::Literal(LiteralLexeme::Text(text))) => TestName::from(text.clone()),
                 Ok(_) | Err(_) => panic!("test name can either be an identifier or a quoted string"),
             };
             let (body_cursor, body) = parse_code_body(cursor)?;
@@ -35,11 +33,11 @@ mod tests {
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;
-    use crate::parselet::body::code_body::CodeBodyParselet;
-    use crate::lexeme::identifier::SimpleIdentifierLexeme;
     use crate::io::slice::SourceSlice;
-    use crate::parsing::util::cursor::End;
+    use crate::lexeme::identifier::SimpleIdentifierLexeme;
     use crate::lexeme::literal::TextLiteralLexeme;
+    use crate::parselet::body::code_body::CodeBodyParselet;
+    use crate::parsing::util::cursor::End;
 
     #[test]
     fn text_name_empty_body() {
@@ -95,12 +93,7 @@ mod tests {
     #[should_panic]
     #[allow(unused_must_use)]
     fn no_nl_after_colon() {
-        let lexemes = builder()
-            .keyword("test")
-            .identifier("my_test_name")
-            .colon()
-            .start_block()
-            .file();
+        let lexemes = builder().keyword("test").identifier("my_test_name").colon().start_block().file();
         parse_test(lexemes.cursor());
     }
 
@@ -163,13 +156,18 @@ mod tests {
             .file();
         let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
         let test_name = TextLiteralLexeme::new("my test string name", SourceSlice::mock()).into();
-        let expected = TestParselet::new(test_name, CodeBodyParselet::new(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .build()));
+        let expected = TestParselet::new(
+            test_name,
+            CodeBodyParselet::new(
+                builder()
+                    .keyword("let")
+                    .identifier("x")
+                    .assignment()
+                    .literal_int(42)
+                    .newline()
+                    .build(),
+            ),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
     }
@@ -195,17 +193,22 @@ mod tests {
             .file();
         let (cursor, entry) = parse_test(lexemes.cursor()).unwrap();
         let test_name = SimpleIdentifierLexeme::from_valid("my_test_name", SourceSlice::mock()).into();
-        let expected = TestParselet::new(test_name, CodeBodyParselet::new(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .identifier("x")
-            .association(Dash)
-            .literal_int(5)
-            .newline()
-            .build()));
+        let expected = TestParselet::new(
+            test_name,
+            CodeBodyParselet::new(
+                builder()
+                    .keyword("let")
+                    .identifier("x")
+                    .assignment()
+                    .literal_int(42)
+                    .newline()
+                    .identifier("x")
+                    .association(Dash)
+                    .literal_int(5)
+                    .newline()
+                    .build(),
+            ),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }

@@ -5,7 +5,7 @@ use crate::lexeme::Lexeme;
 
 pub fn print_lexemes(lexemes: &[Lexeme]) -> String {
     if lexemes.is_empty() {
-        return "".to_string()
+        return "".to_string();
     }
     let mut indent = 0;
     let mut text = String::with_capacity(lexemes.len() * 8);
@@ -14,10 +14,18 @@ pub fn print_lexemes(lexemes: &[Lexeme]) -> String {
         let prev = &lexemes[0];
         let lexeme = &lexemes[1];
         if let Lexeme::StartBlock(_) = lexeme {
-            assert!(prev.is_newline() || prev.is_block_boundary(), "start of a block should be preceded by a newline, found {:?}", prev)
+            assert!(
+                prev.is_newline() || prev.is_block_boundary(),
+                "start of a block should be preceded by a newline, found {:?}",
+                prev
+            )
         }
         if let Lexeme::EndBlock(_) = lexeme {
-            assert!(prev.is_newline() || prev.is_block_boundary(), "end of a block should be preceded by a newline, found {:?}", prev)
+            assert!(
+                prev.is_newline() || prev.is_block_boundary(),
+                "end of a block should be preceded by a newline, found {:?}",
+                prev
+            )
         }
         indent = print_one_lexeme(&mut text, lexeme, indent);
     }
@@ -48,12 +56,12 @@ fn print_one_lexeme(mut text: &mut String, lexeme: &Lexeme, mut indent: u32) -> 
         Lexeme::StartBlock(_) => {
             indent += 1;
             text.push('\t');
-        },
+        }
         Lexeme::EndBlock(_) => {
             assert!(indent >= 1);
             indent -= 1;
             text.pop();
-        },
+        }
         Lexeme::Colon(_) => write!(text, ":").unwrap(),
         Lexeme::Comma(_) => write!(text, ",").unwrap(),
         Lexeme::Ellipsis(_) => write!(text, "…").unwrap(),

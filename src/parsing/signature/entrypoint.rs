@@ -2,8 +2,8 @@ use crate::common::codeparts::Keyword;
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parsing::partial::code_body::parse_code_body;
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
@@ -40,13 +40,7 @@ mod tests {
 
     #[test]
     fn anonymous_nl_endblock() {
-        let lexemes = builder()
-            .keyword("main")
-            .colon()
-            .newline()
-            .start_block()
-            .end_block()
-            .file();
+        let lexemes = builder().keyword("main").colon().newline().start_block().end_block().file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
@@ -72,12 +66,7 @@ mod tests {
 
     #[test]
     fn anonymous_nl_eof() {
-        let lexemes = builder()
-            .keyword("main")
-            .colon()
-            .newline()
-            .start_block()
-            .file();
+        let lexemes = builder().keyword("main").colon().newline().start_block().file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
@@ -103,12 +92,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn no_nl_after_colon() {
-        let lexemes = builder()
-            .keyword("main")
-            .colon()
-            .start_block()
-            .end_block()
-            .file();
+        let lexemes = builder().keyword("main").colon().start_block().end_block().file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
@@ -174,17 +158,19 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .identifier("x")
-            .association(Dash)
-            .literal_int(5)
-            .newline()
-            .build()));
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(
+            builder()
+                .keyword("let")
+                .identifier("x")
+                .assignment()
+                .literal_int(42)
+                .newline()
+                .identifier("x")
+                .association(Dash)
+                .literal_int(5)
+                .newline()
+                .build(),
+        ));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -207,14 +193,19 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let entry_name = SimpleIdentifierLexeme::from_valid("my_main_name", SourceSlice::mock());
-        let expected = EntryPointParselet::named(entry_name, CodeBodyParselet::new(builder()
-            .identifier("f")
-            .parenthesis_open()
-            .literal_int(42)
-            .parenthesis_close()
-            .newline()
-            .newline()
-            .build()));
+        let expected = EntryPointParselet::named(
+            entry_name,
+            CodeBodyParselet::new(
+                builder()
+                    .identifier("f")
+                    .parenthesis_open()
+                    .literal_int(42)
+                    .parenthesis_close()
+                    .newline()
+                    .newline()
+                    .build(),
+            ),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }

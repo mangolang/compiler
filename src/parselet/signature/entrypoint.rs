@@ -9,23 +9,14 @@ pub struct EntryPointParselet {
 
 impl EntryPointParselet {
     pub fn new(name: Option<SimpleIdentifierLexeme>, body: CodeBodyParselet) -> Self {
-        EntryPointParselet {
-            name,
-            body,
-        }
+        EntryPointParselet { name, body }
     }
 
     pub fn named(name: SimpleIdentifierLexeme, body: CodeBodyParselet) -> Self {
-        EntryPointParselet {
-            name: Some(name),
-            body,
-        }
+        EntryPointParselet { name: Some(name), body }
     }
 
     pub fn anonymous(body: CodeBodyParselet) -> Self {
-        EntryPointParselet {
-            name: None,
-            body,
-        }
+        EntryPointParselet { name: None, body }
     }
 }

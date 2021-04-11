@@ -7,8 +7,8 @@ use crate::parselet::signature::typ::TypeParselet;
 use crate::parsing::partial::code_body::parse_code_body;
 use crate::parsing::partial::parameters::parse_parenthesised_parameters;
 use crate::parsing::partial::typ::parse_type;
-use crate::parsing::util::{NoMatch, ParseRes};
 use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
@@ -20,7 +20,7 @@ pub fn parse_function(mut cursor: ParseCursor) -> ParseRes<FunctionParselet> {
                     let (return_cursor, returns) = parse_return(params_cursor, &name)?;
                     let (body_cursor, body) = parse_code_body(return_cursor)?;
                     let function = FunctionParselet::new(name, params, returns, body);
-                    return Ok((body_cursor, function))
+                    return Ok((body_cursor, function));
                 }
             };
         }
@@ -35,7 +35,7 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
             return match parse_type(cursor) {
                 Ok(returns) => Ok(returns),
                 Err(_) => panic!("function {} expected a return type", name.name.as_str()),
-            }
+            };
         }
     };
     return Ok((original_cursor, TypeParselet::void(name.source().clone())));
@@ -52,9 +52,7 @@ mod test_parse_return {
 
     #[test]
     fn no_return() {
-        let lexemes = builder()
-            .colon()
-            .file();
+        let lexemes = builder().colon().file();
         let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
         let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
         let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("None", SourceSlice::mock()));
@@ -64,10 +62,7 @@ mod test_parse_return {
 
     #[test]
     fn simple_return_eof() {
-        let lexemes = builder()
-            .operator("->")
-            .identifier("int")
-            .file();
+        let lexemes = builder().operator("->").identifier("int").file();
         let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
         let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
         let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("int", SourceSlice::mock()));
@@ -77,11 +72,7 @@ mod test_parse_return {
 
     #[test]
     fn simple_return_colon_utf_arrow() {
-        let lexemes = builder()
-            .operator("➔")
-            .identifier("int")
-            .colon()
-            .file();
+        let lexemes = builder().operator("➔").identifier("int").colon().file();
         let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
         let (cursor, returns) = parse_return(lexemes.cursor(), &func_name).unwrap();
         let expected = TypeParselet::new(SimpleIdentifierLexeme::from_valid("int", SourceSlice::mock()));
@@ -93,11 +84,7 @@ mod test_parse_return {
     #[should_panic]
     #[allow(unused_must_use)]
     fn return_literal_error() {
-        let lexemes = builder()
-            .operator("->")
-            .literal_bool(true)
-            .colon()
-            .file();
+        let lexemes = builder().operator("->").literal_bool(true).colon().file();
         let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
         parse_return(lexemes.cursor(), &func_name);
     }
@@ -106,15 +93,11 @@ mod test_parse_return {
     #[should_panic]
     #[allow(unused_must_use)]
     fn arrow_only_error() {
-        let lexemes = builder()
-            .operator("->")
-            .colon()
-            .file();
+        let lexemes = builder().operator("->").colon().file();
         let func_name = SimpleIdentifierLexeme::from_valid("my_fun_name", SourceSlice::mock());
         parse_return(lexemes.cursor(), &func_name);
     }
 }
-
 
 #[cfg(test)]
 mod empty_with_endblock {

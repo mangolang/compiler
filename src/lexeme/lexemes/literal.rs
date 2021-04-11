@@ -18,7 +18,7 @@ impl TextLiteralLexeme {
     pub fn new(text: impl AsRef<str>, source: SourceSlice) -> Self {
         TextLiteralLexeme {
             text: ustr(text.as_ref()),
-            source
+            source,
         }
     }
 }

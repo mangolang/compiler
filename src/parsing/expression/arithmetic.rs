@@ -7,8 +7,7 @@ use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
-    let (cursor, operator) = match parse_operator(
-        cursor.fork(), |op| op.is_add_sub()) {
+    let (cursor, operator) = match parse_operator(cursor.fork(), |op| op.is_add_sub()) {
         Ok(ex) => ex,
         Err(_) => return Ok((cursor, left)),
     };

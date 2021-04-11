@@ -20,12 +20,12 @@ pub struct FileParselet {
 
 impl FileParselet {
     pub fn new(
-            imports: Vec<ImportParselet>,
-            entrypoint: Option<EntryPointParselet>,
-            records: SmallVec<[RecordParselet; 1]>,
-            unions: SmallVec<[UnionParselet; 1]>,
-            functions: SmallVec<[FunctionParselet; 1]>,
-            tests: SmallVec<[TestParselet; 1]>,
+        imports: Vec<ImportParselet>,
+        entrypoint: Option<EntryPointParselet>,
+        records: SmallVec<[RecordParselet; 1]>,
+        unions: SmallVec<[UnionParselet; 1]>,
+        functions: SmallVec<[FunctionParselet; 1]>,
+        tests: SmallVec<[TestParselet; 1]>,
     ) -> Self {
         FileParselet {
             imports,

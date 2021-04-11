@@ -17,10 +17,7 @@ pub struct TypedValueParselet {
 
 impl TypedValueParselet {
     pub fn new(name: SimpleIdentifierLexeme, typ: TypeParselet) -> Self {
-        TypedValueParselet {
-            name,
-            typ,
-        }
+        TypedValueParselet { name, typ }
     }
 
     #[cfg(test)]
@@ -40,9 +37,7 @@ pub struct ParametersParselet {
 
 impl ParametersParselet {
     pub fn new(values: ParamParselets) -> Self {
-        ParametersParselet {
-            values
-        }
+        ParametersParselet { values }
     }
 
     pub fn len(&self) -> usize {

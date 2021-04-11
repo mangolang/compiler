@@ -1,7 +1,7 @@
 use crate::lexeme::Lexeme;
-use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::ParseCursor;
 use crate::parselet::body::code_body::CodeBodyParselet;
+use crate::parsing::util::cursor::ParseCursor;
+use crate::parsing::util::{NoMatch, ParseRes};
 
 /// Process from (incl) colon to end of the block, leaving body at lexeme stage.
 pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
@@ -32,7 +32,7 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
 //TODO @mark: any more tests?
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{Dash, GE, EQ};
+    use crate::common::codeparts::operator::Symbol::{Dash, EQ, GE};
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;
@@ -72,17 +72,19 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::new(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .identifier("x")
-            .association(Dash)
-            .literal_int(5)
-            .newline()
-            .build());
+        let expected = CodeBodyParselet::new(
+            builder()
+                .keyword("let")
+                .identifier("x")
+                .assignment()
+                .literal_int(42)
+                .newline()
+                .identifier("x")
+                .association(Dash)
+                .literal_int(5)
+                .newline()
+                .build(),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -104,14 +106,16 @@ mod tests {
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
         let expected = if let Lexeme::Identifier(name) = &lexemes[3] {
             assert_eq!(name.name.as_string(), "f");
-            CodeBodyParselet::new(builder()
-                .identifier("f")
-                .parenthesis_open()
-                .literal_int(42)
-                .parenthesis_close()
-                .newline()
-                .newline()
-                .build())
+            CodeBodyParselet::new(
+                builder()
+                    .identifier("f")
+                    .parenthesis_open()
+                    .literal_int(42)
+                    .parenthesis_close()
+                    .newline()
+                    .newline()
+                    .build(),
+            )
         } else {
             panic!("identifier not at expected position");
         };
@@ -161,41 +165,43 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::new(builder()
-            .keyword("if")
-            .literal_int(2)
-            .operator(GE)
-            .literal_int(1)
-            .colon()
-            .newline()
-            .start_block()
-            .start_block()
-            .keyword("while")
-            .literal_int(0)
-            .operator(EQ)
-            .literal_int(0)
-            .colon()
-            .newline()
-            .start_block()
-            .keyword("if")
-            .literal_text("hi")
-            .operator(EQ)
-            .literal_text("hi")
-            .colon()
-            .newline()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .end_block()
-            .end_block()
-            .keyword("let")
-            .identifier("y")
-            .assignment()
-            .literal_int(37)
-            .newline()
-            .build());
+        let expected = CodeBodyParselet::new(
+            builder()
+                .keyword("if")
+                .literal_int(2)
+                .operator(GE)
+                .literal_int(1)
+                .colon()
+                .newline()
+                .start_block()
+                .start_block()
+                .keyword("while")
+                .literal_int(0)
+                .operator(EQ)
+                .literal_int(0)
+                .colon()
+                .newline()
+                .start_block()
+                .keyword("if")
+                .literal_text("hi")
+                .operator(EQ)
+                .literal_text("hi")
+                .colon()
+                .newline()
+                .keyword("let")
+                .identifier("x")
+                .assignment()
+                .literal_int(42)
+                .newline()
+                .end_block()
+                .end_block()
+                .keyword("let")
+                .identifier("y")
+                .assignment()
+                .literal_int(37)
+                .newline()
+                .build(),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -216,13 +222,15 @@ mod tests {
             .identifier("fake")
             .file();
         let (cursor, entry) = parse_code_body(lexemes.cursor()).unwrap();
-        let expected = CodeBodyParselet::new(builder()
-            .keyword("let")
-            .identifier("x")
-            .assignment()
-            .literal_int(42)
-            .newline()
-            .build());
+        let expected = CodeBodyParselet::new(
+            builder()
+                .keyword("let")
+                .identifier("x")
+                .assignment()
+                .literal_int(42)
+                .newline()
+                .build(),
+        );
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Ok(&builder().keyword("use").build_single()));
     }

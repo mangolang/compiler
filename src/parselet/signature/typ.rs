@@ -1,5 +1,5 @@
-use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::io::slice::SourceSlice;
+use crate::lexeme::identifier::SimpleIdentifierLexeme;
 
 //TODO @mark: keep these representations? or e.g. `()` or `void` or `null`?
 //TODO @mark: should these be special-cased somewhere? at least registered as known identifiers in every file.
@@ -14,9 +14,7 @@ pub struct TypeParselet {
 
 impl TypeParselet {
     pub fn new(typ: SimpleIdentifierLexeme) -> Self {
-        TypeParselet {
-            tmp_type: typ,
-        }
+        TypeParselet { tmp_type: typ }
     }
 
     pub fn void(source: SourceSlice) -> Self {
