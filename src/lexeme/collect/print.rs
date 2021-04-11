@@ -3,7 +3,7 @@ use ::std::fmt::Write;
 use crate::common::debug::ToText;
 use crate::lexeme::Lexeme;
 
-pub fn print_lexemes(lexemes: &Vec<Lexeme>) -> String {
+pub fn print_lexemes(lexemes: &[Lexeme]) -> String {
     if lexemes.is_empty() {
         return "".to_string()
     }
@@ -21,7 +21,7 @@ pub fn print_lexemes(lexemes: &Vec<Lexeme>) -> String {
         }
         indent = print_one_lexeme(&mut text, lexeme, indent);
     }
-    while text.ends_with(" ") || text.ends_with("\n") || text.ends_with("\t") {
+    while text.ends_with(' ') || text.ends_with('\n') || text.ends_with('\t') {
         text.pop();
     }
     text.shrink_to_fit();
@@ -61,14 +61,14 @@ fn print_one_lexeme(mut text: &mut String, lexeme: &Lexeme, mut indent: u32) -> 
         Lexeme::Newline(_) => print_indent(&mut text, indent),
         Lexeme::Unlexable(unlexable) => write!(text, "?{}?", unlexable.to_text()).unwrap(),
     }
-    if !text.ends_with("\n") && !text.ends_with("\t") {
+    if !text.ends_with('\n') && !text.ends_with('\t') {
         write!(text, " ").unwrap()
     }
     indent
 }
 
 fn print_indent(buffer: &mut String, indent: u32) {
-    write!(buffer, "\n").unwrap();
+    writeln!(buffer).unwrap();
     (0..indent).for_each(|_| write!(buffer, "\t").unwrap());
 }
 

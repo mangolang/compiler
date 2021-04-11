@@ -2,6 +2,7 @@ use ::std::ops::Index;
 
 use ::smallvec::SmallVec;
 
+#[cfg(test)]
 use crate::io::slice::SourceSlice;
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::parselet::signature::typ::TypeParselet;
@@ -45,7 +46,7 @@ impl ParametersParselet {
     }
 
     pub fn len(&self) -> usize {
-        return self.values.len()
+        self.values.len()
     }
 }
 

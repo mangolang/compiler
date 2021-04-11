@@ -1,9 +1,9 @@
 use crate::common::codeparts::Keyword;
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
-use crate::parsing::util::{NoMatch, ParseRes};
-use crate::parsing::util::cursor::{End, ParseCursor};
 use crate::parsing::partial::code_body::parse_code_body;
+use crate::parsing::util::{NoMatch, ParseRes};
+use crate::parsing::util::cursor::ParseCursor;
 
 pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet> {
     if let Lexeme::Keyword(keyword) = cursor.take()? {
@@ -30,12 +30,13 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
 #[cfg(test)]
 mod tests {
     use crate::common::codeparts::operator::Symbol::Dash;
+    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::builder;
+    use crate::lexeme::identifier::SimpleIdentifierLexeme;
+    use crate::parselet::body::code_body::CodeBodyParselet;
+    use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::parselet::body::code_body::CodeBodyParselet;
-    use crate::lexeme::identifier::SimpleIdentifierLexeme;
-    use crate::io::slice::SourceSlice;
 
     #[test]
     fn anonymous_nl_endblock() {

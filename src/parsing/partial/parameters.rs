@@ -39,7 +39,7 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
                             names_seen.insert(name.name.into_ustr());
                             params.push(TypedValueParselet::new(name, typ));
                             cursor = typ_cursor;
-                            if let Some(_) = cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()) {
+                            if cursor.take_if(|lexeme| lexeme.is_newline() || lexeme.is_comma()).is_some() {
                                 cursor.skip_while(|lexeme| lexeme.is_newline() || lexeme.is_comma());
                                 continue
                             }
