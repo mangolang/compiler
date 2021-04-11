@@ -1,11 +1,19 @@
 use crate::lexeme::FQIdentifierLexeme;
 use crate::parselet::body::code_body::CodeBodyParselet;
 
-//TODO @mark: lexing
 #[derive(Debug, PartialEq, Eq)]
 pub struct EntryPointParselet {
     name: Option<FQIdentifierLexeme>,
     body: CodeBodyParselet,
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn implement_test() {
+        panic!("FQIdentifierLexeme -> SimpleIdentifierLexeme")
+    }
 }
 
 impl EntryPointParselet {

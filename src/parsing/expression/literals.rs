@@ -38,7 +38,7 @@ mod literal {
     fn text() {
         check(
             builder().literal_text("hello42").file(),
-            literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())),
+            literal(LiteralLexeme::new_text(ustr("hello42"), SourceSlice::mock())),
         );
     }
 
@@ -128,7 +128,7 @@ mod special {
         let lexemes = builder().literal_text("hello42").comma().file();
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_expression(cursor).unwrap();
-        assert_eq!(literal(LiteralLexeme::Text(ustr("hello42"), SourceSlice::mock())), parselet);
+        assert_eq!(literal(LiteralLexeme::new_text(ustr("hello42"), SourceSlice::mock())), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }

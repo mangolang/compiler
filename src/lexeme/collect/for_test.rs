@@ -19,6 +19,7 @@ use crate::lexeme::collect::print::print_lexeme;
 use crate::lexeme::collect::print::print_lexemes;
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
+use crate::lexeme::literal::TextLiteralLexeme;
 
 pub type LexemeGenerator = Box<dyn FnOnce(SourceSlice) -> Lexeme>;
 
@@ -154,7 +155,7 @@ impl TestLexemeBuilder {
     pub fn literal_text(mut self, txt: impl Into<String>) -> Self {
         let txt = txt.into();
         let end = self.add_src(format!("\"{}\"", &txt));
-        let lex = move |src| Lexeme::Literal(LiteralLexeme::Text(ustr(txt.as_ref()), src));
+        let lex = move |src| Lexeme::Literal(LiteralLexeme::new_text(ustr(txt.as_ref()), src));
         self.lexemes.push((end, Box::new(lex)));
         self
     }
@@ -270,7 +271,7 @@ pub fn identifier(txt: &str) -> FQIdentifierLexeme {
 }
 
 pub fn literal_text(txt: impl AsRef<str>) -> LiteralLexeme {
-    LiteralLexeme::Text(ustr(txt.as_ref()), SourceSlice::mock())
+    LiteralLexeme::Text(TextLiteralLexeme::new(ustr(txt.as_ref()), SourceSlice::mock()))
 }
 
 pub fn literal_int(nr: i64) -> LiteralLexeme {

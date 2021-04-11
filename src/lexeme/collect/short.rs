@@ -38,7 +38,7 @@ pub fn keyword_supported(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
 }
 
 pub fn literal_text(txt: impl AsRef<str>, source: SourceSlice) -> Lexeme {
-    Lexeme::Literal(LiteralLexeme::Text(ustr(txt.as_ref()), source))
+    Lexeme::Literal(LiteralLexeme::new_text(ustr(txt.as_ref()), source))
 }
 
 pub fn literal_int(nr: i64, source: SourceSlice) -> Lexeme {

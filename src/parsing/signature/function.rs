@@ -50,8 +50,6 @@ mod test_parse_return {
     use crate::parsing::signature::function::SimpleIdentifierLexeme;
     use crate::parsing::util::cursor::End;
 
-    use super::parse_function;
-
     #[test]
     fn no_return() {
         let lexemes = builder()
@@ -224,7 +222,6 @@ mod simple_body {
         ($($name: ident: $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr,)*) => {
             use crate::lexeme::collect::for_test::builder;
             use crate::parselet::collect::for_test::function;
-            use crate::parsing::util::cursor::End;
             use crate::parsing::signature::function::Symbol::Dash;
 
             use super::parse_function;
