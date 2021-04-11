@@ -10,9 +10,12 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
         if keyword.word == Keyword::Entrypoint {
             let mut name_cursor = cursor.fork();
             let identifier = if let Lexeme::Identifier(identifier) = name_cursor.take()? {
-                let name = identifier.clone();
-                cursor = name_cursor;
-                Some(name)
+                if let Some(simple_identifier) = identifier.to_simple() {
+                    cursor = name_cursor;
+                    Some(simple_identifier)
+                } else {
+                    None
+                }
             } else {
                 None
             };
@@ -31,6 +34,8 @@ mod tests {
 
     use super::*;
     use crate::parselet::body::code_body::CodeBodyParselet;
+    use crate::lexeme::identifier::SimpleIdentifierLexeme;
+    use crate::io::slice::SourceSlice;
 
     #[test]
     fn anonymous_nl_endblock() {
@@ -58,11 +63,8 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
-        } else {
-            panic!("identifier not at expected position");
-        };
+        let entry_name = SimpleIdentifierLexeme::from_valid("my_main_name", SourceSlice::mock());
+        let expected = EntryPointParselet::named(entry_name, CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -91,11 +93,8 @@ mod tests {
             .start_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
-        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(vec![]))
-        } else {
-            panic!("identifier not at expected position");
-        };
+        let entry_name = SimpleIdentifierLexeme::from_valid("my_main_name", SourceSlice::mock());
+        let expected = EntryPointParselet::named(entry_name, CodeBodyParselet::new(vec![]));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }
@@ -206,8 +205,9 @@ mod tests {
             .end_block()
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let entry_name = SimpleIdentifierLexeme::from_valid("my_main_name", SourceSlice::mock());
         let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(name.clone(), CodeBodyParselet::new(builder()
+            EntryPointParselet::named(entry_name, CodeBodyParselet::new(builder()
                 .identifier("f")
                 .parenthesis_open()
                 .literal_int(42)
