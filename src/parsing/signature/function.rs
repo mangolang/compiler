@@ -42,14 +42,52 @@ fn parse_return<'a>(mut cursor: ParseCursor<'a>, name: &SimpleIdentifierLexeme) 
 }
 
 #[cfg(test)]
-mod no_param_no_return {
-    use crate::lexeme::collect::for_test::builder;
-    use crate::parsing::util::cursor::End;
+macro_rules! empty_with_endblock {
+    ($name: ident, $param_inp: expr, $param_outp: expr, $return_inp: expr, $return_outp: expr) => {
+        use crate::lexeme::collect::for_test::builder;
+        use crate::parselet::collect::for_test::function;
+        use crate::parsing::util::cursor::End;
 
+        use super::parse_function;
+
+        #[test]
+        fn $name() {
+            let lexemes = builder()
+                .keyword("fun")
+                .identifier("my_fun_name")
+                .parenthesis_open()
+                .raw($param_inp)
+                .parenthesis_close()
+                .raw($return_inp)
+                .colon()
+                .newline()
+                .start_block()
+                .end_block()
+                .file();
+            let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+            let expected = function("my_fun_name", $param_outp, $return_outp, vec![]);
+            assert_eq!(expected, func);
+            assert_eq!(cursor.peek(), Err(End));
+        }
+    }
+}
+
+#[cfg(test)]
+mod empty_with_endblock2 {
     use ::smallvec::smallvec;
 
-    use super::*;
+    empty_with_endblock!(no_param_no_return, vec![], smallvec![], vec![], "None");
+}
+
+#[cfg(test)]
+mod no_param_no_return2 {
+    use ::smallvec::smallvec;
+
+    use crate::lexeme::collect::for_test::builder;
     use crate::parselet::collect::for_test::function;
+    use crate::parsing::util::cursor::End;
+
+    use super::*;
 
     #[test]
     fn empty_with_endblock() {
@@ -85,26 +123,24 @@ mod no_param_no_return {
         assert_eq!(expected, func);
         assert_eq!(cursor.peek(), Err(End));
     }
-    //
-    // #[test]
-    // fn nl_eof() {
-    //     let lexemes = builder()
-    //         .keyword("fun")
-    //         .identifier("my_fun_name")
-    //         .colon()
-    //         .newline()
-    //         .start_block()
-    //         .file();
-    //     let (cursor, function) = parse_function(lexemes.cursor()).unwrap();
-    //     let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-    //         FunctionParselet::new(name.clone(), CodeBodyParselet::new(vec![]))
-    //     } else {
-    //         panic!("identifier not at expected position");
-    //     };
-    //     assert_eq!(expected, entry);
-    //     assert_eq!(cursor.peek(), Err(End));
-    // }
-    //
+
+    #[test]
+    fn nl_eof() {
+        let lexemes = builder()
+            .keyword("fun")
+            .identifier("my_fun_name")
+            .parenthesis_open()
+            .parenthesis_close()
+            .colon()
+            .newline()
+            .start_block()
+            .file();
+        let (cursor, func) = parse_function(lexemes.cursor()).unwrap();
+        let expected = function("my_fun_name", smallvec![], "None", vec![]);
+        assert_eq!(expected, func);
+        assert_eq!(cursor.peek(), Err(End));
+    }
+
     // #[test]
     // #[should_panic]
     // fn no_nl_after_colon() {
