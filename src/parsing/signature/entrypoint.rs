@@ -77,7 +77,10 @@ mod tests {
             .newline()
             .start_block()
             .file();
-        parse_entrypoint(lexemes.cursor());
+        let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
+        let expected = EntryPointParselet::anonymous(CodeBodyParselet::new(vec![]));
+        assert_eq!(expected, entry);
+        assert_eq!(cursor.peek(), Err(End));
     }
 
     #[test]
@@ -203,18 +206,14 @@ mod tests {
             .file();
         let (cursor, entry) = parse_entrypoint(lexemes.cursor()).unwrap();
         let entry_name = SimpleIdentifierLexeme::from_valid("my_main_name", SourceSlice::mock());
-        let expected = if let Lexeme::Identifier(name) = &lexemes[1] {
-            EntryPointParselet::named(entry_name, CodeBodyParselet::new(builder()
-                .identifier("f")
-                .parenthesis_open()
-                .literal_int(42)
-                .parenthesis_close()
-                .newline()
-                .newline()
-                .build()))
-        } else {
-            panic!("identifier not at expected position");
-        };
+        let expected = EntryPointParselet::named(entry_name, CodeBodyParselet::new(builder()
+            .identifier("f")
+            .parenthesis_open()
+            .literal_int(42)
+            .parenthesis_close()
+            .newline()
+            .newline()
+            .build()));
         assert_eq!(expected, entry);
         assert_eq!(cursor.peek(), Err(End));
     }

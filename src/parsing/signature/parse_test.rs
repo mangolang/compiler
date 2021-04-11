@@ -93,6 +93,7 @@ mod tests {
 
     #[test]
     #[should_panic]
+    #[allow(unused_must_use)]
     fn no_nl_after_colon() {
         let lexemes = builder()
             .keyword("test")

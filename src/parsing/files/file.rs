@@ -10,6 +10,7 @@ use crate::parsing::signature::record::parse_record;
 use crate::parsing::signature::union::parse_union;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::dbg_log;
 
 pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut imports = vec![];
@@ -25,6 +26,9 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
     let mut unions = smallvec![];
     let mut tests = smallvec![];
     loop {
+        cursor.skip_while(|lexeme| lexeme.is_newline());
+        dbg_log!("token at top of parse_file: {:?}", cursor.peek());  //TODO @mark: TEMPORARY! REMOVE THIS!
+
         if let Ok((entry_cursor, entry_parselet)) = parse_entrypoint(cursor.fork()) {
             assert!(entrypoint.is_none());  // for now
             cursor = entry_cursor;
@@ -71,8 +75,8 @@ mod tests {
     use crate::parselet::collect::for_test::{entrypoint, function};
     use crate::parselet::collect::for_test::import_alias;
     use crate::parselet::collect::for_test::param;
-    use crate::parselet::collect::for_test::text_test;
     use crate::parselet::signature::entrypoint::EntryPointParselet;
+    use crate::parselet::collect::for_test::text_test;
 
     use super::*;
 
@@ -198,7 +202,7 @@ mod tests {
             .end_block()
             .file();
         let expected = FileParselet::new(
-            vec![import_alias("pit.text.println", "txt")],
+            vec![import_alias("pit.text.println", "print")],
             Some(entrypoint(None, builder()
                 .identifier("print")
                 .parenthesis_open()
