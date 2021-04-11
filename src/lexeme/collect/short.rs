@@ -10,7 +10,7 @@ use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
+    AssociationLexeme, EndBlockLexeme, FQIdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
 
@@ -21,7 +21,7 @@ pub fn association(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
 }
 
 pub fn identifier(txt: &str, source: SourceSlice) -> MsgResult<Lexeme> {
-    Ok(Lexeme::Identifier(IdentifierLexeme::from_str(txt, source)?))
+    Ok(Lexeme::Identifier(FQIdentifierLexeme::from_str(txt, source)?))
 }
 
 /// Parse a keyword, including reserved keywords for future use.

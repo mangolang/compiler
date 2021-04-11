@@ -1,4 +1,4 @@
-use crate::lexeme::{IdentifierLexeme, Lexeme};
+use crate::lexeme::{FQIdentifierLexeme, Lexeme};
 use crate::parsing::util::cursor::{End, ParseCursor};
 use crate::parsing::util::{NoMatch, ParseRes};
 
@@ -10,7 +10,7 @@ use crate::parsing::util::{NoMatch, ParseRes};
 /// * Declarations of modules, records or functions should be simple (without periods)
 /// * Names of imports are fully qualified (usually, but not always, containing periods)
 /// * Uses of records or functions can either use fully qualified name or simple name.
-pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<IdentifierLexeme> {
+pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<FQIdentifierLexeme> {
     if let Lexeme::Identifier(root_iden) = cursor.take()? {
         //TODO @mark: is this clone needed?
         let mut full_name = root_iden.clone();

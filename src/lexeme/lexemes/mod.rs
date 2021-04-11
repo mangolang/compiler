@@ -1,6 +1,6 @@
 pub use self::association::AssociationLexeme;
 pub use self::end_statement::EndStatementLexeme;
-pub use self::identifier::IdentifierLexeme;
+pub use self::identifier::FQIdentifierLexeme;
 pub use self::keyword::KeywordLexeme;
 pub use self::literal::LiteralLexeme;
 pub use self::operator::OperatorLexeme;

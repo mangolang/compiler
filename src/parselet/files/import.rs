@@ -1,14 +1,14 @@
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
-use crate::lexeme::IdentifierLexeme;
+use crate::lexeme::FQIdentifierLexeme;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct ImportParselet {
-    identifier: IdentifierLexeme,
+    identifier: FQIdentifierLexeme,
     alias: Option<SimpleIdentifierLexeme>,
 }
 
 impl ImportParselet {
-    pub fn new(identifier: IdentifierLexeme, alias: Option<SimpleIdentifierLexeme>) -> Self {
+    pub fn new(identifier: FQIdentifierLexeme, alias: Option<SimpleIdentifierLexeme>) -> Self {
         ImportParselet { identifier, alias }
     }
 

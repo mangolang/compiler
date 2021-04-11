@@ -1,22 +1,22 @@
-use crate::lexeme::IdentifierLexeme;
+use crate::lexeme::FQIdentifierLexeme;
 use crate::parselet::body::code_body::CodeBodyParselet;
 
 //TODO @mark: lexing
 #[derive(Debug, PartialEq, Eq)]
 pub struct EntryPointParselet {
-    name: Option<IdentifierLexeme>,
+    name: Option<FQIdentifierLexeme>,
     body: CodeBodyParselet,
 }
 
 impl EntryPointParselet {
-    pub fn new(name: Option<IdentifierLexeme>, body: CodeBodyParselet) -> Self {
+    pub fn new(name: Option<FQIdentifierLexeme>, body: CodeBodyParselet) -> Self {
         EntryPointParselet {
             name,
             body,
         }
     }
 
-    pub fn named(name: IdentifierLexeme, body: CodeBodyParselet) -> Self {
+    pub fn named(name: FQIdentifierLexeme, body: CodeBodyParselet) -> Self {
         EntryPointParselet {
             name: Some(name),
             body,

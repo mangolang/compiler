@@ -1,4 +1,4 @@
-use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
+use crate::lexeme::{FQIdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
 use crate::parselet::special::UnparseableParselet;
@@ -26,7 +26,7 @@ use crate::parselet::{ExpressionParselets, Parselets};
 //     }
 // }
 
-pub fn variable(lexeme: IdentifierLexeme) -> ExpressionParselets {
+pub fn variable(lexeme: FQIdentifierLexeme) -> ExpressionParselets {
     ExpressionParselets::Variable(VariableParselet::new(lexeme))
 }
 

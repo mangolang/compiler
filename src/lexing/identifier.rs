@@ -21,7 +21,7 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
 mod identifiers {
     use crate::common::codeparts::name::Name;
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{IdentifierLexeme, Lexeme};
+    use crate::lexeme::{FQIdentifierLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
@@ -33,7 +33,7 @@ mod identifiers {
         lex_keyword_identifier(&mut reader, &mut lexer);
         let expected: LexemeCollector = expected_names
             .iter()
-            .map(|n| Lexeme::Identifier(IdentifierLexeme::from_name(Name::new(*n).unwrap(), SourceSlice::mock())))
+            .map(|n| Lexeme::Identifier(FQIdentifierLexeme::from_name(Name::new(*n).unwrap(), SourceSlice::mock())))
             .collect();
         assert_eq!(lexer.lexemes(), &expected);
     }
@@ -138,7 +138,7 @@ mod mixed {
     use crate::common::codeparts::name::Name;
     use crate::common::codeparts::Keyword;
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::{IdentifierLexeme, KeywordLexeme, Lexeme};
+    use crate::lexeme::{FQIdentifierLexeme, KeywordLexeme, Lexeme};
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
@@ -157,7 +157,7 @@ mod mixed {
             &[
                 Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Let, SourceSlice::mock())),
                 Lexeme::Keyword(KeywordLexeme::from_keyword(Keyword::Mut, SourceSlice::mock())),
-                Lexeme::Identifier(IdentifierLexeme::from_name(Name::new("python").unwrap(), SourceSlice::mock())),
+                Lexeme::Identifier(FQIdentifierLexeme::from_name(Name::new("python").unwrap(), SourceSlice::mock())),
                 Lexeme::Keyword(KeywordLexeme::from_keyword(
                     Keyword::Reserved("mango".to_owned()),
                     SourceSlice::mock(),

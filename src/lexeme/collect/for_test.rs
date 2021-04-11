@@ -9,7 +9,7 @@ use crate::dbg_log;
 use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
 use crate::lexeme::{
-    AssociationLexeme, EndBlockLexeme, IdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
+    AssociationLexeme, EndBlockLexeme, FQIdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
@@ -115,7 +115,7 @@ impl TestLexemeBuilder {
     pub fn identifier(mut self, txt: impl Into<String>) -> Self {
         let txt = txt.into();
         let end = self.add_src(&txt);
-        let lex = move |src| Lexeme::Identifier(IdentifierLexeme::from_str(&txt, src).unwrap());
+        let lex = move |src| Lexeme::Identifier(FQIdentifierLexeme::from_str(&txt, src).unwrap());
         self.lexemes.push((end, Box::new(lex)));
         self
     }
@@ -256,8 +256,8 @@ impl TestLexemeBuilder {
     }
 }
 
-pub fn identifier(txt: &str) -> IdentifierLexeme {
-    IdentifierLexeme::from_str(&txt, SourceSlice::mock()).unwrap()
+pub fn identifier(txt: &str) -> FQIdentifierLexeme {
+    FQIdentifierLexeme::from_str(&txt, SourceSlice::mock()).unwrap()
 }
 
 pub fn literal_text(txt: impl AsRef<str>) -> LiteralLexeme {

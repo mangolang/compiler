@@ -9,32 +9,24 @@ use crate::lexeme::Lexeme;
 
 /// An arbitrary identifier, i.e. 'Hello' or 'std.text.regex'.
 #[derive(Debug, Eq, Clone)]
-pub struct IdentifierLexeme {
+pub struct FQIdentifierLexeme {
     pub name: FQN,
     source: SourceSlice,
 }
 
-#[cfg(test)]
-mod to_do {
-    #[test]
-    fn implement_test() {
-        panic!("IdentifierLexeme -> FQIdentifierLexeme");
-    }
-}
-
-impl IdentifierLexeme {
+impl FQIdentifierLexeme {
     pub fn from_str(text: &str, source: SourceSlice) -> MsgResult<Self> {
         let name = FQN::new(text)?;
-        Ok(IdentifierLexeme { name, source })
+        Ok(FQIdentifierLexeme { name, source })
     }
 
     pub fn from_name(name: Name, source: SourceSlice) -> Self {
-        IdentifierLexeme { name: name.into(), source }
+        FQIdentifierLexeme { name: name.into(), source }
     }
 
     //TODO @mark: test
     /// Join two identifiers into one, i.e. 'a.b' & 'c' to 'a.b.c'
-    pub fn join(mut self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> Self {
+    pub fn join(mut self, separator: &PeriodLexeme, addition: &FQIdentifierLexeme) -> Self {
         let addition_name = addition
             .name
             .as_simple_name()
@@ -88,14 +80,14 @@ impl SimpleIdentifierLexeme {
     }
 
     //TODO @mark: test
-    pub fn join(self, separator: &PeriodLexeme, addition: &IdentifierLexeme) -> IdentifierLexeme {
+    pub fn join(self, separator: &PeriodLexeme, addition: &FQIdentifierLexeme) -> FQIdentifierLexeme {
         let fqn = self.into_non_simple();
         fqn.join(separator, addition)
     }
 
     /// Convert the type to `IdentifierLexeme` (does not actually add qualifiers to the name).
-    pub fn into_non_simple(self) -> IdentifierLexeme {
-        IdentifierLexeme {
+    pub fn into_non_simple(self) -> FQIdentifierLexeme {
+        FQIdentifierLexeme {
             name: FQN::from_name(self.name),
             source: self.source,
         }
@@ -104,7 +96,7 @@ impl SimpleIdentifierLexeme {
 
 //TODO @mark: Simple into FQN Into<>
 
-impl PartialEq for IdentifierLexeme {
+impl PartialEq for FQIdentifierLexeme {
     fn eq(&self, other: &Self) -> bool {
         self.name == other.name
     }
@@ -116,25 +108,25 @@ impl PartialEq for SimpleIdentifierLexeme {
     }
 }
 
-impl PartialEq<IdentifierLexeme> for SimpleIdentifierLexeme {
-    fn eq(&self, other: &IdentifierLexeme) -> bool {
+impl PartialEq<FQIdentifierLexeme> for SimpleIdentifierLexeme {
+    fn eq(&self, other: &FQIdentifierLexeme) -> bool {
         other.name.len() == 1 && &self.name == other.name.leaf()
     }
 }
 
-impl PartialEq<SimpleIdentifierLexeme> for IdentifierLexeme {
+impl PartialEq<SimpleIdentifierLexeme> for FQIdentifierLexeme {
     fn eq(&self, other: &SimpleIdentifierLexeme) -> bool {
         self.name.len() == 1 && self.name.leaf() == &other.name
     }
 }
 
-impl hash::Hash for IdentifierLexeme {
+impl hash::Hash for FQIdentifierLexeme {
     fn hash<H: hash::Hasher>(&self, state: &mut H) {
         self.name.hash(state)
     }
 }
 
-impl SourceLocation for IdentifierLexeme {
+impl SourceLocation for FQIdentifierLexeme {
     fn source(&self) -> &SourceSlice {
         &self.source
     }
@@ -146,8 +138,8 @@ impl SourceLocation for SimpleIdentifierLexeme {
     }
 }
 
-impl From<IdentifierLexeme> for Lexeme {
-    fn from(identifier: IdentifierLexeme) -> Self {
+impl From<FQIdentifierLexeme> for Lexeme {
+    fn from(identifier: FQIdentifierLexeme) -> Self {
         Lexeme::Identifier(identifier)
     }
 }

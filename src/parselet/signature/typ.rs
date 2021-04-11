@@ -31,6 +31,6 @@ mod tests {
     #[test]
     fn make_void() {
         let void = TypeParselet::void(SourceSlice::mock());
-        assert_eq!(void.tmp_type.name.as_str(), "none");
+        assert_eq!(void.tmp_type.name.as_str(), "None");
     }
 }

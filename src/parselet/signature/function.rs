@@ -1,6 +1,6 @@
 use ::smallvec::SmallVec;
 
-use crate::lexeme::IdentifierLexeme;
+use crate::lexeme::FQIdentifierLexeme;
 use crate::parselet::body::code_body::CodeBodyParselet;
 use crate::parselet::signature::parameters::ParametersParselet;
 use crate::parselet::signature::typ::TypeParselet;

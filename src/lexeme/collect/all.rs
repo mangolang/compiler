@@ -5,7 +5,7 @@ use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::lexemes::AssociationLexeme;
-use crate::lexeme::lexemes::IdentifierLexeme;
+use crate::lexeme::lexemes::FQIdentifierLexeme;
 use crate::lexeme::lexemes::KeywordLexeme;
 use crate::lexeme::lexemes::LiteralLexeme;
 use crate::lexeme::lexemes::OperatorLexeme;
@@ -22,7 +22,7 @@ use crate::lexeme::special::UnlexableLexeme;
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Lexeme {
     Association(AssociationLexeme),
-    Identifier(IdentifierLexeme),
+    Identifier(FQIdentifierLexeme),
     Keyword(KeywordLexeme),
     Literal(LiteralLexeme),
     Operator(OperatorLexeme),
