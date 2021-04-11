@@ -1,16 +1,15 @@
 use crate::lexeme::{Lexeme, OperatorLexeme};
-use crate::parselet::binary_operation::BinaryOperationParselet;
+use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::call::parse_function_call;
-use crate::parsing::expression::variable::parse_variable;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
 
 pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_multiplication(cursor)?;
-    let (cursor, operator) = match parse_operator(cursor, |op| op.is_add_sub()) {
+    let (cursor, operator) = match parse_operator(cursor.fork(), |op| op.is_add_sub()) {
         Ok(ex) => ex,
-        Err(_) => return Ok((cursor, left)),
+        Err(NoMatch) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_addition(cursor)?;
     Ok((
@@ -21,9 +20,9 @@ pub fn parse_addition(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 
 pub fn parse_multiplication(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (cursor, left) = parse_function_call(cursor)?;
-    let (cursor, operator) = match parse_operator(cursor, |op| op.is_mult_div()) {
+    let (cursor, operator) = match parse_operator(cursor.fork(), |op| op.is_mult_div()) {
         Ok(ex) => ex,
-        Err(_) => return Ok((cursor, left)),
+        Err(NoMatch) => return Ok((cursor, left)),
     };
     let (cursor, right) = parse_multiplication(cursor)?;
     Ok((
@@ -45,22 +44,20 @@ fn parse_operator(mut cursor: ParseCursor, op_test: fn(&OperatorLexeme) -> bool)
 
 #[cfg(test)]
 mod test_util {
-    use crate::lexeme::Lexeme;
+    use crate::lexeme::collect::FileLexemes;
     use crate::parselet::ExpressionParselets;
     use crate::parsing::expression::arithmetic::parse_addition;
-    use crate::parsing::util::cursor::{End, ParseCursor};
+    use crate::parsing::util::cursor::End;
 
-    pub fn check_add(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+    pub fn check_add(lexemes: FileLexemes, expected: ExpressionParselets) {
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
 
-    pub fn check_mul(lexeme: Vec<Lexeme>, expected: ExpressionParselets) {
-        let lexemes = lexeme.into();
-        let cursor = ParseCursor::new(&lexemes);
+    pub fn check_mul(lexemes: FileLexemes, expected: ExpressionParselets) {
+        let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_addition(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
@@ -69,9 +66,9 @@ mod test_util {
 
 #[cfg(test)]
 mod addition {
-    use crate::lexeme::collect::for_test::*;
+    use crate::common::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
 
     use super::test_util::check_add as check;
     use super::*;
@@ -79,7 +76,7 @@ mod addition {
     #[test]
     fn single_addition() {
         check(
-            vec![literal_int(4).into(), operator("+").into(), literal_int(3).into()],
+            builder().literal_int(4).operator("+").literal_int(3).file(),
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
         );
     }
@@ -87,7 +84,7 @@ mod addition {
     #[test]
     fn single_subtraction() {
         check(
-            vec![literal_real(10.).into(), operator("-").into(), literal_real(5.).into()],
+            builder().literal_real(10.).operator("-").literal_real(5.).file(),
             binary(literal(literal_real(10.)), operator(Symbol::Dash), literal(literal_real(5.))),
         );
     }
@@ -95,15 +92,15 @@ mod addition {
     #[test]
     fn multi_addition() {
         check(
-            vec![
-                literal_int(4).into(),
-                operator("+").into(),
-                literal_int(3).into(),
-                operator("+").into(),
-                literal_int(2).into(),
-                operator("+").into(),
-                literal_int(1).into(),
-            ],
+            builder()
+                .literal_int(4)
+                .operator("+")
+                .literal_int(3)
+                .operator("+")
+                .literal_int(2)
+                .operator("+")
+                .literal_int(1)
+                .file(),
             binary(
                 literal(literal_int(4)),
                 operator(Symbol::Plus),
@@ -120,26 +117,26 @@ mod addition {
     #[test]
     fn wrong_types() {
         check(
-            vec![literal_text("hello").into(), operator("-").into(), literal_bool(true).into()],
+            builder().literal_text("hello").operator("-").literal_bool(true).file(),
             binary(literal(literal_text("hello")), operator(Symbol::Dash), literal(literal_bool(true))),
         );
     }
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_addition(cursor);
+        let lexemes = builder().comma().file();
+        let cursor = lexemes.cursor();
+        let parselet = parse_addition(cursor.fork());
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
 
 #[cfg(test)]
 mod multiplication {
-    use crate::lexeme::collect::for_test::*;
+    use crate::common::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
 
     use super::test_util::check_mul as check;
     use super::*;
@@ -147,7 +144,7 @@ mod multiplication {
     #[test]
     fn single_multiplication() {
         check(
-            vec![literal_int(4).into(), operator("*").into(), literal_int(3).into()],
+            builder().literal_int(4).operator("*").literal_int(3).file(),
             binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3))),
         );
     }
@@ -155,7 +152,7 @@ mod multiplication {
     #[test]
     fn single_division() {
         check(
-            vec![literal_real(10.).into(), operator("/").into(), literal_real(5.).into()],
+            builder().literal_real(10.).operator("/").literal_real(5.).file(),
             binary(literal(literal_real(10.)), operator(Symbol::Slash), literal(literal_real(5.))),
         );
     }
@@ -163,15 +160,15 @@ mod multiplication {
     #[test]
     fn multi_multiplication() {
         check(
-            vec![
-                literal_int(4).into(),
-                operator("*").into(),
-                literal_int(3).into(),
-                operator("*").into(),
-                literal_int(2).into(),
-                operator("*").into(),
-                literal_int(1).into(),
-            ],
+            builder()
+                .literal_int(4)
+                .operator("*")
+                .literal_int(3)
+                .operator("*")
+                .literal_int(2)
+                .operator("*")
+                .literal_int(1)
+                .file(),
             binary(
                 literal(literal_int(4)),
                 operator(Symbol::Asterisk),
@@ -188,7 +185,7 @@ mod multiplication {
     #[test]
     fn wrong_types() {
         check(
-            vec![literal_text("hello").into(), operator("/").into(), literal_bool(true).into()],
+            builder().literal_text("hello").operator("/").literal_bool(true).file(),
             binary(
                 literal(literal_text("hello".to_owned())),
                 operator(Symbol::Slash),
@@ -199,35 +196,35 @@ mod multiplication {
 
     #[test]
     fn not_recognized() {
-        let lexemes = vec![comma()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let parselet = parse_addition(cursor);
+        let lexemes = builder().comma().file();
+        let cursor = lexemes.cursor();
+        let parselet = parse_addition(cursor.fork());
         assert!(parselet.is_err());
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }
 
 #[cfg(test)]
 mod mixed {
-    use crate::lexeme::collect::for_test::*;
+    use crate::common::codeparts::eqfloat::f64eq;
+    use crate::common::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, literal_int, literal_real, operator};
     use crate::parselet::short::{binary, literal};
-    use crate::util::codeparts::Symbol;
-    use crate::util::numtype::f64eq;
 
     use super::test_util::check_add;
 
     #[test]
     fn multi_mixed() {
         check_add(
-            vec![
-                literal_real(4.).into(),
-                operator("*").into(),
-                literal_real(3.).into(),
-                operator("-").into(),
-                literal_int(8).into(),
-                operator("/").into(),
-                literal_int(2).into(),
-            ],
+            builder()
+                .literal_real(4.)
+                .operator("*")
+                .literal_real(3.)
+                .operator("-")
+                .literal_int(8)
+                .operator("/")
+                .literal_int(2)
+                .file(),
             binary(
                 binary(
                     literal(literal_real(f64eq(4.))),
@@ -243,43 +240,41 @@ mod mixed {
 
 #[cfg(test)]
 mod special {
-    use crate::lexeme::collect::for_test::*;
+    use crate::common::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, literal_int, operator};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::expression::parse_expression;
     use crate::parsing::util::cursor::End;
-    use crate::util::codeparts::Symbol;
 
     use super::*;
 
     #[test]
     fn empty() {
-        let lexemes = vec![].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let _parselet = parse_addition(cursor);
+        let lexemes = builder().file();
+        let cursor = lexemes.cursor();
+        let _parselet = parse_addition(cursor.fork());
         assert_eq!(Err(End), cursor.peek());
     }
 
     #[test]
     fn leftover() {
-        let lexemes = vec![literal_int(4).into(), operator("+").into(), literal_int(3).into(), comma()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_addition(cursor).unwrap();
+        let lexemes = builder().literal_int(4).operator("+").literal_int(3).comma().file();
+        let (cursor, parselet) = parse_addition(lexemes.cursor()).unwrap();
         assert_eq!(
             binary(literal(literal_int(4)), operator(Symbol::Plus), literal(literal_int(3))),
             parselet
         );
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 
     #[test]
     fn is_expression() {
-        let lexemes = vec![literal_int(4).into(), operator("*").into(), literal_int(3).into(), comma()].into();
-        let cursor = ParseCursor::new(&lexemes);
-        let (cursor, parselet) = parse_expression(cursor).unwrap();
+        let lexemes = builder().literal_int(4).operator("*").literal_int(3).comma().file();
+        let (cursor, parselet) = parse_expression(lexemes.cursor()).unwrap();
         assert_eq!(
-            binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3)),),
+            binary(literal(literal_int(4)), operator(Symbol::Asterisk), literal(literal_int(3))),
             parselet
         );
-        assert_eq!(Ok(&comma()), cursor.peek());
+        assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
 }

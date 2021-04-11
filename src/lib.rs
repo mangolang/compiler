@@ -1,41 +1,23 @@
 //TODO @mark: disable unused stuff later, but currently too much in-progress
-#![allow(unused_variables, dead_code, unused_imports)]
+#![allow(dead_code)]
 
-//use crate::io::fortest::stringreader::StringReader;
-//use crate::lexing::combi_lexer::CombiLexer;
-//use crate::lexing::util::lex_all::lex_all;
-//use crate::parsing::parse_expression;
-use std::io::{Read, Write};
-
-//use crate::lexing::combi_lexer::CombiLexer;
-//use crate::lexing::util::lex_all::lex_all;
-//use crate::parsing::parse_expression;
+pub use crate::orchestrate::mango_file_to_ir;
+pub use crate::orchestrate::mango_str_to_ir;
 
 // Utilities
 pub(crate) mod common;
 pub(crate) mod io;
-pub(crate) mod util;
 
 // Types
 pub(crate) mod ir;
+pub(crate) mod lexeme;
 pub(crate) mod parselet;
 pub(crate) mod sem;
 
-pub(crate) mod lexeme;
+// Operations
 pub(crate) mod lexing;
 pub(crate) mod parsing;
-
-// Operations
-pub(crate) mod optimizing;
-pub(crate) mod reducing;
 pub(crate) mod semanticating;
 pub(crate) mod typing;
 
-pub(crate) mod towasm;
-
-pub fn run<R: Read, O: Write, E: Write>(_source: &str, _inp: &R, _out: &O, _err: &E) {
-    //    let lex = lex_all(&mut CombiLexer::new(Box::new(StringReader::new(source.to_owned()))));
-    //
-    //    //TODO @mark: use result
-    //    parse_expression(lex);
-}
+mod orchestrate;

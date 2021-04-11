@@ -3,9 +3,12 @@
 
 pub use self::parse::parse;
 
+pub mod body;
 pub mod expression;
-mod parse;
+pub mod files;
+pub mod parse;
 pub mod partial;
+pub mod signature;
 pub mod util;
 
 #[cfg(test)]

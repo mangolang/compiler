@@ -1,10 +1,10 @@
 use ::std::hash;
 
+use crate::common::codeparts::Symbol;
+use crate::common::debug::ToText;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
-use crate::util::codeparts::Symbol;
-use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -38,6 +38,7 @@ impl AssociationLexeme {
             Symbol::Dash => true,
             Symbol::Asterisk => true,
             Symbol::Slash => true,
+            Symbol::Percent => true,
             Symbol::Exclamation => unimplemented!(),
             Symbol::Question => unimplemented!(),
             // Binary boolean operators are not allowed before '='
@@ -46,6 +47,7 @@ impl AssociationLexeme {
             Symbol::EQ => false,
             Symbol::LE => false,
             Symbol::GE => false,
+            Symbol::RightArrow => false,
         };
         if !is_valid {
             return Err(ErrMsg::new(format!(

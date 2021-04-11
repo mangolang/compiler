@@ -1,13 +1,9 @@
-use smallvec::SmallVec;
-
-// use crate::common::error::{ErrMsg, MsgResult};
-// use crate::util::codeparts::Keyword;
-// use crate::util::numtype::f64eq;
-// use crate::parselet::{Parselets, UnparseableParselet, ExpressionParselets, LiteralParselet};
-use crate::lexeme::{IdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
+use crate::lexeme::{FQIdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
-use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, UnparseableParselet, VariableParselet};
+use crate::parselet::special::UnparseableParselet;
+use crate::parselet::terminal::{LiteralParselet, VariableParselet};
+use crate::parselet::{ExpressionParselets, Parselets};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
 //     Ok(Parselets::Association(AssociationParselet::from_str(txt)?))
@@ -30,7 +26,7 @@ use crate::parselet::{ExpressionParselets, LiteralParselet, Parselets, Unparseab
 //     }
 // }
 
-pub fn variable(lexeme: IdentifierLexeme) -> ExpressionParselets {
+pub fn variable(lexeme: FQIdentifierLexeme) -> ExpressionParselets {
     ExpressionParselets::Variable(VariableParselet::new(lexeme))
 }
 

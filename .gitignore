@@ -8,10 +8,10 @@ __pycache__/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Kotlin template
-# Compiled class file
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
 # BlueJ files
@@ -147,10 +147,10 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
+# Yarn Integrity files
 .yarn-integrity
 
-# dotenv environment variables file
+# dotenv environment variables files
 .env
 
 ### CUSTOM CHANGES ###

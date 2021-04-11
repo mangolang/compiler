@@ -29,7 +29,7 @@ macro_rules! try_lex (
     };
 );
 
-/// Lexes a whole source file and returns the lexemes.
+/// Lexes a whole source files and returns the lexemes.
 pub fn lex(source: &SourceFile) -> FileLexemes {
     //TODO performance: does this initial capacity make sense?
     let mut reader = SourceReader::new(source);
@@ -53,14 +53,14 @@ pub fn lex(source: &SourceFile) -> FileLexemes {
 
 #[cfg(test)]
 mod try_lex {
-    use crate::lexeme::collect::for_test::unlexable;
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexing::reader::typ::Reader;
     use crate::lexing::tests::create_lexer;
 
     use super::*;
 
     fn lex_fn_match(_reader: &mut impl Reader, lexer: &mut impl Lexer) {
-        lexer.add(unlexable("hi"))
+        lexer.add(builder().unlexable("hi").build_single())
     }
 
     fn lex_fn_no_match(_reader: &mut impl Reader, _lexer: &mut impl Lexer) {}

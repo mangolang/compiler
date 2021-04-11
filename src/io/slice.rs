@@ -2,7 +2,7 @@ use ::std::fmt;
 
 use super::source::SourceFile;
 
-/// A piece of the source, that can be shown together with it's context.
+/// A piece of the source, that can be shown together with its context.
 // Note: There was quite some investigation into avoiding Rc here:
 // * Using lifetimes is a problem because it indirectly needs to be in the same struct
 //   as SourceFile, for example as part of parse errors. Which makes the parent immutable,
@@ -12,7 +12,7 @@ use super::source::SourceFile;
 //   it does not guarantee it will stay alive; it's applicable for self-referential types,
 //   which this is not.
 // Therefore Rc is used for the foreseeable future. Don't leak slices or create cycles,
-// otherwise the file won't drop.
+// otherwise the files won't drop.
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct SourceSlice {
     file: SourceFile,
@@ -50,7 +50,7 @@ impl SourceSlice {
 
     /// If the first slice (`self`) is right before the second (`other`), they are combined
     /// into a new slice. If they are not adjacent, an (empty) error is returned.
-    pub fn join(mut self, other: SourceSlice) -> Result<SourceSlice, ()> {
+    pub fn join(mut self, other: &SourceSlice) -> Result<SourceSlice, ()> {
         if self.end == other.start || self.end + 1 == other.start {
             self.end = other.end;
             return Ok(self);
@@ -63,7 +63,7 @@ impl SourceSlice {
         SourceSlice {
             file: SourceFile::mock("[mock]"),
             start: 0,
-            end: 6,
+            end: 1,
         }
     }
 }
@@ -149,7 +149,7 @@ mod tests {
     #[test]
     fn join_adjacent() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 5).join(f.slice(6, 9)).unwrap();
+        let s = f.slice(1, 5).join(&f.slice(6, 9)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(9, s.end);
     }
@@ -157,7 +157,7 @@ mod tests {
     #[test]
     fn join_overlap() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 3).join(f.slice(3, 5)).unwrap();
+        let s = f.slice(1, 3).join(&f.slice(3, 5)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(5, s.end);
     }
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn join_empty() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 1).join(f.slice(1, 1)).unwrap();
+        let s = f.slice(1, 1).join(&f.slice(1, 1)).unwrap();
         assert_eq!(1, s.start);
         assert_eq!(1, s.end);
     }
@@ -173,7 +173,7 @@ mod tests {
     #[test]
     fn disjoint_join() {
         let f = SourceFile::mock("hello world!");
-        let s = f.slice(1, 3).join(f.slice(5, 5));
+        let s = f.slice(1, 3).join(&f.slice(5, 5));
         assert!(s.is_err());
     }
 }

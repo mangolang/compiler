@@ -2,7 +2,7 @@
 name = "mangolib"
 description = "The Mango programming language (front-end library) (UNDER CONSTRUCTION)"
 # Note: until version 0.4.0, the crates.io 'mango' crate was what since 0.5.0 is 'mangolib'
-version = "0.5.0"
+version = "0.6.0"
 authors = ["Mark <mverleg.noreply@gmail.com>"]
 homepage = "https://mangocode.org/"
 license = "Apache-2.0"
@@ -28,14 +28,15 @@ path = "src/lib.rs"
 mango_ir = "0.1.0"
 scoped_name = "0.2.0"
 #nom = "^6.0.0-alpha1"
-regex = "1.4.2"
+regex = "1.4.5"
 ustr = "0.7.0"
 lazy_static = "1.4.0"
-derive-new = "0.5.8"
+derive-new = "0.5.9"
 #cargo-wasm = "0.4.*"
 #wasm-bindgen = "^0.2.63"
 #itertools = "^0.8.2"  # TODO @mark: unused?
-smallvec = { version = "1.6.0", features = ["union"] }
+# #TODO @mark: this one: smallvec = { version = "1.6.1", features = ["union"] }
+smallvec = { version = "1.6.1" }
 #indoc = "^0.3.5"
 #parity-wasm = "^0.41.0"
 

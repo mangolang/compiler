@@ -1,10 +1,10 @@
 use ::std::hash;
 
-use crate::io::slice::SourceSlice;
-use crate::util::encdec::ToText;
+use crate::common::debug::ToText;
+use crate::io::slice::{SourceLocation, SourceSlice};
 
-/// End of statement.
-/// Strictly, this doesn't always end a statement, e.g. if it follows a continuation.
+/// End of body.
+/// Strictly, this doesn't always end a body, e.g. if it follows a continuation.
 #[derive(Debug, Eq, Clone)]
 pub enum EndStatementLexeme {
     EndLine(SourceSlice),
@@ -41,8 +41,17 @@ impl EndStatementLexeme {
 }
 
 impl ToText for EndStatementLexeme {
-    // Currently always print newlines; keeping original formatting is not a priority
+    // Currently, always print newlines; keeping original formatting is not a priority
     fn to_text(&self) -> String {
-        "\n".to_owned()
+        ";\n".to_owned()
+    }
+}
+
+impl SourceLocation for EndStatementLexeme {
+    fn source(&self) -> &SourceSlice {
+        match self {
+            EndStatementLexeme::EndLine(src) => src,
+            EndStatementLexeme::Semicolon(src) => src,
+        }
     }
 }

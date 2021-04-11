@@ -1,7 +1,7 @@
-use crate::parselet::function_call::FunctionCallParselet;
 use crate::parselet::node::array_indexing::ArrayIndexingParselet;
 use crate::parselet::node::assignment::AssignmentParselet;
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
+use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parselet::node::unary_operation::UnaryOperationParselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;
@@ -29,7 +29,8 @@ mod statical {
     use crate::parselet::node::binary_operation::BinaryOperationParselet;
     use crate::parselet::node::function_call::FunctionCallParselet;
     use crate::parselet::node::unary_operation::UnaryOperationParselet;
-    use crate::parselet::{ExpressionParselets, LiteralParselet, VariableParselet};
+    use crate::parselet::terminal::{LiteralParselet, VariableParselet};
+    use crate::parselet::ExpressionParselets;
 
     #[test]
     fn size() {
@@ -43,11 +44,9 @@ mod statical {
         println!("AssignmentParselet: {}", mem::size_of::<AssignmentParselet>());
         assert!(
             expression_size <= 6 * 8,
-            format!(
-                "size is {} bytes or {} words",
-                expression_size,
-                (expression_size + word_size - 1) / word_size
-            )
+            "size is {} bytes or {} words",
+            expression_size,
+            (expression_size + word_size - 1) / word_size,
         );
     }
 }

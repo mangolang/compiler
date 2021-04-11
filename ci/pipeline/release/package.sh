@@ -2,7 +2,7 @@
 
 source "${BASH_SOURCE%/*}/../shared.sh"
 
-# Attempt to fix file permissions.
+# Attempt to fix files permissions.
 # https://stackoverflow.com/a/29584184
 CHECK_NIGHTLY bash -c 'chown -R `stat -c "%u:%g" /release` /release'
 

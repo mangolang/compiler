@@ -7,7 +7,7 @@ use ::ustr::Ustr;
 
 use crate::io::slice::SourceSlice;
 
-/// A source 'file'. Does not have to be a file on disk, could be e.g. a string or web page.
+/// A source 'files'. Does not have to be a files on disk, could be e.g. a string or web page.
 /// Source is intentionally loaded into memory in its entirety. This is done because
 /// so that all further lexemes can refer to slices of the source, without allocating strings.
 // Feel free to clone this when needed, it's just a wrapper for an Rc version.
@@ -21,7 +21,7 @@ pub struct SourceFile {
 pub struct SourceFileContent {
     /// Any string that identifies the source in a unique and understandable way.
     source_identifier: Ustr,
-    /// The content in the source 'file'.
+    /// The content in the source 'files'.
     pub(super) data: String,
 }
 
@@ -44,7 +44,7 @@ impl SourceFile {
     pub fn mock(text: impl Into<String>) -> Self {
         let text = text.into();
         SourceFileContent {
-            source_identifier: ustr(&format!("mock-file:{}", &text)),
+            source_identifier: ustr(&format!("mock-files:{}", &text)),
             data: text,
         }
         .into()

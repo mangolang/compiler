@@ -1,9 +1,9 @@
 use ::std::hash;
 
+use crate::common::codeparts::Symbol;
+use crate::common::debug::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;
-use crate::util::codeparts::Symbol;
-use crate::util::encdec::ToText;
 
 /// Equals symbol, which is used for associating a value with an identifier.
 /// Also in-place operations like *=, += etc.
@@ -37,6 +37,10 @@ impl OperatorLexeme {
     pub fn is_mult_div(&self) -> bool {
         self.symbol == Symbol::Asterisk || self.symbol == Symbol::Slash
     }
+
+    pub fn symbol(&self) -> &Symbol {
+        &self.symbol
+    }
 }
 
 impl PartialEq for OperatorLexeme {
@@ -65,6 +69,6 @@ impl SourceLocation for OperatorLexeme {
 
 impl ToText for OperatorLexeme {
     fn to_text(&self) -> String {
-        format!(" {} ", self.symbol)
+        format!("{}", self.symbol)
     }
 }

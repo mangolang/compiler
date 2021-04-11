@@ -1,10 +1,11 @@
 use ::std::fmt;
 
+use crate::common::debug::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
 use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
 use crate::lexeme::lexemes::AssociationLexeme;
-use crate::lexeme::lexemes::IdentifierLexeme;
+use crate::lexeme::lexemes::FQIdentifierLexeme;
 use crate::lexeme::lexemes::KeywordLexeme;
 use crate::lexeme::lexemes::LiteralLexeme;
 use crate::lexeme::lexemes::OperatorLexeme;
@@ -14,7 +15,6 @@ use crate::lexeme::separators::ColonLexeme;
 use crate::lexeme::special::EndBlockLexeme;
 use crate::lexeme::special::StartBlockLexeme;
 use crate::lexeme::special::UnlexableLexeme;
-use crate::util::encdec::ToText;
 
 //TODO @mark: pass code slice along with lexeme
 
@@ -22,7 +22,7 @@ use crate::util::encdec::ToText;
 #[derive(PartialEq, Eq, Hash, Clone)]
 pub enum Lexeme {
     Association(AssociationLexeme),
-    Identifier(IdentifierLexeme),
+    Identifier(FQIdentifierLexeme),
     Keyword(KeywordLexeme),
     Literal(LiteralLexeme),
     Operator(OperatorLexeme),
@@ -30,7 +30,7 @@ pub enum Lexeme {
     ParenthesisClose(ParenthesisCloseLexeme),
     BracketOpen(BracketOpenLexeme),
     BracketClose(BracketCloseLexeme),
-    // EndStatement(EndStatementLexeme),
+    //EndStatement(EndStatementLexeme),
     StartBlock(StartBlockLexeme),
     EndBlock(EndBlockLexeme),
     Colon(ColonLexeme),
@@ -42,9 +42,16 @@ pub enum Lexeme {
 }
 
 impl Lexeme {
-    // Note: if one day there are many is_* and as_* methods, find or write a macro.
     pub fn is_newline(&self) -> bool {
         matches!(self, Lexeme::Newline(_))
+    }
+
+    pub fn is_comma(&self) -> bool {
+        matches!(self, Lexeme::Comma(_))
+    }
+
+    pub fn is_block_boundary(&self) -> bool {
+        matches!(self, Lexeme::StartBlock(_)) || matches!(self, Lexeme::EndBlock(_))
     }
 }
 
@@ -60,7 +67,7 @@ impl SourceLocation for Lexeme {
             Lexeme::ParenthesisClose(parenthesis_close) => parenthesis_close.source(),
             Lexeme::BracketOpen(parenthesis_open) => parenthesis_open.source(),
             Lexeme::BracketClose(parenthesis_close) => parenthesis_close.source(),
-            //Lexemes::EndStatement(end_statement) => end_statement.source(),
+            //Lexeme::EndStatement(end_statement) => end_statement.source(),
             Lexeme::StartBlock(start_block) => start_block.source(),
             Lexeme::EndBlock(end_block) => end_block.source(),
             Lexeme::Colon(colon) => colon.source(),
@@ -85,7 +92,7 @@ impl fmt::Debug for Lexeme {
             Lexeme::ParenthesisClose(_parenthesis_close) => write!(f, "')'"),
             Lexeme::BracketOpen(_parenthesis_open) => write!(f, "'['"),
             Lexeme::BracketClose(_parenthesis_close) => write!(f, "']'"),
-            //Lexemes::EndStatement(end_statement) => write!(f, "end_statement"),
+            //Lexeme::EndStatement(end_statement) => write!(f, ";"),
             Lexeme::StartBlock(_start_block) => write!(f, "start_block"),
             Lexeme::EndBlock(_end_block) => write!(f, "end_block"),
             Lexeme::Colon(_colon) => write!(f, ":"),
@@ -109,6 +116,6 @@ mod tests {
     #[test]
     fn test_lexemes_size() {
         //TODO @mark: is this limit too high?
-        assert!(size_of::<Lexeme>() <= 8 * LONG_SIZE, size_of::<Lexeme>());
+        assert!(size_of::<Lexeme>() <= 8 * LONG_SIZE, "{}", size_of::<Lexeme>());
     }
 }

@@ -32,7 +32,7 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     while let ReaderResult::Match(more_src) = reader.direct_match(&*INDENT_RE) {
         line_indent += 1;
         //TODO @mark: need test coverage for this source slice thing
-        source = source.join(more_src).unwrap()
+        source = source.join(&more_src).unwrap()
     }
 
     // Determine the lexemes to create.
@@ -51,7 +51,7 @@ pub fn lex_indents(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 #[cfg(test)]
 mod indents {
     use crate::io::slice::SourceSlice;
-    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::{EndBlockLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
@@ -69,7 +69,7 @@ mod indents {
 
     #[test]
     fn increase() {
-        check(0, "\t    hello", &[start_block(), start_block()]);
+        check(0, "\t    hello", &builder().start_block().start_block().build());
     }
 
     #[test]

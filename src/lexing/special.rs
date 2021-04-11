@@ -16,12 +16,12 @@ pub fn lex_unlexable(reader: &mut impl Reader, lexer: &mut impl Lexer) {
     lexer.add(Lexeme::Unlexable(UnlexableLexeme::from_source(source)));
 }
 
-/// Check whether the end of file has been reached (true if EOF).
+/// Check whether the end of files has been reached (true if EOF).
 pub fn lex_eof(reader: &mut impl Reader) -> bool {
     if let ReaderResult::Match(whitespace) = reader.direct_peek(&*EMPTY_RE) {
         debug_assert!(whitespace.len() <= reader.remaining_len());
         if whitespace.len() == reader.remaining_len() {
-            // End of file has been reached (the rest is all whitespace)
+            // End of files has been reached (the rest is all whitespace)
             return true;
         }
     }
@@ -36,12 +36,14 @@ mod unlexable {
     use crate::lexing::tests::create_lexer;
 
     use super::lex_unlexable;
+    use crate::lexeme::collect::FileLexemes;
 
     #[test]
     fn letter() {
         let (_source, mut reader, mut lexer) = create_lexer("abc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_lexemes(), vec![unlexable(SourceFile::mock("a").slice(0, 1))].into());
+        let expected = FileLexemes::new(vec![unlexable(SourceFile::mock("a").slice(0, 1))]);
+        assert_eq!(lexer.into_lexemes(), expected);
     }
 
     #[test]
@@ -49,7 +51,8 @@ mod unlexable {
         // Newline is a partial case, because normally regex's '.' does not match it.
         let (_source, mut reader, mut lexer) = create_lexer("\nabc");
         lex_unlexable(&mut reader, &mut lexer);
-        assert_eq!(lexer.into_lexemes(), vec![unlexable(SourceFile::mock("\n").slice(0, 1))].into());
+        let expected = FileLexemes::new(vec![unlexable(SourceFile::mock("\n").slice(0, 1))]);
+        assert_eq!(lexer.into_lexemes(), expected);
     }
 }
 

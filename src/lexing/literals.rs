@@ -7,12 +7,9 @@ use crate::lexeme::collect::short::literal_real;
 use crate::lexeme::collect::short::literal_text;
 use crate::lexing::lexer::Lexer;
 use crate::lexing::reader::typ::{Reader, ReaderResult};
-use crate::util::parsetxt::int::parse_int;
-use crate::util::parsetxt::int::INT_RE;
-use crate::util::parsetxt::real::parse_real;
-use crate::util::parsetxt::real::REAL_RE;
-use crate::util::parsetxt::text::parse_single_quote;
-use crate::util::parsetxt::text::SINGLE_QUOTE_RE;
+use crate::lexing::util::int::{parse_int, INT_RE};
+use crate::lexing::util::real::{parse_real, REAL_RE};
+use crate::lexing::util::text::{parse_single_quote, SINGLE_QUOTE_RE};
 
 lazy_static! {
     // TODO maybe these will be constants instead of keywords one day
@@ -65,7 +62,6 @@ mod test_util {
     use crate::lexeme::Lexeme;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
-    use crate::util::strtype::typ::StrType;
 
     use super::lex_literal;
 
@@ -78,7 +74,7 @@ mod test_util {
 
 #[cfg(test)]
 mod constants {
-    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::collect::for_test::literal_bool;
 
     use super::test_util::check;
 
@@ -124,8 +120,7 @@ mod constants {
 
 #[cfg(test)]
 mod int {
-    use crate::lexeme::collect::for_test::*;
-    use crate::util::strtype::typ::StrType;
+    use crate::lexeme::collect::for_test::literal_int;
 
     use super::test_util::check;
 
@@ -203,7 +198,7 @@ mod int {
 
 #[cfg(test)]
 mod real {
-    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::collect::for_test::literal_real;
 
     use super::test_util::check;
 
@@ -262,7 +257,7 @@ mod real {
 
 #[cfg(test)]
 mod text {
-    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::collect::for_test::literal_text;
 
     use super::test_util::check;
 
@@ -331,7 +326,7 @@ mod text {
 
 #[cfg(test)]
 mod exhaustion {
-    use crate::lexeme::collect::for_test::*;
+    use crate::lexeme::collect::for_test::{literal_bool, literal_int, literal_real, literal_text};
 
     use super::test_util::check;
 
