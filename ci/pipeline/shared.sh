@@ -44,7 +44,7 @@ then
     printf 'release name: %s\n' "$RELEASE_NAME"
     RELEASE_PATH="$(pwd)/artifact/$RELEASE_NAME"
     # This `if` makes sure cleanup only happens in the first Github Action step.
-    if is_first_run; then
+    if $is_first_run; then
         rm -rf "${RELEASE_PATH:?}"
     fi
     # shellcheck disable=SC2174
