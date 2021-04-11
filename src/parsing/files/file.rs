@@ -94,7 +94,7 @@ mod tests {
             .parenthesis_close()
             .newline()
             .end_block()
-            .newline()
+            .keyword("use")
             .file();
         let expected = FileParselet::new(
             vec![],
@@ -112,7 +112,7 @@ mod tests {
         );
         let (end_cursor, parselet) = parse_file(lexemes.cursor()).unwrap();
         assert_eq!(expected, parselet);
-        assert_eq!(Ok(&builder().newline().build_single()), end_cursor.peek());
+        assert_eq!(Ok(&builder().keyword("use").build_single()), end_cursor.peek());
     }
 
     #[test]
@@ -217,7 +217,7 @@ mod tests {
                 .build())),
             smallvec![],
             smallvec![],
-            smallvec![function("", smallvec![param("x", "int"), param("y", "int")], "int", builder()
+            smallvec![function("gcd", smallvec![param("x", "int"), param("y", "int")], "int", builder()
                 .keyword("while")
                 .identifier("y")
                 .operator(GT)
@@ -255,6 +255,7 @@ mod tests {
                 .parenthesis_close()
                 .operator("==")
                 .literal_int(20)
+                .newline()
                 .build())],
         );
         let parselet = parse_file(lexemes.cursor()).unwrap().1;
