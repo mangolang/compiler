@@ -76,6 +76,7 @@ There are multiple levels of compiled-ness, each with it's own cache invalidatio
 
 * IR: body and dependencies type-checked.
 
+    * At this point, bi-directional dependencies are known. Which is important for cache invalidation.
     * Dependencies must be at this same level before it can start.
     * Types checked, including lifetimes.
     * Cache key is file's + signature.
@@ -110,5 +111,13 @@ These are the main data locations:
     * Must be a mechanism to wake up a task after all its dependencies are done. Either callbacks or just careful push order.
     * Tasks must be idempotent, so when a task is needed it can just be added without checking if it exists.
     * Implemented as concurrent queue, not persisted
+
+Some thoughts:
+
+* Cache invalidation relies on bi-directional dependencies. Different levels of invalidation, corresponding to levels: signature, binary api, inlined.
+* Number of references for inlining etc should be counted per project, but the cache is shared.
+* How would this work with profile-guided optimization?
+* Cache format is not stable between compiler versions; new compiler = clean compile. But metadata should probably remain readable, to know the version etc.
+* How and when is disp space reclaimed?
 
 
