@@ -35,6 +35,8 @@ Intermediate results are kept in memory and on disk, for several reasons:
 * Build in steps so as to only compile what is used
 * Share cache between projects (on one machine, or in CI)
 
+So note that code is only compiled when needed. Which in turn means that a program can be valid if it contains unused parts that would be invalid if they were used (in practise, just no guarantees about such code, it may be accepted or rejected).
+
 Disk
 ...............................
 
@@ -53,13 +55,42 @@ For the project itself, there is only `target`, which contains a bunch of `envir
 Levels
 ...............................
 
-There are multiple levels of compiled-ness:
+*Note: at a later point, this will also include macros.*
+
+*Note: this is for functions; maybe records and unions work differently.*
+
+There are multiple levels of compiled-ness, each with it's own cache invalidation:
 
 * Unvisited file.
 * File's signatures parsed, bodies lexed.
-* References in body resolved, type checked.
+
+    * Only reached when a file is imported and referenced
+    * Triggered when imported, only referenced unit(s) compiled further.
+    * Timestamp can be cache key. Is anything cached beyond source?
+
+* Body parsed, references to dependencies known.
+
+    * Dependencies are known but may not be at this stage yet.
+    * Level is necessary: previous level does not know dependencies, next level must know dependency types. Something must be inbetween while awaiting dependency compile.
+    * Perhaps no caching at this level.
+
+* IR: body and dependencies type-checked.
+
+    * Dependencies must be at this same level before it can start.
+    * Types checked, including lifetimes.
+    * Cache key is file's + signature.
+
 * Inlined / optimized.
+
+    * Some optimizations like inlining can change or remove binary interface, so separate stage.
+    * Cache: difficult - could be worth caching because slow, but optimizations depend on other modules (i.e. nr of call sites).
+    * Still in same IR format.
+
 * Compiled to target X.
+
+    * Not sure if this is per function etc. Perhaps it's per package, or everthing together.
+    * Note there could be several of these if several targets, so add some param.
+    * Perhaps not a separate step for optimizing, no purpose to separate.
 
 Structure
 ...............................
@@ -76,6 +107,8 @@ These are the main data locations:
 * A queue of all the tasks
 
     * Values are tasks to increment a code unit's level by one (i.e. parse, type-check...)
+    * Must be a mechanism to wake up a task after all its dependencies are done. Either callbacks or just careful push order.
+    * Tasks must be idempotent, so when a task is needed it can just be added without checking if it exists.
     * Implemented as concurrent queue, not persisted
 
 
