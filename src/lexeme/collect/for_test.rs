@@ -3,7 +3,6 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::eqfloat::f64eq;
 use crate::common::codeparts::{Keyword, Symbol};
 use crate::dbg_log;
 use crate::io::slice::SourceSlice;

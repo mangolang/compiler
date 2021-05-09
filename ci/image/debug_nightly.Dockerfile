@@ -10,7 +10,7 @@ COPY rustfmt.toml Cargo.toml Cargo.lock ./
 COPY src src
 
 # This makes sure things are rebuilt
-RUN bash -c 'touch -c src/main.rs; touch -c src/lib.rs'
+RUN bash -c 'touch -c src/lib.rs'
 
 # Build the code (debug mode)
 RUN cargo build --all-targets --all-features

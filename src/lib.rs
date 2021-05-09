@@ -9,7 +9,6 @@ pub(crate) mod common;
 pub(crate) mod io;
 
 // Types
-pub(crate) mod ir;
 pub(crate) mod lexeme;
 pub(crate) mod parselet;
 pub(crate) mod sem;
