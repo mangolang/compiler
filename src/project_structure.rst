@@ -50,6 +50,32 @@ The dependencies are stored in a user-wide directly (so shared between projects 
 
 For the project itself, there is only `target`, which contains a bunch of `environment`s.
 
+Levels
+...............................
+
+There are multiple levels of compiled-ness:
+
+* Unvisited file.
+* File's signatures parsed, bodies lexed.
+* References in body resolved, type checked.
+* Inlined / optimized.
+* Compiled to target X.
+
 Structure
 ...............................
+
+These are the main data locations:
+
+* The current state is in a big map
+
+    * The key identifies a version of a file (path, but also compiler flags etc).
+    * The value represents the code units in the file in various stages of compiled-ness.
+    * The whole value is RwLock-ed. Care must be taken with cyclic dependencies.
+    * The map can live partly in memory (concurrent map) and partly on disk (when to big, or on shutdown).
+
+* A queue of all the tasks
+
+    * Values are tasks to increment a code unit's level by one (i.e. parse, type-check...)
+    * Implemented as concurrent queue, not persisted
+
 
