@@ -3,8 +3,8 @@
 
 pub use ::mango_ir as ir;
 
-pub use crate::orchestrate::mango_file_to_ir;
-pub use crate::orchestrate::mango_str_to_ir;
+// pub use crate::orchestrate::mango_file_to_ir;
+// pub use crate::orchestrate::mango_str_to_ir;
 
 // Utilities
 pub(crate) mod common;
