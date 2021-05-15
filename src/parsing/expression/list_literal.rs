@@ -10,6 +10,8 @@ pub fn parse_list_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> 
         Ok(ex) => ex,
         Err(NoMatch) => return Err(NoMatch),
     };
+    todo!("parse_addition");  //TODO @mark: TEMPORARY! REMOVE THIS!
+    //TODO @mark: fallback should be parse_addition(cursor)
     let (cursor, _right) = parse_bracket_close(cursor)?;
     Ok((cursor, expression))
 }

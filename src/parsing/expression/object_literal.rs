@@ -4,16 +4,16 @@ use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::grouping::parse_parenthesised_group;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::expression::list_literal::parse_list_literal;
+use crate::parsing::expression::map_literal::parse_map_literal;
 
-pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
+pub fn parse_object_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     // let mut literal_cursor = cursor.fork();
     // if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
     //     let literal = literal_lexeme.clone();
     //     return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
     // }
     // parse_parenthesised_group(cursor)
-    parse_list_literal(cursor);
+    parse_map_literal(cursor);
     unimplemented!()  //TODO @mark:
 }
 

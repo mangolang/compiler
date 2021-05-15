@@ -1,7 +1,7 @@
 use crate::lexeme::Lexeme;
 use crate::parselet::terminal::VariableParselet;
 use crate::parselet::ExpressionParselets;
-use crate::parsing::expression::literals::parse_literal;
+use crate::parsing::expression::value_literal::parse_value_literal;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
@@ -11,7 +11,7 @@ pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
         let identifier = lexeme.clone();
         return Ok((variable_cursor, ExpressionParselets::Variable(VariableParselet::new(identifier))));
     }
-    parse_literal(cursor)
+    parse_value_literal(cursor)
 }
 
 #[cfg(test)]
