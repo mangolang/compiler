@@ -3,7 +3,7 @@ use ::std::hash;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
-use crate::common::codeparts::eqfloat::f64eq;
+use crate::ir::codeparts::eqfloat::f64eq;
 use crate::common::debug::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::Lexeme;

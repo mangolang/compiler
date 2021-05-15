@@ -2,17 +2,17 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::eqfloat::f64eq;
-use crate::common::codeparts::Keyword;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::SourceSlice;
-use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::separators::ColonLexeme;
+use crate::ir::codeparts::eqfloat::f64eq;
+use crate::ir::codeparts::Keyword;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, FQIdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::separators::ColonLexeme;
 
 //TODO @mark: replace more lexeme usages by short versions
 

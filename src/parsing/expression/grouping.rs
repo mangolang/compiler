@@ -16,7 +16,7 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 
 #[cfg(test)]
 mod parenthese {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_text, operator};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;

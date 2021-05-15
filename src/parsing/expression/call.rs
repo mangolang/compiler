@@ -29,7 +29,7 @@ pub fn parse_function_call(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 
 #[cfg(test)]
 mod by_name {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::parselet::short::{binary, function_call, literal, variable};
     use crate::parsing::util::cursor::End;

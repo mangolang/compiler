@@ -1,7 +1,7 @@
 use ::std::hash;
 
-use crate::common::codeparts::fqn::Fqn;
-use crate::common::codeparts::name::Name;
+use crate::ir::codeparts::fqn::Fqn;
+use crate::ir::codeparts::name::Name;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
 use crate::lexeme::lexemes::separators::PeriodLexeme;

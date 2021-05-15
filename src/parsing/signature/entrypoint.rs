@@ -1,4 +1,4 @@
-use crate::common::codeparts::Keyword;
+use crate::ir::codeparts::Keyword;
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::entrypoint::EntryPointParselet;
 use crate::parsing::partial::code_body::parse_code_body;
@@ -29,7 +29,7 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::Dash;
+    use crate::ir::codeparts::operator::Symbol::Dash;
     use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::identifier::SimpleIdentifierLexeme;

@@ -3,22 +3,23 @@ use ::std::str::FromStr;
 
 use ::ustr::ustr;
 
-use crate::common::codeparts::{Keyword, Symbol};
 use crate::dbg_log;
 use crate::io::slice::SourceSlice;
 use crate::io::source::SourceFile;
-use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
-use crate::lexeme::collect::print::print_lexeme;
-#[cfg(test)]
-use crate::lexeme::collect::print::print_lexemes;
-use crate::lexeme::collect::FileLexemes;
-use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
-use crate::lexeme::literal::TextLiteralLexeme;
-use crate::lexeme::separators::ColonLexeme;
+use crate::ir::codeparts::{Keyword, Symbol};
+use crate::ir::codeparts::eqfloat::f64eq;
 use crate::lexeme::{
     AssociationLexeme, EndBlockLexeme, FQIdentifierLexeme, KeywordLexeme, Lexeme, LiteralLexeme, OperatorLexeme, ParenthesisCloseLexeme,
     ParenthesisOpenLexeme, StartBlockLexeme, UnlexableLexeme,
 };
+use crate::lexeme::brackets::{BracketCloseLexeme, BracketOpenLexeme};
+use crate::lexeme::collect::FileLexemes;
+use crate::lexeme::collect::print::print_lexeme;
+#[cfg(test)]
+use crate::lexeme::collect::print::print_lexemes;
+use crate::lexeme::lexemes::separators::{CommaLexeme, EllipsisLexeme, NewlineLexeme, PeriodLexeme};
+use crate::lexeme::literal::TextLiteralLexeme;
+use crate::lexeme::separators::ColonLexeme;
 
 pub type LexemeGenerator = Box<dyn FnOnce(SourceSlice) -> Lexeme>;
 

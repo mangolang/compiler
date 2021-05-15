@@ -3,7 +3,6 @@ use ::std::path::Path;
 use crate::common::error::MangoResult;
 use crate::io::disk::read;
 use crate::io::source::SourceFile;
-use crate::ir::collect::SourceIR;
 use crate::lexing::lex;
 use crate::parsing::parse::parse;
 

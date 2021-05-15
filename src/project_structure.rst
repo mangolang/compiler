@@ -119,5 +119,6 @@ Some thoughts:
 * How would this work with profile-guided optimization?
 * Cache format is not stable between compiler versions; new compiler = clean compile. But metadata should probably remain readable, to know the version etc.
 * How and when is disp space reclaimed?
+* Could something smart be done for detecting renames? Possibly something that could also help with dead code elimination?
 
 

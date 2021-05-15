@@ -1,4 +1,4 @@
-use crate::common::codeparts::Keyword;
+use crate::ir::codeparts::Keyword;
 use crate::lexeme::Lexeme;
 use crate::parselet::files::import::ImportParselet;
 use crate::parsing::partial::qualified_name::parse_qualified_name;

@@ -82,7 +82,7 @@ fn print_indent(buffer: &mut String, indent: u32) {
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{EQ, GE};
+    use crate::ir::codeparts::operator::Symbol::{EQ, GE};
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;

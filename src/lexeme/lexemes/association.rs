@@ -1,6 +1,6 @@
 use ::std::hash;
 
-use crate::common::codeparts::Symbol;
+use crate::ir::codeparts::Symbol;
 use crate::common::debug::ToText;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::{SourceLocation, SourceSlice};

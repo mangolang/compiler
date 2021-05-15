@@ -1,7 +1,7 @@
 use ::std::hash;
 use ::std::str::FromStr;
 
-use crate::common::codeparts::Keyword;
+use crate::ir::codeparts::Keyword;
 use crate::common::debug::ToText;
 use crate::common::error::MsgResult;
 use crate::io::slice::{SourceLocation, SourceSlice};
