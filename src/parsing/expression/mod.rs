@@ -9,6 +9,10 @@ mod grouping;
 mod index;
 mod literals;
 mod variable;
+mod map_literal;
+mod list_literal;
+#[cfg(test)]
+mod test_mon;
 
 pub fn parse_expression(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     parse_addition(cursor)

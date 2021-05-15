@@ -50,7 +50,7 @@ mod tests {
             .identifier("fake")
             .file();
         let res = parse_code_body(lexemes.cursor());
-        // Not sure if this will be supported one day, but it is not supported now
+        // Not sure if ''no colon' will be supported one day, but it is not supported now
         assert!(res.is_err());
     }
 
