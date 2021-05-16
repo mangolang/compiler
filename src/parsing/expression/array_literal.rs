@@ -71,158 +71,55 @@ mod by_name {
         );
     }
 
-    //
-    // #[test]
-    // fn single_literal_positional_arg() {
-    //     check(
-    //         builder().identifier("data").bracket_open().literal_int(42).bracket_close().file(),
-    //         vec![variable(identifier("data")), vec![literal(literal_int(42))]],
-    //     );
-    // }
-    //
-    // #[test]
-    // fn single_identifier_positional_arg() {
-    //     check(
-    //         builder().identifier("arr").bracket_open().identifier("x").bracket_close().file(),
-    //         array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
-    //     );
-    // }
-    //
-    // #[test]
-    // fn single_identifier_positional_arg_trailing_comma() {
-    //     check(
-    //         builder()
-    //             .identifier("arr")
-    //             .bracket_open()
-    //             .identifier("x")
-    //             .comma()
-    //             .bracket_close()
-    //             .file(),
-    //         array_index(variable(identifier("arr")), vec![variable(identifier("x"))]),
-    //     );
-    // }
-    //
-    // #[test]
-    // fn single_arithmetic_positional_arg() {
-    //     check(
-    //         builder()
-    //             .identifier("arr")
-    //             .bracket_open()
-    //             .parenthesis_open()
-    //             .identifier("x")
-    //             .operator("-")
-    //             .literal_int(1)
-    //             .parenthesis_close()
-    //             .operator("*")
-    //             .parenthesis_open()
-    //             .identifier("y")
-    //             .operator("+")
-    //             .literal_int(10)
-    //             .parenthesis_close()
-    //             .bracket_close()
-    //             .file(),
-    //         array_index(
-    //             variable(identifier("arr")),
-    //             vec![binary(
-    //                 binary(variable(identifier("x")), operator(Symbol::Dash), literal(literal_int(1))),
-    //                 operator(Symbol::Asterisk),
-    //                 binary(variable(identifier("y")), operator(Symbol::Plus), literal(literal_int(10))),
-    //             )],
-    //         ),
-    //     );
-    // }
-    //
-    // #[test]
-    // fn double_argument() {
-    //     check(
-    //         builder()
-    //             .identifier("arr")
-    //             .bracket_open()
-    //             .identifier("x")
-    //             .comma()
-    //             .identifier("y")
-    //             .bracket_close()
-    //             .file(),
-    //         array_index(
-    //             variable(identifier("arr")),
-    //             vec![variable(identifier("x")), variable(identifier("y"))],
-    //         ),
-    //     );
-    // }
-    //
-    // #[test]
-    // fn double_argument_trailing_comma() {
-    //     check(
-    //         builder()
-    //             .identifier("arr")
-    //             .bracket_open()
-    //             .identifier("x")
-    //             .comma()
-    //             .identifier("y")
-    //             .comma()
-    //             .bracket_close()
-    //             .file(),
-    //         array_index(
-    //             variable(identifier("arr")),
-    //             vec![variable(identifier("x")), variable(identifier("y"))],
-    //         ),
-    //     );
-    // }
-}
+    #[test]
+    fn single_literal() {
+        check(
+            builder().bracket_open().literal_int(1).bracket_close().file(),
+            vec![literal(literal_int(1))],
+        );
+    }
 
-#[cfg(test)]
-mod special {
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int};
-    use crate::parselet::short::{array_index, literal, variable};
-    use crate::parsing::expression::parse_expression;
+    #[test]
+    fn comma_separated_literals() {
+        check(
+            builder().bracket_open()
+                .literal_int(1).comma()
+                .literal_int(2).comma()
+                .literal_int(3).comma()
+                .bracket_close().file(),
+            vec![literal(literal_int(1)), literal(literal_int(2)), literal(literal_int(3))],
+        );
+    }
 
-    use super::*;
+    #[test]
+    fn newline_separated_literals() {
+        check(
+            builder().bracket_open()
+                .literal_int(1).newline()
+                .literal_int(2).newline()
+                .literal_int(3)
+                .bracket_close().file(),
+            vec![literal(literal_int(1)), literal(literal_int(2)), literal(literal_int(3))],
+        );
+    }
 
-    // #[test]
-    // fn no_args() {
-    //     let lexemes = builder().identifier("fun").bracket_open().bracket_close().file();
-    //     let cursor = lexemes.cursor();
-    //     let (cursor, parselet) = parse_array_literal(cursor).unwrap();
-    //     assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
-    //     assert_eq!(parselet, variable(identifier("fun")));
-    // }
-    //
-    // #[test]
-    // fn unseparated() {
-    //     let lexemes = builder()
-    //         .identifier("fun")
-    //         .bracket_open()
-    //         .identifier("x")
-    //         .literal_int(1)
-    //         .bracket_close()
-    //         .file();
-    //     let cursor = lexemes.cursor();
-    //     let (cursor, parselet) = parse_array_literal(cursor).unwrap();
-    //     assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
-    //     assert_eq!(parselet, variable(identifier("fun")));
-    // }
-    //
-    // #[test]
-    // fn unclosed() {
-    //     let lexemes = builder().identifier("fun").bracket_open().identifier("x").file();
-    //     let cursor = lexemes.cursor();
-    //     let (cursor, parselet) = parse_array_literal(cursor).unwrap();
-    //     assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
-    //     assert_eq!(parselet, variable(identifier("fun")));
-    // }
-    //
-    // #[test]
-    // fn reachable_from_expression() {
-    //     let lexemes = builder()
-    //         .identifier("data")
-    //         .bracket_open()
-    //         .literal_int(42)
-    //         .bracket_close()
-    //         .comma()
-    //         .file();
-    //     let cursor = lexemes.cursor();
-    //     let (cursor, parselet) = parse_expression(cursor).unwrap();
-    //     assert_eq!(array_index(variable(identifier("data")), vec![literal(literal_int(42))]), parselet);
-    //     assert_eq!(Ok(lexemes.last()), cursor.peek());
-    // }
+    #[test]
+    fn mixed_types() {
+        todo!("make test")
+    }
+
+    #[test]
+    fn complex_expression() {
+        todo!("make test")
+    }
+
+    #[test]
+    fn multi_complex_expression() {
+        todo!("make test")
+    }
+
+    #[test]
+    fn nested() {
+        todo!("make test")
+    }
 }
