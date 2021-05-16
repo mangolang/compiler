@@ -1,10 +1,10 @@
 use crate::lexeme::Lexeme;
-use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::ExpressionParselets;
+use crate::parselet::terminal::LiteralParselet;
+use crate::parsing::expression::array_literal::parse_array_literal;
 use crate::parsing::expression::grouping::parse_parenthesised_group;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::expression::array_literal::parse_list_literal;
 
 pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     // let mut literal_cursor = cursor.fork();
@@ -13,7 +13,7 @@ pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //     return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
     // }
     // parse_parenthesised_group(cursor)
-    parse_list_literal(cursor);
+    parse_array_literal(cursor);
     unimplemented!()  //TODO @mark:
 }
 
@@ -22,13 +22,13 @@ mod maps {
     use ::ustr::ustr;
 
     use crate::io::slice::SourceSlice;
+    use crate::lexeme::collect::FileLexemes;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_real};
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::FileLexemes;
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         // let cursor = lexemes.cursor();

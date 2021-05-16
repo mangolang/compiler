@@ -6,6 +6,8 @@ use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_open};
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
+use crate::parselet::terminal::ArrayLiteralParselet;
+use crate::parsing::expression::arithmetic::parse_addition;
 
 /// Parse array literal, which looks like
 ///
@@ -16,21 +18,17 @@ use crate::parsing::util::ParseRes;
 /// * [x, y,]
 /// * ...
 ///
-/// Very similar to `parse_array_indexing`.
+/// Very similar to `parse_array_literal`.
 pub fn parse_array_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor.fork())
+    if let Ok((close_cursor, args)) = parse_bracket_open(cursor.fork())
         .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
         .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor).map(|ok| (ok.0, args)))
     {
-        if !args.is_empty() {
-            return Ok((close_cursor, ExpressionParselets::Call(FunctionCallParselet::new(identifier, args))));
-        } else {
-            dbg_log!("rejected array indexing parsing with nothing between [ and ]");
-        }
+        return Ok((close_cursor, ExpressionParselets::ArrayLiteral(ArrayLiteralParselet::new(args))));
     }
-    Ok((iden_cursor, identifier))
+    parse_addition(cursor)
 }
-//TODO @mark: test if this works for repeated indexing, e.g. `arr[1][0]`
+
 
 #[cfg(test)]
 mod by_name {
@@ -116,7 +114,6 @@ mod by_name {
                 .identifier("arr")
                 .bracket_open()
                 .identifier("x")
-pub fn parse_object_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
                 .comma()
                 .identifier("y")
                 .bracket_close()
