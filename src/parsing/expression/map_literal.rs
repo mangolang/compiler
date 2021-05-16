@@ -6,6 +6,7 @@ use crate::parsing::expression::grouping::parse_parenthesised_group;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
+//TODO @mark: perhaps merge with object_literal
 pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     // let mut literal_cursor = cursor.fork();
     // if let Lexeme::Literal(literal_lexeme) = literal_cursor.take()? {
@@ -13,8 +14,8 @@ pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     //     return Ok((literal_cursor, ExpressionParselets::Literal(LiteralParselet::new(literal))));
     // }
     // parse_parenthesised_group(cursor)
-    parse_array_literal(cursor);
-    unimplemented!()  //TODO @mark:
+    dbg!("TO DO: parse_map_literal");
+    parse_array_literal(cursor)
 }
 
 #[cfg(test)]

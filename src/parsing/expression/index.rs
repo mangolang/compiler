@@ -203,4 +203,13 @@ mod special {
         assert_eq!(array_index(variable(identifier("data")), vec![literal(literal_int(42))]), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
     }
+
+    #[test]
+    fn start_with_newline() {
+        let lexemes = builder().identifier("data").bracket_open().newline().bracket_close().file();
+        let cursor = lexemes.cursor();
+        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
+        assert_eq!(parselet, variable(identifier("data")));
+    }
 }
