@@ -7,18 +7,17 @@ use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_o
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
 
-/// Parse indexing, which looks like
+/// Parse array literal, which looks like
 ///
-/// * arr_name[x]
-/// * arr_name[0,]
-/// * arr_name[x + y]
-/// * arr_name[x, y]
-/// * arr_name[x, y,]
+/// * [x]
+/// * [0,]
+/// * [x + y]
+/// * [x, y]
+/// * [x, y,]
 /// * ...
 ///
-/// Very similar to `parse_array_literal`.
-pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
-    let (iden_cursor, identifier) = parse_variable(cursor)?;
+/// Very similar to `parse_array_indexing`.
+pub fn parse_array_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor.fork())
         .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
         .and_then(|(args_cursor, args)| parse_bracket_close(args_cursor).map(|ok| (ok.0, args)))
@@ -45,7 +44,7 @@ mod by_name {
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
-        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        let (cursor, parselet) = parse_array_literal(cursor).unwrap();
         assert_eq!(expected, parselet);
         assert_eq!(Err(End), cursor.peek());
     }
@@ -117,6 +116,7 @@ mod by_name {
                 .identifier("arr")
                 .bracket_open()
                 .identifier("x")
+pub fn parse_object_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
                 .comma()
                 .identifier("y")
                 .bracket_close()
@@ -160,7 +160,7 @@ mod special {
     fn no_args() {
         let lexemes = builder().identifier("fun").bracket_open().bracket_close().file();
         let cursor = lexemes.cursor();
-        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        let (cursor, parselet) = parse_array_literal(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
@@ -175,7 +175,7 @@ mod special {
             .bracket_close()
             .file();
         let cursor = lexemes.cursor();
-        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        let (cursor, parselet) = parse_array_literal(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
         assert_eq!(parselet, variable(identifier("fun")));
     }
@@ -184,7 +184,7 @@ mod special {
     fn unclosed() {
         let lexemes = builder().identifier("fun").bracket_open().identifier("x").file();
         let cursor = lexemes.cursor();
-        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        let (cursor, parselet) = parse_array_literal(cursor).unwrap();
         assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
         assert_eq!(parselet, variable(identifier("fun")));
     }

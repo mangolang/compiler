@@ -4,7 +4,7 @@ use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::grouping::parse_parenthesised_group;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::ParseRes;
-use crate::parsing::expression::list_literal::parse_list_literal;
+use crate::parsing::expression::array_literal::parse_list_literal;
 
 pub fn parse_map_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     // let mut literal_cursor = cursor.fork();

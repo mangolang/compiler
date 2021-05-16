@@ -11,7 +11,7 @@ mod index;
 mod variable;
 mod value_literal;
 mod map_literal;
-mod list_literal;
+mod array_literal;
 mod object_literal;
 #[cfg(test)]
 mod test_mon;
