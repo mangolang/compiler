@@ -29,8 +29,8 @@ pub fn parse_entrypoint(mut cursor: ParseCursor) -> ParseRes<EntryPointParselet>
 
 #[cfg(test)]
 mod tests {
-    use crate::ir::codeparts::operator::Symbol::Dash;
     use crate::io::slice::SourceSlice;
+    use crate::ir::codeparts::operator::Symbol::Dash;
     use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::identifier::SimpleIdentifierLexeme;
     use crate::parselet::body::code_body::CodeBodyParselet;

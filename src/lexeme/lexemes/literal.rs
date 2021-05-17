@@ -3,9 +3,9 @@ use ::std::hash;
 use ::ustr::ustr;
 use ::ustr::Ustr;
 
-use crate::ir::codeparts::eqfloat::f64eq;
 use crate::common::debug::ToText;
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::ir::codeparts::eqfloat::f64eq;
 use crate::lexeme::Lexeme;
 
 #[derive(Debug, Eq, Clone)]

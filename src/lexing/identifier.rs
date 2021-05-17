@@ -19,8 +19,8 @@ pub fn lex_keyword_identifier(reader: &mut impl Reader, lexer: &mut impl Lexer) 
 
 #[cfg(test)]
 mod identifiers {
-    use crate::ir::codeparts::name::Name;
     use crate::io::slice::SourceSlice;
+    use crate::ir::codeparts::name::Name;
     use crate::lexeme::{FQIdentifierLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
     use crate::lexing::lexer::Lexer;
@@ -102,9 +102,9 @@ mod identifiers {
 
 #[cfg(test)]
 mod keywords {
+    use crate::io::slice::SourceSlice;
     use crate::ir::codeparts::keyword::KEYWORDS;
     use crate::ir::codeparts::Keyword;
-    use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::builder;
     use crate::lexeme::{KeywordLexeme, Lexeme};
 
@@ -135,9 +135,9 @@ mod keywords {
 
 #[cfg(test)]
 mod mixed {
+    use crate::io::slice::SourceSlice;
     use crate::ir::codeparts::name::Name;
     use crate::ir::codeparts::Keyword;
-    use crate::io::slice::SourceSlice;
     use crate::lexeme::{FQIdentifierLexeme, KeywordLexeme, Lexeme};
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;

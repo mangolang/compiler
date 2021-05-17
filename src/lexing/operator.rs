@@ -131,8 +131,8 @@ mod operators {
 
 #[cfg(test)]
 mod associations {
-    use crate::ir::codeparts::Symbol;
     use crate::io::slice::SourceSlice;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::association;
     use crate::lexeme::{AssociationLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;

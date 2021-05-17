@@ -1,9 +1,9 @@
 use ::std::hash;
 
-use crate::ir::codeparts::Symbol;
 use crate::common::debug::ToText;
 use crate::common::error::{ErrMsg, MsgResult};
 use crate::io::slice::{SourceLocation, SourceSlice};
+use crate::ir::codeparts::Symbol;
 use crate::lexeme::Lexeme;
 
 /// Equals symbol, which is used for associating a value with an identifier.
