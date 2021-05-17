@@ -2,7 +2,7 @@ use crate::lexeme::{FQIdentifierLexeme, Lexeme, LiteralLexeme, OperatorLexeme};
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::{ExprGroup, FunctionCallParselet};
 use crate::parselet::special::UnparseableParselet;
-use crate::parselet::terminal::{LiteralParselet, VariableParselet};
+use crate::parselet::terminal::{LiteralParselet, VariableParselet, ArrayLiteralParselet};
 use crate::parselet::{ExpressionParselets, Parselets};
 
 // pub fn association(txt: &str) -> MsgResult<Parselets> {
@@ -44,6 +44,10 @@ pub fn function_call(function: ExpressionParselets, args: ExprGroup) -> Expressi
 
 pub fn array_index(array: ExpressionParselets, indices: ExprGroup) -> ExpressionParselets {
     ExpressionParselets::Call(FunctionCallParselet::new(array, indices))
+}
+
+pub fn array_literal(content: Vec<ExpressionParselets>) -> ExpressionParselets {
+    ExpressionParselets::ArrayLiteral(ArrayLiteralParselet::new(content))
 }
 
 // pub fn operator(txt: &str) -> MsgResult<Parselets> {

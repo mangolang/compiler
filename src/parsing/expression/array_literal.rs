@@ -38,17 +38,18 @@ pub fn parse_array_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
 
 
 #[cfg(test)]
-mod by_name {
+mod arrays {
     use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::FileLexemes;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool, literal_int, literal_text, operator};
+    use crate::parselet::collect::short::array_literal;
     use crate::parselet::short::{array_index, binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
 
     fn check(lexemes: FileLexemes, expected_content: Vec<ExpressionParselets>) {
-        let expected = ExpressionParselets::ArrayLiteral(ArrayLiteralParselet::new(expected_content));
+        let expected = array_literal(expected_content);
         let cursor = lexemes.cursor();
         let (cursor, parselet) = parse_array_literal(cursor).unwrap();
         assert_eq!(expected, parselet);
@@ -82,7 +83,8 @@ mod by_name {
     #[test]
     fn comma_separated_literals() {
         check(
-            builder().bracket_open()
+            builder()
+                .bracket_open()
                 .literal_int(1).comma()
                 .literal_int(2).comma()
                 .literal_int(3).comma()
@@ -94,7 +96,8 @@ mod by_name {
     #[test]
     fn newline_separated_literals() {
         check(
-            builder().bracket_open()
+            builder()
+                .bracket_open()
                 .literal_int(1).newline()
                 .literal_int(2).newline()
                 .literal_int(3)
@@ -105,21 +108,65 @@ mod by_name {
 
     #[test]
     fn mixed_types() {
-        todo!("make test")
+        check(
+            builder()
+                .bracket_open()
+                .literal_bool(true).comma()
+                .literal_text("hello")
+                .bracket_close().file(),
+            vec![
+                literal(literal_bool(true)),
+                literal(literal_text("hello")),
+            ],
+        );
     }
 
     #[test]
     fn complex_expression() {
-        todo!("make test")
-    }
-
-    #[test]
-    fn multi_complex_expression() {
-        todo!("make test")
+        check(
+            builder()
+                .bracket_open()
+                .literal_int(1)
+                .operator("+")
+                .literal_int(2)
+                .operator("*")
+                .literal_int(3)
+                .comma()
+                .newline()
+                .literal_text("hello")
+                .comma()
+                .bracket_close().file(),
+            vec![
+                binary(literal(literal_int(1)), operator(Symbol::Plus),
+                       binary(literal(literal_int(2)), operator(Symbol::Asterisk), literal(literal_int(3))),),
+                literal(literal_text("hello")),
+            ],
+        );
     }
 
     #[test]
     fn nested() {
-        todo!("make test")
+        check(
+            builder()
+                .bracket_open()
+                .bracket_open()
+                .literal_int(1)
+                .newline()
+                .bracket_close()
+                .comma()
+                .bracket_open()
+                .bracket_open()
+                .bracket_open()
+                .literal_bool(true)
+                .comma()
+                .bracket_close()
+                .bracket_close()
+                .comma()
+                .bracket_close().file(),
+            vec![
+                array_literal(vec![literal(literal_int(1))]),
+                array_literal(vec![array_literal(vec![literal(literal_bool(true))])])
+            ],
+        );
     }
 }
