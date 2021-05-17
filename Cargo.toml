@@ -28,20 +28,20 @@ path = "src/lib.rs"
 mango_ir = "0.1.0"
 scoped_name = "0.2.0"
 #nom = "^6.0.0-alpha1"
-regex = "1.4.5"
-ustr = "0.7.0"
+regex = "1.5.4"
+ustr = "0.8.0"
 lazy_static = "1.4.0"
 derive-new = "0.5.9"
 #cargo-wasm = "0.4.*"
 #wasm-bindgen = "^0.2.63"
 #itertools = "^0.8.2"  # TODO @mark: unused?
 # #TODO @mark: this one: smallvec = { version = "1.6.1", features = ["union"] }
-smallvec = { version = "1.6.1" }
+smallvec = "1.6.1"
 #indoc = "^0.3.5"
 #parity-wasm = "^0.41.0"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
-proc-macro2 = "1.0.24"
+proc-macro2 = "1.0.26"
 
 [dev-dependencies]
 
