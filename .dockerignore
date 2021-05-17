@@ -4,7 +4,7 @@
 *
 
 # Now explicitly add the source code, Cargo files and readme:
-!ci/image
+!ci/extra_checks.sh
 !Cargo.toml
 !Cargo.lock
 !rustfmt.toml
