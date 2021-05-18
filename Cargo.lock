@@ -156,6 +156,7 @@ dependencies = [
 [[package]]
 name = "mango_ir"
 version = "0.1.0"
+source = "git+https://github.com/mangolang/mango_ir#67214c3d0e10d3a2ce1ce2e825f9e829bb744384"
 dependencies = [
  "lazy_static",
  "regex",

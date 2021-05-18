@@ -19,7 +19,7 @@ name = "mangolib"
 path = "src/lib.rs"
 
 [dependencies]
-mango_ir = { path = "../mango_ir" }
+mango_ir = { git = "https://github.com/mangolang/mango_ir" }
 #scoped_name = { path = "../scoped_name" }
 scoped_name = "0.2.0"
 #nom = "^6.0.0-alpha1"
