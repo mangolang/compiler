@@ -1,5 +1,5 @@
-use crate::common::codeparts::operator::ASSOCIATION_RE;
-use crate::common::codeparts::operator::SYMBOL_RE;
+use crate::ir::codeparts::operator::ASSOCIATION_RE;
+use crate::ir::codeparts::operator::SYMBOL_RE;
 use crate::lexeme::collect::short::association;
 use crate::lexeme::collect::short::operator;
 use crate::lexing::lexer::Lexer;
@@ -21,7 +21,7 @@ pub fn lex_association(reader: &mut impl Reader, lexer: &mut impl Lexer) {
 
 #[cfg(test)]
 mod operators {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::operator;
     use crate::lexeme::Lexeme;
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;
@@ -131,8 +131,8 @@ mod operators {
 
 #[cfg(test)]
 mod associations {
-    use crate::common::codeparts::Symbol;
     use crate::io::slice::SourceSlice;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::association;
     use crate::lexeme::{AssociationLexeme, Lexeme};
     use crate::lexing::lexer::lexeme_collector::LexemeCollector;

@@ -97,7 +97,7 @@ mod basic {
 
 #[cfg(test)]
 mod complex_expr {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::parselet::short::{binary, literal, variable};
     use crate::parsing::util::cursor::End;
@@ -348,7 +348,7 @@ mod ending {
 /// is ended, and it's up to the caller to determine whether what comes after is ok.
 #[cfg(test)]
 mod errors {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, identifier, literal_bool, literal_int, literal_text, operator};
     use crate::parselet::short::{binary, literal, variable};
 

@@ -1,4 +1,4 @@
-use crate::common::codeparts::name::Name;
+use crate::ir::codeparts::name::Name;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct UnionParselet {

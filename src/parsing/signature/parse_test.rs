@@ -1,4 +1,4 @@
-use crate::common::codeparts::Keyword;
+use crate::ir::codeparts::Keyword;
 use crate::lexeme::{Lexeme, LiteralLexeme};
 use crate::parselet::signature::test_parselet::{TestName, TestParselet};
 use crate::parsing::partial::code_body::parse_code_body;
@@ -29,7 +29,7 @@ pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::Dash;
+    use crate::ir::codeparts::operator::Symbol::Dash;
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;

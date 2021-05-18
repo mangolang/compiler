@@ -1,5 +1,5 @@
-use crate::common::codeparts::{Keyword, Symbol};
 use crate::io::slice::SourceLocation;
+use crate::ir::codeparts::{Keyword, Symbol};
 use crate::lexeme::identifier::SimpleIdentifierLexeme;
 use crate::lexeme::Lexeme;
 use crate::parselet::signature::function::FunctionParselet;

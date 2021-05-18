@@ -39,7 +39,7 @@ pub fn parse_qualified_name(mut cursor: ParseCursor) -> ParseRes<FQIdentifierLex
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::fqn::Fqn;
+    use crate::ir::codeparts::fqn::Fqn;
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;

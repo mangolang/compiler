@@ -156,8 +156,12 @@ dependencies = [
 [[package]]
 name = "mango_ir"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bc2bf9def26a83dc2c21245343613efbe2ff64e5daf844c8bdd01f1fab73fee"
+source = "git+https://github.com/mangolang/mango_ir#67214c3d0e10d3a2ce1ce2e825f9e829bb744384"
+dependencies = [
+ "lazy_static",
+ "regex",
+ "ustr 0.8.0",
+]
 
 [[package]]
 name = "mangolib"
@@ -307,6 +311,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 
 [[package]]
+name = "serde"
+version = "1.0.126"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec7505abeacaec74ae4778d9d9328fe5a5d04253220a85c4ee022239fc996d03"
+
+[[package]]
 name = "smallvec"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -360,6 +370,7 @@ dependencies = [
  "byteorder",
  "lazy_static",
  "parking_lot 0.11.1",
+ "serde",
 ]
 
 [[package]]

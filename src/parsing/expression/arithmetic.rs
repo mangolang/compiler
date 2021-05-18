@@ -66,7 +66,7 @@ mod test_util {
 
 #[cfg(test)]
 mod addition {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
 
@@ -134,7 +134,7 @@ mod addition {
 
 #[cfg(test)]
 mod multiplication {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_real, literal_text, operator};
     use crate::parselet::short::{binary, literal};
 
@@ -206,8 +206,8 @@ mod multiplication {
 
 #[cfg(test)]
 mod mixed {
-    use crate::common::codeparts::eqfloat::f64eq;
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::eqfloat::f64eq;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_real, operator};
     use crate::parselet::short::{binary, literal};
 
@@ -240,7 +240,7 @@ mod mixed {
 
 #[cfg(test)]
 mod special {
-    use crate::common::codeparts::Symbol;
+    use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_int, operator};
     use crate::parselet::short::{binary, literal};
     use crate::parsing::expression::parse_expression;

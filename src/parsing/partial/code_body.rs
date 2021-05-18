@@ -32,7 +32,7 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
 //TODO @mark: any more tests?
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{Dash, EQ, GE};
+    use crate::ir::codeparts::operator::Symbol::{Dash, EQ, GE};
     use crate::lexeme::collect::for_test::builder;
 
     use super::*;

@@ -69,7 +69,7 @@ pub fn parse_file(mut cursor: ParseCursor) -> ParseRes<FileParselet> {
 
 #[cfg(test)]
 mod tests {
-    use crate::common::codeparts::operator::Symbol::{Percent, GT};
+    use crate::ir::codeparts::operator::Symbol::{Percent, GT};
     use crate::lexeme::collect::for_test::builder;
     use crate::parselet::body::code_body::CodeBodyParselet;
     use crate::parselet::collect::for_test::import_alias;
