@@ -8,6 +8,7 @@ use crate::parsing::util::ParseRes;
 /// Occurs as part of e.g. function calls, or array literals.
 pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<ExpressionParselets>> {
     let mut expressions = vec![];
+    cursor.skip_while(|lexeme| matches!(lexeme, Lexeme::Newline(_)));
     while let Ok((expr_cursor, expr)) = parse_expression(cursor.fork()) {
         expressions.push(expr);
         let mut separator_cursor = expr_cursor.fork();

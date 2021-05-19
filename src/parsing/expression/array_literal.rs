@@ -156,7 +156,6 @@ mod arrays {
                 .comma()
                 .bracket_open()
                 .bracket_open()
-                .bracket_open()
                 .literal_bool(true)
                 .comma()
                 .bracket_close()
