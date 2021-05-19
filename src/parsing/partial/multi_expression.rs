@@ -436,3 +436,17 @@ mod errors {
         assert_eq!(Ok(&identifier("q").into()), cursor.peek());
     }
 }
+
+#[cfg(test)]
+mod special {
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, literal_text};
+    use crate::parselet::short::{literal, variable};
+    use crate::parsing::util::cursor::End;
+
+    use super::test_util::check;
+
+    #[test]
+    fn just_newline() {
+        check(builder().newline().file(), vec![], Err(End));
+    }
+}
