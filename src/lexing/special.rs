@@ -32,11 +32,11 @@ pub fn lex_eof(reader: &mut impl Reader) -> bool {
 mod unlexable {
     use crate::io::source::SourceFile;
     use crate::lexeme::collect::short::unlexable;
+    use crate::lexeme::collect::FileLexemes;
     use crate::lexing::lexer::Lexer;
     use crate::lexing::tests::create_lexer;
 
     use super::lex_unlexable;
-    use crate::lexeme::collect::FileLexemes;
 
     #[test]
     fn letter() {

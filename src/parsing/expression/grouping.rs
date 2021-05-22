@@ -18,11 +18,11 @@ pub fn parse_parenthesised_group(cursor: ParseCursor) -> ParseRes<ExpressionPars
 mod parenthese {
     use crate::ir::codeparts::Symbol;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_text, operator};
+    use crate::lexeme::collect::FileLexemes;
     use crate::parselet::short::{binary, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::FileLexemes;
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();

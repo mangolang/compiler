@@ -16,6 +16,7 @@ use crate::parsing::util::ParseRes;
 /// * arr_name[x, y,]
 /// * ...
 ///
+/// Very similar to `parse_array_literal`.
 pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     let (iden_cursor, identifier) = parse_variable(cursor)?;
     if let Ok((close_cursor, args)) = parse_bracket_open(iden_cursor.fork())
@@ -35,12 +36,12 @@ pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 #[cfg(test)]
 mod by_name {
     use crate::ir::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::lexeme::collect::FileLexemes;
     use crate::parselet::short::{array_index, binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();
@@ -201,5 +202,14 @@ mod special {
         let (cursor, parselet) = parse_expression(cursor).unwrap();
         assert_eq!(array_index(variable(identifier("data")), vec![literal(literal_int(42))]), parselet);
         assert_eq!(Ok(lexemes.last()), cursor.peek());
+    }
+
+    #[test]
+    fn start_with_newline() {
+        let lexemes = builder().identifier("data").bracket_open().newline().bracket_close().file();
+        let cursor = lexemes.cursor();
+        let (cursor, parselet) = parse_array_indexing(cursor).unwrap();
+        assert_eq!(cursor.peek(), Ok(&builder().bracket_open().build_single()));
+        assert_eq!(parselet, variable(identifier("data")));
     }
 }

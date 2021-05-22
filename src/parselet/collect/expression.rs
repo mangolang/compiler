@@ -3,6 +3,7 @@ use crate::parselet::node::assignment::AssignmentParselet;
 use crate::parselet::node::binary_operation::BinaryOperationParselet;
 use crate::parselet::node::function_call::FunctionCallParselet;
 use crate::parselet::node::unary_operation::UnaryOperationParselet;
+use crate::parselet::terminal::ArrayLiteralParselet;
 use crate::parselet::terminal::LiteralParselet;
 use crate::parselet::terminal::VariableParselet;
 use crate::parselet::Parselet;
@@ -11,6 +12,7 @@ use crate::parselet::Parselet;
 #[derive(PartialEq, Eq, Hash, Debug)]
 pub enum ExpressionParselets {
     Literal(LiteralParselet),
+    ArrayLiteral(ArrayLiteralParselet),
     UnaryOperation(UnaryOperationParselet),
     BinaryOperation(BinaryOperationParselet),
     Variable(VariableParselet),

@@ -1,5 +1,5 @@
 use crate::lexeme::lexemes::LiteralLexeme;
-use crate::parselet::Parselet;
+use crate::parselet::{ExpressionParselets, Parselet};
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct LiteralParselet {
@@ -9,6 +9,18 @@ pub struct LiteralParselet {
 impl LiteralParselet {
     pub fn new(lexeme: LiteralLexeme) -> Self {
         LiteralParselet { lexeme }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Hash)]
+pub struct ArrayLiteralParselet {
+    //TODO @mark: smallvec?
+    lexemes: Vec<ExpressionParselets>,
+}
+
+impl ArrayLiteralParselet {
+    pub fn new(lexemes: Vec<ExpressionParselets>) -> Self {
+        ArrayLiteralParselet { lexemes }
     }
 }
 

@@ -34,9 +34,9 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
 mod tests {
     use crate::ir::codeparts::operator::Symbol::{Dash, EQ, GE};
     use crate::lexeme::collect::for_test::builder;
+    use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::parsing::util::cursor::End;
 
     #[test]
     fn no_colon() {
@@ -50,7 +50,7 @@ mod tests {
             .identifier("fake")
             .file();
         let res = parse_code_body(lexemes.cursor());
-        // Not sure if this will be supported one day, but it is not supported now
+        // Not sure if ''no colon' will be supported one day, but it is not supported now
         assert!(res.is_err());
     }
 
