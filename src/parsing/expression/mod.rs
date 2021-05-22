@@ -8,8 +8,6 @@ mod array_literal;
 mod call;
 mod grouping;
 mod index;
-mod map_literal;
-mod object_literal;
 mod value_literal;
 mod variable;
 
