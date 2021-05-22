@@ -36,12 +36,12 @@ pub fn parse_array_indexing(cursor: ParseCursor) -> ParseRes<ExpressionParselets
 #[cfg(test)]
 mod by_name {
     use crate::ir::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
     use crate::lexeme::collect::FileLexemes;
     use crate::parselet::short::{array_index, binary, literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, operator};
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();

@@ -1,10 +1,10 @@
 use ::std::fmt;
 use ::std::ops::Index;
+use std::ops::Range;
 
 use crate::lexeme::Lexeme;
 #[cfg(test)]
 use crate::parsing::util::cursor::ParseCursor;
-use std::ops::Range;
 
 #[derive(Debug)]
 pub struct FileLexemes {

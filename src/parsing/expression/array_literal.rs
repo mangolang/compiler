@@ -1,5 +1,5 @@
-use crate::parselet::ExpressionParselets;
 use crate::parselet::terminal::ArrayLiteralParselet;
+use crate::parselet::ExpressionParselets;
 use crate::parsing::expression::arithmetic::parse_addition;
 use crate::parsing::partial::multi_expression::parse_multi_expression;
 use crate::parsing::partial::single_token::{parse_bracket_close, parse_bracket_open};
@@ -18,14 +18,14 @@ use crate::parsing::util::ParseRes;
 /// Very similar to `parse_array_literal`.
 pub fn parse_array_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
     if let Ok(q) = parse_bracket_open(cursor.fork()) {
-        dbg!(&q.0);   //TODO @mark: TEMPORARY! REMOVE THIS!
-        dbg!(&q.1);   //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!(&q.0); //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!(&q.1); //TODO @mark: TEMPORARY! REMOVE THIS!
         let r = parse_multi_expression(q.0);
-        dbg!(&r.is_ok());   //TODO @mark: TEMPORARY! REMOVE THIS!
-        dbg!(&r.as_ref().unwrap().0);   //TODO @mark: TEMPORARY! REMOVE THIS!
-        dbg!(&r.as_ref().unwrap().1);   //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!(&r.is_ok()); //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!(&r.as_ref().unwrap().0); //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!(&r.as_ref().unwrap().1); //TODO @mark: TEMPORARY! REMOVE THIS!
     } else {
-        dbg!("SKIP");  //TODO @mark: TEMPORARY! REMOVE THIS!
+        dbg!("SKIP"); //TODO @mark: TEMPORARY! REMOVE THIS!
     }
     if let Ok((close_cursor, args)) = parse_bracket_open(cursor.fork())
         .and_then(|(open_cursor, _)| parse_multi_expression(open_cursor))
@@ -36,14 +36,12 @@ pub fn parse_array_literal(cursor: ParseCursor) -> ParseRes<ExpressionParselets>
     parse_addition(cursor)
 }
 
-
 #[cfg(test)]
 mod arrays {
     use crate::ir::codeparts::Symbol;
+    use crate::lexeme::collect::for_test::{builder, literal_bool, literal_int, literal_text, operator};
     use crate::lexeme::collect::FileLexemes;
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_bool, literal_int, literal_text, operator};
-    use crate::parselet::collect::short::array_literal;
-    use crate::parselet::short::{array_index, binary, literal, variable};
+    use crate::parselet::collect::short::{array_literal, binary, literal};
     use crate::parsing::util::cursor::End;
 
     use super::*;
@@ -58,18 +56,12 @@ mod arrays {
 
     #[test]
     fn empty() {
-        check(
-            builder().bracket_open().bracket_close().file(),
-            vec![],
-        );
+        check(builder().bracket_open().bracket_close().file(), vec![]);
     }
 
     #[test]
     fn just_newline() {
-        check(
-            builder().bracket_open().newline().bracket_close().file(),
-            vec![],
-        );
+        check(builder().bracket_open().newline().bracket_close().file(), vec![]);
     }
 
     #[test]
@@ -85,10 +77,14 @@ mod arrays {
         check(
             builder()
                 .bracket_open()
-                .literal_int(1).comma()
-                .literal_int(2).comma()
-                .literal_int(3).comma()
-                .bracket_close().file(),
+                .literal_int(1)
+                .comma()
+                .literal_int(2)
+                .comma()
+                .literal_int(3)
+                .comma()
+                .bracket_close()
+                .file(),
             vec![literal(literal_int(1)), literal(literal_int(2)), literal(literal_int(3))],
         );
     }
@@ -98,10 +94,13 @@ mod arrays {
         check(
             builder()
                 .bracket_open()
-                .literal_int(1).newline()
-                .literal_int(2).newline()
+                .literal_int(1)
+                .newline()
+                .literal_int(2)
+                .newline()
                 .literal_int(3)
-                .bracket_close().file(),
+                .bracket_close()
+                .file(),
             vec![literal(literal_int(1)), literal(literal_int(2)), literal(literal_int(3))],
         );
     }
@@ -111,13 +110,12 @@ mod arrays {
         check(
             builder()
                 .bracket_open()
-                .literal_bool(true).comma()
+                .literal_bool(true)
+                .comma()
                 .literal_text("hello")
-                .bracket_close().file(),
-            vec![
-                literal(literal_bool(true)),
-                literal(literal_text("hello")),
-            ],
+                .bracket_close()
+                .file(),
+            vec![literal(literal_bool(true)), literal(literal_text("hello"))],
         );
     }
 
@@ -135,10 +133,14 @@ mod arrays {
                 .newline()
                 .literal_text("hello")
                 .comma()
-                .bracket_close().file(),
+                .bracket_close()
+                .file(),
             vec![
-                binary(literal(literal_int(1)), operator(Symbol::Plus),
-                       binary(literal(literal_int(2)), operator(Symbol::Asterisk), literal(literal_int(3))),),
+                binary(
+                    literal(literal_int(1)),
+                    operator(Symbol::Plus),
+                    binary(literal(literal_int(2)), operator(Symbol::Asterisk), literal(literal_int(3))),
+                ),
                 literal(literal_text("hello")),
             ],
         );
@@ -161,10 +163,11 @@ mod arrays {
                 .bracket_close()
                 .bracket_close()
                 .comma()
-                .bracket_close().file(),
+                .bracket_close()
+                .file(),
             vec![
                 array_literal(vec![literal(literal_int(1))]),
-                array_literal(vec![array_literal(vec![literal(literal_bool(true))])])
+                array_literal(vec![array_literal(vec![literal(literal_bool(true))])]),
             ],
         );
     }

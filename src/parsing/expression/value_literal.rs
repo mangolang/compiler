@@ -20,12 +20,12 @@ mod literal {
 
     use crate::io::slice::SourceSlice;
     use crate::lexeme::collect::for_test::{builder, literal_int, literal_real};
+    use crate::lexeme::collect::FileLexemes;
     use crate::lexeme::LiteralLexeme;
     use crate::parselet::short::literal;
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::FileLexemes;
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();

@@ -13,8 +13,9 @@ This git commit message hook validates that the commit message conforms to the c
 https://chris.beams.io/posts/git-commit/
 """
 
-import string
 from re import compile
+
+import string
 from sys import argv, stderr
 
 

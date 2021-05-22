@@ -37,10 +37,10 @@ pub fn parse_multi_expression(mut cursor: ParseCursor) -> ParseRes<Vec<Expressio
 
 #[cfg(test)]
 mod test_util {
+    use crate::lexeme::collect::FileLexemes;
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::FileLexemes;
 
     pub fn check(lexemes: FileLexemes, expected: Vec<ExpressionParselets>, lexeme_at_cursor: Result<&Lexeme, End>) {
         let cursor = lexemes.cursor();
@@ -439,8 +439,7 @@ mod errors {
 
 #[cfg(test)]
 mod special {
-    use crate::lexeme::collect::for_test::{builder, identifier, literal_int, literal_text};
-    use crate::parselet::short::{literal, variable};
+    use crate::lexeme::collect::for_test::builder;
     use crate::parsing::util::cursor::End;
 
     use super::test_util::check;

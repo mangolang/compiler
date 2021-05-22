@@ -17,11 +17,11 @@ pub fn parse_variable(cursor: ParseCursor) -> ParseRes<ExpressionParselets> {
 #[cfg(test)]
 mod var {
     use crate::lexeme::collect::for_test::{builder, identifier, literal_bool};
+    use crate::lexeme::collect::FileLexemes;
     use crate::parselet::short::{literal, variable};
     use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::lexeme::collect::FileLexemes;
 
     fn check(lexemes: FileLexemes, expected: ExpressionParselets) {
         let cursor = lexemes.cursor();

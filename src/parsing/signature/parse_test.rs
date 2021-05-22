@@ -29,15 +29,15 @@ pub fn parse_test(mut cursor: ParseCursor) -> ParseRes<TestParselet> {
 
 #[cfg(test)]
 mod tests {
+    use crate::io::slice::SourceSlice;
     use crate::ir::codeparts::operator::Symbol::Dash;
     use crate::lexeme::collect::for_test::builder;
-
-    use super::*;
-    use crate::io::slice::SourceSlice;
     use crate::lexeme::identifier::SimpleIdentifierLexeme;
     use crate::lexeme::literal::TextLiteralLexeme;
     use crate::parselet::body::code_body::CodeBodyParselet;
     use crate::parsing::util::cursor::End;
+
+    use super::*;
 
     #[test]
     fn text_name_empty_body() {

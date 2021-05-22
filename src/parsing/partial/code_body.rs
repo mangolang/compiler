@@ -34,9 +34,9 @@ pub fn parse_code_body(mut cursor: ParseCursor) -> ParseRes<CodeBodyParselet> {
 mod tests {
     use crate::ir::codeparts::operator::Symbol::{Dash, EQ, GE};
     use crate::lexeme::collect::for_test::builder;
+    use crate::parsing::util::cursor::End;
 
     use super::*;
-    use crate::parsing::util::cursor::End;
 
     #[test]
     fn no_colon() {
