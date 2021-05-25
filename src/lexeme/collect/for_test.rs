@@ -235,6 +235,10 @@ impl TestLexemeBuilder {
         self.add_simple(": ", |src| Lexeme::Colon(ColonLexeme::new(src)))
     }
 
+    pub fn type_sep(self) -> Self {
+        self.add_simple("< ", |src| Lexeme::Operator(OperatorLexeme::from_symbol(Symbol::LT, src)))
+    }
+
     pub fn comma(self) -> Self {
         self.add_simple(",", |src| Lexeme::Comma(CommaLexeme::new(src)))
     }

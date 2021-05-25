@@ -3,6 +3,7 @@ target/
 *.iml
 __pycache__/
 *.pyc
+*.out
 
 ### PREVIOUS KOTLIN AND IDEA IGNORES ###
 

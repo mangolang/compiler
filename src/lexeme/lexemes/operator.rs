@@ -9,8 +9,8 @@ use crate::lexeme::Lexeme;
 /// Also in-place operations like *=, += etc.
 #[derive(Debug, Eq, Clone)]
 pub struct OperatorLexeme {
-    symbol: Symbol,
-    source: SourceSlice,
+    pub symbol: Symbol,
+    pub source: SourceSlice,
 }
 
 impl OperatorLexeme {
