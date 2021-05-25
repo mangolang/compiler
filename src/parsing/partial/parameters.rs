@@ -31,7 +31,6 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
             Ok(Lexeme::Identifier(name)) => {
                 if let Some(name) = name.to_simple() {
                     let name = name.clone();
-                    //TODO @mark: ':' to '<' ?
                     if let Lexeme::Operator(OperatorLexeme { symbol: Symbol::LT, source: _ }) = iter_cursor.take()? {
                         //TODO @mark: parse complex types like [int, double] or Vec[int]
                         if let Ok((typ_cursor, typ)) = parse_type(iter_cursor) {
@@ -80,7 +79,7 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .parenthesis_close()
             .file();
@@ -95,7 +94,7 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .parenthesis_close()
@@ -111,7 +110,7 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .newline()
             .parenthesis_close()
@@ -127,7 +126,7 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .newline()
@@ -144,19 +143,19 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type2")
             .comma()
             .identifier("name3")
-            .colon()
+            .type_sep()
             .identifier("type3")
             .newline()
             .identifier("name4")
-            .colon()
+            .type_sep()
             .identifier("type4")
             .newline()
             .parenthesis_close()
@@ -175,11 +174,11 @@ mod with_parentheses {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .parenthesis_close()
@@ -213,11 +212,11 @@ mod error_cases {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type2")
             .comma()
             .parenthesis_close()
@@ -230,7 +229,7 @@ mod error_cases {
     fn missing_open() {
         let lexemes = builder()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .parenthesis_close()
@@ -244,7 +243,7 @@ mod error_cases {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .file();
@@ -257,10 +256,10 @@ mod error_cases {
         let lexemes = builder()
             .parenthesis_open()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .parenthesis_close()
             .file();
@@ -293,7 +292,7 @@ mod without_parentheses {
 
     #[test]
     fn single() {
-        let lexemes = builder().identifier("name").colon().identifier("type").file();
+        let lexemes = builder().identifier("name").type_sep().identifier("type").file();
         let (cursor, params) = parse_parameters(lexemes.cursor()).unwrap();
         assert_eq!(params.len(), 1);
         assert_eq!(params[0], TypedValueParselet::new_mocked("name", "type"));
@@ -304,7 +303,7 @@ mod without_parentheses {
     fn single_trailing_comma() {
         let lexemes = builder()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .parenthesis_close()
@@ -319,7 +318,7 @@ mod without_parentheses {
     fn single_trailing_newline() {
         let lexemes = builder()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .newline()
             .parenthesis_close()
@@ -334,7 +333,7 @@ mod without_parentheses {
     fn single_trailing_comma_and_newline() {
         let lexemes = builder()
             .identifier("name")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .newline()
@@ -350,11 +349,11 @@ mod without_parentheses {
     fn double() {
         let lexemes = builder()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type2")
             .comma()
             .parenthesis_close()
@@ -370,19 +369,19 @@ mod without_parentheses {
     fn quadruple() {
         let lexemes = builder()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type1")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type2")
             .comma()
             .identifier("name3")
-            .colon()
+            .type_sep()
             .identifier("type3")
             .newline()
             .identifier("name4")
-            .colon()
+            .type_sep()
             .identifier("type4")
             .newline()
             .parenthesis_close()
@@ -400,11 +399,11 @@ mod without_parentheses {
     fn next_lexeme_close() {
         let lexemes = builder()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .parenthesis_close()
@@ -419,11 +418,11 @@ mod without_parentheses {
     fn next_lexeme_random() {
         let lexemes = builder()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .keyword("use")
@@ -438,11 +437,11 @@ mod without_parentheses {
     fn next_lexeme_eof() {
         let lexemes = builder()
             .identifier("name1")
-            .colon()
+            .type_sep()
             .identifier("type")
             .comma()
             .identifier("name2")
-            .colon()
+            .type_sep()
             .identifier("type")
             .file();
         let (cursor, params) = parse_parameters(lexemes.cursor()).unwrap();

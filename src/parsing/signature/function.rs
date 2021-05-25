@@ -187,10 +187,10 @@ mod empty_with_eof {
 
     tests!(
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
-        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
-        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
+        one_param_no_return: builder().identifier("x").type_sep().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
+        multi_param_no_return: builder().identifier("x").type_sep().identifier("int").comma().identifier("y").type_sep().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
         no_param_simple_return: builder().build(), smallvec![], builder().operator("->").identifier("int").build(), "int",
-        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").type_sep().identifier("int").comma().identifier("y").type_sep().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
 
@@ -255,9 +255,9 @@ mod simple_body {
 
     tests!(
         no_param_no_return: builder().build(), smallvec![], vec![], "None",
-        one_param_no_return: builder().identifier("x").colon().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
-        multi_param_no_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
+        one_param_no_return: builder().identifier("x").type_sep().identifier("int").build(), smallvec![param("x", "int")], vec![], "None",
+        multi_param_no_return: builder().identifier("x").type_sep().identifier("int").comma().identifier("y").type_sep().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], vec![], "None",
         no_param_simple_return: builder().build(), smallvec![], builder().operator("->").identifier("int").build(), "int",
-        multi_param_simple_return: builder().identifier("x").colon().identifier("int").comma().identifier("y").colon().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
+        multi_param_simple_return: builder().identifier("x").type_sep().identifier("int").comma().identifier("y").type_sep().identifier("double").build(), smallvec![param("x", "int"), param("y", "double")], builder().operator("->").identifier("int").build(), "int",
     );
 }
