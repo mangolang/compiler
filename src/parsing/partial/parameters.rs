@@ -2,12 +2,12 @@ use std::collections::HashSet;
 
 use ::smallvec::smallvec;
 
+use crate::ir::codeparts::Symbol;
 use crate::lexeme::{Lexeme, OperatorLexeme};
 use crate::parselet::signature::parameters::{ParametersParselet, TypedValueParselet};
 use crate::parsing::partial::typ::parse_type;
 use crate::parsing::util::cursor::ParseCursor;
 use crate::parsing::util::{NoMatch, ParseRes};
-use crate::ir::codeparts::Symbol;
 
 /// Parse a series of names with types, e.g. for function declarations, including the parentheses ().
 pub fn parse_parenthesised_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet> {
@@ -31,7 +31,11 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
             Ok(Lexeme::Identifier(name)) => {
                 if let Some(name) = name.to_simple() {
                     let name = name.clone();
-                    if let Lexeme::Operator(OperatorLexeme { symbol: Symbol::LT, source: _ }) = iter_cursor.take()? {
+                    if let Lexeme::Operator(OperatorLexeme {
+                        symbol: Symbol::LT,
+                        source: _,
+                    }) = iter_cursor.take()?
+                    {
                         //TODO @mark: parse complex types like [int, double] or Vec[int]
                         if let Ok((typ_cursor, typ)) = parse_type(iter_cursor) {
                             if names_seen.contains(name.name.as_ustr()) {
@@ -45,8 +49,12 @@ pub fn parse_parameters(mut cursor: ParseCursor) -> ParseRes<ParametersParselet>
                                 continue;
                             }
                             break;
+                        } else {
+                            //TODO @mark: better error handling
+                            panic!("parameter {} is missing a type", name.name);
                         }
                     } else {
+                        //TODO @mark: better error handling
                         panic!("parameter {} is missing a type", name.name);
                     }
                 }
