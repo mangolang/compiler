@@ -36,7 +36,7 @@ smallvec = "1.6.1"
 #parity-wasm = "^0.41.0"
 
 # TODO: Temporary, indirect dependency that needs version bound to work
-proc-macro2 = "1.0.26"
+proc-macro2 = "1.0.27"
 
 [dev-dependencies]
 
