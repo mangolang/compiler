@@ -5,7 +5,7 @@ FROM mangocode/mango_daily_base:2021-06-27 AS build
 ENV RUST_LOG='debug,ws=warn,mio=warn'
 
 # Copy the actual code.
-COPY ./Cargo.toml ./Cargo.lock ./deny.toml ./rustfmt.toml ./
+COPY ./Cargo.toml ./deny.toml ./rustfmt.toml ./
 COPY ./src/ ./src
 
 # Build (for test)
