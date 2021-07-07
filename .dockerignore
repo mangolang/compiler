@@ -6,7 +6,6 @@
 # Now explicitly add the source code, Cargo files and readme:
 !ci/extra_checks.sh
 !Cargo.toml
-!Cargo.lock
 !rustfmt.toml
 !deny.toml
 !.cargo/
