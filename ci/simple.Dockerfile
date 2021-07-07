@@ -1,6 +1,6 @@
 
 #TODO @mark: why compile still takes >1 min each despite pre-compiled dependencies?
-FROM mangocode/mango_daily_base:2021-05-02 AS build
+FROM mangocode/mango_daily_base:2021-06-27 AS build
 
 ENV RUST_LOG='debug,ws=warn,mio=warn'
 
